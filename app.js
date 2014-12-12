@@ -38,11 +38,13 @@ try {
 
 // APP CONFIGURATION
 
+app.set('views', __dirname + '/views');
+app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 app.use(morgan('tiny'));
-app.use(express.static(__dirname + '/editor'));
+app.use(express.static(__dirname + '/public'));
 
 // MONGOOSE CONNECTION
 
@@ -59,3 +61,8 @@ mongoose.connection.on("error", function(err) {
 });
 
 app.use('/api', rest);
+
+app.route('/')
+	.get( function(req, res, next) {
+    res.render('admin');
+  })

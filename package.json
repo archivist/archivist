@@ -10,5 +10,24 @@
     "mongoose": "*",
     "morgan": "*"
   },
-  "url": "http://github.com/substance/archivist/"
+  "url": "http://github.com/substance/archivist/",
+  "devDependencies": {
+    "browserify": "*",
+    "duo": "*",
+    "gulp": "3.8.8",
+    "gulp-minify-css": "^0.3.10",
+    "gulp-rename": "^1.2.0",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.0.1",
+    "gulp-util": "*",
+    "lodash": "^2.4.1",
+    "map-stream": "*",
+    "vinyl-source-stream": "*",
+    "watchify": "*"
+  },
+  "scripts": {
+    "start": "NODE_ENV=development foreman start",
+    "devmode": "NODE_ENV=development foreman start & gulp watch",
+    "prepare": "gulp compress"
+  }
 }
