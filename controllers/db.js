@@ -14,6 +14,11 @@ var db = exports;
  */
 
 db.createDocument = function(document, cb) {
+	if (document.hasOwnProperty('schema')) {
+		document._schema = document.schema;
+		delete document.schema;
+	}
+
 	new Document(document).save(function(err) {
 		cb(err);
 	});
@@ -29,7 +34,13 @@ db.createDocument = function(document, cb) {
 
 db.getDocument = function(id, cb) {
 	Document.findOne({id: id}, function(err, document) {
-		cb(err, document);
+		doc = document.toJSON();
+		if (doc.hasOwnProperty('_schema')) {
+			delete doc._schema;
+			doc.schema = document._schema;
+		}
+
+		cb(err, doc);
 	});
 }
 
@@ -43,6 +54,11 @@ db.getDocument = function(id, cb) {
  */
 
 db.updateDocument = function(id, data, cb) {
+	if (data.hasOwnProperty('schema')) {
+		data._schema = data.schema;
+		delete data.schema;
+	}
+
 	Document.findOneAndUpdate({id: id}, { $set: data }, function (err, document) {
 		cb(err, document);
 	});
