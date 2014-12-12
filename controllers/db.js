@@ -1,0 +1,79 @@
+/* The DB controller */
+ 
+var Document = require('../models/document.js');
+
+var db = exports;
+
+/* The Document REST api */
+
+/** 
+ * Creates Document record from JSON
+ *
+ * @param {string} document - JSON represenation of new document
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.createDocument = function(document, cb) {
+	new Document(document).save(function(err) {
+		cb(err);
+	});
+}
+
+
+/** 
+ * Gets Document record by unique id 
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.getDocument = function(id, cb) {
+	Document.findOne({id: id}, function(err, document) {
+		cb(err, document);
+	});
+}
+
+
+/** 
+ * Updates Document record unique JSON
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {string} data - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.updateDocument = function(id, data, cb) {
+	Document.findOneAndUpdate({id: id}, { $set: data }, function (err, document) {
+		cb(err, document);
+	});
+}
+
+
+/** 
+ * Removes Document record by unique id 
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.removeDocument = function(id, cb) {
+  Document.findOneAndRemove({id: id}, function (err) {
+    cb(err);
+  });
+}
+
+
+/** 
+ * List Documents by title
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.listDocuments = function(name, cb) {
+  var regex = new RegExp(name, 'i');
+
+  var query = Document.find({"nodes.document.title": regex});
+  query.select('nodes.document.title nodes.document.created_at nodes.document.authors id');
+  query.exec(cb);
+}

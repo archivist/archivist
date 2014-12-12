@@ -1,0 +1,14 @@
+{
+  "name": "substance-archivist",
+  "description": "Substance Archivist app",
+  "version": "0.0.1",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "jade": "*",
+    "method-override": "*",
+    "mongoose": "*",
+    "morgan": "*"
+  },
+  "url": "http://github.com/substance/archivist/"
+}
