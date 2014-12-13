@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+
+var builder = require('buildify'),
+    path = require('path');
+
+var templateData = {
+  version: require('../package.json').version
+};
+
+var baseDir = __dirname + '/..',
+    sourceDir = baseDir + '/src',
+    outputDir = baseDir + '/distribution';
+
+//Files to concatenate into main file
+var fileList = [
+  'form.js',
+  'validators.js',
+  'fieldset.js',
+  'field.js',
+  'nestedField.js',
+  'editor.js',
+  'editors/text.js',
+  'editors/textarea.js',
+  'editors/password.js',
+  'editors/number.js',
+  'editors/hidden.js',
+  'editors/checkbox.js',
+  'editors/select.js',
+  'editors/radio.js',
+  'editors/checkboxes.js',
+  'editors/object.js',
+  'editors/nestedmodel.js',
+  'editors/date.js',
+  'editors/datetime.js',
+];
+
+//Concatenate the main files
+var mainContents = builder(sourceDir)
+  .concat(fileList)
+  .getContent();
+
+//Save regular dev and mini versions
+builder(baseDir)
+  .setContent(mainContents)
+  .wrap('scripts/build-templates/main.js', templateData)
+  .save('distribution/backbone-forms.js')
+  .uglify()
+  .save('distribution/backbone-forms.min.js');
+
+//Main AMD file (for RequireJS)
+builder(baseDir)
+  .setContent(mainContents)
+  .wrap('scripts/build-templates/main.amd.js', templateData)
+  .save('distribution.amd/backbone-forms.js')
+  .uglify()
+  .save('distribution.amd/backbone-forms.min.js');
+
+
+//Extra editors
+['list'].forEach(function(name) {
+  //Save regular dev and mini versions
+  builder(baseDir)
+    .load('src/editors/extra/'+name+'.js')
+    .save('distribution/editors/'+name+'.js')
+    .uglify()
+    .save('distribution/editors/'+name+'.min.js');
+
+  //CSS file
+  if (path.existsSync(baseDir + '/src/editors/'+name+'.css')) {
+    builder(baseDir)
+      .load('src/editors/extra/'+name+'.css')
+      .save('distribution/editors/'+name+'.css')
+      .save('distribution.amd/editors/'+name+'.css');
+  }
+
+  //Save AMD version (for RequireJS)
+  builder(baseDir)
+    .load('src/editors/extra/'+name+'.js')
+    .wrap('scripts/build-templates/simple.amd.js')
+    .save('distribution.amd/editors/'+name+'.js')
+    .uglify()
+    .save('distribution.amd/editors/'+name+'.min.js');
+});
+
+
+//Templates
+['old', 'bootstrap', 'bootstrap3'].forEach(function(name) {
+  //HTML
+  builder(baseDir)
+    .load('src/templates/'+name+'.js')
+    .wrap('scripts/build-templates/standalone-template.js')
+    .save('distribution/templates/'+name+'.js');
+
+  //HTML (AMD)
+  builder(baseDir)
+    .load('src/templates/'+name+'.js')
+    .wrap('scripts/build-templates/standalone-template.amd.js')
+    .save('distribution.amd/templates/'+name+'.js');
+
+  //CSS
+  builder(baseDir)
+    .load('src/templates/'+name+'.css')
+    .save('distribution/templates/'+name+'.css')
+    .save('distribution.amd/templates/'+name+'.css');
+});
+
+
+//Modal adapters
+builder(baseDir)
+  .load('lib/backbone.bootstrap-modal/src/backbone.bootstrap-modal.js')
+  .save('distribution/adapters/backbone.bootstrap-modal.js')
+  .uglify()
+  .save('distribution/adapters/backbone.bootstrap-modal.min.js');

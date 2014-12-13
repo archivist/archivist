@@ -36,7 +36,7 @@ var deleteDocument = function(req, res, next) {
 }
 
 var listDocuments = function(req, res, next) {
-  db.listDocuments(req.query.title, function(err, documents) {
+  db.listDocuments(req.query, function(err, documents) {
     if (err) return next(err);
     res.json(documents);
   });

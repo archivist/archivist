@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Backgrid.js Jasmine Spec Runner</title>
+    
+    <link rel="stylesheet" type="text/css" href="vendor/css/jasmine.css">
+    <link rel="stylesheet" type="text/css" href="../backgrid-filter.css">
+    <script src="vendor/js/jasmine.js"></script>
+    <script src="vendor/js/jasmine-html.js"></script>
+    
+    <script src="vendor/js/jquery.js"></script>
+    <script src="vendor/js/lunr.js"></script>
+    <script src="vendor/js/underscore.js"></script>
+    <script src="vendor/js/backbone.js"></script>
+    <script src="vendor/js/backgrid.js"></script>
+    <script src="vendor/js/backbone-pageable.js"></script>
+    <script src="../backgrid-filter.js"></script>
+    <script src="filter.js"></script>
+
+    <script>
+      (function () {
+        var jasmineEnv = jasmine.getEnv();
+        jasmineEnv.updateInterval = 1000;
+
+        var htmlReporter = new jasmine.HtmlReporter();
+
+        jasmineEnv.addReporter(htmlReporter);
+
+        jasmineEnv.specFilter = function (spec) {
+          return htmlReporter.specFilter(spec);
+        };
+
+        $(document).ready(function () {
+          jasmineEnv.execute();
+        });
+      }());
+    </script>
+    
+  </head>
+  
+  <body>
+    <script>
+     var filter = new Backgrid.Extension.ServerSideFilter({
+       collection: new Backbone.Collection()
+     });
+     $("body").append(filter.render().$el);
+    </script>
+  </body>
+</html>

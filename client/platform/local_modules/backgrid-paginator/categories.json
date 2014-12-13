@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Backgrid.js Extensions",
+    "groups": [
+      {
+        "name": "Paginator",
+        "classes": [
+          "Backgrid.Extension.PageHandle",
+          "Backgrid.Extension.Paginator"
+        ]
+      }
+    ]
+  }
+]

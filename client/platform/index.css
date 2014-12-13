@@ -1,0 +1,189 @@
+@import './node_modules/backgrid/lib/backgrid.css';
+@import './local_modules/backgrid-paginator/backgrid-paginator.css';
+@import './node_modules/backgrid-filter/backgrid-filter.css';
+/*@import './node_modules/animate.css/animate.css';*/
+@import './local_modules/notify/notification.css';
+@import './styles/reset.css';
+@import './styles/substance.css';
+
+body {
+  background: #F8F8F8;
+}
+ 
+body {
+  overflow: auto;
+}
+ 
+/* Clearfix solution */
+ 
+.container:after {
+  content:"";
+  display:table;
+  clear:both;
+}
+ 
+.header {
+ 
+}
+ 
+.animate,
+.animate * {
+	-webkit-transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.3s ease-in-out;
+	-o-transition: all 0.3s ease-in-out;
+	-ms-transition: all 0.3s ease-in-out;
+}
+
+/* Dashboard */
+
+.document-cell {
+  position: relative;
+  padding: 20px;
+  background: white;
+  margin-bottom: 1px;
+  cursor: pointer;
+}
+
+.document-cell:hover {
+	background: #F8F8F8;
+}
+ 
+.document-cell .subject {
+  color: #999;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+ 
+.document-cell .title {
+  font-size: 20px;
+  line-height: 35px;
+  padding: 10px 0px;
+  margin-right: 50px;
+}
+ 
+ 
+.document-cell .authors {
+  float: left;
+  margin-right: 20px;
+  font-size: 15px;
+	font-style: italic;
+	line-height: 15px;
+}
+ 
+.document-cell .updated-at {
+  float: right;
+  font-style: italic;
+  font-size: 14px;
+  color: #999;
+}
+ 
+.document-cell .delete-document {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #D50A46;
+}
+
+.dashboard th.sortable a {
+	float: right;
+	font-size: 15px;
+	font-style: italic;
+	padding-right: 13px;
+}
+ 
+/* Actions */ 
+/* -------------------------- */
+ 
+/* Create Document */
+.actions {
+  padding: 20px;
+}
+ 
+ 
+ 
+/* Subjects Panel */
+ 
+.panel.subjects .available-subjects {
+  padding: 20px;
+}
+
+.data-toolbox {
+	background-color: #262626;
+	height: 50px;
+}
+
+.toolbox {
+	float: left;
+}
+
+.toolbox ul {
+	list-style: none;
+}
+
+.toolbox ul li {
+	float: left;
+	padding: 3px 10px;
+	width: 70px;
+	display: block;
+	text-align: center;
+	cursor: pointer;
+}
+
+.toolbox ul li.active {
+	color: #f8f8f8;
+	border-bottom: 2px solid #f8f8f8;
+}
+
+.toolbox ul li:hover {
+	color: #f8f8f8;
+}
+
+.toolbox ul li .title {
+	font-size: 10px;
+	clear: both;
+	display: block;
+}
+
+.context-filters {
+	float: left;
+}
+
+/* Context Toolbar */
+
+.context-toolbar {
+	float: right;
+	margin: 20px;
+}
+
+.context-toolbar button {
+	display: block;
+	float: left;
+	line-height: 30px;
+	height: 30px;
+	padding: 0 20px;
+	font-size: 13px;
+	font-weight: 600;
+	border-radius: 4px;
+	color: #eee;
+	-moz-box-shadow: none;
+	box-shadow: none;
+	background: #262626;
+	border: none;
+	cursor: pointer;
+}
+
+.context-toolbar button:hover {
+	color: #fff;
+}
+
+/* Filters */
+
+.form-search input {
+	border-color: rgba(38, 38, 38, 0.3);
+}
+
+.form-search input:focus {
+	border-color: rgba(38, 38, 38, 0.5);
+}

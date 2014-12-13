@@ -23,7 +23,7 @@
     "lodash": "^2.4.1",
     "map-stream": "*",
     "vinyl-source-stream": "*",
-    "watchify": "*"
+    "watchify": "git://github.com/substack/watchify.git"
   },
   "scripts": {
     "start": "NODE_ENV=development foreman start",

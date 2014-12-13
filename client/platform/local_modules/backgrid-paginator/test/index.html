@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Backgrid.js Jasmine Spec Runner</title>
+    
+    <link rel="stylesheet" type="text/css" href="vendor/css/jasmine.css">
+    <script src="vendor/js/jasmine.js"></script>
+    <script src="vendor/js/jasmine-html.js"></script>
+    
+    <script src="vendor/js/jquery.js"></script>
+    <script src="vendor/js/underscore.js"></script>
+    <script src="vendor/js/backbone.js"></script>
+    <script src="vendor/js/backgrid.js"></script>
+    <script src="vendor/js/backbone.paginator.js"></script>
+    <script src="../backgrid-paginator.js"></script>
+    <script src="paginator.js"></script>
+
+    <script>
+      (function () {
+        var jasmineEnv = jasmine.getEnv();
+        jasmineEnv.updateInterval = 1000;
+
+        var htmlReporter = new jasmine.HtmlReporter();
+
+        jasmineEnv.addReporter(htmlReporter);
+
+        jasmineEnv.specFilter = function (spec) {
+          return htmlReporter.specFilter(spec);
+        };
+
+        $(document).ready(function () {
+          jasmineEnv.execute();
+        });
+      }());
+    </script>
+    
+  </head>
+  
+  <body>
+  </body>
+</html>

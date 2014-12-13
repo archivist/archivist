@@ -1,0 +1,13 @@
+[
+  {
+    "name": "Backbone.Paginator",
+    "groups": [
+      {
+        "name": "Backbone",
+        "classes": [
+          "Backbone.PageableCollection"
+        ]
+      }
+    ]
+  }
+]

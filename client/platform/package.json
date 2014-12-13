@@ -1,0 +1,17 @@
+{
+  "name": "archivist-platform",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "animate.css": "^3.1.1",
+    "backbone": "^1.1.2",
+    "backbone-forms": "powmedia/backbone-forms",
+    "backbone.layoutmanager": "^0.9.5",
+    "backbone.paginator": "^2.0.2",
+    "backgrid": "^0.3.5",
+    "jquery": "^2.1.1",
+    "moment": "^2.8.3",
+    "underscore": "*"
+  }
+}

@@ -9,9 +9,9 @@ var browserify = require('browserify'),
     streamify = require('gulp-streamify'),
     source = require('vinyl-source-stream'),
     map = require('map-stream'),
-    sourceFile = './client/db/index.js',
-    destFolder = './public/db/',
-    destFile = 'db.js';
+    sourceFile = './client/platform/index.js',
+    destFolder = './public/platform/',
+    destFile = 'index.js';
 
 gulp.task('browserify', function() {
   var bundler = browserify(sourceFile,{ debug: true, cache: {}, packageCache: {} }),
@@ -31,9 +31,9 @@ gulp.task('watch', function() {
  
   function rebundle() {
     console.log('building new version')
-    gulp.src('./client/db/index.css')
+    gulp.src('./client/platform/index.css')
       .pipe(duo())
-      .pipe(rename("db.css"))
+      .pipe(rename("index.css"))
       .pipe(gulp.dest(destFolder))
     return bundler.bundle()
       .on('error', function(err){
@@ -50,10 +50,10 @@ gulp.task('watch', function() {
 gulp.task('compress', function() {
   var bundler = browserify(sourceFile,{cache: {}, packageCache: {} }),
       bundle = function() {
-        gulp.src('./client/db/index.css')
+        gulp.src('./client/platform/index.css')
           .pipe(duo())
           .pipe(minifyCSS({cache:true}))
-          .pipe(rename("db.css"))
+          .pipe(rename("index.css"))
           .pipe(gulp.dest(destFolder))
         return bundler
           .bundle()

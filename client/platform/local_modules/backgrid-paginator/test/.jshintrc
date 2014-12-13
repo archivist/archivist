@@ -1,0 +1,35 @@
+{
+  "camelcase": true,
+  "immed": true,
+  "latedef": true,
+  "noarg": true,
+  "trailing": true,
+  "expr": true,
+  "shadow": true,
+  "supernew": true,
+  "boss": true,
+  "undef": true,
+  "unused": true,
+  "eqnull": true,
+
+  "devel": true,
+  "jquery": true,
+  "browser": true,
+  "nonstandard": true,
+
+  "globals": {
+    "expect": false,
+    "describe": false,
+    "xdescribe": false,
+    "beforeEach": false,
+    "afterEach": false,
+    "it": false,
+    "xit": false,
+    "spyOn": false,
+    "runs": false,
+    "waitsFor": false,
+    "Backbone": false,
+    "Backgrid": false,
+    "_": false
+  }
+}

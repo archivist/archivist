@@ -1,6 +1,7 @@
 /* The DB controller */
  
-var Document = require('../models/document.js');
+var Document = require('../models/document.js')
+	,	util = require('./util.js');
 
 var db = exports;
 
@@ -86,10 +87,16 @@ db.removeDocument = function(id, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-db.listDocuments = function(name, cb) {
-  var regex = new RegExp(name, 'i');
+db.listDocuments = function(opt, cb) {
+	  var query = util.getQuery(opt.query),
+	      options = util.getOptions(opt);
 
-  var query = Document.find({"nodes.document.title": regex});
-  query.select('nodes.document.title nodes.document.created_at nodes.document.authors id');
-  query.exec(cb);
+  Document.find(query, 'nodes.document.title nodes.document.created_at nodes.document.authors id', options, function(err, documents) {
+    cb(err, documents);
+  });
+  // var regex = new RegExp(name, 'i');
+
+  // var query = Document.find({"nodes.document.title": regex});
+  // query.select('nodes.document.title nodes.document.created_at nodes.document.authors id');
+  // query.exec(cb);
 }
