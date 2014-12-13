@@ -1,6 +1,7 @@
 /* The DB controller */
  
 var Document = require('../models/document.js')
+	,	Subject = require('../models/subject.js')
 	,	util = require('./util.js');
 
 var db = exports;
@@ -81,9 +82,9 @@ db.removeDocument = function(id, cb) {
 
 
 /** 
- * List Documents by title
+ * List Documents
  *
- * @param {string} id - The unique id of target document record
+ * @param {string} opt - The query options from request
  * @param {callback} cb - The callback that handles the results 
  */
 
@@ -94,9 +95,81 @@ db.listDocuments = function(opt, cb) {
   Document.find(query, 'nodes.document.title nodes.document.created_at nodes.document.authors id', options, function(err, documents) {
     cb(err, documents);
   });
-  // var regex = new RegExp(name, 'i');
+}
 
-  // var query = Document.find({"nodes.document.title": regex});
-  // query.select('nodes.document.title nodes.document.created_at nodes.document.authors id');
-  // query.exec(cb);
+
+
+/* The Subject REST api */
+
+/** 
+ * Creates Subject record from JSON
+ *
+ * @param {string} subject - JSON represenation of new subject
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.createSubject = function(subject, cb) {
+	new Subject(subject).save(function(err) {
+		cb(err);
+	});
+}
+
+
+/** 
+ * Gets Subject record by unique id 
+ *
+ * @param {string} id - The unique id of target subject record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.getSubject = function(id, cb) {
+	Subject.findOne({id: id}, function(err, subject) {
+		cb(err, subject);
+	});
+}
+
+
+/** 
+ * Updates Subject record unique JSON
+ *
+ * @param {string} id - The unique id of target subject record
+ * @param {string} data - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.updateSubject = function(id, data, cb) {
+	Subject.findOneAndUpdate({id: id}, { $set: data }, function (err, subject) {
+		cb(err, subject);
+	});
+}	
+
+
+/** 
+ * Removes Subject record by unique id 
+ *
+ * @param {string} id - The unique id of target subject record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.removeSubject = function(id, cb) {
+  Subject.findOneAndRemove({id: id}, function (err) {
+    cb(err);
+  });
+}
+
+
+/** 
+ * List Subjects
+ *
+ * @param {string} opt - The query options from request
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.listSubjects = function(opt, cb) {
+	  var query = util.getQuery(opt.query),
+	      options = util.getOptions(opt);
+
+  Subjects.find(query, null, options, function(err, subjects) {
+    cb(err, subjects);
+  });
 }
