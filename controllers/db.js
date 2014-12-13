@@ -169,7 +169,7 @@ db.listSubjects = function(opt, cb) {
 	  var query = util.getQuery(opt.query),
 	      options = util.getOptions(opt);
 
-  Subjects.find(query, null, options, function(err, subjects) {
+  Subject.find(query, null, options, function(err, subjects) {
     cb(err, subjects);
   });
 }
