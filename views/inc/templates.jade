@@ -11,14 +11,6 @@ script#contextmenu(type='text/template')
 	<% items.each(function(item) { %>
 	<button type="button" class="btn btn-default" data-fn="<%= item.get('fn') %>"><i class="fa fa-<%= item.get('icon') %>"></i> <%= item.get('name') %></button>
 	<% }) %>
-script#subjects(type='text/template')
-	<button id="goback" class="close-stack" data-toggle="tooltip" title="закрыть">×</button>
-	<div id="page" class="category">
-	<div class="row">
-	<div class="sidebar col-lg-4 col-md-4 col-sm-4 col-xs-4">
-	</div>
-	<div class="subjects col-lg-7 col-md-7 col-sm-7 col-xs-7">
-	<%= list %>
-	</div>
-	</div>
-	</div>
+script#subjectsLayout(type='text/template')
+	<div id="context-panel" class="context-panel"></div>
+	<div class="sidebar"></div>

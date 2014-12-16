@@ -7,6 +7,7 @@ var subjectSchema = new Schema({
     id: String
   ,	type: String
   ,	name: String
+  , description: String
   , parent: String
 });
  

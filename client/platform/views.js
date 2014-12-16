@@ -5,7 +5,7 @@ var Backbone = require('backbone'),
     Pageable = require('./local_modules/backgrid-paginator/backgrid-paginator.js'),
     layoutmanager = require('backbone.layoutmanager'),
     forms = require('backbone-forms'),
-    nestable = require('nestable'),
+    bootstrapForms = require('./local_modules/bootstrap-form/bootstrap3.js'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
@@ -36,8 +36,9 @@ var MainGrid = Backbone.Layout.extend({
   filters: function() {},
   createContextPanel: function() {
     var contextPanel = document.createElement("div");
+    contextPanel.id = "context-panel";
     contextPanel.className = "context-panel";
-    contextPanel.innerHTML = '<div class="context-filters"></div><div class="context-toolbar animate"></div>';
+    contextPanel.innerHTML = '<div class="context-filters"></div>';
     this.$el.prepend(contextPanel);
   },
   close: function() {
@@ -179,12 +180,20 @@ var MainLayout = Backbone.Layout.extend({
     this.stackView.setRootView(v);
     this.setView('#stackView', this.stackView).render();
   },
+
+  addContext: function(v) {
+    this.stackView.insertView('#context-panel', v).render();
+  },
 	
 	keyup: function(e){
 		if (e.which == 27 && $(e.target).is('body') && !$(e.target).hasClass('modal-open')) {
 			this.removeFromStack();
 		}
 	},
+
+  getRoot: function() {
+    return this.stackView.getFirst();
+  },
 
   getTop: function() {
     return this.stackView.getLast();
@@ -232,6 +241,11 @@ var StackView = Backbone.Layout.extend({
       var view = views.pop();
       this.transitionViewOut(view);
     }
+  },
+
+  getFirst: function() {
+    var views = this.getViews().value();
+    return views[0];
   },
 
   getLast: function() {
@@ -329,112 +343,200 @@ var DocumentsGrid = MainGrid.extend({
 exports.documentsGrid = DocumentsGrid
 
 
+var ListView = Backbone.View.extend({
+  tagName: "div",
+  className: "list",
+
+  initialize: function (options) {
+    var listItems = this.listItems = options.items;
+
+    // add new item to the list
+    this.listenTo(listItems, "add", function (item) {
+      this.addItem(item);
+    })
+
+    this.listenTo(listItems, "change", function (item) {
+      this.updateItem(item);
+    })
+
+    // remove item from list
+    this.listenTo(listItems, "remove", function (item) {
+      this.removeItem(item);
+    })
+  },
+
+  prepareViews: function() {
+    this.itemViews = {};
+    this.listItems.each(function(item) {
+      this.itemViews[item.cid] = new ItemView({model: item}).render();
+    }, this);
+  },
+
+  addItem: function(item) {
+    // model creation
+    this.itemViews[item.cid] = new ItemView({model: item}).render();
+    this.updateHiercharchy();
+  },
+ 
+  // doesnt affect hierarchy
+  updateItem: function(item) {
+    this.itemViews[item.cid].render() // re-render
+    this.updateHiercharchy();
+  },
+
+  removeItem: function(item) {
+    this.itemViews[item.cid].remove()
+    this.updateHiercharchy();
+  },
+
+  updateHiercharchy: function() {
+    var self = this;
+ 
+    // Build a map of parents referencing their kids
+    var map = {};
+    _.each(self.itemViews, function(item) {
+      var parent = item.model.get('parent') || "root";
+      if (!map[parent]) {
+        map[parent] = [ item ];
+      } else {
+        map[parent].push(item);
+      }
+    });
+
+    function renderChildren(parent) {
+      var listEl = document.createElement('ol');
+ 
+      var items = map[parent];
+      if (!items) return listEl; // exit condition      
+      
+      _.each(items, function(item) {
+        var listItemEl = self.itemViews[item.model.cid].render().el;
+
+        var childList = renderChildren(item.model.get('id'));
+        listItemEl.appendChild(childList);
+        listEl.appendChild(listItemEl);
+      });
+      
+      return listEl;
+    }
+    var listEl = renderChildren("root");
+    self.$el.append(listEl);
+  },
+
+  render: function() {
+    this.prepareViews();
+    this.updateHiercharchy();
+    this.delegateEvents();
+    return this;
+  },
+
+  remove: function() {
+
+  }
+
+});
+
+
+var ItemView = Backbone.View.extend({
+  tagName: "li",
+
+  events: {
+    'click': 'enterEditMode'
+  },
+
+  initialize: function () {
+    var model = this.model;
+
+    model.on("change", function () {
+      this.render();
+    }, this);
+  },
+
+  render: function () {
+    this.$el.empty();
+    var model = this.model;
+    var content = document.createElement('span');
+    content.textContent = model.get('name');
+    this.$el.append(content);
+    this.delegateEvents();
+    return this;
+  },
+
+  enterEditMode: function(e) {
+    var model = this.model;
+    model.trigger("list:edit", model);
+    e.preventDefault();
+    e.stopPropagation();
+  },
+
+  remove: function () {
+
+  } 
+});
+
 // SUBJECT PAGES
 
-var SubjectsMainGrid = MainGrid.extend({
+var SubjectsView = Backbone.Layout.extend({
   icon: 'subjects',
-  filters: function() {
-  },
-  _add: function() {
-    Backbone.middle.trigger("goTo", 'subjects/add')
-  },
-  panel: [
-    {
-      name: "Add new subject",
-      icon: "plus",
-      fn: "_add"
-    }
-  ]
-})
-exports.subjectsMainGrid = SubjectsMainGrid
+  className: 'subjects',
+  template: '#subjectsLayout',
 
-var SubjectsView = EditPage.extend({
-  template: '#subject',
-  events: {
-    'click .dd-content': 'editTerm'
-  },
   initialize: function() {
     var self = this;
-    self.contextMenu.reset(self.panelEdit);
-    self.generateNestedHtml();
-    self.terms.bind('change add remove', function(e){
-      self.generateNestedHtml();
-      self.render();
-    });
+    this.collection.on('list:edit', function(model) {
+      this.editSubject(model);
+    }, this);
   },
   beforeRender: function() {
 
   },
   afterRender: function() {
     var self = this;
-    this.$el.addClass(this.options_def.class);
-    this.$el.css('background-color', 'rgba(0,0,0,0.8)');
-    this.$el.find('.nestable').nestable();
+    $('#' + this.icon).addClass('active');
+    this.contextMenu.reset(this.panel);
+    var view = new ListView({items: self.collection}).render();
+    this.$el.append(view.el)
   },
-  generateNestedHtml: function() {
-    var self = this,
-        nested = self.terms.getSerialisedJson();
+  editSubject: function(model) {
+    var sidebar = this.$el.find('.sidebar');
+    sidebar.empty();
+    this.form = new Backbone.Form({
+      model: model
+    }).render();
+    this.form.on('change', function(e) {
+      this.commit();
+    });
+    sidebar.html(this.form.el);
+    //this.insertView('.sidebar', this.form).render();
+    //this.$el.html(this.form.el);
+    return this;
+    //console.log(e)
+    // var subjectId = e.target.parentElement.dataset.id,
+    //     termForm = new TermEdit({model: this.terms.get(termId)});
 
-    var html = '<div class="nestable dd">';
-    html += generateOrderedList(nested);
-    html += '</div>';
-
-    this.options.nested = html;
-
-    function generateOrderedList(nested) {
-      var output = '<ol class="dd-list">';
-      _.each(nested, function(element, index, list){
-        var item = '<li class="dd-item" data-id="' + element.id + '">';
-        item += '<div class="dd-handle">Drag</div>';
-        item += '<div class="dd-content">' + element.name + '</div>';
-        if (element.children) {
-          item += generateOrderedList(element.children);
-        }
-        item += '</li>';
-        output += item;
-      })
-      output += '</ol>';
-      return output;
-    }
-  },
-  editTerm: function(e) {
-    var termId = e.target.parentElement.dataset.id,
-        termForm = new TermEdit({model: this.terms.get(termId)});
-
-    var modal = new Backbone.BootstrapModal({ content: termForm, animate: true }).open();
+    // var modal = new Backbone.BootstrapModal({ content: termForm, animate: true }).open();
   },
   _save: function() {
-    var self = this,
-        nested = self.$el.find('.nestable').nestable('serialize');
-
-    _.each(nested, function(term) {
-      var model = self.terms.get(term.id);
-      if(model.get("parentId") != term.parentId) {
-        console.log(model, 'old')
-        model.save({parentId: term.parentId})
-        console.log(model, 'new')
-      }
-      recursiveSaveTerms(term);
-    })
-
-    function recursiveSaveTerms(term){
-      _.each(term.children, function(child) {
-        var model = self.terms.get(child.id);
-        if(model.get("parentId") != term.id) {
-          model.save({parentId: term.id})
-        }
-        recursiveSaveTerms(child);
-      });
-    }
+  
   },
-  serialize: function() {
-    return { model: this.model.attributes, list: this.options.nested };
+  _add: function() {
+    this.collection.add({ name: "Untitled" });
   },
-  panelEdit: [
+  close: function() {
+    $('#' + this.icon).removeClass('active');
+    this.remove();
+    this.unbind();
+  },
+  panel: [
     {
       name: "save",
       icon: "save",
       fn: "_save"
+    },
+    {
+      name: "Add new subject",
+      icon: "plus",
+      fn: "_add"
     }
   ]
 })
@@ -511,6 +613,7 @@ exports.mainMenu = MainMenu
 
 var ContextMenu = Backbone.View.extend({
   manage: true,
+  className: "context-toolbar animate",
   events: {
     'click .btn': '_run'
   },
@@ -530,15 +633,16 @@ var ContextMenu = Backbone.View.extend({
   restore: function() {
     this.collection.reset(this.prev);
   },
-  render: function() {
-    console.log(this)
-  },
   _run: function(e) {
     e.preventDefault();
-    var view = this.layout.getTop(),
+    var view = this.layout.getRoot(),
         fn = e.currentTarget.dataset.fn;
 
     view[fn]();
+  },
+  close: function() {
+    this.remove();
+    this.unbind();
   }
 });
 exports.contextMenu = ContextMenu;

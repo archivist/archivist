@@ -37,7 +37,7 @@ var Router = Backbone.Router.extend({
     'subjects/add': 'subjectAdd',
     'subjects/:id': 'subjectEdit'
 	},
-  dashboard: function(callback,id) {
+  dashboard: function(callback, id) {
     var dashboardGrid = [
       {
         name: 'nodes.document.title',
@@ -47,6 +47,21 @@ var Router = Backbone.Router.extend({
       }
     ];
     this.grid(dashboardGrid, 'documents', 'documentsGrid', callback, id);
+  },
+
+  subjects: function(callback, id) {
+    Notify.spinner('show');
+
+    var self = this;
+        
+    self.subjects = new models.subjects()
+
+    self.subjects.fetch().done(function() {
+      var subjectsView = new views.subjectsView({ collection: self.subjects, contextMenu: self.contextMenu });
+      self.changeLayout(subjectsView, callback, id);
+      Notify.spinner('hide');
+      Notify.info( 'Data has been loaded' );
+    });
   },
 
   subjectPage: function(id) {
@@ -130,10 +145,11 @@ var Router = Backbone.Router.extend({
   changeLayout: function(v, callback, id) {
     if (!this.initialized) {
       this.layout = new views.mainLayout({rootView: v, contextMenu: this.contextMenu}).render()
-      this.initialized = true
+      this.initialized = true;
       this.buildContextMenu()
     } else {
       this.layout.changeLayout(v);
+      this.buildContextMenu()
     }
     if (callback) this[callback](id);
   },
@@ -145,7 +161,9 @@ var Router = Backbone.Router.extend({
   },
 
   buildContextMenu: function() {
-    var contextMenu = new views.contextMenu({ collection: this.contextMenu, el: this.layout.rootView.$el.find('.context-toolbar'), layout: this.layout });
+    var self = this;
+    var contextMenu = new views.contextMenu({ collection: this.contextMenu, layout: this.layout });
+    this.layout.addContext(contextMenu);
   }
 })
 

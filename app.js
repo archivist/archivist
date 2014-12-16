@@ -66,3 +66,8 @@ app.route('/')
 	.get( function(req, res, next) {
     res.render('admin');
   })
+
+app.route('/:var(subjects)*?')
+  .get(function(req, res, next) {
+    res.render('admin');
+  })

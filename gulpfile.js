@@ -31,10 +31,10 @@ gulp.task('watch', function() {
  
   function rebundle() {
     console.log('building new version')
-    gulp.src('./client/platform/index.css')
-      .pipe(duo())
-      .pipe(rename("index.css"))
-      .pipe(gulp.dest(destFolder))
+    // gulp.src('./client/platform/index.css')
+    //   .pipe(duo())
+    //   .pipe(rename("index.css"))
+    //   .pipe(gulp.dest(destFolder))
     return bundler.bundle()
       .on('error', function(err){
           console.log(err.message);
