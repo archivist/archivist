@@ -6,7 +6,7 @@ var Subject = Utility.model.extend({
   schema: {
     name: { type: 'Text', validators: ['required'], title: 'Title' },
     description: { type: 'TextArea', title: 'Description' },
-    //parent: { type: 'Text' }
+    parent: { type: 'ParentChooser' }
   }
 })
 exports.subject = Subject

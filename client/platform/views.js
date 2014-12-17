@@ -5,6 +5,7 @@ var Backbone = require('backbone'),
     Pageable = require('./local_modules/backgrid-paginator/backgrid-paginator.js'),
     layoutmanager = require('backbone.layoutmanager'),
     forms = require('backbone-forms'),
+    parent = require('./local_modules/parent-form/parent.js'),
     bootstrapForms = require('./local_modules/bootstrap-form/bootstrap3.js'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
@@ -363,6 +364,23 @@ var ListView = Backbone.View.extend({
     this.listenTo(listItems, "remove", function (item) {
       this.removeItem(item);
     })
+
+    this.on("parent:choose", function(child) {
+      this.stopListening(this.listItems, "list:getitem");
+      listItems.once("list:getitem", function(parent) {
+        child.set('parent', parent.get('id'));
+        this.registerItemListner();
+        this.updateHiercharchy();
+      }, this);
+    })
+
+    this.registerItemListner();
+  },
+
+  registerItemListner: function() {
+    this.listenTo(this.listItems, "list:getitem", function (item) {
+      item.trigger("list:edit", item)
+    })
   },
 
   prepareViews: function() {
@@ -441,7 +459,7 @@ var ItemView = Backbone.View.extend({
   tagName: "li",
 
   events: {
-    'click': 'enterEditMode'
+    'click': 'chooseItem'
   },
 
   initialize: function () {
@@ -462,9 +480,9 @@ var ItemView = Backbone.View.extend({
     return this;
   },
 
-  enterEditMode: function(e) {
+  chooseItem: function(e) {
     var model = this.model;
-    model.trigger("list:edit", model);
+    model.trigger("list:getitem", model);
     e.preventDefault();
     e.stopPropagation();
   },
@@ -494,18 +512,25 @@ var SubjectsView = Backbone.Layout.extend({
     var self = this;
     $('#' + this.icon).addClass('active');
     this.contextMenu.reset(this.panel);
-    var view = new ListView({items: self.collection}).render();
-    this.$el.append(view.el)
+    this.list = new ListView({items: self.collection}).render();
+    this.$el.append(this.list.el);
   },
   editSubject: function(model) {
-    var sidebar = this.$el.find('.sidebar');
+    var self = this,
+        sidebar = this.$el.find('.sidebar');
     sidebar.empty();
     this.form = new Backbone.Form({
       model: model
     }).render();
-    this.form.on('change', function(e) {
+    this.form.on('change', function() {
       this.commit();
     });
+    this.form.on('parent:edit', function(item) {
+      self.list.trigger('parent:choose', item.model);
+    })
+    this.collection.once('list:itemparent', function(item){
+      this.form.trigger("parent:choosed", item);
+    }, this);
     sidebar.html(this.form.el);
     //this.insertView('.sidebar', this.form).render();
     //this.$el.html(this.form.el);
