@@ -392,6 +392,8 @@ var ListView = Backbone.View.extend({
 
   addItem: function(item) {
     // model creation
+    // make changes without set method to avoid change event call
+    item.attributes.id = item.cid;
     this.itemViews[item.cid] = new ItemView({model: item}).render();
     this.updateHiercharchy();
   },
