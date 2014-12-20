@@ -331,7 +331,7 @@ var DocumentsGrid = MainGrid.extend({
     this.$el.find('.context-filters').prepend(this.titleFilter.render().el);
 	},
   _add: function() {
-    Backbone.middle.trigger("goTo", 'editor/new')
+    Backbone.middle.trigger("goToExt", 'editor/new')
   },
   panel: [
     {
@@ -696,7 +696,7 @@ var DocumentRow = Backgrid.Row.extend({
   },
   onClick: function (e) {
     e.preventDefault()
-    Backbone.middle.trigger("goTo", '/editor/' + this.model.get('id'));
+    Backbone.middle.trigger("goToExt", '/editor/' + this.model.get('id'));
   }
 });
 exports.documentRow = DocumentRow
@@ -722,7 +722,7 @@ var DocumentCell = Backgrid.ObjectCell = Backgrid.Cell.extend({
 
       this.$el.append(markup)
       this.delegateEvents()
-      return this
+      return this;
     }
   }
 });

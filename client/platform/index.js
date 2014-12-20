@@ -16,12 +16,16 @@ Backbone.middle = _.extend({
 	},
 	goToPrev: function() {
 		Backbone.AppRouter.previous();
+	},
+	goToExt: function(url) {
+		window.location = url;
 	}
 }, Backbone.Events);
 
 Backbone.middle.on({
 	"goTo": Backbone.middle.goTo,
-	"goToPrevious": Backbone.middle.goToPrev
+	"goToPrevious": Backbone.middle.goToPrev,
+	"goToExt": Backbone.middle.goToExt
 });
 
 AppStart();

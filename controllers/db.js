@@ -35,7 +35,7 @@ db.createDocument = function(document, cb) {
  */
 
 db.getDocument = function(id, cb) {
-	Document.findOne({id: id}, function(err, document) {
+	Document.findById(id, function(err, document) {
 		doc = document.toJSON();
 		if (doc.hasOwnProperty('_schema')) {
 			delete doc._schema;
@@ -61,7 +61,7 @@ db.updateDocument = function(id, data, cb) {
 		delete data.schema;
 	}
 
-	Document.findOneAndUpdate({id: id}, { $set: data }, function (err, document) {
+	Document.findByIdAndUpdate(id, { $set: data }, function (err, document) {
 		cb(err, document);
 	});
 }
@@ -75,7 +75,7 @@ db.updateDocument = function(id, data, cb) {
  */
 
 db.removeDocument = function(id, cb) {
-  Document.findOneAndRemove({id: id}, function (err) {
+  Document.findByIdAndRemove(id, function (err) {
     cb(err);
   });
 }
@@ -123,7 +123,7 @@ db.createSubject = function(subject, cb) {
  */
 
 db.getSubject = function(id, cb) {
-	Subject.findOne({id: id}, function(err, subject) {
+	Subject.findById(id, function(err, subject) {
 		cb(err, subject);
 	});
 }
@@ -138,7 +138,7 @@ db.getSubject = function(id, cb) {
  */
 
 db.updateSubject = function(id, data, cb) {
-	Subject.findOneAndUpdate({id: id}, { $set: data }, function (err, subject) {
+	Subject.findByIdAndUpdate(id, { $set: data }, function (err, subject) {
 		cb(err, subject);
 	});
 }	
@@ -152,7 +152,7 @@ db.updateSubject = function(id, data, cb) {
  */
 
 db.removeSubject = function(id, cb) {
-  Subject.findOneAndRemove({id: id}, function (err) {
+  Subject.findByIdAndRemove(id, function (err) {
     cb(err);
   });
 }
