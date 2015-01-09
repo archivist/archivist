@@ -10,7 +10,13 @@ MONGO_URL=***
 RS_NAME=***
 ```
 
-Install Heroku Toolbelt. Then run
+Install Heroku Toolbelt. Then pull in Substance modules
+
+```
+$ substance --update
+```
+
+Now you can run the server
 
 ```
 npm run devmode
@@ -26,3 +32,5 @@ You could also prepare compress bundle (js&css) without starting server, use
 ```
 npm run prepare
 ```
+
+
