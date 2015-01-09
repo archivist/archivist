@@ -6,6 +6,7 @@
     "body-parser": "*",
     "express": "*",
     "jade": "*",
+    "underscore": "1.7.0",
     "method-override": "*",
     "mongoose": "*",
     "morgan": "*"

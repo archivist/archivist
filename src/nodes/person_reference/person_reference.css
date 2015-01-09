@@ -1,0 +1,11 @@
+/* LinkReference annotation */
+.content-node .person_reference { 
+  background: rgba(100, 120, 100, 0.075);
+
+  color: #1B6685;
+  border-bottom: 1px solid rgba(100, 120, 100, 0.4);
+}
+
+.content-node .person_reference:hover, .content-node .person_reference.active {
+  background: rgba(100, 120, 100, 0.6);
+}

@@ -5,7 +5,45 @@ var mongoose = require('mongoose')
 	, morgan = require('morgan')
 	, rest = require('./controllers/rest.js')
 	, port = process.env.PORT || 5000
-	, app = express();
+	, app = express()
+	, path = require('path')
+	, fs = require('fs')
+	, _ = require('underscore');
+
+// Substance stuff
+// --------------------
+
+var CJSServer = require('substance-cjs');
+var config = require("./.screwdriver/project.json");
+
+// var ARCHIVIST_COMPOSER_PATH = path.join(__dirname, "node_modules/archivist-composer");
+
+var config = require("./.screwdriver/project.json");
+new CJSServer(app, __dirname, 'archivist')
+  // ATTENTION: the second argument is the script which is resembled by injecting a list
+  // of script tags instead. It must be exactly the same string which is used in the script src.
+  .scripts('./boot_archivist_composer.js', './archivist_composer.js', {
+    ignores: [
+    ]
+  })
+  // ... the same applies to the css file
+  .styles(config.styles, 'archivist_composer.css')
+  .page('/archivist.html');
+
+// Serve assets with alias as configured in project.json (~dist like setup)
+_.each(config.assets, function(srcPath, distPath) {
+  var absPath = path.join(__dirname, srcPath);
+  var route = "/" + distPath;
+  //console.log("Adding route for asset", route, "->", absPath);
+  if (fs.lstatSync(absPath).isDirectory()) {
+    app.use( route, express.static(absPath) );
+  } else {
+    app.use(route, function(req, res) {
+      res.sendfile(absPath);
+    });
+  }
+});
+
 
 
 // MONGOOSE CONNECT

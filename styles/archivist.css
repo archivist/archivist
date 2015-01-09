@@ -1,0 +1,78 @@
+body {
+  background: #F8F8F8;
+}
+
+body {
+  overflow: auto;
+}
+
+/* Clearfix solution */
+
+.container:after {
+  content:"";
+  display:table;
+  clear:both;
+}
+
+.header {
+
+}
+
+.documents .document {
+  position: relative;
+  padding: 20px;
+  background: white;
+  margin-bottom: 1px;
+}
+
+.documents .document .subject {
+  color: #999;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.documents .document .title {
+  font-size: 24px;
+  line-height: 35px;
+  padding: 10px 0px;
+  margin-right: 50px;
+}
+
+
+.documents .document .authors {
+  float: left;
+  margin-right: 20px;
+  font-size: 18px;
+}
+
+.documents .document .updated-at {
+  float: right;
+  font-style: italic;
+  font-size: 14px;
+  color: #999;
+}
+
+.documents .document .delete-document {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  color: #D50A46;
+}
+
+/* Actions */ 
+/* -------------------------- */
+
+/* Create Document */
+.actions {
+  padding: 20px;
+}
+
+
+
+/* Subjects Panel */
+
+.panel.subjects .available-subjects {
+  padding: 20px;
+}

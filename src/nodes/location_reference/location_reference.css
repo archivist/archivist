@@ -1,0 +1,10 @@
+/* LinkReference annotation */
+.content-node .location_reference { 
+  background: rgba(245, 166, 35, 0.075);
+
+  color: #1B6685;
+  border-bottom: 1px solid rgba(245, 166, 35, 0.4);
+}
+.content-node .location_reference:hover, .content-node .location_reference.active {
+  background: rgba(245, 166, 35, 0.6);
+}
