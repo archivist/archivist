@@ -33,8 +33,15 @@ ArchivistBackend.Prototype = function() {
   };
 
   this.save = function(doc, path, cb) {
-    console.error('TODO: store in archivist service');
-    cb("Not implemented yet");
+    $.ajax({
+      type: "PUT",
+      url: "/api/documents/"+path,
+      contentType: "application/json",
+      data: JSON.stringify(doc.toJSON()),
+      success: function(result) {
+        cb(null);
+      }
+    });
   };
 
   // Read from Arraybuffer
