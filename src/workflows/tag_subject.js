@@ -28,14 +28,15 @@ TagSubject.Prototype = function() {
   this.handleStateUpdate = function(state, oldState, stateInfo) {
     var subjectsPanel = this.writerView.panelViews["subjects"];
 
+    console.log('handling state update...');
     // Show all available subjects and make them selectable
-    if (state.id === "tagsubject") {
-      subjectsPanel.updateView({
-        mode: "select",
-        subjectReferenceId: state.subjectReferenceId
-      });
-      return true;
-    }
+    // if (state.id === "tagsubject") {
+    //   subjectsPanel.updateView({
+    //     mode: "select",
+    //     subjectReferenceId: state.subjectReferenceId
+    //   });
+    //   return true;
+    // }
 
     // View only referenced subjects
     // if (oldState.id === "tagsubject") {
@@ -48,8 +49,10 @@ TagSubject.Prototype = function() {
     // TODO: this should actually not live here as it has nothing to do with the tag_subject workflow
     // IDEA: Allow panels to define state change behavior
     if (state.id === "main" && state.subjectReferenceId) {
+      var mode = state.mode || "show";
+
       subjectsPanel.updateView({
-        mode: "show",
+        mode: mode,
         subjectReferenceId: state.subjectReferenceId
       });
 
@@ -88,42 +91,26 @@ TagSubject.Prototype = function() {
     var node = container.getRootNodeFromPos(cursor.pos);
     var charPos = cursor.charPos;
 
-    this.writerCtrl.switchState({
-      id: "tagsubject",
-      contextId: "subjects",
-      containerId: containerId,
-      nodeId: node.id,
-      recover: recoverSha,
-      // Note: app states can only contain string variables
-      charPos: ""+charPos
-    }, {"no-scroll": true});
-  };
-
-  // nodeId or null if cancelled
-  this.endWorkflow = function(entityIds) {
+    // Create subject annotation
     var editorCtrl = this.writerCtrl.contentCtrl;
-    var doc = this.writerCtrl.document;
     var state = this.writerCtrl.state;
-    var annotationId;
 
-    if (state.subjectReferenceId) {
-      console.log('updating subjectref');
-      // Update use case
-      annotationId = state.subjectReferenceId;
-      // console.log('entityIds', entityIds);
-      doc.set([annotationId, "target"], entityIds);
-      // doc.set([videoNode.id, 'files'], videoFileIds);
-    } else {
-      // Create use case
-      annotationId = editorCtrl.addMultiAnnotation("subject_reference", {target: entityIds, container: "content"});
-    }
+    var annotationId = editorCtrl.addMultiAnnotation("subject_reference", {target: [], container: "content"});
 
     // Transition to highlight the subjectReference we just created
     this.writerCtrl.switchState({
       id: "main",
       contextId: "subjects",
-      subjectReferenceId: annotationId
+      subjectReferenceId: annotationId,
+      mode: "select"
     }, {updateRoute: true, replace: true});
+
+    this.endWorkflow();
+  };
+
+  // nodeId or null if cancelled
+  this.endWorkflow = function(entityIds) {
+    // No longer needed
   };
 };
 

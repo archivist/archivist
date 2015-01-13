@@ -25,6 +25,7 @@ SubjectsView.Prototype = function() {
 
   this.cancelEdit = function() {
     var state = this.writerCtrl.state;
+    // TODO: delete if there are no subjects assigned
     this.writerCtrl.switchState({
       id: "main",
       contextId: "subjects",
@@ -32,9 +33,8 @@ SubjectsView.Prototype = function() {
     }, {"no-scroll": true});
   };
 
-
   this.deleteSubjectReference = function(e) {
-    e.preventDefault();
+    if (e) e.preventDefault();
     var state = this.writerCtrl.state;
     var doc = this.writerCtrl.document;
     var subjectReferenceId = state.subjectReferenceId;
@@ -59,19 +59,29 @@ SubjectsView.Prototype = function() {
     var state = this.writerCtrl.state;
 
     this.writerCtrl.switchState({
-      id: "tagsubject",
+      id: "main",
       contextId: "subjects",
-      subjectReferenceId: state.subjectReferenceId
+      subjectReferenceId: state.subjectReferenceId,
+      mode: "select"
     }, {"no-scroll": true});
   };
 
-  this.confirmSelection = function() {
-    var subjectIds = $(this.treeView).jstree().get_selected();
+  this.confirmSelection = function(e) {
+    e.preventDefault();
 
-    if (subjectIds.length > 0) {
-      var tagSubjectWorkfow = this.writerCtrl.workflows["tag_subject"];
-      tagSubjectWorkfow.endWorkflow(subjectIds);      
-    }
+    var subjectIds = $(this.treeView).jstree().get_selected();
+    var state = this.writerCtrl.state;
+    var doc = this.writerCtrl.document;
+
+    var annotationId = state.subjectReferenceId;
+    doc.set([annotationId, "target"], subjectIds);
+
+    this.writerCtrl.switchState({
+      id: "main",
+      contextId: "subjects",
+      subjectReferenceId: annotationId,
+      mode: "show"
+    }, {updateRoute: true, replace: true});
   };
 
   this.updateView = function(viewState) {
@@ -132,11 +142,18 @@ SubjectsView.Prototype = function() {
   this.renderSelectMode = function() {
     var state = this.writerCtrl.state;
     var doc = this.writerCtrl.document;
+    var annotation = doc.get(state.subjectReferenceId);
+
     this.headerEl = $$('.header', {text: "Please choose relevant subjects"});
     this.el.appendChild(this.headerEl);
     this.actionsEl = $$('.actions');
     this.actionsEl.appendChild($$('a.action.confirm-selection', {href: "#", text: "Save"}));
-    this.actionsEl.appendChild($$('a.action.cancel-edit', {href: "#", text: "Cancel"}));
+
+    if (!annotation.target || annotation.target.length === 0) {
+      this.actionsEl.appendChild($$('a.action.delete-subject-reference', {href: "#", text: "Cancel"}));  
+    }
+
+    // this.actionsEl.appendChild($$('a.action.cancel-edit', {href: "#", text: "Cancel"}));
     this.headerEl.appendChild(this.actionsEl);
 
     // Used for add and edit workflow
@@ -163,11 +180,10 @@ SubjectsView.Prototype = function() {
       }
     });
 
-    if (state.subjectReferenceId) {
-
+    if (state.subjectReferenceId) { // always?
       // Set currently selected subjects
       _.delay(function() {
-        var annotation = doc.get(state.subjectReferenceId);
+        
         _.each(annotation.target, function(subjectId) {
           $('.jstree').jstree('select_node', subjectId);
         }, this);
