@@ -696,7 +696,7 @@ var DocumentRow = Backgrid.Row.extend({
   },
   onClick: function (e) {
     e.preventDefault()
-    Backbone.middle.trigger("goToExt", '/archivist.html?path=' + this.model.get('id')+'#state=composer.main;0.path='+this.model.get('id')+';1.contextId=toc');
+    Backbone.middle.trigger("goToExt", '/archivist.html#state=composer.main;0.path='+this.model.get('id')+';1.contextId=toc');
   }
 });
 exports.documentRow = DocumentRow

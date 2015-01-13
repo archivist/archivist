@@ -137,8 +137,7 @@
     "styles/nodes/definition_reference/definition_reference.css": "src/nodes/definition_reference/definition_reference.css",
     "styles/nodes/subject_reference/subject_reference.css": "src/nodes/subject_reference/subject_reference.css",
 
-    "styles/composer.css": "styles/composer.css",
-    "styles/archivist.css": "styles/archivist.css"
+    "styles/composer.css": "styles/composer.css"
   },
   "assets": {
     "lib": "lib",

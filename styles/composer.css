@@ -1,5 +1,9 @@
 /* Composer style overrides */
 
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
 
 /* Entity Panel
 /* -------------------------- */

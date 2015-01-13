@@ -109,9 +109,3 @@ app.route('/:var(subjects)*?')
   .get(function(req, res, next) {
     res.render('admin');
   })
-
-// EDITOR ROUTE
-app.route('/editor/*')
-	.get( function(req, res, next) {
-    res.send('Here comes the editor!');
-  })
