@@ -461,7 +461,13 @@ var ItemView = Backbone.View.extend({
   tagName: "li",
 
   events: {
-    'click': 'chooseItem'
+    'click': 'chooseItem',
+    'dragstart': '_onDragStart',
+    'dragenter': '_onDragEnter',
+    'dragleave': '_onDragLeave',
+    'dragover': '_onDragOver',
+    'drop': '_onDrop',
+    'dragend': '_onDragEnd'
   },
 
   initialize: function () {
@@ -477,7 +483,9 @@ var ItemView = Backbone.View.extend({
     var model = this.model;
     var content = document.createElement('span');
     content.textContent = model.get('name');
+    content.addEventListener('drop', function(e){console.log(e)}, false);
     this.$el.append(content);
+    this.$el.attr("draggable","true");
     this.delegateEvents();
     return this;
   },
@@ -491,7 +499,54 @@ var ItemView = Backbone.View.extend({
 
   remove: function () {
 
-  } 
+  },
+
+
+  _onDragStart: function(e) {
+    e.stopPropagation();
+
+    var id = this.model.get('id');
+
+    if (e.originalEvent) e = e.originalEvent
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("id", id);
+    e.target.style.opacity = '0.5';
+    return true;
+  },
+
+  _onDragEnd: function(e) {
+    if (e.originalEvent) e = e.originalEvent
+    e.target.style.opacity = '1';
+  },
+
+  _onDragEnter: function(e) {
+    e.stopPropagation();
+    if (e.originalEvent) e = e.originalEvent;
+    if (e.target.tagName == 'SPAN') {
+      var dropzone = document.createElement('span');
+      dropzone.setAttribute('id','dropzone');
+      e.target.nextSibling.insertBefore(dropzone, e.target.nextSibling.firstChild);
+    }
+  },
+
+  _onDragLeave: function(e) {
+    e.stopPropagation();
+    if (e.originalEvent) e = e.originalEvent;
+    if (e.target.tagName == 'SPAN') {
+      var dropzone = document.getElementById("dropzone");
+      e.target.nextSibling.removeChild(dropzone);
+    }
+  },
+
+  _onDragOver: function(e) {
+    e.stopPropagation();
+    if (e.originalEvent) e = e.originalEvent;
+    //console.log(e.pageY - $(e.target).offset().top, e.target.offsetHeight, this.model.get('id'));
+  },
+
+  _onDrop: function(e) {
+    console.log(e)
+  }
 });
 
 // SUBJECT PAGES
