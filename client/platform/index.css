@@ -35,6 +35,19 @@ body {
 	-ms-transition: all 0.3s ease-in-out;
 }
 
+/* Draggable elements */
+
+/* Prevent the text contents of draggable elements from being selectable. */
+[draggable] {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  /* Required to make elements draggable in old WebKit */
+  -khtml-user-drag: element;
+  -webkit-user-drag: element;
+}
+
 /* Dashboard */
 
 .document-cell {
@@ -210,8 +223,11 @@ body {
     -webkit-border-radius: 3px;
             border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
-    cursor: pointer;
+    cursor: move;
 }
+
+.list #dropzone {border: 1px dashed #ccc; background: #fafafa;}
+.list #dropzone.active {border: 1px dashed #000;}
 
 .subjects {
   height: 100%;
