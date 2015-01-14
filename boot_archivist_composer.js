@@ -13,11 +13,11 @@ var MetadataPanel = require("./src/panels/metadata");
 var ArchivistShell = require("./src/archivist_shell");
 
 var panels = [
-  new LocationsPanel(),
-  new PersonsPanel(),
-  new DefinitionsPanel(),
+  // new LocationsPanel(),
+  // new PersonsPanel(),
+  // new DefinitionsPanel(),
   new SubjectsPanel(),
-  new MetadataPanel()
+  // new MetadataPanel()
 ];
 
 // Tools
@@ -31,9 +31,9 @@ var PersonTool = require("./src/tools/person_tool");
 var DefinitionTool = require("./src/tools/definition_tool");
 var SubjectTool = require("./src/tools/subject_tool");
 
-tools.push(new LocationTool());
-tools.push(new PersonTool());
-tools.push(new DefinitionTool());
+// tools.push(new LocationTool());
+// tools.push(new PersonTool());
+// tools.push(new DefinitionTool());
 tools.push(new SubjectTool());
 
 // Workflows
