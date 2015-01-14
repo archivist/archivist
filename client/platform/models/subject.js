@@ -18,6 +18,17 @@ var Subjects = Utility.collection.extend({
     pageSize: 20,
     sortKey: "started",
     order: 1,
+  },
+  getChanged: function () {
+    return this.models.filter(function(m) {
+      return m.hasChanged()
+    });
+  },
+  saveChanged: function() {
+    var changed = this.getChanged();
+    _.each(changed, function(m) {
+      m.save();
+    });
   }
 })
 exports.subjects = Subjects

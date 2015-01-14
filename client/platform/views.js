@@ -10,6 +10,7 @@ var Backbone = require('backbone'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
+    ObjectId = require('./local_modules/objectid/Objectid.js'),
 		Notify = require('./local_modules/notify/notify.js')
 
 var MainGrid = Backbone.Layout.extend({
@@ -396,8 +397,6 @@ var ListView = Backbone.View.extend({
 
   addItem: function(item) {
     // model creation
-    // make changes without set method to avoid change event call
-    item.attributes.id = item.cid;
     this.itemViews[item.cid] = new ItemView({model: item}).render();
     this.updateHiercharchy();
   },
@@ -513,7 +512,7 @@ var ItemView = Backbone.View.extend({
   _onDragStart: function(e) {
     e.stopPropagation();
 
-    var id = this.model.get('id');
+    var id = this.model.get('_id');
 
     if (e.originalEvent) e = e.originalEvent
     e.dataTransfer.effectAllowed = "move";
@@ -624,10 +623,11 @@ var SubjectsView = Backbone.Layout.extend({
     // var modal = new Backbone.BootstrapModal({ content: termForm, animate: true }).open();
   },
   _save: function() {
-  
+    this.collection.saveChanged();
   },
   _add: function() {
-    this.collection.add({ name: "Untitled" });
+    var id = new ObjectId().toString();
+    this.collection.add({ _id: id, name: "Untitled" });
   },
   close: function() {
     $('#' + this.icon).removeClass('active');

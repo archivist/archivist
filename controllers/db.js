@@ -138,7 +138,8 @@ db.getSubject = function(id, cb) {
  */
 
 db.updateSubject = function(id, data, cb) {
-	Subject.findByIdAndUpdate(id, { $set: data }, function (err, subject) {
+	delete data.__v;
+	Subject.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, subject) {
 		cb(err, subject);
 	});
 }	
