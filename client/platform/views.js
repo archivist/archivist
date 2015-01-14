@@ -365,6 +365,10 @@ var ListView = Backbone.View.extend({
       this.removeItem(item);
     })
 
+    this.listenTo(listItems, "changeParent", function (itemId, parentId) {
+      this.changeParent(itemId, parentId);
+    })
+
     this.on("parent:choose", function(child) {
       this.stopListening(this.listItems, "list:getitem");
       listItems.once("list:getitem", function(parent) {
@@ -407,6 +411,11 @@ var ListView = Backbone.View.extend({
   removeItem: function(item) {
     this.itemViews[item.cid].remove()
     this.updateHiercharchy();
+  },
+
+  changeParent: function(itemId, parentId) {
+    var model = this.listItems.get(itemId);
+    model.set('parent', parentId);
   },
 
   updateHiercharchy: function() {
@@ -483,7 +492,6 @@ var ItemView = Backbone.View.extend({
     var model = this.model;
     var content = document.createElement('span');
     content.textContent = model.get('name');
-    content.addEventListener('drop', function(e){console.log(e)}, false);
     this.$el.append(content);
     this.$el.attr("draggable","true");
     this.delegateEvents();
@@ -509,23 +517,23 @@ var ItemView = Backbone.View.extend({
 
     if (e.originalEvent) e = e.originalEvent
     e.dataTransfer.effectAllowed = "move";
-    e.dataTransfer.setData("id", id);
+    e.dataTransfer.setData("text/plain", id);
     e.target.style.opacity = '0.5';
+    //e.target.style.display = 'none';
     return true;
   },
 
   _onDragEnd: function(e) {
     if (e.originalEvent) e = e.originalEvent
     e.target.style.opacity = '1';
+    //e.target.style.display = 'block';
   },
 
   _onDragEnter: function(e) {
     e.stopPropagation();
     if (e.originalEvent) e = e.originalEvent;
     if (e.target.tagName == 'SPAN') {
-      var dropzone = document.createElement('span');
-      dropzone.setAttribute('id','dropzone');
-      e.target.nextSibling.insertBefore(dropzone, e.target.nextSibling.firstChild);
+      this._insertDragPlaceholder(e.target);
     }
   },
 
@@ -533,20 +541,36 @@ var ItemView = Backbone.View.extend({
     e.stopPropagation();
     if (e.originalEvent) e = e.originalEvent;
     if (e.target.tagName == 'SPAN') {
-      var dropzone = document.getElementById("dropzone");
-      e.target.nextSibling.removeChild(dropzone);
+      this._removeDragPlaceholder();
     }
   },
 
   _onDragOver: function(e) {
-    e.stopPropagation();
-    if (e.originalEvent) e = e.originalEvent;
-    //console.log(e.pageY - $(e.target).offset().top, e.target.offsetHeight, this.model.get('id'));
+    e.preventDefault();
   },
 
   _onDrop: function(e) {
-    console.log(e)
+    e.stopPropagation();
+    if (e.originalEvent) e = e.originalEvent;
+
+    var id = e.dataTransfer.getData("text/plain");
+    if(id != this.model.get('id')) this.model.trigger('changeParent', id, this.model.get('id'));
+
+    return false;
+  },
+
+  _insertDragPlaceholder: function(target) {
+    this._removeDragPlaceholder();
+    var dropzone = document.createElement('span');
+    dropzone.setAttribute('id','dropzone');
+    target.nextSibling.insertBefore(dropzone, target.nextSibling.firstChild);
+  },
+
+  _removeDragPlaceholder: function() {
+    var dropzone = document.getElementById("dropzone");
+    if (dropzone) dropzone.parentNode.removeChild(dropzone);
   }
+
 });
 
 // SUBJECT PAGES
