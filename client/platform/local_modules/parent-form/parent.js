@@ -2,15 +2,20 @@ var Backbone = require('backbone');
 
 Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
-    tagName: 'button',
+    tagName: 'div',
 
     className: 'parent',
 
     events: {
-        'click': function(e) {
+        'click .choose-parent': function(e) {
             e.preventDefault();
             this.trigger('click', this);
-            this._onClick();
+            this._onClickChoose();
+        },
+        'click .root-parent': function(e) {
+            e.preventDefault();
+            this.trigger('click', this);
+            this._onClickRoot();
         },
         'focus': function() {
             this.trigger('focus', this);
@@ -25,13 +30,25 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
     },
 
     render: function() {
-        this.el.innerHTML = 'Choose new parent';
+        var parentChooser = document.createElement('button');
+        parentChooser.className = 'choose-parent';
+        parentChooser.innerHTML = 'Choose new parent';
+        this.el.appendChild(parentChooser);
+        
+        var rootChooser = document.createElement('button');
+        rootChooser.className = 'root-parent';
+        rootChooser.innerHTML = 'Make root';
+        this.el.appendChild(rootChooser);
 
         return this;
     },
 
-    _onClick: function() {
+    _onClickChoose: function() {
       this.trigger('edit', this);
+    },
+
+    _onClickRoot: function() {
+      this.model.set('parent','');
     },
 
     focus: function() {

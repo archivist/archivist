@@ -519,6 +519,7 @@ var ItemView = Backbone.View.extend({
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", id);
     e.target.style.opacity = '0.5';
+    e.target.className = 'dragging';
     //e.target.style.display = 'none';
     return true;
   },
@@ -526,13 +527,13 @@ var ItemView = Backbone.View.extend({
   _onDragEnd: function(e) {
     if (e.originalEvent) e = e.originalEvent
     e.target.style.opacity = '1';
-    //e.target.style.display = 'block';
+    e.target.className = '';
   },
 
   _onDragEnter: function(e) {
     e.stopPropagation();
     if (e.originalEvent) e = e.originalEvent;
-    if (e.target.tagName == 'SPAN') {
+    if (e.target.tagName == 'SPAN' && !$(e.target).parents('.dragging').length) {
       this._insertDragPlaceholder(e.target);
     }
   },
@@ -554,7 +555,7 @@ var ItemView = Backbone.View.extend({
     if (e.originalEvent) e = e.originalEvent;
 
     var id = e.dataTransfer.getData("text/plain");
-    if(id != this.model.get('id')) this.model.trigger('changeParent', id, this.model.get('id'));
+    if(id != this.model.get('id') && !$(e.target).parents('.dragging').length) this.model.trigger('changeParent', id, this.model.get('id'));
 
     return false;
   },
