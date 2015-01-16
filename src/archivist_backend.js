@@ -2,9 +2,11 @@
 
 var ArchivistDocumentFactory = require("./archivist_document_factory");
 var SAMPLE = require('../data/sample');
+var Metadata = require('./metadata');
 
 var ArchivistBackend = function() {
   this.documentFactory = new ArchivistDocumentFactory();
+  this.metadata = Metadata.instance();
 };
 
 ArchivistBackend.Prototype = function() {
@@ -19,17 +21,23 @@ ArchivistBackend.Prototype = function() {
   this.open =  function(path, cb) {
     var self = this;
     var doc;
-    if (path === "SAMPLE") {
-      doc = this.documentFactory.createFromJSON(SAMPLE);
-      cb(null, doc);
-    } else {
-      // console.error('TODO: load from archivist service');
-      // cb("Not implemented yet");
+
+    // if (path === "SAMPLE") {
+    //   doc = this.documentFactory.createFromJSON(SAMPLE);
+    //   cb(null, doc);
+    // } else {
+    // console.error('TODO: load from archivist service');
+    // cb("Not implemented yet");
+
+    // First load metadata
+    this.metadata.load(function(err) {
       $.getJSON("/api/documents/"+path, function(data) {
         doc = self.documentFactory.createFromJSON(data);
+        doc.metadata = self.metadata;
         cb(null, doc);
       });
-    }
+    });
+    // }
   };
 
   this.save = function(doc, path, cb) {

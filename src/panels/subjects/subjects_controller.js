@@ -2,9 +2,8 @@
 var PanelController = require("substance-composer").PanelController;
 var SubjectsView = require("./subjects_view");
 var _ = require("underscore");
-var MetadataService = require('../../metadata_service');
 
-  
+
 // A simple tree implementation
 // -------------
 
@@ -68,9 +67,10 @@ Tree.prototype = new Tree.Prototype();
 var SubjectsController = function(doc, writerCtrl) {
   PanelController.call(this, doc, writerCtrl);
 
-  this.metadataService = MetadataService.instance();
+  // this.metadataService = MetadataService.instance();
+  // var subjects = this.metadataService.getSubjects();
+  var subjects = doc.metadata.getSubjects();
 
-  var subjects = this.metadataService.getSubjects();
   this.tree = new Tree(subjects);
 };
 
@@ -91,10 +91,13 @@ SubjectsController.Prototype = function() {
     var availableSubjects = this.getSubjects();
 
     var subjects = []; // The result
+
     _.each(subjectReferences, function(subjectRef) {
-      subjects = subjects.concat(_.map(subjectRef.target, function(subjectId) {
-        return availableSubjects[subjectId];
-      }, this));
+      _.each(subjectRef.target, function(subjectId) {
+        if (availableSubjects[subjectId]) {
+          subjects.push(availableSubjects[subjectId]);
+        }
+      }, this);
     }, this);
 
     return subjects;
@@ -108,13 +111,19 @@ SubjectsController.Prototype = function() {
     // just to make sure
     if (!annotation) return [];
     var availableSubjects = this.getSubjects();
-    return _.map(annotation.target, function(subjectId) {
-      return availableSubjects[subjectId];
+
+    var referencedSubjects = [];
+    _.each(annotation.target, function(subjectId) {
+      if (availableSubjects[subjectId]) {
+        referencedSubjects.push(availableSubjects[subjectId]);
+      }
     });
+    return referencedSubjects;
   };
 
   this.getSubjects = function() {
-    var subjects = this.metadataService.getSubjects();
+    var doc = this.document;
+    var subjects = doc.metadata.getSubjects();
     return subjects;
   };
 
@@ -152,7 +161,6 @@ SubjectsController.Prototype = function() {
       res.push(node.name);
       return res;
     }
-
     return getParent(subjectId);
   };
 };
