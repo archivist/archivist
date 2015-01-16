@@ -391,24 +391,24 @@ var ListView = Backbone.View.extend({
   prepareViews: function() {
     this.itemViews = {};
     this.listItems.each(function(item) {
-      this.itemViews[item.cid] = new ItemView({model: item}).render();
+      this.itemViews[item.id] = new ItemView({model: item}).render();
     }, this);
   },
 
   addItem: function(item) {
     // model creation
-    this.itemViews[item.cid] = new ItemView({model: item}).render();
+    this.itemViews[item.id] = new ItemView({model: item}).render();
     this.updateHiercharchy();
   },
  
   // doesnt affect hierarchy
   updateItem: function(item) {
-    this.itemViews[item.cid].render() // re-render
+    this.itemViews[item.id].render() // re-render
     this.updateHiercharchy();
   },
 
   removeItem: function(item) {
-    this.itemViews[item.cid].remove()
+    this.itemViews[item.id].remove()
     this.updateHiercharchy();
   },
 
@@ -438,7 +438,8 @@ var ListView = Backbone.View.extend({
       if (!items) return listEl; // exit condition      
       
       _.each(items, function(item) {
-        var listItemEl = self.itemViews[item.model.cid].render().el;
+        var isParent = map.hasOwnProperty(item.model.id);
+        var listItemEl = self.itemViews[item.model.id].render(isParent).el;
 
         var childList = renderChildren(item.model.get('id'));
         listItemEl.appendChild(childList);
@@ -470,6 +471,8 @@ var ItemView = Backbone.View.extend({
 
   events: {
     'click': 'chooseItem',
+    'click .collapse': '_collapseItem',
+    'click .expand': '_expandItem',
     'dragstart': '_onDragStart',
     'dragenter': '_onDragEnter',
     'dragleave': '_onDragLeave',
@@ -486,11 +489,23 @@ var ItemView = Backbone.View.extend({
     }, this);
   },
 
-  render: function () {
+  render: function (parent) {
     this.$el.empty();
-    var model = this.model;
+
+    var collapseBtn = document.createElement('button');
+    collapseBtn.classList.add("collapse");
+    collapseBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
+    if(!parent) collapseBtn.style.display = 'none';
+    this.$el.append(collapseBtn);
+
+    var expandBtn = document.createElement('button');
+    expandBtn.classList.add("expand");
+    expandBtn.innerHTML = '<i class="fa fa-plus-square-o"></i>';
+    expandBtn.style.display = 'none';
+    this.$el.append(expandBtn);
+
     var content = document.createElement('span');
-    content.textContent = model.get('name');
+    content.textContent = this.model.get('name');
     this.$el.append(content);
     this.$el.attr("draggable","true");
     this.delegateEvents();
@@ -506,6 +521,26 @@ var ItemView = Backbone.View.extend({
 
   remove: function () {
 
+  },
+
+
+  _collapseItem: function(e) {
+    var item = $(e.currentTarget).parent();
+    var lists = item.children('ol');
+    if (lists.length) {
+        item.addClass('collapsed');
+        item.children('.collapse').hide();
+        item.children('.expand').show();
+        item.children('ol').hide();
+    }
+  },
+
+  _expandItem: function(e) {
+    var item = $(e.currentTarget).parent();
+    item.removeClass('collapsed');
+    item.children('.expand').hide();
+    item.children('.collapse').show();
+    item.children('ol').show();
   },
 
 
@@ -552,9 +587,9 @@ var ItemView = Backbone.View.extend({
   _onDrop: function(e) {
     e.stopPropagation();
     if (e.originalEvent) e = e.originalEvent;
-
+    debugger;
     var id = e.dataTransfer.getData("text/plain");
-    if(id != this.model.get('id') && !$(e.target).parents('.dragging').length) this.model.trigger('changeParent', id, this.model.get('id'));
+    if(id != this.model.id && !$(e.target).parents('.dragging').length) this.model.trigger('changeParent', id, this.model.id);
 
     return false;
   },
@@ -613,6 +648,7 @@ var SubjectsView = Backbone.Layout.extend({
       this.form.trigger("parent:choosed", item);
     }, this);
     sidebar.html(this.form.el);
+    this.form.$el.find('input')[0].focus();
     //this.insertView('.sidebar', this.form).render();
     //this.$el.html(this.form.el);
     return this;

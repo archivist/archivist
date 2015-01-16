@@ -4,7 +4,7 @@ var Utility = require('./util.js'),
 var Subject = Utility.model.extend({
   urlRoot: "/api/subjects",
   schema: {
-    name: { type: 'Text', validators: ['required'], title: 'Title' },
+    name: { type: 'Text', validators: ['required'], title: 'Title', editorAttrs: {autofocus:'autofocus'} },
     description: { type: 'TextArea', title: 'Description' },
     parent: { type: 'ParentChooser' }
   }
@@ -15,9 +15,9 @@ var Subjects = Utility.collection.extend({
   model: Subject,
   url: "/api/subjects",
   state: {
-    pageSize: 20,
-    sortKey: "started",
-    order: 1,
+    pageSize: null,
+    sortKey: "name",
+    order: -1,
   },
   getChanged: function () {
     return this.models.filter(function(m) {

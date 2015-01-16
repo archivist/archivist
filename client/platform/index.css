@@ -11,10 +11,6 @@ body {
   background: #F8F8F8;
 }
  
-body {
-  overflow: auto;
-}
- 
 /* Clearfix solution */
  
 .container:after {
@@ -226,6 +222,14 @@ body {
     cursor: move;
 }
 
+.list button {
+  float: left;
+  background: none;
+  border: 0px;
+  margin-left: 8px;
+  padding: 6px;
+}
+
 .list #dropzone {border: 1px dashed #ccc; background: #fafafa;}
 .list #dropzone.active {border: 1px dashed #000;}
 
@@ -245,6 +249,8 @@ body {
   padding: 10px;
   height: 100%;
   border-right: 1px solid #eee;
+  overflow: scroll;
+  padding-bottom: 120px;
 }
 
 .subjects .sidebar {
