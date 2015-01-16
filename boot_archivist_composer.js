@@ -83,28 +83,28 @@ $(function() {
     el: containerEl
   });
 
-  window.onbeforeunload = function() {
-    if (composer.controller.isDocumentDirty()) {
-      var options = {
-        type: 'info',
-        title: 'Unsaved Changes',
-        message: 'You have unsaved changes.',
-        buttons: ['Save', 'Discard', 'Cancel'],
-        detail: 'You can Save or Discard the changes. If you press Cancel the document will not be closed.'
-      };
-      var choice = shell.showModalDialog(options);
-      switch (choice) {
-      case 0:
-        composer.save();
-        // Note: we have to intercept the closing
-        // as otherwise the file window gets closed before the file dialog
-        return false;
-      case 1:
-        return true;
-      case 2:
-        return false;
-      }
-    }
-    return true;
-  };
+  // window.onbeforeunload = function() {
+  //   if (composer.controller.isDocumentDirty()) {
+  //     var options = {
+  //       type: 'info',
+  //       title: 'Unsaved Changes',
+  //       message: 'You have unsaved changes.',
+  //       buttons: ['Save', 'Discard', 'Cancel'],
+  //       detail: 'You can Save or Discard the changes. If you press Cancel the document will not be closed.'
+  //     };
+  //     var choice = shell.showModalDialog(options);
+  //     switch (choice) {
+  //     case 0:
+  //       composer.save();
+  //       // Note: we have to intercept the closing
+  //       // as otherwise the file window gets closed before the file dialog
+  //       return false;
+  //     case 1:
+  //       return true;
+  //     case 2:
+  //       return false;
+  //     }
+  //   }
+  //   return true;
+  // };
 });
