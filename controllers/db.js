@@ -6,6 +6,7 @@ var Document = require('../models/document.js')
 
 var db = exports;
 
+
 /* The Document REST api */
 
 /** 
@@ -19,10 +20,13 @@ db.createDocument = function(document, cb) {
 	if (document.hasOwnProperty('schema')) {
 		document._schema = document.schema;
 		delete document.schema;
+		document._id = document.id;
+		delete document.id;
 	}
 
-	new Document(document).save(function(err) {
-		cb(err);
+	var newDoc = new Document(document);
+	newDoc.save(function(err) {
+		cb(err, newDoc);
 	});
 }
 
