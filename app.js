@@ -8,7 +8,9 @@ var mongoose = require('mongoose')
 	, app = express()
 	, path = require('path')
 	, fs = require('fs')
-	, _ = require('underscore');
+	, _ = require('underscore')
+	, db = require('./controllers/db.js')
+	, DocumentFactory = require('./models/document_factory.js');
 
 // Substance stuff
 // --------------------
@@ -104,6 +106,16 @@ app.route('/')
 	.get( function(req, res, next) {
     res.render('admin');
   })
+
+app.route('/editor/new')
+	.get( function(req, res, next) {
+		var newDoc = DocumentFactory.createEmptyDoc();
+	  db.createDocument(newDoc, function(err, doc) {
+	    if (err) return next(err);
+	    res.json({id: doc.id});
+	    res.redirect('/archivist.html#state=composer.main;0.path='+doc.id+';1.contextId=toc');
+	  });
+  });
 
 app.route('/:var(subjects)*?')
   .get(function(req, res, next) {
