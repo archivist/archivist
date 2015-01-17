@@ -36,17 +36,17 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
     render: function() {
         var parentChooser = document.createElement('button');
-        parentChooser.className = 'choose-parent';
+        parentChooser.className = 'choose-parent btn';
         parentChooser.innerHTML = 'Choose new parent';
         this.el.appendChild(parentChooser);
         
         var rootChooser = document.createElement('button');
-        rootChooser.className = 'root-parent';
+        rootChooser.className = 'root-parent btn';
         rootChooser.innerHTML = 'Make root';
         this.el.appendChild(rootChooser);
 
         var addChild = document.createElement('button');
-        addChild.className = 'add-child';
+        addChild.className = 'add-child btn';
         addChild.innerHTML = 'Add child';
         this.el.appendChild(addChild);
 

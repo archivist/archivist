@@ -21,7 +21,7 @@ var Subjects = Utility.collection.extend({
   },
   getChanged: function () {
     return this.models.filter(function(m) {
-      return m.hasChanged()
+      return (m.hasChanged() || !m.get('id'));
     });
   },
   saveChanged: function() {

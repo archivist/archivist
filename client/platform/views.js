@@ -431,6 +431,8 @@ var ListView = Backbone.View.extend({
       }
     });
 
+    //debugger;
+
     function renderChildren(parent) {
       var listEl = document.createElement('ol');
  
@@ -441,11 +443,11 @@ var ListView = Backbone.View.extend({
         var isParent = map.hasOwnProperty(item.model.id);
         var listItemEl = self.itemViews[item.model.id].render(isParent).el;
 
-        var childList = renderChildren(item.model.get('id'));
+        var childList = renderChildren(item.model.id);
         listItemEl.appendChild(childList);
         listEl.appendChild(listItemEl);
       });
-      
+
       return listEl;
     }
     var listEl = renderChildren("root");
@@ -567,7 +569,7 @@ var ItemView = Backbone.View.extend({
     e.dataTransfer.setData("text/plain", id);
     e.dataTransfer.setDragImage(e.target.parentNode,0,0);
     e.target.style.opacity = '0.5';
-    e.target.className = 'dragging';
+    e.target.parentNode.className = 'dragging';
     //e.target.style.display = 'none';
     return true;
   },
@@ -575,7 +577,7 @@ var ItemView = Backbone.View.extend({
   _onDragEnd: function(e) {
     if (e.originalEvent) e = e.originalEvent
     e.target.style.opacity = '1';
-    e.target.className = '';
+    e.target.parentNode.className = '';
   },
 
   _onDragEnter: function(e) {
@@ -628,6 +630,11 @@ var SubjectsView = Backbone.Layout.extend({
   className: 'subjects',
   template: '#subjectsLayout',
 
+  events: {
+    "click .import": "_runImport",
+    "click .cancel": "_cancelImport"
+  },
+
   initialize: function() {
     var self = this;
     this.collection.on('list:edit', function(model) {
@@ -674,6 +681,31 @@ var SubjectsView = Backbone.Layout.extend({
 
     // var modal = new Backbone.BootstrapModal({ content: termForm, animate: true }).open();
   },
+  _runImport: function() {
+    var self = this,
+        data = $('.import-data').val(),
+        lines = data.split('\n'),
+        map = [];
+
+    _.each(lines, function(line, i) {
+      var indentation = 0;
+      while (line[indentation] == '\t') {
+          indentation++;
+      }
+      if(!map[indentation]) map[indentation] = [];
+      var name = line.split('\t').join(''),
+          id = new ObjectId().toString(),
+          parent = indentation > 0 ? map[indentation - 1][map[indentation - 1].length - 1] : '';
+
+      map[indentation].push(id);
+
+      self.collection.add({ _id: id, name: name, parent: parent });
+    });
+    self.$el.find('.sidebar').empty();
+  },
+  _cancelImport: function() {
+    this.$el.find('.sidebar').empty();
+  },
   _save: function() {
     this.collection.saveChanged();
   },
@@ -681,6 +713,15 @@ var SubjectsView = Backbone.Layout.extend({
     var id = new ObjectId().toString(),
         parent = parentId ? parentId : '';
     this.collection.add({ _id: id, name: "Untitled", parent: parent });
+  },
+  _import: function() {
+    $('li.active').removeClass('active');
+    var sidebar = this.$el.find('.sidebar');
+    sidebar.empty();
+
+    var dialog = document.createElement('div');
+    dialog.innerHTML = '<textarea class="import-data" style="width: 100%;"></textarea><button class="import btn">Import</button><button class="cancel btn">Cancel</button>';
+    sidebar.append(dialog);
   },
   close: function() {
     $('#' + this.icon).removeClass('active');
@@ -697,6 +738,11 @@ var SubjectsView = Backbone.Layout.extend({
       name: "Add new subject",
       icon: "plus",
       fn: "_add"
+    },
+    {
+      name: "import",
+      icon: "file-text-o",
+      fn: "_import"
     }
   ]
 })
