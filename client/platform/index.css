@@ -214,7 +214,7 @@ body {
 .list ol { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
 .list ol ol { padding-left: 30px; }
 .list li { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
-.list li span { display: block; height: 30px; margin: 5px; padding: 5px 10px; color: #333; text-decoration: none; border: 1px solid #ccc;
+.list li span { display: block; margin: 5px; padding: 5px 10px; color: #333; text-decoration: none; border: 1px solid #ccc;
     background: #fafafa;
     background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
     background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
