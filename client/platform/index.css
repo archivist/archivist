@@ -222,18 +222,26 @@ body {
     -webkit-border-radius: 3px;
             border-radius: 3px;
     box-sizing: border-box; -moz-box-sizing: border-box;
-    cursor: move;
+    cursor: pointer;
+}
+
+.list li.active > span {
+  box-shadow: 0 0 8px 2px #ccc;
 }
 
 .list button {
   float: left;
   background: none;
   border: 0px;
-  margin-left: 8px;
-  padding: 6px;
+  padding: 6px 10px 6px 1px;
+}
+.list button:first-child {
+  margin-left: 6px;
+  padding-left: 10px;
+  cursor: move;
 }
 
-.list #dropzone {border: 1px dashed #ccc; background: #fafafa;}
+.list #dropzone {border: 1px dashed #ccc; background: #fafafa; height: 30px;}
 .list #dropzone.active {border: 1px dashed #000;}
 
 .subjects {

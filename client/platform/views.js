@@ -473,6 +473,7 @@ var ItemView = Backbone.View.extend({
     'click': 'chooseItem',
     'click .collapse': '_collapseItem',
     'click .expand': '_expandItem',
+    'click .drag-handle': '_dragHandleClick',
     'dragstart': '_onDragStart',
     'dragenter': '_onDragEnter',
     'dragleave': '_onDragLeave',
@@ -492,6 +493,12 @@ var ItemView = Backbone.View.extend({
   render: function (parent) {
     this.$el.empty();
 
+    var dragHandle = document.createElement('button');
+    dragHandle.classList.add("drag-handle");
+    dragHandle.innerHTML = '<i class="fa fa-bars"></i>';
+    dragHandle.setAttribute("draggable", true);
+    this.$el.append(dragHandle);
+
     var collapseBtn = document.createElement('button');
     collapseBtn.classList.add("collapse");
     collapseBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
@@ -507,13 +514,14 @@ var ItemView = Backbone.View.extend({
     var content = document.createElement('span');
     content.textContent = this.model.get('name');
     this.$el.append(content);
-    this.$el.attr("draggable","true");
     this.delegateEvents();
     return this;
   },
 
   chooseItem: function(e) {
     var model = this.model;
+    $('li.active').removeClass('active');
+    this.$el.addClass('active');
     model.trigger("list:getitem", model);
     e.preventDefault();
     e.stopPropagation();
@@ -523,8 +531,12 @@ var ItemView = Backbone.View.extend({
 
   },
 
+  _dragHandleClick: function(e) {
+    e.stopPropagation();
+  },
 
   _collapseItem: function(e) {
+    e.stopPropagation();
     var item = $(e.currentTarget).parent();
     var lists = item.children('ol');
     if (lists.length) {
@@ -536,6 +548,7 @@ var ItemView = Backbone.View.extend({
   },
 
   _expandItem: function(e) {
+    e.stopPropagation();
     var item = $(e.currentTarget).parent();
     item.removeClass('collapsed');
     item.children('.expand').hide();
@@ -552,6 +565,7 @@ var ItemView = Backbone.View.extend({
     if (e.originalEvent) e = e.originalEvent
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.setDragImage(e.target.parentNode,0,0);
     e.target.style.opacity = '0.5';
     e.target.className = 'dragging';
     //e.target.style.display = 'none';
