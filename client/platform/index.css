@@ -69,7 +69,7 @@ body {
   font-size: 20px;
   line-height: 35px;
   padding: 10px 0px;
-  margin-right: 100px;
+  margin: 0 210px 0 10px;
 }
  
  
@@ -86,13 +86,16 @@ body {
   font-style: italic;
   font-size: 14px;
   color: #999;
+  position: absolute;
+  right: 20px;
+  top: 38px;
 }
  
 .document-cell .delete-document {
   display: block;
   position: absolute;
   right: 20px;
-  top: 20px;
+  top: 12px;
   color: #D50A46;
 }
 

@@ -811,11 +811,20 @@ exports.clickableRow = ClickableRow
 
 var DocumentRow = Backgrid.Row.extend({
   events: {
-    "click": "onClick"
+    "click": "onClick",
+    "click .delete-document": "onRemove"
   },
   onClick: function (e) {
-    e.preventDefault()
+    e.preventDefault();
     Backbone.middle.trigger("goToExt", '/archivist.html#state=composer.main;0.path='+this.model.get('id')+';1.contextId=toc');
+  },
+  onRemove: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var confirm = window.confirm("Are you sure this is where you want to be?\nThis action can't be undone. Think twice!");
+    if(confirm) {
+      this.model.destroy();
+    }
   }
 });
 exports.documentRow = DocumentRow
@@ -834,10 +843,7 @@ var DocumentCell = Backgrid.ObjectCell = Backgrid.Cell.extend({
 
       var markup = '<div class="title">' + metadata.title + '</div> \
                     <span class="delete-document">Delete</span> \
-                    <div class="container"> \
-                    <div class="authors">by ' + metadata.authors.join(', ') + '</div> \
-                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + '</div> \
-                    </div>';
+                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + '</div>';
 
       this.$el.append(markup)
       this.delegateEvents()
