@@ -17,6 +17,11 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
             this.trigger('click', this);
             this._onClickRoot();
         },
+        'click .add-child': function(e) {
+            e.preventDefault();
+            this.trigger('click', this);
+            this._onAddChild();
+        },
         'focus': function() {
             this.trigger('focus', this);
         },
@@ -40,6 +45,11 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
         rootChooser.innerHTML = 'Make root';
         this.el.appendChild(rootChooser);
 
+        var addChild = document.createElement('button');
+        addChild.className = 'add-child';
+        addChild.innerHTML = 'Add child';
+        this.el.appendChild(addChild);
+
         return this;
     },
 
@@ -49,6 +59,10 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
     _onClickRoot: function() {
       this.model.set('parent','');
+    },
+
+    _onAddChild: function() {
+      this.trigger('add', this);
     },
 
     focus: function() {

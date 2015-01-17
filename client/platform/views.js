@@ -587,7 +587,6 @@ var ItemView = Backbone.View.extend({
   _onDrop: function(e) {
     e.stopPropagation();
     if (e.originalEvent) e = e.originalEvent;
-    debugger;
     var id = e.dataTransfer.getData("text/plain");
     if(id != this.model.id && !$(e.target).parents('.dragging').length) this.model.trigger('changeParent', id, this.model.id);
 
@@ -644,6 +643,9 @@ var SubjectsView = Backbone.Layout.extend({
     this.form.on('parent:edit', function(item) {
       self.list.trigger('parent:choose', item.model);
     })
+    this.form.on('parent:add', function(item) {
+      self._add(item.model.id);
+    })
     this.collection.once('list:itemparent', function(item){
       this.form.trigger("parent:choosed", item);
     }, this);
@@ -661,9 +663,10 @@ var SubjectsView = Backbone.Layout.extend({
   _save: function() {
     this.collection.saveChanged();
   },
-  _add: function() {
-    var id = new ObjectId().toString();
-    this.collection.add({ _id: id, name: "Untitled" });
+  _add: function(parentId) {
+    var id = new ObjectId().toString(),
+        parent = parentId ? parentId : '';
+    this.collection.add({ _id: id, name: "Untitled", parent: parent });
   },
   close: function() {
     $('#' + this.icon).removeClass('active');
