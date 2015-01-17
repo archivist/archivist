@@ -112,7 +112,6 @@ app.route('/editor/new')
 		var newDoc = DocumentFactory.createEmptyDoc();
 	  db.createDocument(newDoc, function(err, doc) {
 	    if (err) return next(err);
-	    res.json({id: doc.id});
 	    res.redirect('/archivist.html#state=composer.main;0.path='+doc.id+';1.contextId=toc');
 	  });
   });

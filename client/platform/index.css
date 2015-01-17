@@ -46,6 +46,12 @@ body {
 
 /* Dashboard */
 
+.dashboard {
+  overflow: auto;
+  height: 100%;
+  padding-bottom: 50px;
+}
+
 .document-cell {
   position: relative;
   padding: 20px;
