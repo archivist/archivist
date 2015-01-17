@@ -25,6 +25,7 @@ function createEmptyDoc() {
 	      "title": "Untitled",
 	      "authors": [],
 	      "abstract": "",
+	      "abstract_en": "",
 	      "created_at": new Date().toJSON(),
 	      "updated_at": new Date().toJSON(),
 	      "published_on": new Date().toJSON()
