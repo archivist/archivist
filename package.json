@@ -9,7 +9,12 @@
     "underscore": "1.7.0",
     "method-override": "*",
     "mongoose": "*",
-    "morgan": "*"
+    "morgan": "*",
+    "connect-flash": "^0.1.1",
+    "connect-mongostore": "^0.1.4",
+    "express-session": "*",
+    "passport": "*",
+    "passport-google-oauth": "*"
   },
   "url": "http://github.com/substance/archivist/",
   "devDependencies": {

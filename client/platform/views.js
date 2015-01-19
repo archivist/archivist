@@ -375,7 +375,7 @@ var ListView = Backbone.View.extend({
       listItems.once("list:getitem", function(parent) {
         child.set('parent', parent.get('id'));
         this.registerItemListner();
-        this.updateHiercharchy();
+        this.updateHierarchy();
       }, this);
     })
 
@@ -398,18 +398,18 @@ var ListView = Backbone.View.extend({
   addItem: function(item) {
     // model creation
     this.itemViews[item.id] = new ItemView({model: item}).render();
-    this.updateHiercharchy();
+    this.updateHierarchy();
   },
  
   // doesnt affect hierarchy
   updateItem: function(item) {
     this.itemViews[item.id].render() // re-render
-    this.updateHiercharchy();
+    //this.updateHierarchy();
   },
 
   removeItem: function(item) {
     this.itemViews[item.id].remove()
-    this.updateHiercharchy();
+    this.updateHierarchy();
   },
 
   changeParent: function(itemId, parentId) {
@@ -417,7 +417,7 @@ var ListView = Backbone.View.extend({
     model.set('parent', parentId);
   },
 
-  updateHiercharchy: function() {
+  updateHierarchy: function() {
     var self = this;
  
     // Build a map of parents referencing their kids
@@ -456,7 +456,7 @@ var ListView = Backbone.View.extend({
 
   render: function() {
     this.prepareViews();
-    this.updateHiercharchy();
+    this.updateHierarchy();
     this.delegateEvents();
     return this;
   },

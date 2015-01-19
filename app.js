@@ -3,6 +3,10 @@ var mongoose = require('mongoose')
 	, bodyParser = require('body-parser')
 	, methodOverride = require('method-override')
 	, morgan = require('morgan')
+  , session = require('express-session')
+  , MongoStore = require('connect-mongostore')(session)
+  , flash = require('connect-flash')
+  , passport = require('passport')
 	, rest = require('./controllers/rest.js')
 	, port = process.env.PORT || 5000
 	, app = express()
@@ -10,6 +14,7 @@ var mongoose = require('mongoose')
 	, fs = require('fs')
 	, _ = require('underscore')
 	, db = require('./controllers/db.js')
+	, oauth = require('./controllers/oauth.js')
 	, DocumentFactory = require('./models/document_factory.js');
 
 // Substance stuff
@@ -83,6 +88,18 @@ app.set('view engine', 'jade');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
+app.use(flash());
+app.use(session({
+	resave: true,
+  saveUninitialized: true,
+  secret: 'archivistSecretWeapon',
+  store: new MongoStore({
+    mongooseConnection: mongoose.connections[0],
+    ttl: 2 * 3600
+  })
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(morgan('tiny'));
 app.use(express.static(__dirname + '/public'));
 
@@ -100,15 +117,17 @@ mongoose.connection.on("error", function(err) {
 	return console.log(err.message);
 });
 
+app.use('/', oauth);
+
 app.use('/api', rest);
 
 app.route('/')
-	.get( function(req, res, next) {
+	.get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('admin');
   })
 
 app.route('/editor/new')
-	.get( function(req, res, next) {
+	.get(oauth.ensureAuthenticated, function(req, res, next) {
 		var newDoc = DocumentFactory.createEmptyDoc();
 	  db.createDocument(newDoc, function(err, doc) {
 	    if (err) return next(err);
@@ -117,6 +136,12 @@ app.route('/editor/new')
   });
 
 app.route('/:var(subjects)*?')
-  .get(function(req, res, next) {
+  .get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('admin');
   })
+
+// ERROR ROUTES
+
+app.use(function(req, res){
+  res.render('error.jade', {title: 'Looks like you are lost...', msg: 'Try to go back to <a href="/">main page</a>.'});
+});
