@@ -22,6 +22,11 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
             this.trigger('click', this);
             this._onAddChild();
         },
+        'click .remove': function(e) {
+            e.preventDefault();
+            this.trigger('click', this);
+            this._onRemove();
+        },
         'focus': function() {
             this.trigger('focus', this);
         },
@@ -50,6 +55,16 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
         addChild.innerHTML = 'Add child';
         this.el.appendChild(addChild);
 
+        var mergeBtn = document.createElement('button');
+        mergeBtn.className = 'merge btn';
+        mergeBtn.innerHTML = '<i class="fa fa-code-fork"></i>';
+        this.el.appendChild(mergeBtn);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'remove btn';
+        removeBtn.innerHTML = '<i class="fa fa-trash-o"></i>';
+        this.el.appendChild(removeBtn);
+
         return this;
     },
 
@@ -63,6 +78,13 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
     _onAddChild: function() {
       this.trigger('add', this);
+    },
+
+    _onRemove: function() {
+      var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
+      if(confirm) {
+        this.model.destroy();
+      }
     },
 
     focus: function() {
