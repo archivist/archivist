@@ -379,11 +379,20 @@ var ListView = Backbone.View.extend({
       }, this);
     })
 
+    this.on("parent:merge", function(child) {
+      this.stopListening(this.listItems, "list:getitem");
+      listItems.once("list:getitem", function(parent) {
+        console.log("Let's merge " + child.id + " with " + parent.id);
+      }, this);
+    })
+
     this.registerItemListner();
   },
 
   registerItemListner: function() {
-    this.listenTo(this.listItems, "list:getitem", function (item) {
+    this.listenTo(this.listItems, "list:getitem", function (item, el) {
+      $('div.list li.active').removeClass('active');
+      el.addClass('active');
       item.trigger("list:edit", item)
     })
   },
@@ -529,9 +538,7 @@ var ItemView = Backbone.View.extend({
 
   chooseItem: function(e) {
     var model = this.model;
-    $('div.list li.active').removeClass('active');
-    this.$el.addClass('active');
-    model.trigger("list:getitem", model);
+    model.trigger("list:getitem", model, this.$el);
     e.preventDefault();
     e.stopPropagation();
   },
@@ -670,6 +677,9 @@ var SubjectsView = Backbone.Layout.extend({
     });
     this.form.on('parent:edit', function(item) {
       self.list.trigger('parent:choose', item.model);
+    })
+    this.form.on('parent:merge', function(item) {
+      self.list.trigger('parent:merge', item.model);
     })
     this.form.on('parent:add', function(item) {
       self._add(item.model.id);
