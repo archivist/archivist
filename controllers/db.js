@@ -2,6 +2,7 @@
  
 var Document = require('../models/document.js')
 	,	Subject = require('../models/subject.js')
+	, User = require('../models/user.js')
 	,	util = require('./util.js');
 
 var db = exports;
@@ -176,5 +177,132 @@ db.listSubjects = function(opt, cb) {
 
   Subject.find(query, null, options, function(err, subjects) {
     cb(err, subjects);
+  });
+}
+
+/* The User api */
+
+/** 
+ * Creates User record from Google profile
+ *
+ * @param {string} profile - Google OAuth profile
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.createUser = function(profile, cb) {
+	new User({
+    id: profile._json.id,
+    name: profile._json.name,
+    email: profile._json.email,
+    picture: profile._json.picture
+  }).save(function(err){
+    cb(err);
+  });
+}
+
+
+/** 
+ * Gets User record by unique id 
+ *
+ * @param {string} id - The unique id of target user record
+ * @param {callback} done - Defered done method which handles the results 
+ */
+
+db.getUser = function(id, done) {
+  User.findOne({id: id}, function(err, user) {
+    done(err, user);
+  })
+}
+
+
+/** 
+ * Updates User record unique JSON
+ *
+ * @param {string} id - The unique id of target user record
+ * @param {string} data - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.updateUser = function(id, data, cb) {
+	var data = req.body
+    , id = req.params.id;
+
+  delete data._id;
+  delete data._v;
+
+  User.findByIdAndUpdate(id, { $set: data }, function (err, user) {
+    if (err) return next(err);
+    cb(user);
+  });
+}	
+
+
+/** 
+ * Removes User record by unique id 
+ *
+ * @param {string} id - The unique id of target user record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.removeUser = function(id, cb) {
+  User.findByIdAndRemove(id, function (err) {
+    cb(err);
+  });
+}
+
+
+/** 
+ * List Users
+ *
+ * @param {string} opt - The query options from request
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.listUsers = function(opt, cb) {
+	  var query = util.getQuery(opt.query),
+	      options = util.getOptions(opt);
+
+	User.find(query, null, options, function(err, users) {
+    cb(err, users);
+  });
+}
+
+/** 
+ * Find User profile or create new one
+ *
+ * @param {string} profile - The unique profile of target user record
+ * @param {callback} done - Defered done method which handles the results 
+ */
+
+db.findOrCreateUser = function(profile, done) {
+  var self = this;
+  User.findOne({id: profile._json.id}, function(err, user) {
+    if (err) return next(err);
+    if (user) {
+      if (user.access) {
+        return done(null, profile);
+      } else {
+        return done(null, false, { message: 'You have no access. Sorry. See you.' });    
+      } 
+    } else {
+      self.createUser(profile, function(err) {
+      	if (err) return next(err);
+      	return done(null, false, { message: 'Thank you! We will check your information and give you access. Maybe.' }); 
+      });
+    }
+  });
+}
+
+/** 
+ * Check access for User profile and continue or redirect to main page
+ */
+
+db.checkSuperUser = function(req, res, next) {
+  User.findOne({email: req.user.email}, function(err, user) {
+    if(user.access && user.super) {
+      return next();
+    } else {
+      res.redirect('/');
+    }
   });
 }

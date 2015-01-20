@@ -375,7 +375,7 @@ var ListView = Backbone.View.extend({
       listItems.once("list:getitem", function(parent) {
         child.set('parent', parent.get('id'));
         this.registerItemListner();
-        this.updateHiercharchy();
+        this.updateHierarchy();
       }, this);
     })
 
@@ -398,18 +398,18 @@ var ListView = Backbone.View.extend({
   addItem: function(item) {
     // model creation
     this.itemViews[item.id] = new ItemView({model: item}).render();
-    this.updateHiercharchy();
+    this.updateHierarchy();
   },
  
   // doesnt affect hierarchy
   updateItem: function(item) {
     this.itemViews[item.id].render() // re-render
-    this.updateHiercharchy();
+    //this.updateHierarchy();
   },
 
   removeItem: function(item) {
     this.itemViews[item.id].remove()
-    this.updateHiercharchy();
+    this.updateHierarchy();
   },
 
   changeParent: function(itemId, parentId) {
@@ -417,7 +417,7 @@ var ListView = Backbone.View.extend({
     model.set('parent', parentId);
   },
 
-  updateHiercharchy: function() {
+  updateHierarchy: function() {
     var self = this;
  
     // Build a map of parents referencing their kids
@@ -456,7 +456,7 @@ var ListView = Backbone.View.extend({
 
   render: function() {
     this.prepareViews();
-    this.updateHiercharchy();
+    this.updateHierarchy();
     this.delegateEvents();
     return this;
   },
@@ -522,7 +522,7 @@ var ItemView = Backbone.View.extend({
 
   chooseItem: function(e) {
     var model = this.model;
-    $('li.active').removeClass('active');
+    $('div.list li.active').removeClass('active');
     this.$el.addClass('active');
     model.trigger("list:getitem", model);
     e.preventDefault();
@@ -715,7 +715,7 @@ var SubjectsView = Backbone.Layout.extend({
     this.collection.add({ _id: id, name: "Untitled", parent: parent });
   },
   _import: function() {
-    $('li.active').removeClass('active');
+    $('div.list li.active').removeClass('active');
     var sidebar = this.$el.find('.sidebar');
     sidebar.empty();
 
@@ -881,7 +881,7 @@ var DocumentRow = Backgrid.Row.extend({
   onRemove: function(e) {
     e.preventDefault();
     e.stopPropagation();
-    var confirm = window.confirm("Are you sure this is where you want to be?\nThis action can't be undone. Think twice!");
+    var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
     if(confirm) {
       this.model.destroy();
     }

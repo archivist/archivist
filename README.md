@@ -10,9 +10,10 @@ MONGO_URL=***
 RS_NAME=***
 ```
 
-Install Heroku Toolbelt. Then pull in Substance modules
+Install Heroku Toolbelt. Then pull in npm and Substance modules
 
 ```
+$ npm install
 $ substance --update
 ```
 

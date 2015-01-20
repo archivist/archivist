@@ -22,6 +22,11 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
             this.trigger('click', this);
             this._onAddChild();
         },
+        'click .remove': function(e) {
+            e.preventDefault();
+            this.trigger('click', this);
+            this._onRemove();
+        },
         'focus': function() {
             this.trigger('focus', this);
         },
@@ -37,18 +42,33 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
     render: function() {
         var parentChooser = document.createElement('button');
         parentChooser.className = 'choose-parent btn';
-        parentChooser.innerHTML = 'Choose new parent';
+        parentChooser.setAttribute('title', 'Choose new parent');
+        parentChooser.innerHTML = '<i class="fa fa-bars"></i>';
         this.el.appendChild(parentChooser);
         
         var rootChooser = document.createElement('button');
         rootChooser.className = 'root-parent btn';
-        rootChooser.innerHTML = 'Make root';
+        rootChooser.setAttribute('title', 'Set root level');
+        rootChooser.innerHTML = '<i class="fa fa-level-up"></i>';
         this.el.appendChild(rootChooser);
 
         var addChild = document.createElement('button');
         addChild.className = 'add-child btn';
-        addChild.innerHTML = 'Add child';
+        addChild.setAttribute('title', 'Add child subject');
+        addChild.innerHTML = '<i class="fa fa-plus-square-o"></i>';
         this.el.appendChild(addChild);
+
+        var mergeBtn = document.createElement('button');
+        mergeBtn.className = 'merge btn';
+        mergeBtn.setAttribute('title', 'Merge with another subject');
+        mergeBtn.innerHTML = '<i class="fa fa-code-fork"></i>';
+        this.el.appendChild(mergeBtn);
+
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'remove btn';
+        removeBtn.setAttribute('title', 'Remove subject');
+        removeBtn.innerHTML = '<i class="fa fa-trash-o"></i>';
+        this.el.appendChild(removeBtn);
 
         return this;
     },
@@ -63,6 +83,13 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
     _onAddChild: function() {
       this.trigger('add', this);
+    },
+
+    _onRemove: function() {
+      var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
+      if(confirm) {
+        this.model.destroy();
+      }
     },
 
     focus: function() {
