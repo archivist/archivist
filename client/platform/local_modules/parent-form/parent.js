@@ -22,6 +22,11 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
             this.trigger('click', this);
             this._onAddChild();
         },
+        'click .merge': function(e) {
+            e.preventDefault();
+            this.trigger('click', this);
+            this._onMerge();
+        },
         'click .remove': function(e) {
             e.preventDefault();
             this.trigger('click', this);
@@ -83,6 +88,10 @@ Backbone.Form.editors.ParentChooser = Backbone.Form.editors.Base.extend({
 
     _onAddChild: function() {
       this.trigger('add', this);
+    },
+
+    _onMerge: function() {
+      this.trigger('merge', this);
     },
 
     _onRemove: function() {
