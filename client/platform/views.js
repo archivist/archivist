@@ -522,7 +522,7 @@ var ItemView = Backbone.View.extend({
 
   chooseItem: function(e) {
     var model = this.model;
-    $('li.active').removeClass('active');
+    $('div.list li.active').removeClass('active');
     this.$el.addClass('active');
     model.trigger("list:getitem", model);
     e.preventDefault();
@@ -715,7 +715,7 @@ var SubjectsView = Backbone.Layout.extend({
     this.collection.add({ _id: id, name: "Untitled", parent: parent });
   },
   _import: function() {
-    $('li.active').removeClass('active');
+    $('div.list li.active').removeClass('active');
     var sidebar = this.$el.find('.sidebar');
     sidebar.empty();
 
@@ -881,7 +881,7 @@ var DocumentRow = Backgrid.Row.extend({
   onRemove: function(e) {
     e.preventDefault();
     e.stopPropagation();
-    var confirm = window.confirm("Are you sure this is where you want to be?\nThis action can't be undone. Think twice!");
+    var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
     if(confirm) {
       this.model.destroy();
     }
