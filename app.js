@@ -85,7 +85,7 @@ try {
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 app.use(flash());
