@@ -403,8 +403,9 @@ var ListView = Backbone.View.extend({
  
   // doesnt affect hierarchy
   updateItem: function(item) {
-    this.itemViews[item.id].render() // re-render
-    //this.updateHierarchy();
+    var isParent = this.listItems.findWhere({parent: item.id}) ? true : false;
+    this.itemViews[item.id].render(isParent) // re-render
+    this.updateHierarchy(item);
   },
 
   removeItem: function(item) {
@@ -417,7 +418,7 @@ var ListView = Backbone.View.extend({
     model.set('parent', parentId);
   },
 
-  updateHierarchy: function() {
+  updateHierarchy: function(item) {
     var self = this;
  
     // Build a map of parents referencing their kids
@@ -450,8 +451,14 @@ var ListView = Backbone.View.extend({
 
       return listEl;
     }
-    var listEl = renderChildren("root");
-    self.$el.append(listEl);
+
+    var listEl = item ? renderChildren(item.id) : renderChildren("root");
+    if (item) {
+      this.itemViews[item.id].$el.append(listEl);
+    } else {
+      self.$el.append(listEl);
+    }
+    
   },
 
   render: function() {
