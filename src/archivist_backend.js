@@ -33,6 +33,9 @@ ArchivistBackend.Prototype = function() {
     this.metadata.load(function(err) {
       $.getJSON("/api/documents/"+path, function(data) {
         doc = self.documentFactory.createFromJSON(data);
+        // HACK: monkey patching the document to provide resources
+        // ... TODO we could add a dedicated namespace for external
+        //     resources within the document.
         doc.metadata = self.metadata;
         cb(null, doc);
       });
