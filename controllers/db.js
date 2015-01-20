@@ -180,6 +180,29 @@ db.listSubjects = function(opt, cb) {
   });
 }
 
+
+/** 
+ * Merge Subjects
+ *
+ * @param {string} one - Id of subject to merge
+ * @param {string} into - Id of subject to merge into
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.mergeSubjects = function(one, into, cb) {
+  console.log("Let's merge " + one + " into " + into + "!");
+  cb();
+
+  // Do something and then remove first subject:
+
+  // Subject.findByIdAndRemove(one, function (err) {
+  //   cb(err);
+  // });
+}
+
+
+
+
 /* The User api */
 
 /** 

@@ -90,10 +90,20 @@ var listSubjects = function(req, res, next) {
   });
 }
 
+var mergeSubjects = function(req, res, next) {
+  db.mergeSubjects(req.query.one, req.query.into, function(err) {
+    if (err) return next(err);
+    res.json(200);
+  });
+}
+
 
 rest.route('/subjects')
   .post(createSubject)
   .get(listSubjects)
+
+rest.route('/subjects/merge')
+  .get(mergeSubjects)
 
 rest.route('/subjects/:id')
   .get(readSubject)
