@@ -10,6 +10,7 @@ var Backbone = require('backbone'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
+    request = require('superagent'),
     ObjectId = require('./local_modules/objectid/Objectid.js'),
 		Notify = require('./local_modules/notify/notify.js')
 
@@ -382,7 +383,12 @@ var ListView = Backbone.View.extend({
     this.on("parent:merge", function(child) {
       this.stopListening(this.listItems, "list:getitem");
       listItems.once("list:getitem", function(parent) {
-        console.log("Let's merge " + child.id + " with " + parent.id);
+        request
+          .get('/api/subjects/merge')
+          .query({ one: child.id, into: parent.id })
+          .end(function(res){
+            if(res.ok) console.log("Merged: " + child.id + " into " + parent.id);
+          });
       }, this);
     })
 
@@ -423,8 +429,10 @@ var ListView = Backbone.View.extend({
   },
 
   changeParent: function(itemId, parentId) {
-    var model = this.listItems.get(itemId);
+    var model = this.listItems.get(itemId),
+        isParent = this.listItems.findWhere({parent: itemId}) ? true : false;
     model.set('parent', parentId);
+    this.updateHierarchy();
   },
 
   updateHierarchy: function(item) {

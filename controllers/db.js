@@ -1,9 +1,12 @@
 /* The DB controller */
  
 var Document = require('../models/document.js')
-	,	Subject = require('../models/subject.js')
-	, User = require('../models/user.js')
-	,	util = require('./util.js');
+  , Subject = require('../models/subject.js')
+  , System = require('../models/system.js')
+  , User = require('../models/user.js')
+  , util = require('./util.js')
+  , sUtil = require('substance-util')
+  , _ = require('underscore');
 
 var db = exports;
 
@@ -18,17 +21,17 @@ var db = exports;
  */
 
 db.createDocument = function(document, cb) {
-	if (document.hasOwnProperty('schema')) {
-		document._schema = document.schema;
-		delete document.schema;
-		document._id = document.id;
-		delete document.id;
-	}
+  if (document.hasOwnProperty('schema')) {
+    document._schema = document.schema;
+    delete document.schema;
+    document._id = document.id;
+    delete document.id;
+  }
 
-	var newDoc = new Document(document);
-	newDoc.save(function(err) {
-		cb(err, newDoc);
-	});
+  var newDoc = new Document(document);
+  newDoc.save(function(err) {
+    cb(err, newDoc);
+  });
 }
 
 
@@ -40,15 +43,15 @@ db.createDocument = function(document, cb) {
  */
 
 db.getDocument = function(id, cb) {
-	Document.findById(id, function(err, document) {
-		doc = document.toJSON();
-		if (doc.hasOwnProperty('_schema')) {
-			delete doc._schema;
-			doc.schema = document._schema;
-		}
+  Document.findById(id, function(err, document) {
+    doc = document.toJSON();
+    if (doc.hasOwnProperty('_schema')) {
+      delete doc._schema;
+      doc.schema = document._schema;
+    }
 
-		cb(err, doc);
-	});
+    cb(err, doc);
+  });
 }
 
 
@@ -61,14 +64,14 @@ db.getDocument = function(id, cb) {
  */
 
 db.updateDocument = function(id, data, cb) {
-	if (data.hasOwnProperty('schema')) {
-		data._schema = data.schema;
-		delete data.schema;
-	}
+  if (data.hasOwnProperty('schema')) {
+    data._schema = data.schema;
+    delete data.schema;
+  }
 
-	Document.findByIdAndUpdate(id, { $set: data }, function (err, document) {
-		cb(err, document);
-	});
+  Document.findByIdAndUpdate(id, { $set: data }, function (err, document) {
+    cb(err, document);
+  });
 }
 
 
@@ -94,8 +97,8 @@ db.removeDocument = function(id, cb) {
  */
 
 db.listDocuments = function(opt, cb) {
-	  var query = util.getQuery(opt.query),
-	      options = util.getOptions(opt);
+    var query = util.getQuery(opt.query),
+        options = util.getOptions(opt);
 
   Document.find(query, 'nodes.document.title nodes.document.created_at nodes.document.authors id', options, function(err, documents) {
     cb(err, documents);
@@ -114,9 +117,9 @@ db.listDocuments = function(opt, cb) {
  */
 
 db.createSubject = function(subject, cb) {
-	new Subject(subject).save(function(err) {
-		cb(err);
-	});
+  new Subject(subject).save(function(err) {
+    cb(err);
+  });
 }
 
 
@@ -128,9 +131,9 @@ db.createSubject = function(subject, cb) {
  */
 
 db.getSubject = function(id, cb) {
-	Subject.findById(id, function(err, subject) {
-		cb(err, subject);
-	});
+  Subject.findById(id, function(err, subject) {
+    cb(err, subject);
+  });
 }
 
 
@@ -143,12 +146,69 @@ db.getSubject = function(id, cb) {
  */
 
 db.updateSubject = function(id, data, cb) {
-	delete data.__v;
-	Subject.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, subject) {
-		cb(err, subject);
-	});
-}	
+  delete data.__v;
+  Subject.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, subject) {
+    cb(err, subject);
+  });
+}
 
+
+/** 
+ * Updates subject references in a document, either removing them or replacing them with a new subjectId
+ *
+ * @param {string} doc - Substance document as JSON
+ * @param {string} data - subject to be updated
+ * @param {object} options - mode = delete|replace, replace mode has newSubjectId
+ */
+ 
+db.updateSubjectForDoc = function(docId, subjectId, opt, cb) {
+  db.getDocument(docId, function(err, doc) {
+    var subjectReferences = [];
+    _.each(doc.nodes, function(node) {
+      if (node.type === "subject_reference") {
+        console.log('node.target#before', node.id, node.target);
+        // Skip nodes subject refs that don't have targets
+        if (!node.target) return;
+        var pos = node.target.indexOf(subjectId);
+        if (pos > -1) {
+          if (opt.mode === "delete") {
+            node.target.splice(pos, 1);
+          } else {
+            node.target[pos] = opt.newSubjectId;
+          }
+        }
+        console.log('node.target#after', node.id, node.target);
+      }
+    });
+
+    // cb(null);
+    db.updateDocument(docId, doc, function(err) {
+      cb(err);
+    });
+  });
+};
+ 
+ 
+/** 
+ * Updates subject references in a document, either removing them or replacing them with a new subjectId
+ *
+ * @param {string} data - subject to be updated
+ * @param {object} options - mode = delete|replace, replace mode has newSubjectId
+ */
+ 
+db.propagateSubjectChange = function(subjectId, opt, cb) {
+   Document.find({}, 'id', {}, function(err, documents) {
+    sUtil.async.each({
+      items: documents,
+      iterator: function(doc, cb) {
+        db.updateSubjectForDoc(doc._id, subjectId, opt, cb);
+      }
+    }, function() {
+      console.log('done with everything yay!');
+      cb(null);
+    });
+  });
+};
 
 /** 
  * Removes Subject record by unique id 
@@ -157,11 +217,21 @@ db.updateSubject = function(id, data, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-db.removeSubject = function(id, cb) {
-  Subject.findByIdAndRemove(id, function (err) {
-    cb(err);
+db.removeSubject = function(subjectId, cb) {
+  // Check if subject has children, if yes reject deletion
+  Subject.find({parent: subjectId}, 'id', {}, function(err, subjects) {
+    if (subjects.length > 0) {
+      return cb('can not delete subject that has child subjects');
+    }
+
+    db.propagateSubjectChange(subjectId, {mode: "delete"}, function(err) {
+      if (err) return cb(err);
+      Subject.findByIdAndRemove(id, function (err) {
+        cb(err);
+      });
+    });
   });
-}
+};
 
 
 /** 
@@ -172,11 +242,39 @@ db.removeSubject = function(id, cb) {
  */
 
 db.listSubjects = function(opt, cb) {
-	  var query = util.getQuery(opt.query),
-	      options = util.getOptions(opt);
+    var query = util.getQuery(opt.query),
+        options = util.getOptions(opt);
 
   Subject.find(query, null, options, function(err, subjects) {
     cb(err, subjects);
+  });
+}
+
+
+/** 
+ * Merge Subjects
+ *
+ * @param {string} subjectId - Id of subject to merge
+ * @param {string} newSubjectId - Id of subject to merge into
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.mergeSubjects = function(subjectId, newSubjectId, cb) {
+  console.log("Let's merge " + subjectId + " into " + newSubjectId + "!");
+
+  // Check if subject has children, if yes reject deletion
+  Subject.find({parent: subjectId}, 'id', {}, function(err, subjects) {
+    if (subjects.length > 0) {
+      return cb('can not merge subject that has child subjects');
+    }
+
+    db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: "xxxx"}, function(err) {
+      if (err) return cb(err);
+
+      Subject.findByIdAndRemove(subjectId, function (err) {
+        cb(err);
+      });      
+    });
   });
 }
 
@@ -190,7 +288,7 @@ db.listSubjects = function(opt, cb) {
  */
 
 db.createUser = function(profile, cb) {
-	new User({
+  new User({
     id: profile._json.id,
     name: profile._json.name,
     email: profile._json.email,
@@ -224,7 +322,7 @@ db.getUser = function(id, done) {
  */
 
 db.updateUser = function(id, data, cb) {
-	var data = req.body
+  var data = req.body
     , id = req.params.id;
 
   delete data._id;
@@ -234,7 +332,7 @@ db.updateUser = function(id, data, cb) {
     if (err) return next(err);
     cb(user);
   });
-}	
+} 
 
 
 /** 
@@ -259,10 +357,10 @@ db.removeUser = function(id, cb) {
  */
 
 db.listUsers = function(opt, cb) {
-	  var query = util.getQuery(opt.query),
-	      options = util.getOptions(opt);
+    var query = util.getQuery(opt.query),
+        options = util.getOptions(opt);
 
-	User.find(query, null, options, function(err, users) {
+  User.find(query, null, options, function(err, users) {
     cb(err, users);
   });
 }
@@ -286,8 +384,8 @@ db.findOrCreateUser = function(profile, done) {
       } 
     } else {
       self.createUser(profile, function(err) {
-      	if (err) return next(err);
-      	return done(null, false, { message: 'Thank you! We will check your information and give you access. Maybe.' }); 
+        if (err) return next(err);
+        return done(null, false, { message: 'Thank you! We will check your information and give you access. Maybe.' }); 
       });
     }
   });
@@ -306,3 +404,36 @@ db.checkSuperUser = function(req, res, next) {
     }
   });
 }
+
+
+/* System variables API */
+
+/**
+ * Set system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {string} value - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.setSystemVariable = function(name, value, cb) {
+  System.findOneAndUpdate({name: name}, { $set: value }, {new: true, upsert: true}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+/**
+ * Get system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.getSystemVariable = function(name, cb) {
+  System.findOne({name: name}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+
+//maintenance

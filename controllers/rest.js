@@ -1,6 +1,7 @@
 /* The REST controller */
  
 var db = require('./db.js')
+  , mode = require('./mode.js')
 	,	express = require('express')
   , rest = express.Router();
 
@@ -44,13 +45,13 @@ var listDocuments = function(req, res, next) {
 
 
 rest.route('/documents')
-  .post(createDocument)
+  .post(mode.checkCurrentMode, createDocument)
   .get(listDocuments)
 
 rest.route('/documents/:id')
   .get(readDocument)
-  .put(updateDocument)
-  .delete(deleteDocument)
+  .put(mode.checkCurrentMode, updateDocument)
+  .delete(mode.checkCurrentMode, deleteDocument)
 
 
 /* The Subjects REST controller */
@@ -90,15 +91,25 @@ var listSubjects = function(req, res, next) {
   });
 }
 
+var mergeSubjects = function(req, res, next) {
+  db.mergeSubjects(req.query.one, req.query.into, function(err) {
+    if (err) return next(err);
+    res.json(200);
+  });
+}
+
 
 rest.route('/subjects')
   .post(createSubject)
   .get(listSubjects)
 
+rest.route('/subjects/merge')
+  .get(mode.checkCurrentMode, mergeSubjects)
+
 rest.route('/subjects/:id')
   .get(readSubject)
-  .put(updateSubject)
-  .delete(deleteSubject)
+  .put(mode.checkCurrentMode, updateSubject)
+  .delete(mode.checkCurrentMode, deleteSubject)
 
 
 

@@ -22,33 +22,32 @@ ArchivistBackend.Prototype = function() {
     var self = this;
     var doc;
 
-    // if (path === "SAMPLE") {
-    //   doc = this.documentFactory.createFromJSON(SAMPLE);
-    //   cb(null, doc);
-    // } else {
-    // console.error('TODO: load from archivist service');
-    // cb("Not implemented yet");
-
     // First load metadata
+    // All available metadata objects are fetched in one go,
+    // and assigned to a .metadata property on the doc
+    // that way we can work with them synchronously in the app/panels
     this.metadata.load(function(err) {
       $.getJSON("/api/documents/"+path, function(data) {
+        console.log('version fetched:', data.__v);
         doc = self.documentFactory.createFromJSON(data);
         // HACK: monkey patching the document to provide resources
         // ... TODO we could add a dedicated namespace for external
         //     resources within the document.
+        doc.version = data.__v;
         doc.metadata = self.metadata;
         cb(null, doc);
       });
     });
-    // }
   };
 
   this.save = function(doc, path, cb) {
+    var json = doc.toJSON();
+    console.log('local version:', doc.version);
     $.ajax({
       type: "PUT",
       url: "/api/documents/"+path,
       contentType: "application/json",
-      data: JSON.stringify(doc.toJSON()),
+      data: JSON.stringify(json),
       success: function(result) {
         cb(null);
       }
