@@ -69,7 +69,7 @@ db.updateDocument = function(id, data, cb) {
     delete data.schema;
   }
 
-  Document.findByIdAndUpdate(id, { $set: data }, function (err, document) {
+  Document.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
     cb(err, document);
   });
 }

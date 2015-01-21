@@ -464,6 +464,7 @@ var ListView = Backbone.View.extend({
         var childList = renderChildren(item.model.id);
         listItemEl.appendChild(childList);
         listEl.appendChild(listItemEl);
+        debugger;
       });
 
       return listEl;
@@ -528,13 +529,13 @@ var ItemView = Backbone.View.extend({
     var collapseBtn = document.createElement('button');
     collapseBtn.classList.add("collapse");
     collapseBtn.innerHTML = '<i class="fa fa-minus-square-o"></i>';
-    if(!parent) collapseBtn.style.display = 'none';
+    collapseBtn.style.display = 'none';
     this.$el.append(collapseBtn);
 
     var expandBtn = document.createElement('button');
     expandBtn.classList.add("expand");
     expandBtn.innerHTML = '<i class="fa fa-plus-square-o"></i>';
-    expandBtn.style.display = 'none';
+    if(!parent) expandBtn.style.display = 'none';
     this.$el.append(expandBtn);
 
     var content = document.createElement('span');
@@ -564,10 +565,10 @@ var ItemView = Backbone.View.extend({
     var item = $(e.currentTarget).parent();
     var lists = item.children('ol');
     if (lists.length) {
-        item.addClass('collapsed');
-        item.children('.collapse').hide();
-        item.children('.expand').show();
-        item.children('ol').hide();
+      item.addClass('collapsed');
+      item.children('.collapse').hide();
+      item.children('.expand').show();
+      item.children('ol').hide();
     }
   },
 
