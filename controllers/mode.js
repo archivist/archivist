@@ -7,6 +7,7 @@ var db = require('./db.js')
 mode.checkCurrentMode = function(req, res, next) {
   db.getSystemVariable('maintenance', function(err, mode) {
     if (err) return next(err);
+    mode = mode.toJSON();
     if (!mode.on) {
       return next();
     } else {
