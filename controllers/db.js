@@ -2,6 +2,7 @@
  
 var Document = require('../models/document.js')
   , Subject = require('../models/subject.js')
+  , System = require('../models/system.js')
   , User = require('../models/user.js')
   , util = require('./util.js')
   , sUtil = require('substance-util')
