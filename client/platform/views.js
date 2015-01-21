@@ -464,7 +464,7 @@ var ListView = Backbone.View.extend({
         var childList = renderChildren(item.model.id);
         listItemEl.appendChild(childList);
         listEl.appendChild(listItemEl);
-        debugger;
+        if (isParent) item._collapseItem(item.$el);
       });
 
       return listEl;
@@ -498,8 +498,8 @@ var ItemView = Backbone.View.extend({
 
   events: {
     'click': 'chooseItem',
-    'click .collapse': '_collapseItem',
-    'click .expand': '_expandItem',
+    'click .collapse': '_onCollapseItem',
+    'click .expand': '_onExpandItem',
     'click .drag-handle': '_dragHandleClick',
     'dragstart': '_onDragStart',
     'dragenter': '_onDragEnter',
@@ -560,9 +560,7 @@ var ItemView = Backbone.View.extend({
     e.stopPropagation();
   },
 
-  _collapseItem: function(e) {
-    e.stopPropagation();
-    var item = $(e.currentTarget).parent();
+  _collapseItem: function(item) {
     var lists = item.children('ol');
     if (lists.length) {
       item.addClass('collapsed');
@@ -572,15 +570,24 @@ var ItemView = Backbone.View.extend({
     }
   },
 
-  _expandItem: function(e) {
+  _onCollapseItem: function(e) {
     e.stopPropagation();
     var item = $(e.currentTarget).parent();
+    this._collapseItem(item);
+  },
+
+  _expandItem: function(item) {
     item.removeClass('collapsed');
     item.children('.expand').hide();
     item.children('.collapse').show();
     item.children('ol').show();
   },
 
+  _onExpandItem: function(e) {
+    e.stopPropagation();
+    var item = $(e.currentTarget).parent();
+    this._expandItem(item);
+  },
 
   _onDragStart: function(e) {
     e.stopPropagation();
