@@ -48,6 +48,10 @@ ArchivistBackend.Prototype = function() {
       data: JSON.stringify(json),
       success: function(result) {
         cb(null);
+      },
+      error: function(err) {
+        console.log('OH MY GOSH', err);
+        cb(null);
       }
     });
   };
