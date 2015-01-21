@@ -6,6 +6,6 @@ var mongoose = require('mongoose')
  
 var systemSchema = new Schema({
 	name: { type: String, index: true }
-}, { strict: false });
+}, { strict: false, collection: 'system' });
  
 module.exports = mongoose.model('System', systemSchema);

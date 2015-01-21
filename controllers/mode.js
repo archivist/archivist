@@ -13,7 +13,6 @@ mode.checkCurrentMode = function(req, res, next) {
       res.status(503);
       res.send('System is in maintenance mode, please try again later');
     }
-    if (mode.on) 
   })
 }
 
