@@ -83,7 +83,7 @@
     {
       "repository": "https://github.com/substance/util.git",
       "folder": "node_modules/substance-util",
-      "branch": "master"
+      "branch": "substance-next"
     },
     {
       "repository": "https://github.com/substance/cjs.git",
