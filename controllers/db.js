@@ -175,13 +175,13 @@ db.updateSubjectForDoc = function(docId, subjectId, opt, cb) {
             node.target.splice(pos, 1);
           } else {
             node.target[pos] = opt.newSubjectId;
+            node.target = _.uniq(node.target);
           }
         }
         console.log('node.target#after', node.id, node.target);
       }
     });
 
-    // cb(null);
     db.updateDocument(docId, doc, function(err) {
       cb(err);
     });
@@ -268,7 +268,7 @@ db.mergeSubjects = function(subjectId, newSubjectId, cb) {
       return cb('can not merge subject that has child subjects');
     }
 
-    db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: "xxxx"}, function(err) {
+    db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: newSubjectId}, function(err) {
       if (err) return cb(err);
 
       Subject.findByIdAndRemove(subjectId, function (err) {

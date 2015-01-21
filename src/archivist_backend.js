@@ -42,7 +42,8 @@ ArchivistBackend.Prototype = function() {
 
   this.save = function(doc, path, cb) {
     var json = doc.toJSON();
-    console.log('local version:', doc.version);
+    json.__v = doc.version;
+    console.log('local version:', json.__v);
     $.ajax({
       type: "PUT",
       url: "/api/documents/"+path,
