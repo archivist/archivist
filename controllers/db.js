@@ -226,7 +226,7 @@ db.removeSubject = function(subjectId, cb) {
 
     db.propagateSubjectChange(subjectId, {mode: "delete"}, function(err) {
       if (err) return cb(err);
-      Subject.findByIdAndRemove(id, function (err) {
+      Subject.findByIdAndRemove(subjectId, function (err) {
         cb(err);
       });
     });
