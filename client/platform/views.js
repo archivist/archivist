@@ -429,8 +429,10 @@ var ListView = Backbone.View.extend({
   },
 
   changeParent: function(itemId, parentId) {
-    var model = this.listItems.get(itemId);
+    var model = this.listItems.get(itemId),
+        isParent = this.listItems.findWhere({parent: itemId}) ? true : false;
     model.set('parent', parentId);
+    this.updateHierarchy();
   },
 
   updateHierarchy: function(item) {
