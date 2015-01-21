@@ -15,6 +15,7 @@ var mongoose = require('mongoose')
 	, _ = require('underscore')
 	, db = require('./controllers/db.js')
 	, oauth = require('./controllers/oauth.js')
+	, mode = require('./controllers/mode.js')
 	, DocumentFactory = require('./models/document_factory.js');
 
 // Substance stuff
@@ -119,6 +120,7 @@ mongoose.connection.on("error", function(err) {
 
 app.use('/', oauth);
 
+app.use('/api', mode);
 app.use('/api', rest);
 
 app.route('/')

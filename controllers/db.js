@@ -2,6 +2,7 @@
  
 var Document = require('../models/document.js')
 	,	Subject = require('../models/subject.js')
+  , System = require('../models/system.js')
 	, User = require('../models/user.js')
 	,	util = require('./util.js');
 
@@ -202,7 +203,6 @@ db.mergeSubjects = function(one, into, cb) {
 
 
 
-
 /* The User api */
 
 /** 
@@ -329,3 +329,36 @@ db.checkSuperUser = function(req, res, next) {
     }
   });
 }
+
+
+/* System variables API */
+
+/**
+ * Set system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {string} value - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.setSystemVariable = function(name, value, cb) {
+  System.findOneAndUpdate({name: name}, { $set: value }, {new: true, upsert: true}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+/**
+ * Get system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.getSystemVariable = function(name, cb) {
+  System.findOne({name: name}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+
+//maintenance
