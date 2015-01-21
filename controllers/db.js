@@ -67,10 +67,21 @@ db.updateDocument = function(id, data, cb) {
   if (data.hasOwnProperty('schema')) {
     data._schema = data.schema;
     delete data.schema;
+    
   }
 
-  Document.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
-    cb(err, document);
+  Document.findById(id, "__v", function(err, currentDoc) {
+    console.log('currentDoc.__v', currentDoc.__v, 'data', data.__v);
+    // Perform version check
+    if (currentDoc.__v !== data.__v) {
+      return cb('Document can not be saved becuase your local version is outdated. Please open document in a new tab and re-apply your changes.');
+    }
+
+    delete data.__v; // clear __v property, so $inc can do its job
+
+    Document.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
+      cb(err, document.__v);
+    });
   });
 }
 
@@ -226,7 +237,7 @@ db.removeSubject = function(subjectId, cb) {
 
     db.propagateSubjectChange(subjectId, {mode: "delete"}, function(err) {
       if (err) return cb(err);
-      Subject.findByIdAndRemove(id, function (err) {
+      Subject.findByIdAndRemove(subjectId, function (err) {
         cb(err);
       });
     });
