@@ -46,12 +46,14 @@ ArchivistBackend.Prototype = function() {
       url: "/api/documents/"+path,
       contentType: "application/json",
       data: JSON.stringify(json),
-      success: function(result) {
+      success: function(newVersion) {
+        // Remember new document version
+        console.log('successfully saved. new version: ', newVersion);
+        doc.version = newVersion;
         cb(null);
       },
       error: function(err) {
-        console.log('OH MY GOSH', err);
-        cb(null);
+        cb(err.responseText);
       }
     });
   };

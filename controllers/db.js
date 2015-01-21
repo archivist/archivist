@@ -80,7 +80,7 @@ db.updateDocument = function(id, data, cb) {
     delete data.__v; // clear __v property, so $inc can do its job
 
     Document.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
-      cb(err, document);
+      cb(err, document.__v);
     });
   });
 }
