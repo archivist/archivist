@@ -7,8 +7,13 @@ var db = require('./db.js')
 mode.checkCurrentMode = function(req, res, next) {
   db.getSystemVariable('maintenance', function(err, mode) {
     if (err) return next(err);
-    if (!mode.on) return next();
-    if (mode.on) res.send(503);
+    if (!mode.on) {
+      return next();
+    } else {
+      res.status(503);
+      res.send('System is in maintenance mode, please try again later');
+    }
+    if (mode.on) 
   })
 }
 
