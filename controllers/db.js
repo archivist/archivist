@@ -174,7 +174,10 @@ db.updateSubject = function(id, data, cb) {
  
 db.updateSubjectForDoc = function(docId, subjectId, opt, cb) {
   db.getDocument(docId, function(err, doc) {
+    if (err) return cb(err);
+
     var subjectReferences = [];
+    var hasChanged = false;
     _.each(doc.nodes, function(node) {
       if (node.type === "subject_reference") {
         console.log('node.target#before', node.id, node.target);
@@ -188,14 +191,20 @@ db.updateSubjectForDoc = function(docId, subjectId, opt, cb) {
             node.target[pos] = opt.newSubjectId;
             node.target = _.uniq(node.target);
           }
+          hasChanged = true;
         }
         console.log('node.target#after', node.id, node.target);
       }
     });
 
-    db.updateDocument(docId, doc, function(err) {
-      cb(err);
-    });
+    if (hasChanged) {
+      db.updateDocument(docId, doc, function(err) {
+        cb(err);
+      });
+    } else {
+      console.log(docId, 'did not change... move along');
+      cb(null);
+    }
   });
 };
  
