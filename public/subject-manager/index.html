@@ -196,6 +196,35 @@
       //   }
       // });
     })
+    .on("rename_node.jstree", function (e, data) {
+      console.log('renamed node moved yay', e, data);
+      
+      var updatedNode = data.node;
+      var newName = data.text;
+      var oldName = data.old;
+
+      console.log('changing name of node', updatedNode.id, 'from', oldName, 'to', newName);
+
+      // ----------------------------------------
+      // TODO DANIEL:
+      // ----------------------------------------
+
+      // Use backbone stuff to retrieve the model with that id
+      // var subject = subjects.get(movedNode.id);
+
+      // subject.save({
+      //   name: newName,
+      //   success: function() {
+
+      //   },
+      //   error: {
+      //     // there's no easy way to roll back the move so we just force the user to reload the browser interface
+      //     alert('Saving to server failed. Please reload the page and try again.');
+      //   }
+      // });
+    })
+
+    
     .jstree({
       "core" : {
         "animation" : 0,
