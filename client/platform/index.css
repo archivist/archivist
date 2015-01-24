@@ -4,6 +4,7 @@
 @import './local_modules/bootstrap-form/bootstrap.css');
 /*@import './node_modules/animate.css/animate.css';*/
 @import './local_modules/notify/notification.css';
+@import './styles/jstree.css');
 @import './styles/reset.css';
 @import './styles/substance.css';
 
@@ -396,4 +397,10 @@ button.btn {
   background-color: #fff;
   border-color: #ccc;
   margin-right: 5px;
+}
+
+/* SUBJECTS TREE */
+
+.hidden-icon {
+  display: none !important;
 }

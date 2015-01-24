@@ -10,6 +10,7 @@ var Backbone = require('backbone'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
+    jstree = require('jstree'),
     request = require('superagent'),
     ObjectId = require('./local_modules/objectid/Objectid.js'),
 		Notify = require('./local_modules/notify/notify.js')
@@ -780,6 +781,256 @@ var SubjectsView = Backbone.Layout.extend({
   ]
 })
 exports.subjectsView = SubjectsView
+
+var SubjectsTreeView = Backbone.Layout.extend({
+  icon: 'subjects',
+  className: 'subjects',
+  template: '#subjectsTreeLayout',
+
+  initialize: function() {
+    this.state = {
+      nodeToMerge: null
+    };
+  },
+  beforeRender: function() {
+
+  },
+  afterRender: function() {
+    var self = this;
+    $('#' + this.icon).addClass('active');
+    this.contextMenu.reset(this.panel);
+    $('.tree')
+      .on("move_node.jstree", self._onMoveNode)
+      .on("rename_node.jstree", self._onRenameNode)
+      .jstree({
+        "core" : {
+          "animation" : 0,
+          "check_callback" : true,
+          "themes" : { "stripes" : true },
+          "data": self.collection.buildSubjectsTree()
+        },
+        "contextmenu": {
+          "items": self.itemsFunc
+        },
+        "types": {
+          "default": {"icon": "glyphicon hidden-icon"}
+        },
+        "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow", "sort"]
+      });
+  },
+  itemsFunc: function(o, cb) {
+    var self = this;
+
+    var res = $.jstree.defaults.contextmenu.items(o, cb);
+
+    // Create a new node
+    // -------------------
+
+    res.create = {
+      "separator_before"  : false,
+      "separator_after" : true,
+      "_disabled"     : false,
+      "label"       : "Create",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+          obj = inst.get_node(data.reference);
+
+        console.log('creating a new subject...');
+
+        // ----------------------------------------
+        // TODO DANIEL:
+        // Create a new node on the server
+        // ----------------------------------------
+
+
+        // TODO DANIEL:
+        // provide id that you received from the server
+        // if server creation fails, don't execute this code
+        // instead do something like: aler('oh noes'); or utilize
+        // growl-ish notifications
+
+        inst.create_node(obj, {}, "last", function (new_node) {
+          setTimeout(function () { inst.edit(new_node); },0);
+        });
+      }
+    };
+
+    // No cut and paste for the moment
+    delete res.ccp.submenu.copy;
+
+    // Remove a node
+    // -------------------
+
+    res.remove = {
+      "separator_before"  : false,
+      "icon"        : false,
+      "separator_after" : false,
+      "_disabled"   : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+            hasChildren = obj.children.length > 0;
+        return hasChildren; // Only leaf nodes can be deleted
+      },
+      "label"       : "Delete",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+          obj = inst.get_node(data.reference);
+        
+        console.log('deleting...', obj.id);
+
+        // ----------------------------------------
+        // TODO DANIEL:
+        // Call server function deleteSubject
+        // ----------------------------------------
+
+        if(inst.is_selected(obj)) {
+          inst.delete_node(inst.get_selected());
+        }
+        else {
+          inst.delete_node(obj);
+        }
+      }
+    };
+
+    // Start a merge
+    // -------------------
+
+    res.merge = {
+      "separator_before"  : true,
+      "_disabled"     : false,
+      "label"       : "Merge",
+      "_disabled"   : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+            hasChildren = obj.children.length > 0;
+        return hasChildren; // Only leaf nodes can be merged
+      },
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+
+        console.log('obj node to merge', data.reference);
+        self.state.nodeToMerge = obj.id;
+      }
+    };
+
+    // Complete a merge
+    // -------------------
+
+    res.mergeInto = {
+      "separator_before"  : false,
+      "separator_after" : true,
+      "_disabled"     : function (data) {
+        return true;//!self.state.nodeToMerge;
+      },
+      "label"       : "Merge into",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            targetNode = inst.get_node(data.reference),
+            nodeToMerge = inst.get_node(self.state.nodeToMerge);
+
+        if (!nodeToMerge) {
+          console.log('seems like state.nodeToMerge is no longer in the tree. Doing nothing...');
+          return;
+        }
+
+        if (nodeToMerge === targetNode) {
+          console.log('can not merge with itself');
+          return;
+        }
+        
+        console.log('completing merge of ', nodeToMerge.id, 'into ', targetNode.id);
+
+        // ----------------------------------------
+        // TODO DANIEL:
+        // Call server function mergeSubjects
+        // ----------------------------------------
+
+        inst.delete_node(nodeToMerge);
+        self.state.nodeToMerge = null;
+      }
+    };
+
+    return res;
+  },
+  close: function() {
+    $('#' + this.icon).removeClass('active');
+    this.remove();
+    this.unbind();
+  },
+  _onMoveNode: function(e, data) {
+    console.log('node moved yay', e, data);
+      
+    var movedNode = data.node;
+    var newParent = data.parent;
+    var oldParent = data.old_parent;
+
+    console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
+
+    // ----------------------------------------
+    // TODO DANIEL:
+    // ----------------------------------------
+
+    // Use backbone stuff to retrieve the model with that id
+    // var subject = subjects.get(movedNode.id);
+
+    // subject.save({
+    //   parent: newParent,
+    //   success: function() {
+
+    //   },
+    //   error: {
+    //     // there's no easy way to roll back the move so we just force the user to reload the browser interface
+    //     alert('Saving to server failed. Please reload the page and try again.');
+    //   }
+    // });
+  },
+  _onRenameNode: function(e, data) {
+    console.log('renamed node moved yay', e, data);
+      
+    var updatedNode = data.node;
+    var newName = data.text;
+    var oldName = data.old;
+
+    console.log('changing name of node', updatedNode.id, 'from', oldName, 'to', newName);
+
+    // ----------------------------------------
+    // TODO DANIEL:
+    // ----------------------------------------
+
+    // Use backbone stuff to retrieve the model with that id
+    // var subject = subjects.get(movedNode.id);
+
+    // subject.save({
+    //   name: newName,
+    //   success: function() {
+
+    //   },
+    //   error: {
+    //     // there's no easy way to roll back the move so we just force the user to reload the browser interface
+    //     alert('Saving to server failed. Please reload the page and try again.');
+    //   }
+    // });
+  },
+  panel: [
+    {
+      name: "save",
+      icon: "save",
+      fn: "_save"
+    },
+    {
+      name: "Add new subject",
+      icon: "plus",
+      fn: "_add"
+    },
+    {
+      name: "import",
+      icon: "file-text-o",
+      fn: "_import"
+    }
+  ]
+})
+exports.subjectsTreeView = SubjectsTreeView
 
 var SubjectsEdit = Backbone.View.extend({
   className: "subject-edit",

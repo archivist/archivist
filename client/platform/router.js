@@ -57,7 +57,7 @@ var Router = Backbone.Router.extend({
     self.subjects = new models.subjects()
 
     self.subjects.fetch().done(function() {
-      var subjectsView = new views.subjectsView({ collection: self.subjects, contextMenu: self.contextMenu });
+      var subjectsView = new views.subjectsTreeView({ collection: self.subjects, contextMenu: self.contextMenu });
       self.changeLayout(subjectsView, callback, id);
       Notify.spinner('hide');
       Notify.info( 'Data has been loaded' );

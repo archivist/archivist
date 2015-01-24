@@ -19,6 +19,44 @@ var Subjects = Utility.collection.extend({
     sortKey: "name",
     order: -1,
   },
+  buildIndexes: function() {
+    // Build a map of parents referencing their kids
+    this.parentIndex = {};
+    _.each(this.models, function(model) {
+      var parent = model.get('parent') || "root";
+      if (!this.parentIndex[parent]) {
+        this.parentIndex[parent] = [ model ];
+      } else {
+        this.parentIndex[parent].push(model);
+      }
+    }, this);
+  },
+  getChildren: function(nodeId) {
+    return this.parentIndex[nodeId] || [];
+  },
+  buildSubjectsTree: function() {
+    var self = this;
+
+    this.buildIndexes();
+
+    function getChildren(parentId) {
+      var res = [];
+      var nodes = self.getChildren(parentId);
+      if (nodes.length === 0) return res; // exit condition
+
+      _.each(nodes, function(node) {
+        var entry = {
+          id: node.id,
+          text: node.get('name'),
+          children: getChildren(node.id) // get children for subj
+        };
+        res.push(entry);
+      });
+      return res;
+    }
+
+    return getChildren("root");
+  },
   getChanged: function () {
     return this.models.filter(function(m) {
       return (m.hasChanged() || !m.get('id'));
