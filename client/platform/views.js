@@ -974,11 +974,12 @@ var SubjectsTreeView = Backbone.Layout.extend({
     // Use backbone stuff to retrieve the model with that id
     var subject = context.collection.get(movedNode.id);
 
+    if(newParent == '#') newParent = '';
+
     subject.save('parent', newParent, {
       success: function(model, resp) { 
         Notify.spinner('hide');
         var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
-        self.remove();
       },
       error: function(model, err) { 
         Notify.spinner('hide');
@@ -1003,7 +1004,6 @@ var SubjectsTreeView = Backbone.Layout.extend({
       success: function(model, resp) { 
         Notify.spinner('hide');
         var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
-        self.remove();
       },
       error: function(model, err) { 
         Notify.spinner('hide');
