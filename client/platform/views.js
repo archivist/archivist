@@ -828,6 +828,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
     var self = this;
 
     o.model = context.collection.get(o.id);
+    o.collection = context.collection;
 
     var res = $.jstree.defaults.contextmenu.items(o, cb);
 
@@ -856,9 +857,23 @@ var SubjectsTreeView = Backbone.Layout.extend({
         // if server creation fails, don't execute this code
         // instead do something like: aler('oh noes'); or utilize
         // growl-ish notifications
+        //debugger;
 
-        inst.create_node(obj, {}, "last", function (new_node) {
-          setTimeout(function () { inst.edit(new_node); },0);
+        var id = new ObjectId().toString();
+
+        inst.create_node(obj, {id: id}, "last", function (new_node) {
+          //setTimeout(function () { inst.edit(new_node); },0);
+          o.collection.create({ _id: new_node.id, name: new_node.text, parent: new_node.parent }, {
+            success: function(model,resp) {
+              Notify.spinner('hide');
+              Notify.info('Subject ' + obj.model.get('name') + ' has been created!');
+            },
+            error: function(model,err) { 
+              Notify.spinner('hide');
+              Notify.info('Sorry, the error occured! Please reload the page and try again.');
+              console.log(err);
+            }
+          });
         });
       }
     };
