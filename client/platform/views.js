@@ -788,7 +788,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
   template: '#subjectsTreeLayout',
 
   initialize: function() {
-    this.state = {
+    $.jstree.currentState = {
       nodeToMerge: null
     };
   },
@@ -800,8 +800,12 @@ var SubjectsTreeView = Backbone.Layout.extend({
     $('#' + this.icon).addClass('active');
     this.contextMenu.reset(this.panel);
     $('.tree')
-      .on("move_node.jstree", self._onMoveNode)
-      .on("rename_node.jstree", self._onRenameNode)
+      .on("move_node.jstree", function(e, data) {
+        self._onMoveNode(e, data, self);
+      })
+      .on("rename_node.jstree", function(e, data) {
+        self._onRenameNode(e, data, self);
+      })
       .jstree({
         "core" : {
           "animation" : 0,
@@ -910,7 +914,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
             obj = inst.get_node(data.reference);
 
         console.log('obj node to merge', data.reference);
-        self.state.nodeToMerge = obj.id;
+        $.jstree.currentState.nodeToMerge = obj.id;
       }
     };
 
@@ -921,13 +925,13 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "separator_before"  : false,
       "separator_after" : true,
       "_disabled"     : function (data) {
-        return true;//!self.state.nodeToMerge;
+        return !$.jstree.currentState.nodeToMerge;
       },
       "label"       : "Merge into",
       "action"      : function (data) {
         var inst = $.jstree.reference(data.reference),
             targetNode = inst.get_node(data.reference),
-            nodeToMerge = inst.get_node(self.state.nodeToMerge);
+            nodeToMerge = inst.get_node($.jstree.currentState.nodeToMerge);
 
         if (!nodeToMerge) {
           console.log('seems like state.nodeToMerge is no longer in the tree. Doing nothing...');
@@ -947,7 +951,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         // ----------------------------------------
 
         inst.delete_node(nodeToMerge);
-        self.state.nodeToMerge = null;
+        $.jstree.currentState.nodeToMerge = null;
       }
     };
 
@@ -958,7 +962,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
     this.remove();
     this.unbind();
   },
-  _onMoveNode: function(e, data) {
+  _onMoveNode: function(e, data, context) {
     console.log('node moved yay', e, data);
       
     var movedNode = data.node;
@@ -967,25 +971,23 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
 
-    // ----------------------------------------
-    // TODO DANIEL:
-    // ----------------------------------------
-
     // Use backbone stuff to retrieve the model with that id
-    // var subject = subjects.get(movedNode.id);
+    var subject = context.collection.get(movedNode.id);
 
-    // subject.save({
-    //   parent: newParent,
-    //   success: function() {
-
-    //   },
-    //   error: {
-    //     // there's no easy way to roll back the move so we just force the user to reload the browser interface
-    //     alert('Saving to server failed. Please reload the page and try again.');
-    //   }
-    // });
+    subject.save('parent', newParent, {
+      success: function(model, resp) { 
+        Notify.spinner('hide');
+        var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
+        self.remove();
+      },
+      error: function(model, err) { 
+        Notify.spinner('hide');
+        var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+        console.log(err);
+      }
+    })
   },
-  _onRenameNode: function(e, data) {
+  _onRenameNode: function(e, data, context) {
     console.log('renamed node moved yay', e, data);
       
     var updatedNode = data.node;
@@ -994,23 +996,21 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     console.log('changing name of node', updatedNode.id, 'from', oldName, 'to', newName);
 
-    // ----------------------------------------
-    // TODO DANIEL:
-    // ----------------------------------------
-
     // Use backbone stuff to retrieve the model with that id
-    // var subject = subjects.get(movedNode.id);
+    var subject = context.collection.get(updatedNode.id);
 
-    // subject.save({
-    //   name: newName,
-    //   success: function() {
-
-    //   },
-    //   error: {
-    //     // there's no easy way to roll back the move so we just force the user to reload the browser interface
-    //     alert('Saving to server failed. Please reload the page and try again.');
-    //   }
-    // });
+    subject.save('name', newName, {
+      success: function(model, resp) { 
+        Notify.spinner('hide');
+        var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
+        self.remove();
+      },
+      error: function(model, err) { 
+        Notify.spinner('hide');
+        var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+        console.log(err);
+      }
+    })
   },
   panel: [
     {
