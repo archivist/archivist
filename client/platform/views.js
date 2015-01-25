@@ -814,7 +814,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
           "data": self.collection.buildSubjectsTree()
         },
         "contextmenu": {
-          "items": self.itemsFunc
+          "items": function(o, cb) {
+            return self.itemsFunc(o, cb, self);
+          }
         },
         "types": {
           "default": {"icon": "glyphicon hidden-icon"}
@@ -822,8 +824,10 @@ var SubjectsTreeView = Backbone.Layout.extend({
         "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow", "sort"]
       });
   },
-  itemsFunc: function(o, cb) {
+  itemsFunc: function(o, cb, context) {
     var self = this;
+
+    o.model = context.collection.get(o.id);
 
     var res = $.jstree.defaults.contextmenu.items(o, cb);
 
@@ -876,16 +880,29 @@ var SubjectsTreeView = Backbone.Layout.extend({
         return hasChildren; // Only leaf nodes can be deleted
       },
       "label"       : "Delete",
-      "action"      : function (data) {
+      "action"      : function (data, context) {
         var inst = $.jstree.reference(data.reference),
           obj = inst.get_node(data.reference);
         
         console.log('deleting...', obj.id);
 
+        obj.model.destroy({
+          success: function(model,resp) {
+            Notify.spinner('hide');
+            Notify.info('Subject ' + obj.model.get('name') + ' has been removed!');
+          },
+          error: function(model,err) { 
+            Notify.spinner('hide');
+            Notify.info('Sorry, the error occured! Please reload the page and try again.');
+            console.log(err);
+          }
+        });
+
         // ----------------------------------------
         // TODO DANIEL:
         // Call server function deleteSubject
         // ----------------------------------------
+
 
         if(inst.is_selected(obj)) {
           inst.delete_node(inst.get_selected());
