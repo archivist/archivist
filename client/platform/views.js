@@ -971,7 +971,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
         }
 
         if (nodeToMerge === targetNode) {
-          console.log('can not merge with itself');
+          Notify.spinner('hide');
+          var notice = Notify.info('Can not merge with itself!');
           return;
         }
         
@@ -981,6 +982,19 @@ var SubjectsTreeView = Backbone.Layout.extend({
         // TODO DANIEL:
         // Call server function mergeSubjects
         // ----------------------------------------
+
+        request
+          .get('/api/subjects/merge')
+          .query({ one: nodeToMerge.id, into: targetNode.id })
+          .end(function(res){
+            if(res.ok) {
+              Notify.spinner('hide');
+              Notify.info('Merge has been completed!');
+            } else {
+              Notify.spinner('hide');
+              var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+            }
+          });
 
         inst.delete_node(nodeToMerge);
         $.jstree.currentState.nodeToMerge = null;
