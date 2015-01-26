@@ -2,6 +2,6 @@
 .DS_Store
 /node_modules/
 *.sublime-*
-dist
+/dist
 public/platform/*
 /components/
