@@ -455,5 +455,26 @@ db.getSystemVariable = function(name, cb) {
   });
 }
 
+/**
+ * Increment subjects_db_version variable
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
 
-//maintenance
+db.incrementSubjectsDBVersion = function(cb) {
+  System.findOneAndUpdate({name: 'subjects_db_version'}, { $inc: {'version': 1 }}, {new: true, upsert: true}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+/**
+ * Get subjects_db_version variable
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.getSubjectDBVersion = function(cb) {
+  System.findOne({name: 'subjects_db_version'}, function(err, variable) {
+    cb(err, variable);
+  });
+}
