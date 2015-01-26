@@ -19,6 +19,8 @@ var SubjectsView = function(controller) {
   this.$el.on('click', '.edit-subject-reference', _.bind(this.enableSelection, this));
   this.$el.on('click', '.delete-subject-reference', _.bind(this.deleteSubjectReference, this));
   this.$el.on('click', '.cancel-edit', _.bind(this.cancelEdit, this));
+
+
 };
 
 SubjectsView.Prototype = function() {
@@ -76,24 +78,31 @@ SubjectsView.Prototype = function() {
     var annotationId = state.subjectReferenceId;
     doc.set([annotationId, "target"], subjectIds);
 
+    this.writerCtrl.contentCtrl._afterEdit();
+    
     this.writerCtrl.switchState({
       id: "main",
       contextId: "subjects",
       subjectReferenceId: annotationId,
       mode: "show"
     }, {updateRoute: true, replace: true});
+
+
   };
 
   this.updateView = function(viewState) {
     // Remember view state
-    this.viewState = viewState;
+    if (viewState) {
+      this.viewState = viewState;
+    }
+
     this.el.innerHTML = "";
 
-    if (viewState.mode === 'select') {
+    if (this.viewState.mode === 'select') {
       this.renderSelectMode();
-    } else if (viewState.mode === 'show') {
+    } else if (this.viewState.mode === 'show') {
       this.renderShowMode();
-    } else if (viewState.mode === 'list') {
+    } else { // default is list mode
       this.renderListMode();
     }
   };
