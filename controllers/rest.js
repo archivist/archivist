@@ -98,10 +98,26 @@ var mergeSubjects = function(req, res, next) {
   });
 }
 
+var loadMetadata = function(req, res, next) {
+  db.getSubjectDBVersion(function(err, subjectDBVersion) {
+    db.listSubjects(req.query, function(err, subjects) {
+      if (err) return next(err);
+      res.json({
+        subjectDBVersion: subjectDBVersion,
+        subjects: subjects 
+      });
+    });
+  });
+}
+
 
 rest.route('/subjects')
   .post(createSubject)
   .get(listSubjects)
+
+// Provides all metadata for the client including version strings
+rest.route('/metadata')
+  .get(loadMetadata)
 
 rest.route('/subjects/merge')
   .get(mode.checkCurrentMode, mergeSubjects)

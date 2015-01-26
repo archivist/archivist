@@ -80,7 +80,12 @@ db.updateDocument = function(id, data, cb) {
     delete data.__v; // clear __v property, so $inc can do its job
 
     Document.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
-      cb(err, document.__v);
+      db.getSubjectDBVersion(function(err, subjectDBVersion) {
+        cb(err, {
+          documentVersion: document.__v,
+          subjectDBVersion: subjectDBVersion
+        });
+      });
     });
   });
 }
@@ -129,7 +134,8 @@ db.listDocuments = function(opt, cb) {
 
 db.createSubject = function(subject, cb) {
   new Subject(subject).save(function(err) {
-    cb(err);
+    if (err) return cb(err);
+    db.incrementSubjectsDBVersion(cb);
   });
 }
 
@@ -159,7 +165,10 @@ db.getSubject = function(id, cb) {
 db.updateSubject = function(id, data, cb) {
   delete data.__v;
   Subject.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, subject) {
-    cb(err, subject);
+    if (err) return err;
+    db.incrementSubjectsDBVersion(function(err) {
+      cb(err, subject);
+    });
   });
 }
 
@@ -247,7 +256,8 @@ db.removeSubject = function(subjectId, cb) {
     db.propagateSubjectChange(subjectId, {mode: "delete"}, function(err) {
       if (err) return cb(err);
       Subject.findByIdAndRemove(subjectId, function (err) {
-        cb(err);
+        if (err) return cb(err);
+        db.incrementSubjectsDBVersion(cb);
       });
     });
   });
@@ -475,6 +485,7 @@ db.incrementSubjectsDBVersion = function(cb) {
 
 db.getSubjectDBVersion = function(cb) {
   System.findOne({name: 'subjects_db_version'}, function(err, variable) {
-    cb(err, variable);
+    if (err) return err;
+    cb(err, variable.get('version'));
   });
 }

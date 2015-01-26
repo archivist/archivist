@@ -35,25 +35,42 @@ ArchivistBackend.Prototype = function() {
         //     resources within the document.
         doc.version = data.__v;
         doc.metadata = self.metadata;
+
         cb(null, doc);
       });
     });
   };
 
   this.save = function(doc, path, cb) {
+    var self = this;
     var json = doc.toJSON();
     json.__v = doc.version;
-    console.log('local version:', json.__v);
+
+    console.log('local version:', doc.version);
+    console.log('local subjectDBVersion:', doc.metadata.subjectDBVersion);
+
     $.ajax({
       type: "PUT",
       url: "/api/documents/"+path,
       contentType: "application/json",
       data: JSON.stringify(json),
-      success: function(newVersion) {
+      success: function(data) {
         // Remember new document version
-        console.log('successfully saved. new version: ', newVersion);
-        doc.version = newVersion;
-        cb(null);
+        console.log('new documentVersion: ', data.documentVersion);
+        console.log('new subjectDBVersion: ', data.subjectDBVersion);
+        doc.version = data.documentVersion;
+
+        if (doc.metadata.subjectDBVersion !== data.subjectDBVersion) {
+          console.log('outdated subjects metadata.. loading again from server');
+
+          self.metadata.load(function(err) {
+            if (err) return cb(err);
+            doc.trigger('metadata:updated');
+            cb(null);
+          });
+        } else {
+          cb(null);  
+        }
       },
       error: function(err) {
         cb(err.responseText);

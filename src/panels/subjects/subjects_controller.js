@@ -67,14 +67,22 @@ Tree.prototype = new Tree.Prototype();
 var SubjectsController = function(doc, writerCtrl) {
   PanelController.call(this, doc, writerCtrl);
 
-  // this.metadataService = MetadataService.instance();
-  // var subjects = this.metadataService.getSubjects();
-  var subjects = doc.metadata.getSubjects();
-
-  this.tree = new Tree(subjects);
+  this.updateSubjects();
+  this.writerCtrl.document.on('metadata:updated', _.bind(this.updateSubjects, this));
 };
 
 SubjectsController.Prototype = function() {
+
+  this.updateSubjects = function() {
+    var subjects = this.writerCtrl.document.metadata.getSubjects();
+
+    this.tree = new Tree(subjects);
+
+    // updating subjectsview if available
+    if (this.view) {
+      this.view.updateView();
+    }
+  };
 
   this.createView = function() {
     if (!this.view) {

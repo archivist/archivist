@@ -13,8 +13,10 @@ Metadata.Prototype = function() {
 
   this.load = function(cb) {
     var self = this;
-    $.getJSON("/api/subjects", function(subjectsData) {
-      self.importSubjects(subjectsData);
+    $.getJSON("/api/metadata", function(metadata) {
+      console.log('subjectDBVersion', metadata.subjectDBVersion);
+      self.subjectDBVersion = metadata.subjectDBVersion,
+      self.importSubjects(metadata.subjects);
       cb(null);
     });
   };
