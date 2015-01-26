@@ -1,518 +1,94 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node', '/usr/local/bin/npm', 'install' ]
+1 verbose cli [ 'node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'backbone.bootstrap-modal' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.32
 4 warn package.json archivist-platform@0.0.1 No description
 5 warn package.json archivist-platform@0.0.1 No repository field.
 6 warn package.json archivist-platform@0.0.1 No README data
-7 verbose readDependencies using package.json deps
-8 verbose install where, deps [ '/Users/danielbeilinson/Documents/code/archivist/client/platform',
-8 verbose install   [ 'animate.css',
-8 verbose install     'backbone',
-8 verbose install     'backbone-forms',
-8 verbose install     'backbone.layoutmanager',
-8 verbose install     'backbone.paginator',
-8 verbose install     'backgrid',
-8 verbose install     'jquery',
-8 verbose install     'moment',
-8 verbose install     'superagent',
-8 verbose install     'underscore' ] ]
-9 info preinstall archivist-platform@0.0.1
-10 warn package.json backbone-forms@0.14.0 No repository field.
-11 warn package.json animate.css@3.1.1 No repository field.
-12 warn package.json nestable@1.0.0 No repository field.
-13 verbose readDependencies using package.json deps
-14 verbose already installed skipping backbone.layoutmanager@^0.9.5 /Users/danielbeilinson/Documents/code/archivist/client/platform
-15 verbose already installed skipping backbone.paginator@^2.0.2 /Users/danielbeilinson/Documents/code/archivist/client/platform
-16 verbose already installed skipping backgrid@^0.3.5 /Users/danielbeilinson/Documents/code/archivist/client/platform
-17 verbose already installed skipping jquery@^2.1.1 /Users/danielbeilinson/Documents/code/archivist/client/platform
-18 verbose already installed skipping moment@^2.8.3 /Users/danielbeilinson/Documents/code/archivist/client/platform
-19 verbose cache add [ 'superagent@*', null ]
-20 verbose cache add name=undefined spec="superagent@*" args=["superagent@*",null]
-21 verbose parsed url { protocol: null,
-21 verbose parsed url   slashes: null,
-21 verbose parsed url   auth: null,
-21 verbose parsed url   host: null,
-21 verbose parsed url   port: null,
-21 verbose parsed url   hostname: null,
-21 verbose parsed url   hash: null,
-21 verbose parsed url   search: null,
-21 verbose parsed url   query: null,
-21 verbose parsed url   pathname: 'superagent@*',
-21 verbose parsed url   path: 'superagent@*',
-21 verbose parsed url   href: 'superagent@*' }
-22 verbose already installed skipping underscore@* /Users/danielbeilinson/Documents/code/archivist/client/platform
-23 verbose cache add name="superagent" spec="*" args=["superagent","*"]
-24 verbose parsed url { protocol: null,
-24 verbose parsed url   slashes: null,
-24 verbose parsed url   auth: null,
-24 verbose parsed url   host: null,
-24 verbose parsed url   port: null,
-24 verbose parsed url   hostname: null,
-24 verbose parsed url   hash: null,
-24 verbose parsed url   search: null,
-24 verbose parsed url   query: null,
-24 verbose parsed url   pathname: '*',
-24 verbose parsed url   path: '*',
-24 verbose parsed url   href: '*' }
-25 verbose addNamed [ 'superagent', '*' ]
-26 verbose addNamed [ null, '*' ]
-27 silly lockFile 36856f82-superagent superagent@*
-28 verbose lock superagent@* /Users/danielbeilinson/.npm/36856f82-superagent.lock
-29 verbose already installed skipping animate.css@^3.1.1 /Users/danielbeilinson/Documents/code/archivist/client/platform
-30 verbose already installed skipping backbone@^1.1.2 /Users/danielbeilinson/Documents/code/archivist/client/platform
-31 silly addNameRange { name: 'superagent', range: '*', hasData: false }
-32 verbose cache add [ 'backbone-forms@git+https://github.com/powmedia/backbone-forms',
-32 verbose cache add   null ]
-33 verbose cache add name=undefined spec="backbone-forms@git+https://github.com/powmedia/backbone-forms" args=["backbone-forms@git+https://github.com/powmedia/backbone-forms",null]
-34 verbose parsed url { protocol: null,
-34 verbose parsed url   slashes: null,
-34 verbose parsed url   auth: null,
-34 verbose parsed url   host: null,
-34 verbose parsed url   port: null,
-34 verbose parsed url   hostname: null,
-34 verbose parsed url   hash: null,
-34 verbose parsed url   search: null,
-34 verbose parsed url   query: null,
-34 verbose parsed url   pathname: 'backbone-forms@git+https://github.com/powmedia/backbone-forms',
-34 verbose parsed url   path: 'backbone-forms@git+https://github.com/powmedia/backbone-forms',
-34 verbose parsed url   href: 'backbone-forms@git+https://github.com/powmedia/backbone-forms' }
-35 verbose cache add name="backbone-forms" spec="git+https://github.com/powmedia/backbone-forms" args=["backbone-forms","git+https://github.com/powmedia/backbone-forms"]
-36 verbose parsed url { protocol: 'git+https:',
-36 verbose parsed url   slashes: true,
-36 verbose parsed url   auth: null,
-36 verbose parsed url   host: 'github.com',
-36 verbose parsed url   port: null,
-36 verbose parsed url   hostname: 'github.com',
-36 verbose parsed url   hash: null,
-36 verbose parsed url   search: null,
-36 verbose parsed url   query: null,
-36 verbose parsed url   pathname: '/powmedia/backbone-forms',
-36 verbose parsed url   path: '/powmedia/backbone-forms',
-36 verbose parsed url   href: 'git+https://github.com/powmedia/backbone-forms' }
-37 silly lockFile a9f785a0-thub-com-powmedia-backbone-forms https://github.com/powmedia/backbone-forms
-38 verbose lock https://github.com/powmedia/backbone-forms /Users/danielbeilinson/.npm/a9f785a0-thub-com-powmedia-backbone-forms.lock
-39 verbose addRemoteGit [ 'https://github.com/powmedia/backbone-forms', 'master' ]
-40 verbose request where is /superagent
-41 verbose request registry https://registry.npmjs.org/
-42 verbose request id 62ba04317ddfa89a
-43 verbose url raw /superagent
-44 verbose url resolving [ 'https://registry.npmjs.org/', './superagent' ]
-45 verbose url resolved https://registry.npmjs.org/superagent
-46 verbose request where is https://registry.npmjs.org/superagent
-47 info trying registry request attempt 1 at 20:30:05
-48 verbose etag "2DIBDMT31E0GO1PUQFQ6JJ5JE"
-49 http GET https://registry.npmjs.org/superagent
-50 verbose git remote.origin.url https://github.com/powmedia/backbone-forms
-51 http 200 https://registry.npmjs.org/superagent
-52 silly registry.get cb [ 200,
-52 silly registry.get   { date: 'Tue, 20 Jan 2015 17:30:06 GMT',
-52 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-52 silly registry.get     etag: '"5L919YYCUXGKWQAR9WOS0F9OS"',
-52 silly registry.get     'content-type': 'application/json',
-52 silly registry.get     'cache-control': 'max-age=60',
-52 silly registry.get     'content-length': '77170',
-52 silly registry.get     'accept-ranges': 'bytes',
-52 silly registry.get     via: '1.1 varnish',
-52 silly registry.get     age: '32',
-52 silly registry.get     'x-served-by': 'cache-fra1226-FRA',
-52 silly registry.get     'x-cache': 'HIT',
-52 silly registry.get     'x-cache-hits': '1',
-52 silly registry.get     'x-timer': 'S1421775006.112249,VS0,VE0',
-52 silly registry.get     vary: 'Accept',
-52 silly registry.get     'keep-alive': 'timeout=10, max=50',
-52 silly registry.get     connection: 'Keep-Alive' } ]
-53 silly addNameRange number 2 { name: 'superagent', range: '*', hasData: true }
-54 silly addNameRange versions [ 'superagent',
-54 silly addNameRange   [ '0.1.1',
-54 silly addNameRange     '0.1.2',
-54 silly addNameRange     '0.1.3',
-54 silly addNameRange     '0.2.0',
-54 silly addNameRange     '0.3.0',
-54 silly addNameRange     '0.4.0',
-54 silly addNameRange     '0.4.1',
-54 silly addNameRange     '0.4.2',
-54 silly addNameRange     '0.4.3',
-54 silly addNameRange     '0.5.0',
-54 silly addNameRange     '0.5.1',
-54 silly addNameRange     '0.6.0',
-54 silly addNameRange     '0.7.0',
-54 silly addNameRange     '0.8.0',
-54 silly addNameRange     '0.8.1',
-54 silly addNameRange     '0.8.2',
-54 silly addNameRange     '0.9.0',
-54 silly addNameRange     '0.9.1',
-54 silly addNameRange     '0.9.2',
-54 silly addNameRange     '0.9.3',
-54 silly addNameRange     '0.9.4',
-54 silly addNameRange     '0.9.5',
-54 silly addNameRange     '0.9.6',
-54 silly addNameRange     '0.9.7',
-54 silly addNameRange     '0.9.8',
-54 silly addNameRange     '0.9.9',
-54 silly addNameRange     '0.9.10',
-54 silly addNameRange     '0.10.0',
-54 silly addNameRange     '0.11.0',
-54 silly addNameRange     '0.12.0',
-54 silly addNameRange     '0.12.1',
-54 silly addNameRange     '0.12.2',
-54 silly addNameRange     '0.12.3',
-54 silly addNameRange     '0.12.4',
-54 silly addNameRange     '0.13.0',
-54 silly addNameRange     '0.14.0',
-54 silly addNameRange     '0.14.1',
-54 silly addNameRange     '0.14.2',
-54 silly addNameRange     '0.14.3',
-54 silly addNameRange     '0.14.4',
-54 silly addNameRange     '0.14.5',
-54 silly addNameRange     '0.14.6',
-54 silly addNameRange     '0.14.7',
-54 silly addNameRange     '0.14.8',
-54 silly addNameRange     '0.14.9',
-54 silly addNameRange     '0.15.0',
-54 silly addNameRange     '0.15.1',
-54 silly addNameRange     '0.15.2',
-54 silly addNameRange     '0.15.3',
-54 silly addNameRange     '0.15.4',
-54 silly addNameRange     '0.15.5',
-54 silly addNameRange     '0.15.6',
-54 silly addNameRange     '0.15.7',
-54 silly addNameRange     '0.16.0',
-54 silly addNameRange     '0.17.0',
-54 silly addNameRange     '0.18.0',
-54 silly addNameRange     '0.18.1',
-54 silly addNameRange     '0.18.2',
-54 silly addNameRange     '0.19.0',
-54 silly addNameRange     '0.19.1',
-54 silly addNameRange     '0.20.0',
-54 silly addNameRange     '0.21.0' ] ]
-55 verbose addNamed [ 'superagent', '0.21.0' ]
-56 verbose addNamed [ '0.21.0', '0.21.0' ]
-57 silly lockFile eb840cd2-superagent-0-21-0 superagent@0.21.0
-58 verbose lock superagent@0.21.0 /Users/danielbeilinson/.npm/eb840cd2-superagent-0-21-0.lock
-59 silly lockFile 208c6090-superagent-superagent-0-21-0-tgz https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-60 verbose lock https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz /Users/danielbeilinson/.npm/208c6090-superagent-superagent-0-21-0-tgz.lock
-61 verbose addRemoteTarball [ 'https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz',
-61 verbose addRemoteTarball   'fb15027984751ee7152200e6cd21cd6e19a5de87' ]
-62 info retry fetch attempt 1 at 20:30:06
-63 verbose fetch to= /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-64 http GET https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-65 http 200 https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-66 silly lockFile 208c6090-superagent-superagent-0-21-0-tgz https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-67 silly lockFile 208c6090-superagent-superagent-0-21-0-tgz https://registry.npmjs.org/superagent/-/superagent-0.21.0.tgz
-68 silly lockFile eb840cd2-superagent-0-21-0 superagent@0.21.0
-69 silly lockFile eb840cd2-superagent-0-21-0 superagent@0.21.0
-70 silly lockFile 36856f82-superagent superagent@*
-71 silly lockFile 36856f82-superagent superagent@*
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms) From https://github.com/powmedia/backbone-forms
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 7461dde...b18deaa refs/pull/162/merge -> refs/pull/162/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + a51351d...c043116 refs/pull/305/merge -> refs/pull/305/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 2919447...d0e374d refs/pull/316/merge -> refs/pull/316/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)    30b505d..f1a0477  refs/pull/318/head -> refs/pull/318/head
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + f101029...0e8f463 refs/pull/318/merge -> refs/pull/318/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + de66fb1...a4721a2 refs/pull/371/merge -> refs/pull/371/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 67239a4...df2123d refs/pull/372/merge -> refs/pull/372/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 93c953a...c160cc8 refs/pull/381/merge -> refs/pull/381/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 0336bf1...5122d8b refs/pull/393/merge -> refs/pull/393/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 2a268e8...4dba42a refs/pull/398/merge -> refs/pull/398/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 16bf3fb...8de7045 refs/pull/405/merge -> refs/pull/405/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + 6ed1e7b...cdeddc9 refs/pull/410/merge -> refs/pull/410/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + daf2eda...51c102c refs/pull/420/merge -> refs/pull/420/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  + cc7deaa...624681c refs/pull/430/merge -> refs/pull/430/merge  (forced update)
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  * [new ref]         refs/pull/440/head -> refs/pull/440/head
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  * [new ref]         refs/pull/440/merge -> refs/pull/440/merge
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  * [new ref]         refs/pull/443/head -> refs/pull/443/head
-72 verbose git fetch -a origin (https://github.com/powmedia/backbone-forms)  * [new ref]         refs/pull/443/merge -> refs/pull/443/merge
-73 verbose git rev-list -n1 master 22c22e09f08d9f1d0ac29a1912e6eb3c30af5408
-74 verbose resolved git url git+https://github.com/powmedia/backbone-forms#22c22e09f08d9f1d0ac29a1912e6eb3c30af5408
-75 verbose tar unpack /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz
-76 silly lockFile 09674d7c-14959832420572639-tmp-tgz-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz-unpack
-77 verbose lock tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz-unpack /Users/danielbeilinson/.npm/09674d7c-14959832420572639-tmp-tgz-unpack.lock
-78 silly lockFile eafe0de4-8607-0-14959832420572639-tmp-tgz tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz
-79 verbose lock tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz /Users/danielbeilinson/.npm/eafe0de4-8607-0-14959832420572639-tmp-tgz.lock
-80 silly gunzTarPerm modes [ '755', '644' ]
-81 silly gunzTarPerm extractEntry
-82 silly gunzTarPerm modified mode [ '', 509, 493 ]
-83 silly gunzTarPerm extractEntry .gitignore
-84 silly gunzTarPerm modified mode [ '.gitignore', 436, 420 ]
-85 silly gunzTarPerm extractEntry .gitmodules
-86 silly gunzTarPerm modified mode [ '.gitmodules', 436, 420 ]
-87 silly gunzTarPerm extractEntry CONTRIBUTING.md
-88 silly gunzTarPerm modified mode [ 'CONTRIBUTING.md', 436, 420 ]
-89 silly gunzTarPerm extractEntry LICENSE
-90 silly gunzTarPerm modified mode [ 'LICENSE', 436, 420 ]
-91 silly gunzTarPerm extractEntry README.md
-92 silly gunzTarPerm modified mode [ 'README.md', 436, 420 ]
-93 silly gunzTarPerm extractEntry bower.json
-94 silly gunzTarPerm modified mode [ 'bower.json', 436, 420 ]
-95 silly gunzTarPerm extractEntry distribution.amd/
-96 silly gunzTarPerm modified mode [ 'distribution.amd/', 509, 493 ]
-97 silly gunzTarPerm extractEntry distribution.amd/backbone-forms.js
-98 silly gunzTarPerm modified mode [ 'distribution.amd/backbone-forms.js', 436, 420 ]
-99 silly gunzTarPerm extractEntry distribution.amd/backbone-forms.min.js
-100 silly gunzTarPerm modified mode [ 'distribution.amd/backbone-forms.min.js', 436, 420 ]
-101 silly gunzTarPerm extractEntry distribution.amd/editors/
-102 silly gunzTarPerm modified mode [ 'distribution.amd/editors/', 509, 493 ]
-103 silly gunzTarPerm extractEntry distribution.amd/editors/list.js
-104 silly gunzTarPerm modified mode [ 'distribution.amd/editors/list.js', 436, 420 ]
-105 silly gunzTarPerm extractEntry distribution.amd/editors/list.min.js
-106 silly gunzTarPerm modified mode [ 'distribution.amd/editors/list.min.js', 436, 420 ]
-107 silly gunzTarPerm extractEntry distribution.amd/templates/
-108 silly gunzTarPerm modified mode [ 'distribution.amd/templates/', 509, 493 ]
-109 silly gunzTarPerm extractEntry distribution.amd/templates/bootstrap.css
-110 silly gunzTarPerm modified mode [ 'distribution.amd/templates/bootstrap.css', 436, 420 ]
-111 silly gunzTarPerm extractEntry distribution.amd/templates/bootstrap.js
-112 silly gunzTarPerm modified mode [ 'distribution.amd/templates/bootstrap.js', 436, 420 ]
-113 silly gunzTarPerm extractEntry distribution.amd/templates/bootstrap3.css
-114 silly gunzTarPerm modified mode [ 'distribution.amd/templates/bootstrap3.css', 436, 420 ]
-115 silly gunzTarPerm extractEntry distribution.amd/templates/bootstrap3.js
-116 silly gunzTarPerm modified mode [ 'distribution.amd/templates/bootstrap3.js', 436, 420 ]
-117 silly gunzTarPerm extractEntry distribution.amd/templates/old.css
-118 silly gunzTarPerm modified mode [ 'distribution.amd/templates/old.css', 436, 420 ]
-119 silly gunzTarPerm extractEntry distribution.amd/templates/old.js
-120 silly gunzTarPerm modified mode [ 'distribution.amd/templates/old.js', 436, 420 ]
-121 silly gunzTarPerm extractEntry distribution/
-122 silly gunzTarPerm modified mode [ 'distribution/', 509, 493 ]
-123 silly gunzTarPerm extractEntry distribution/adapters/
-124 silly gunzTarPerm modified mode [ 'distribution/adapters/', 509, 493 ]
-125 silly gunzTarPerm extractEntry distribution/adapters/backbone.bootstrap-modal.js
-126 silly gunzTarPerm modified mode [ 'distribution/adapters/backbone.bootstrap-modal.js', 436, 420 ]
-127 silly gunzTarPerm extractEntry distribution/adapters/backbone.bootstrap-modal.min.js
-128 silly gunzTarPerm modified mode [ 'distribution/adapters/backbone.bootstrap-modal.min.js',
-128 silly gunzTarPerm   436,
-128 silly gunzTarPerm   420 ]
-129 silly gunzTarPerm extractEntry distribution/backbone-forms.js
-130 silly gunzTarPerm modified mode [ 'distribution/backbone-forms.js', 436, 420 ]
-131 silly gunzTarPerm extractEntry distribution/backbone-forms.min.js
-132 silly gunzTarPerm modified mode [ 'distribution/backbone-forms.min.js', 436, 420 ]
-133 silly gunzTarPerm extractEntry distribution/editors/
-134 silly gunzTarPerm modified mode [ 'distribution/editors/', 509, 493 ]
-135 silly gunzTarPerm extractEntry distribution/editors/list.js
-136 silly gunzTarPerm modified mode [ 'distribution/editors/list.js', 436, 420 ]
-137 silly gunzTarPerm extractEntry distribution/editors/list.min.js
-138 silly gunzTarPerm modified mode [ 'distribution/editors/list.min.js', 436, 420 ]
-139 silly gunzTarPerm extractEntry distribution/templates/
-140 silly gunzTarPerm modified mode [ 'distribution/templates/', 509, 493 ]
-141 silly gunzTarPerm extractEntry distribution/templates/bootstrap.css
-142 silly gunzTarPerm modified mode [ 'distribution/templates/bootstrap.css', 436, 420 ]
-143 silly gunzTarPerm extractEntry distribution/templates/bootstrap.js
-144 silly gunzTarPerm modified mode [ 'distribution/templates/bootstrap.js', 436, 420 ]
-145 silly gunzTarPerm extractEntry distribution/templates/bootstrap3.css
-146 silly gunzTarPerm modified mode [ 'distribution/templates/bootstrap3.css', 436, 420 ]
-147 silly gunzTarPerm extractEntry distribution/templates/bootstrap3.js
-148 silly gunzTarPerm modified mode [ 'distribution/templates/bootstrap3.js', 436, 420 ]
-149 silly gunzTarPerm extractEntry distribution/templates/old.css
-150 silly gunzTarPerm modified mode [ 'distribution/templates/old.css', 436, 420 ]
-151 silly gunzTarPerm extractEntry distribution/templates/old.js
-152 silly gunzTarPerm modified mode [ 'distribution/templates/old.js', 436, 420 ]
-153 silly gunzTarPerm extractEntry examples/
-154 silly gunzTarPerm modified mode [ 'examples/', 509, 493 ]
-155 silly gunzTarPerm extractEntry examples/browserify/
-156 silly gunzTarPerm modified mode [ 'examples/browserify/', 509, 493 ]
-157 silly gunzTarPerm extractEntry examples/browserify/app.js
-158 silly gunzTarPerm modified mode [ 'examples/browserify/app.js', 436, 420 ]
-159 silly gunzTarPerm extractEntry examples/browserify/build
-160 silly gunzTarPerm modified mode [ 'examples/browserify/build', 509, 493 ]
-161 silly gunzTarPerm extractEntry examples/browserify/bundle.js
-162 silly gunzTarPerm modified mode [ 'examples/browserify/bundle.js', 436, 420 ]
-163 silly gunzTarPerm extractEntry examples/browserify/index.html
-164 silly gunzTarPerm modified mode [ 'examples/browserify/index.html', 436, 420 ]
-165 silly gunzTarPerm extractEntry examples/register-form-custom-template/
-166 silly gunzTarPerm modified mode [ 'examples/register-form-custom-template/', 509, 493 ]
-167 silly gunzTarPerm extractEntry examples/register-form-custom-template/index.html
-168 silly gunzTarPerm modified mode [ 'examples/register-form-custom-template/index.html', 436, 420 ]
-169 silly gunzTarPerm extractEntry examples/register-form-custom-template/main.js
-170 silly gunzTarPerm modified mode [ 'examples/register-form-custom-template/main.js', 436, 420 ]
-171 silly gunzTarPerm extractEntry examples/register-form-custom-template/submit.html
-172 silly gunzTarPerm modified mode [ 'examples/register-form-custom-template/submit.html',
-172 silly gunzTarPerm   436,
-172 silly gunzTarPerm   420 ]
-173 silly gunzTarPerm extractEntry lib/
-174 silly gunzTarPerm modified mode [ 'lib/', 509, 493 ]
-175 silly gunzTarPerm extractEntry lib/backbone.bootstrap-modal/
-176 silly gunzTarPerm modified mode [ 'lib/backbone.bootstrap-modal/', 509, 493 ]
-177 silly gunzTarPerm extractEntry package.json
-178 silly gunzTarPerm modified mode [ 'package.json', 509, 493 ]
-179 silly gunzTarPerm extractEntry scripts/
-180 silly gunzTarPerm modified mode [ 'scripts/', 509, 493 ]
-181 silly gunzTarPerm extractEntry scripts/build
-182 silly gunzTarPerm modified mode [ 'scripts/build', 509, 493 ]
-183 silly gunzTarPerm extractEntry scripts/build-templates/
-184 silly gunzTarPerm modified mode [ 'scripts/build-templates/', 509, 493 ]
-185 silly gunzTarPerm extractEntry scripts/build-templates/main.amd.js
-186 silly gunzTarPerm modified mode [ 'scripts/build-templates/main.amd.js', 436, 420 ]
-187 silly gunzTarPerm extractEntry scripts/build-templates/main.js
-188 silly gunzTarPerm modified mode [ 'scripts/build-templates/main.js', 436, 420 ]
-189 silly gunzTarPerm extractEntry scripts/build-templates/simple.amd.js
-190 silly gunzTarPerm modified mode [ 'scripts/build-templates/simple.amd.js', 436, 420 ]
-191 silly gunzTarPerm extractEntry scripts/build-templates/standalone-template.amd.js
-192 silly gunzTarPerm modified mode [ 'scripts/build-templates/standalone-template.amd.js',
-192 silly gunzTarPerm   436,
-192 silly gunzTarPerm   420 ]
-193 silly gunzTarPerm extractEntry scripts/build-templates/standalone-template.js
-194 silly gunzTarPerm modified mode [ 'scripts/build-templates/standalone-template.js', 436, 420 ]
-195 silly gunzTarPerm extractEntry scripts/watch
-196 silly gunzTarPerm modified mode [ 'scripts/watch', 509, 493 ]
-197 silly gunzTarPerm extractEntry src/
-198 silly gunzTarPerm modified mode [ 'src/', 509, 493 ]
-199 silly gunzTarPerm extractEntry src/editor.js
-200 silly gunzTarPerm modified mode [ 'src/editor.js', 436, 420 ]
-201 silly gunzTarPerm extractEntry src/editors/
-202 silly gunzTarPerm modified mode [ 'src/editors/', 509, 493 ]
-203 silly gunzTarPerm extractEntry src/editors/checkbox.js
-204 silly gunzTarPerm modified mode [ 'src/editors/checkbox.js', 436, 420 ]
-205 silly gunzTarPerm extractEntry src/editors/checkboxes.js
-206 silly gunzTarPerm modified mode [ 'src/editors/checkboxes.js', 436, 420 ]
-207 silly gunzTarPerm extractEntry src/editors/date.js
-208 silly gunzTarPerm modified mode [ 'src/editors/date.js', 436, 420 ]
-209 silly gunzTarPerm extractEntry src/editors/datetime.js
-210 silly gunzTarPerm modified mode [ 'src/editors/datetime.js', 436, 420 ]
-211 silly gunzTarPerm extractEntry src/editors/extra/
-212 silly gunzTarPerm modified mode [ 'src/editors/extra/', 509, 493 ]
-213 silly gunzTarPerm extractEntry src/editors/extra/list.js
-214 silly gunzTarPerm modified mode [ 'src/editors/extra/list.js', 436, 420 ]
-215 silly gunzTarPerm extractEntry src/editors/hidden.js
-216 silly gunzTarPerm modified mode [ 'src/editors/hidden.js', 436, 420 ]
-217 silly gunzTarPerm extractEntry src/editors/nestedmodel.js
-218 silly gunzTarPerm modified mode [ 'src/editors/nestedmodel.js', 436, 420 ]
-219 silly gunzTarPerm extractEntry src/editors/number.js
-220 silly gunzTarPerm modified mode [ 'src/editors/number.js', 436, 420 ]
-221 silly gunzTarPerm extractEntry src/editors/object.js
-222 silly gunzTarPerm modified mode [ 'src/editors/object.js', 436, 420 ]
-223 silly gunzTarPerm extractEntry src/editors/password.js
-224 silly gunzTarPerm modified mode [ 'src/editors/password.js', 436, 420 ]
-225 silly gunzTarPerm extractEntry src/editors/radio.js
-226 silly gunzTarPerm modified mode [ 'src/editors/radio.js', 436, 420 ]
-227 silly gunzTarPerm extractEntry src/editors/select.js
-228 silly gunzTarPerm modified mode [ 'src/editors/select.js', 436, 420 ]
-229 silly gunzTarPerm extractEntry src/editors/text.js
-230 silly gunzTarPerm modified mode [ 'src/editors/text.js', 436, 420 ]
-231 silly gunzTarPerm extractEntry src/editors/textarea.js
-232 silly gunzTarPerm modified mode [ 'src/editors/textarea.js', 436, 420 ]
-233 silly gunzTarPerm extractEntry src/field.js
-234 silly gunzTarPerm modified mode [ 'src/field.js', 436, 420 ]
-235 silly gunzTarPerm extractEntry src/fieldset.js
-236 silly gunzTarPerm modified mode [ 'src/fieldset.js', 436, 420 ]
-237 silly gunzTarPerm extractEntry src/form.js
-238 silly gunzTarPerm modified mode [ 'src/form.js', 436, 420 ]
-239 silly gunzTarPerm extractEntry src/nestedField.js
-240 silly gunzTarPerm modified mode [ 'src/nestedField.js', 436, 420 ]
-241 silly gunzTarPerm extractEntry src/templates/
-242 silly gunzTarPerm modified mode [ 'src/templates/', 509, 493 ]
-243 silly gunzTarPerm extractEntry src/templates/bootstrap.css
-244 silly gunzTarPerm modified mode [ 'src/templates/bootstrap.css', 436, 420 ]
-245 silly gunzTarPerm extractEntry src/templates/bootstrap.js
-246 silly gunzTarPerm modified mode [ 'src/templates/bootstrap.js', 436, 420 ]
-247 silly gunzTarPerm extractEntry src/templates/bootstrap3.css
-248 silly gunzTarPerm modified mode [ 'src/templates/bootstrap3.css', 436, 420 ]
-249 silly gunzTarPerm extractEntry src/templates/bootstrap3.js
-250 silly gunzTarPerm modified mode [ 'src/templates/bootstrap3.js', 436, 420 ]
-251 silly gunzTarPerm extractEntry src/templates/old.css
-252 silly gunzTarPerm modified mode [ 'src/templates/old.css', 436, 420 ]
-253 silly gunzTarPerm extractEntry src/templates/old.js
-254 silly gunzTarPerm modified mode [ 'src/templates/old.js', 436, 420 ]
-255 silly gunzTarPerm extractEntry src/validators.js
-256 silly gunzTarPerm modified mode [ 'src/validators.js', 436, 420 ]
-257 silly gunzTarPerm extractEntry test/
-258 silly gunzTarPerm modified mode [ 'test/', 509, 493 ]
-259 silly gunzTarPerm extractEntry test/distribution.html
-260 silly gunzTarPerm modified mode [ 'test/distribution.html', 436, 420 ]
-261 silly gunzTarPerm extractEntry test/editor.js
-262 silly gunzTarPerm modified mode [ 'test/editor.js', 436, 420 ]
-263 silly gunzTarPerm extractEntry test/editors/
-264 silly gunzTarPerm modified mode [ 'test/editors/', 509, 493 ]
-265 silly gunzTarPerm extractEntry test/editors/checkbox.js
-266 silly gunzTarPerm modified mode [ 'test/editors/checkbox.js', 436, 420 ]
-267 silly gunzTarPerm extractEntry test/editors/checkboxes.js
-268 silly gunzTarPerm modified mode [ 'test/editors/checkboxes.js', 436, 420 ]
-269 silly gunzTarPerm extractEntry test/editors/date.js
-270 silly gunzTarPerm modified mode [ 'test/editors/date.js', 436, 420 ]
-271 silly gunzTarPerm extractEntry test/editors/datetime.js
-272 silly gunzTarPerm modified mode [ 'test/editors/datetime.js', 436, 420 ]
-273 silly gunzTarPerm extractEntry test/editors/extra/
-274 silly gunzTarPerm modified mode [ 'test/editors/extra/', 509, 493 ]
-275 silly gunzTarPerm extractEntry test/editors/extra/list.js
-276 silly gunzTarPerm modified mode [ 'test/editors/extra/list.js', 436, 420 ]
-277 silly gunzTarPerm extractEntry test/editors/hidden.js
-278 silly gunzTarPerm modified mode [ 'test/editors/hidden.js', 436, 420 ]
-279 silly gunzTarPerm extractEntry test/editors/nestedmodel.js
-280 silly gunzTarPerm modified mode [ 'test/editors/nestedmodel.js', 436, 420 ]
-281 silly gunzTarPerm extractEntry test/editors/number.js
-282 silly gunzTarPerm modified mode [ 'test/editors/number.js', 436, 420 ]
-283 silly gunzTarPerm extractEntry test/editors/object.js
-284 silly gunzTarPerm modified mode [ 'test/editors/object.js', 436, 420 ]
-285 silly gunzTarPerm extractEntry test/editors/password.js
-286 silly gunzTarPerm modified mode [ 'test/editors/password.js', 436, 420 ]
-287 silly gunzTarPerm extractEntry test/editors/radio.js
-288 silly gunzTarPerm modified mode [ 'test/editors/radio.js', 436, 420 ]
-289 silly gunzTarPerm extractEntry test/editors/select.js
-290 silly gunzTarPerm modified mode [ 'test/editors/select.js', 436, 420 ]
-291 silly gunzTarPerm extractEntry test/editors/text.js
-292 silly gunzTarPerm modified mode [ 'test/editors/text.js', 436, 420 ]
-293 silly gunzTarPerm extractEntry test/editors/textarea.js
-294 silly gunzTarPerm modified mode [ 'test/editors/textarea.js', 436, 420 ]
-295 silly gunzTarPerm extractEntry test/field.js
-296 silly gunzTarPerm modified mode [ 'test/field.js', 436, 420 ]
-297 silly gunzTarPerm extractEntry test/fieldset.js
-298 silly gunzTarPerm modified mode [ 'test/fieldset.js', 436, 420 ]
-299 silly gunzTarPerm extractEntry test/form.js
-300 silly gunzTarPerm modified mode [ 'test/form.js', 436, 420 ]
-301 silly gunzTarPerm extractEntry test/helpers.js
-302 silly gunzTarPerm modified mode [ 'test/helpers.js', 436, 420 ]
-303 silly gunzTarPerm extractEntry test/index.html
-304 silly gunzTarPerm modified mode [ 'test/index.html', 436, 420 ]
-305 silly gunzTarPerm extractEntry test/integration.js
-306 silly gunzTarPerm modified mode [ 'test/integration.js', 436, 420 ]
-307 silly gunzTarPerm extractEntry test/lib/
-308 silly gunzTarPerm modified mode [ 'test/lib/', 509, 493 ]
-309 silly gunzTarPerm extractEntry test/lib/backbone-1.0.0.js
-310 silly gunzTarPerm modified mode [ 'test/lib/backbone-1.0.0.js', 436, 420 ]
-311 silly gunzTarPerm extractEntry test/lib/backbone-1.1.0.js
-312 silly gunzTarPerm modified mode [ 'test/lib/backbone-1.1.0.js', 436, 420 ]
-313 silly gunzTarPerm extractEntry test/lib/backbone-deep-model-0.10.1.js
-314 silly gunzTarPerm modified mode [ 'test/lib/backbone-deep-model-0.10.1.js', 436, 420 ]
-315 silly gunzTarPerm extractEntry test/lib/jquery.js
-316 silly gunzTarPerm modified mode [ 'test/lib/jquery.js', 436, 420 ]
-317 silly gunzTarPerm extractEntry test/lib/qunit.css
-318 silly gunzTarPerm modified mode [ 'test/lib/qunit.css', 436, 420 ]
-319 silly gunzTarPerm extractEntry test/lib/qunit.js
-320 silly gunzTarPerm modified mode [ 'test/lib/qunit.js', 436, 420 ]
-321 silly gunzTarPerm extractEntry test/lib/sinon.js
-322 silly gunzTarPerm modified mode [ 'test/lib/sinon.js', 436, 420 ]
-323 silly gunzTarPerm extractEntry test/lib/underscore-1.4.4.js
-324 silly gunzTarPerm modified mode [ 'test/lib/underscore-1.4.4.js', 436, 420 ]
-325 silly gunzTarPerm extractEntry test/lib/underscore-1.5.2.js
-326 silly gunzTarPerm modified mode [ 'test/lib/underscore-1.5.2.js', 436, 420 ]
-327 silly gunzTarPerm extractEntry test/lib/underscore.mixin.deepExtend.js
-328 silly gunzTarPerm modified mode [ 'test/lib/underscore.mixin.deepExtend.js', 436, 420 ]
-329 silly gunzTarPerm extractEntry test/memory-leak/
-330 silly gunzTarPerm modified mode [ 'test/memory-leak/', 509, 493 ]
-331 silly gunzTarPerm extractEntry test/memory-leak/index.html
-332 silly gunzTarPerm modified mode [ 'test/memory-leak/index.html', 436, 420 ]
-333 silly gunzTarPerm extractEntry test/memory-leak/main.js
-334 silly gunzTarPerm modified mode [ 'test/memory-leak/main.js', 436, 420 ]
-335 silly gunzTarPerm extractEntry test/validators.js
-336 silly gunzTarPerm modified mode [ 'test/validators.js', 436, 420 ]
-337 silly lockFile 09674d7c-14959832420572639-tmp-tgz-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz-unpack
-338 silly lockFile 09674d7c-14959832420572639-tmp-tgz-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz-unpack
-339 silly lockFile eafe0de4-8607-0-14959832420572639-tmp-tgz tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz
-340 silly lockFile eafe0de4-8607-0-14959832420572639-tmp-tgz tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-1647-bU8RkMwF/1421775008607-0.14959832420572639/tmp.tgz
-341 silly lockFile a9f785a0-thub-com-powmedia-backbone-forms https://github.com/powmedia/backbone-forms
-342 silly lockFile a9f785a0-thub-com-powmedia-backbone-forms https://github.com/powmedia/backbone-forms
-343 error Error: EACCES, mkdir '/Users/danielbeilinson/.npm/superagent/0.21.0'
-343 error  { [Error: EACCES, mkdir '/Users/danielbeilinson/.npm/superagent/0.21.0']
-343 error   errno: 3,
-343 error   code: 'EACCES',
-343 error   path: '/Users/danielbeilinson/.npm/superagent/0.21.0',
-343 error   parent: 'archivist-platform' }
-344 error Please try running this command again as root/Administrator.
-345 error System Darwin 14.0.0
-346 error command "node" "/usr/local/bin/npm" "install"
-347 error cwd /Users/danielbeilinson/Documents/code/archivist/client/platform
-348 error node -v v0.10.32
-349 error npm -v 1.4.28
-350 error path /Users/danielbeilinson/.npm/superagent/0.21.0
-351 error code EACCES
-352 error errno 3
-353 error stack Error: EACCES, mkdir '/Users/danielbeilinson/.npm/superagent/0.21.0'
-354 verbose exit [ 3, true ]
+7 warn package.json animate.css@3.1.1 No repository field.
+8 warn package.json backbone-forms@0.14.0 No repository field.
+9 warn package.json nestable@1.0.0 No repository field.
+10 verbose readDependencies using package.json deps
+11 verbose cache add [ 'backbone.bootstrap-modal', null ]
+12 verbose cache add name=undefined spec="backbone.bootstrap-modal" args=["backbone.bootstrap-modal",null]
+13 verbose parsed url { protocol: null,
+13 verbose parsed url   slashes: null,
+13 verbose parsed url   auth: null,
+13 verbose parsed url   host: null,
+13 verbose parsed url   port: null,
+13 verbose parsed url   hostname: null,
+13 verbose parsed url   hash: null,
+13 verbose parsed url   search: null,
+13 verbose parsed url   query: null,
+13 verbose parsed url   pathname: 'backbone.bootstrap-modal',
+13 verbose parsed url   path: 'backbone.bootstrap-modal',
+13 verbose parsed url   href: 'backbone.bootstrap-modal' }
+14 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
+15 verbose lock backbone.bootstrap-modal /Users/danielbeilinson/.npm/56360d86-backbone-bootstrap-modal.lock
+16 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
+17 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
+18 verbose addNamed [ 'backbone.bootstrap-modal', '' ]
+19 verbose addNamed [ null, '*' ]
+20 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
+21 verbose lock backbone.bootstrap-modal@ /Users/danielbeilinson/.npm/ce9f08af-backbone-bootstrap-modal.lock
+22 silly addNameRange { name: 'backbone.bootstrap-modal', range: '*', hasData: false }
+23 verbose request where is /backbone.bootstrap-modal
+24 verbose request registry https://registry.npmjs.org/
+25 verbose request id 222e1d0c4b42c6c2
+26 verbose url raw /backbone.bootstrap-modal
+27 verbose url resolving [ 'https://registry.npmjs.org/', './backbone.bootstrap-modal' ]
+28 verbose url resolved https://registry.npmjs.org/backbone.bootstrap-modal
+29 verbose request where is https://registry.npmjs.org/backbone.bootstrap-modal
+30 info trying registry request attempt 1 at 02:00:52
+31 http GET https://registry.npmjs.org/backbone.bootstrap-modal
+32 http 404 https://registry.npmjs.org/backbone.bootstrap-modal
+33 verbose headers { date: 'Mon, 26 Jan 2015 23:00:52 GMT',
+33 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+33 verbose headers   'content-type': 'application/json',
+33 verbose headers   'cache-control': 'max-age=0',
+33 verbose headers   'content-length': '52',
+33 verbose headers   'accept-ranges': 'bytes',
+33 verbose headers   via: '1.1 varnish',
+33 verbose headers   age: '0',
+33 verbose headers   'x-served-by': 'cache-fra1244-FRA',
+33 verbose headers   'x-cache': 'MISS',
+33 verbose headers   'x-cache-hits': '0',
+33 verbose headers   'x-timer': 'S1422313252.371933,VS0,VE184',
+33 verbose headers   'keep-alive': 'timeout=10, max=50',
+33 verbose headers   connection: 'Keep-Alive' }
+34 silly registry.get cb [ 404,
+34 silly registry.get   { date: 'Mon, 26 Jan 2015 23:00:52 GMT',
+34 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+34 silly registry.get     'content-type': 'application/json',
+34 silly registry.get     'cache-control': 'max-age=0',
+34 silly registry.get     'content-length': '52',
+34 silly registry.get     'accept-ranges': 'bytes',
+34 silly registry.get     via: '1.1 varnish',
+34 silly registry.get     age: '0',
+34 silly registry.get     'x-served-by': 'cache-fra1244-FRA',
+34 silly registry.get     'x-cache': 'MISS',
+34 silly registry.get     'x-cache-hits': '0',
+34 silly registry.get     'x-timer': 'S1422313252.371933,VS0,VE184',
+34 silly registry.get     'keep-alive': 'timeout=10, max=50',
+34 silly registry.get     connection: 'Keep-Alive' } ]
+35 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
+36 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
+37 error 404 404 Not Found: backbone.bootstrap-modal
+37 error 404
+37 error 404 'backbone.bootstrap-modal' is not in the npm registry.
+37 error 404 You should bug the author to publish it
+37 error 404 It was specified as a dependency of 'archivist-platform'
+37 error 404
+37 error 404 Note that you can also install from a
+37 error 404 tarball, folder, or http url, or git url.
+38 error System Darwin 14.0.0
+39 error command "node" "/usr/local/bin/npm" "install" "--save" "backbone.bootstrap-modal"
+40 error cwd /Users/danielbeilinson/Documents/code/archivist/client/platform
+41 error node -v v0.10.32
+42 error npm -v 1.4.28
+43 error code E404
+44 verbose exit [ 1, true ]

@@ -4,6 +4,7 @@
 @import './local_modules/bootstrap-form/bootstrap.css');
 /*@import './node_modules/animate.css/animate.css';*/
 @import './local_modules/notify/notification.css';
+@import './styles/bootstrap.css');
 @import './styles/jstree.css');
 @import './styles/reset.css';
 @import './styles/substance.css';

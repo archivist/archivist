@@ -7,6 +7,8 @@ var Backbone = require('backbone'),
     forms = require('backbone-forms'),
     parent = require('./local_modules/parent-form/parent.js'),
     bootstrapForms = require('./local_modules/bootstrap-form/bootstrap3.js'),
+    bootstrap = require('./local_modules/bootstrap-modal/bootstrap.js'),
+    modal = require('./local_modules/backbone.bootstrap-modal'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
@@ -832,6 +834,26 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     var res = $.jstree.defaults.contextmenu.items(o, cb);
 
+    // Edit node
+    // -----------
+
+    res.edit = {
+      "separator_before"  : false,
+      "separator_after" : true,
+      "_disabled"     : false,
+      "label"       : "Edit",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+          obj = inst.get_node(data.reference);
+
+        console.log('editing subject...');
+
+        var modal = new Backbone.BootstrapModal({ content: '<textarea id="description"></textarea>', animate: true }).open();
+        //obj.model;
+
+      }
+    };
+
     // Create a new node
     // -------------------
 
@@ -845,19 +867,6 @@ var SubjectsTreeView = Backbone.Layout.extend({
           obj = inst.get_node(data.reference);
 
         console.log('creating a new subject...');
-
-        // ----------------------------------------
-        // TODO DANIEL:
-        // Create a new node on the server
-        // ----------------------------------------
-
-
-        // TODO DANIEL:
-        // provide id that you received from the server
-        // if server creation fails, don't execute this code
-        // instead do something like: aler('oh noes'); or utilize
-        // growl-ish notifications
-        //debugger;
 
         var id = new ObjectId().toString();
 
