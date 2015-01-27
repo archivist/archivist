@@ -841,15 +841,37 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "separator_before"  : false,
       "separator_after" : true,
       "_disabled"     : false,
-      "label"       : "Edit",
+      "label"       : "Description",
       "action"      : function (data) {
         var inst = $.jstree.reference(data.reference),
-          obj = inst.get_node(data.reference);
+            obj = inst.get_node(data.reference),
+            subject = obj.model;
 
         console.log('editing subject...');
 
-        var modal = new Backbone.BootstrapModal({ content: '<textarea id="description"></textarea>', animate: true }).open();
-        //obj.model;
+        var input = document.createElement("textarea");
+        input.id = "description";
+        input.placeholder = "Describe subject here...";
+        input.innerHTML = subject.get('description');
+
+        var container = document.createElement("div");
+        container.appendChild(input);
+
+        var modal = new Backbone.BootstrapModal({ content: container.innerHTML, animate: true }).open(function(){
+          var description = document.getElementById("description").value;
+
+          subject.save('description', description, {
+            success: function(model, resp) { 
+              Notify.spinner('hide');
+              var notice = Notify.info('Subject ' + subject.get('name') + ' has been updated');
+            },
+            error: function(model, err) { 
+              Notify.spinner('hide');
+              var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+              console.log(err);
+            }
+          })
+        });
 
       }
     };
