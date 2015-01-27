@@ -332,6 +332,52 @@ db.removeSubject = function(subjectId, cb) {
 };
 
 
+
+/** 
+ * Merge Subjects
+ *
+ * @param {string} subjectId - Id of subject to merge
+ * @param {string} newSubjectId - Id of subject to merge into
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.mergeSubjects = function(subjectId, newSubjectId, cb) {
+  console.log("Let's merge " + subjectId + " into " + newSubjectId + "!");
+
+  function updateDocsAndMergeSubjects() {
+    db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: newSubjectId}, function(err) {
+      if (err) return cb(err);
+
+      Subject.findByIdAndRemove(subjectId, cb);      
+    });
+  }
+
+  // Check if subject has children, if yes reject deletion
+  Subject.find({parent: subjectId}, 'id', {}, function(err, subjects) {
+    if (subjects.length > 0) {
+      return cb('can not merge subject that has child subjects');
+    }
+
+    db.beginTransaction(function(err) {
+      if (err) return cb(err);
+
+      updateDocsAndMergeSubjects(function(err) {
+        if (err) {
+          db.cancelTransaction(function(terr) {
+            if (terr) return cb(terr);
+            cb(err);
+          });          
+        } else {
+          db.commitTransaction(cb);
+        }
+      });
+    });
+  });
+}
+
+
+
+
 /** 
  * List Subjects
  *
@@ -349,32 +395,6 @@ db.listSubjects = function(opt, cb) {
 }
 
 
-/** 
- * Merge Subjects
- *
- * @param {string} subjectId - Id of subject to merge
- * @param {string} newSubjectId - Id of subject to merge into
- * @param {callback} cb - The callback that handles the results 
- */
-
-db.mergeSubjects = function(subjectId, newSubjectId, cb) {
-  console.log("Let's merge " + subjectId + " into " + newSubjectId + "!");
-
-  // Check if subject has children, if yes reject deletion
-  Subject.find({parent: subjectId}, 'id', {}, function(err, subjects) {
-    if (subjects.length > 0) {
-      return cb('can not merge subject that has child subjects');
-    }
-
-    db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: newSubjectId}, function(err) {
-      if (err) return cb(err);
-
-      Subject.findByIdAndRemove(subjectId, function (err) {
-        cb(err);
-      });      
-    });
-  });
-}
 
 
 /** 
