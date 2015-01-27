@@ -147,8 +147,8 @@
   "bundle": {
     "name": "archivist",
     "folder": "./dist",
-    "source": "./boot.js",
-    "index": "./index.html",
+    "source": "./boot_archivist_composer.js",
+    "index": "./archivist.html",
     "ignores": [
     ]
   }

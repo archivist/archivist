@@ -30,12 +30,12 @@ var config = require("./.screwdriver/project.json");
 new CJSServer(app, __dirname, 'archivist')
   // ATTENTION: the second argument is the script which is resembled by injecting a list
   // of script tags instead. It must be exactly the same string which is used in the script src.
-  .scripts('./boot_archivist_composer.js', './archivist_composer.js', {
+  .scripts('./boot_archivist_composer.js', './dist/archivist_composer.js', {
     ignores: [
     ]
   })
   // ... the same applies to the css file
-  .styles(config.styles, 'archivist_composer.css')
+  .styles(config.styles, 'dist/archivist_composer.css')
   .page('/archivist.html');
 
 // Serve assets with alias as configured in project.json (~dist like setup)
@@ -52,8 +52,6 @@ _.each(config.assets, function(srcPath, distPath) {
   }
 });
 
-
-
 // MONGOOSE CONNECT
 
 var replica_name = process.env.RS_NAME
@@ -63,12 +61,12 @@ try {
 	var options = {
 		server: {
 			auto_reconnect: true,
-			socketOptions: { 
+			socketOptions: {
 				keepAlive: 1,
-				connectTimeoutMS: 30000 
+				connectTimeoutMS: 30000
 			}
-		}, 
-		replset: { 
+		},
+		replset: {
 			rs_name: replica_name,
 			socketOptions : {
 				keepAlive : 1,
@@ -106,7 +104,7 @@ app.use(express.static(__dirname + '/public'));
 
 // MONGOOSE CONNECTION
 
-mongoose.connection.on("open", function(ref) { 
+mongoose.connection.on("open", function(ref) {
 	app.listen(port, function() {
 		console.log("Archivist server listening on port %d", port);
 	});
