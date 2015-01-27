@@ -308,6 +308,29 @@ db.mergeSubjects = function(subjectId, newSubjectId, cb) {
   });
 }
 
+
+/** 
+ * Make subjects backup
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.makeSubjectsBackup = function(cb) {
+  Subject.backup(cb);
+}
+
+/** 
+ * Make subjects backup
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.restoreSubjectsBackup = function(cb) {
+  Subject.restore(cb);
+}
+
+
+
 /* The User api */
 
 /** 
