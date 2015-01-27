@@ -121,25 +121,6 @@ db.listDocuments = function(opt, cb) {
   });
 }
 
-/** 
- * Make documents backup
- *
- * @param {callback} cb - The callback that handles the results 
- */
-
-db.makeDocumentsBackup = function(cb) {
-  Document.backup(cb);
-}
-
-/** 
- * Restore documents backup
- *
- * @param {callback} cb - The callback that handles the results 
- */
-
-db.restoreDocumentsBackup = function(cb) {
-  Document.restore(cb);
-}
 
 
 
@@ -607,8 +588,7 @@ db.getSubjectDBVersion = function(cb) {
  */
 
 db.backupDocuments = function(cb) {
-  console.log('creating backup of documents...');
-  cb(null);
+  Document.backup(cb);
 }
 
 
@@ -619,8 +599,7 @@ db.backupDocuments = function(cb) {
  */
 
 db.restoreDocuments = function(cb) {
-  console.log('restoring docs...');
-  cb(null);
+  Document.restore(cb);
 }
 
 
