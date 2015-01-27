@@ -121,6 +121,27 @@ db.listDocuments = function(opt, cb) {
   });
 }
 
+/** 
+ * Make documents backup
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.makeDocumentsBackup = function(cb) {
+  Document.backup(cb);
+}
+
+/** 
+ * Restore documents backup
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.restoreDocumentsBackup = function(cb) {
+  Document.restore(cb);
+}
+
+
 
 
 /* The Subject REST api */
@@ -320,7 +341,7 @@ db.makeSubjectsBackup = function(cb) {
 }
 
 /** 
- * Make subjects backup
+ * Restore subjects backup
  *
  * @param {callback} cb - The callback that handles the results 
  */
