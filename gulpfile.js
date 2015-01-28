@@ -1,15 +1,15 @@
 var browserify = require('browserify'),
     watchify = require('watchify'),
-    Duo = require('duo'),
+    //Duo = require('duo'),
     gulp = require('gulp'),
-    gutil = require('gulp-util'),
+    //gutil = require('gulp-util'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     importCSS = require('gulp-import-css'),
     minifyCSS = require('gulp-minify-css'),
     streamify = require('gulp-streamify'),
     source = require('vinyl-source-stream'),
-    map = require('map-stream'),
+    //map = require('map-stream'),
     sourceFile = './client/platform/index.js',
     destFolder = './public/platform/',
     destFile = 'index.js';
@@ -65,21 +65,21 @@ gulp.task('compress', function() {
   return bundle();
 });
 
-function duo(opts) {
-  opts = opts || {};
+// function duo(opts) {
+//   opts = opts || {};
 
-  return map(function (file, fn) {
-    Duo(__dirname)
-      .entry(file.path)
-      .run(function (err, src) {
-        if (err) {
-          return fn(err);
-        }
+//   return map(function (file, fn) {
+//     Duo(__dirname)
+//       .entry(file.path)
+//       .run(function (err, src) {
+//         if (err) {
+//           return fn(err);
+//         }
 
-        file.contents = new Buffer(src);
-        fn(null, file);
-      });
-  });
-}
+//         file.contents = new Buffer(src);
+//         fn(null, file);
+//       });
+//   });
+// }
 
 gulp.task('default', ['browserify', 'watch']);
