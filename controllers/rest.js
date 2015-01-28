@@ -57,9 +57,9 @@ rest.route('/documents/:id')
 /* The Subjects REST controller */
 
 var createSubject = function(req, res, next) {
-  db.createSubject(req.body, function(err) {
+  db.createSubject(req.body, function(err, subject) {
     if (err) return next(err);
-    res.json(200);
+    res.json(subject);
   });
 }
 

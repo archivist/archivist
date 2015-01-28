@@ -477,3 +477,36 @@ MODAL
   width: 530px;
   height: 200px;
 }
+
+
+
+
+/* Modal positioning */
+.subject-modal-wrapper {
+  box-sizing: border-box;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  padding: 50px 10px;
+  overflow: auto; 
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.subject-modal-wrapper * {
+  box-sizing: border-box; 
+}
+
+.subject-modal {
+  border-radius: 3px;
+  margin: auto;
+  width: auto;
+  max-width: 550px; 
+}
+
+.subject-modal-views {
+  width: 100%;
+  box-sizing: border-box; 
+}

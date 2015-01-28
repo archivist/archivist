@@ -9,6 +9,7 @@ var Backbone = require('backbone'),
     bootstrapForms = require('./local_modules/bootstrap-form/bootstrap3.js'),
     bootstrap = require('./local_modules/bootstrap-modal/bootstrap.js'),
     modal = require('./local_modules/backbone.bootstrap-modal'),
+    bmodal = require('./node_modules/backbone.modal/backbone.modal.js'),
     filters = require('backgrid-filter'),
     _ = require('underscore'),
     $ = require('jquery'),
@@ -854,29 +855,25 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
         console.log('editing subject...');
 
-        var input = document.createElement("textarea");
-        input.id = "description";
-        input.placeholder = "Describe subject here...";
-        input.innerHTML = subject.get('description');
+        var editModal = new subjectModal({model: subject});
 
-        var container = document.createElement("div");
-        container.appendChild(input);
+        $('#main').append(editModal.render().el);
 
-        var modal = new Backbone.BootstrapModal({ content: container.innerHTML, animate: true }).open(function(){
-          var description = document.getElementById("description").value;
+        // var modal = new Backbone.BootstrapModal({ content: container.innerHTML, animate: true }).open(function(){
+        //   var description = document.getElementById("description").value;
 
-          subject.save('description', description, {
-            success: function(model, resp) { 
-              Notify.spinner('hide');
-              var notice = Notify.info('Subject ' + subject.get('name') + ' has been updated');
-            },
-            error: function(model, err) { 
-              Notify.spinner('hide');
-              var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
-              console.log(err);
-            }
-          })
-        });
+        //   subject.save('description', description, {
+        //     success: function(model, resp) { 
+        //       Notify.spinner('hide');
+        //       var notice = Notify.info('Subject ' + subject.get('name') + ' has been updated');
+        //     },
+        //     error: function(model, err) { 
+        //       Notify.spinner('hide');
+        //       var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+        //       console.log(err);
+        //     }
+        //   })
+        // });
 
       }
     };
@@ -1121,6 +1118,12 @@ var SubjectsTreeView = Backbone.Layout.extend({
   ]
 })
 exports.subjectsTreeView = SubjectsTreeView
+
+var subjectModal = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  template: _.template($('#subjectModal').html()),
+  cancelEl: '.bbm-button'
+});
 
 var SubjectsEdit = Backbone.View.extend({
   className: "subject-edit",

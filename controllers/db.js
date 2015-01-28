@@ -135,9 +135,11 @@ db.listDocuments = function(opt, cb) {
  */
 
 db.createSubject = function(subject, cb) {
-  new Subject(subject).save(function(err) {
+  new Subject(subject).save(function(err, subject) {
     if (err) return cb(err);
-    db.incrementSubjectsDBVersion(cb);
+    db.incrementSubjectsDBVersion(function(err){
+      cb(err, subject)
+    });
   });
 }
 
