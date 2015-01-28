@@ -140,16 +140,17 @@
     "styles/composer.css": "styles/composer.css"
   },
   "assets": {
-    "lib": "lib",
-    "styles": "styles",
-    "data": "data"
+    "lib/jquery-2.0.3.min.js": "./lib/jquery-2.0.3.min.js",
+    "lib/jquery-2.0.3.min.map": "./lib/jquery-2.0.3.min.map",
+    "lib/jquery.timeago.js": "./lib/jquery.timeago.js",
+    "lib/base64.js": "./lib/base64.js",
+    "lib/jstree": "./lib/jstree",
+    "lib/select2": "./lib/select2"
   },
   "bundle": {
-    "name": "archivist",
-    "folder": "./dist",
+    "name": "archivist_composer",
+    "folder": "./public",
     "source": "./boot_archivist_composer.js",
-    "index": "./archivist.html",
-    "ignores": [
-    ]
+    "ignores": []
   }
 }
