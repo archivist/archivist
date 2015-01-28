@@ -234,9 +234,9 @@ db.propagateSubjectChange = function(subjectId, opt, cb) {
       iterator: function(doc, cb) {
         db.updateSubjectForDoc(doc._id, subjectId, opt, cb);
       }
-    }, function() {
+    }, function(err) {
       console.log('done with everything yay!');
-      cb(null);
+      cb(err);
     });
   });
 };
@@ -344,11 +344,10 @@ db.removeSubject = function(subjectId, cb) {
 db.mergeSubjects = function(subjectId, newSubjectId, cb) {
   console.log("Let's merge " + subjectId + " into " + newSubjectId + "!");
 
-  function updateDocsAndMergeSubjects() {
+  function updateDocsAndMergeSubjects(cb) {
     db.propagateSubjectChange(subjectId, {mode: "replace", newSubjectId: newSubjectId}, function(err) {
       if (err) return cb(err);
-
-      Subject.findByIdAndRemove(subjectId, cb);      
+      Subject.findByIdAndRemove(subjectId, cb);
     });
   }
 
@@ -376,8 +375,6 @@ db.mergeSubjects = function(subjectId, newSubjectId, cb) {
 }
 
 
-
-
 /** 
  * List Subjects
  *
@@ -393,8 +390,6 @@ db.listSubjects = function(opt, cb) {
     cb(err, subjects);
   });
 }
-
-
 
 
 /** 
