@@ -1,7 +1,6 @@
 "use strict";
 
 var ArchivistDocumentFactory = require("./archivist_document_factory");
-var SAMPLE = require('../data/sample');
 var Metadata = require('./metadata');
 
 var ArchivistBackend = function() {
@@ -69,7 +68,7 @@ ArchivistBackend.Prototype = function() {
             cb(null);
           });
         } else {
-          cb(null);  
+          cb(null);
         }
       },
       error: function(err) {
