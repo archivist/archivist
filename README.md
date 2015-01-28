@@ -34,4 +34,30 @@ You could also prepare compress bundle (js&css) without starting server, use
 npm run prepare
 ```
 
+# Deploy
 
+```
+$ git checkout release
+```
+
+```
+$ git merge master
+```
+
+> There might be conflicts, merge carefully. We will try to achieve a setup where the assets are the only difference.
+
+```
+$ substance --bundle
+```
+
+Commit all changes.
+
+```
+$ git push heroku release:master
+```
+
+Try everything out. If something is obviously broken you can fix it and try again.
+
+```
+$ git push origin release
+```
