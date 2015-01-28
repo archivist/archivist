@@ -18,12 +18,12 @@ script#subjectsTreeLayout(type='text/template')
 	<div id="context-panel" class="context-panel"></div>
 	<div class="tree"></div>
 script#subjectModal(type='text/template')
-	<div class="modal-content">
+	<div class="modal-body">
 	<textarea id="description" placeholder="Describe subject here..."><% if (typeof(description) != "undefined"){ %><%= description %><% } %></textarea>
 	</div>
 	<div class="modal-footer">
-	<a href="#" class="bbm-button cancel">Cancel</a>
-	<a href="#" class="bbm-button ok">Save</a>
+	<a href="#" class="btn cancel">Cancel</a>
+	<a href="#" class="btn ok">Save</a>
 	</div>
 	</script>
 script#subjectDialog(type='text/template')
