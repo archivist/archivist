@@ -112,21 +112,20 @@ var loadMetadata = function(req, res, next) {
 
 
 rest.route('/subjects')
-  .post(createSubject)
-  .get(listSubjects)
+  .post(mode.checkCurrentMode, createSubject)
+  .get(mode.checkCurrentMode, listSubjects)
 
 // Provides all metadata for the client including version strings
 rest.route('/metadata')
-  .get(loadMetadata)
+  .get(mode.checkCurrentMode, loadMetadata)
 
 rest.route('/subjects/merge')
   .get(mode.checkCurrentMode, mergeSubjects)
 
 rest.route('/subjects/:id')
-  .get(readSubject)
+  .get(mode.checkCurrentMode, readSubject)
   .put(mode.checkCurrentMode, updateSubject)
   .delete(mode.checkCurrentMode, deleteSubject)
-
 
 
 module.exports = rest;
