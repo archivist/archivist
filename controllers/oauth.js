@@ -2,15 +2,18 @@ var db = require('./db.js')
   , express = require('express')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
+  , googleClient = {clientID: process.env.GOOGLE_ID, clientSecret: process.env.GOOGLE_SECRET, callbackURL: process.env.GOOGLE_CALLBACK}
   , oauth = express.Router();
 
 // OAUTH 2
 
-var googleClient = {
+if(process.env.NODE_ENV == 'development') {
+  var googleClient = {
     clientID: '118330780636-1cv5qsmnplhehli10eurk8ti2bq2orh0.apps.googleusercontent.com',
     clientSecret: 'wxMAnE2M4jAczrY0TLAFCUuI',
     callbackURL: "http://localhost:5000/auth/google/callback"
   }
+}
 
 passport.serializeUser(function(user, done) {
   done(null, user.id);
