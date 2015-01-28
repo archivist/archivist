@@ -5,6 +5,7 @@ var browserify = require('browserify'),
     gutil = require('gulp-util'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
+    importCSS = require('gulp-import-css'),
     minifyCSS = require('gulp-minify-css'),
     streamify = require('gulp-streamify'),
     source = require('vinyl-source-stream'),
@@ -23,12 +24,12 @@ gulp.task('browserify', function() {
       };
   return bundle();
 });
- 
+
 gulp.task('watch', function() {
   var bundler = browserify(sourceFile,{debug: true, cache: {}, packageCache: {}});
   bundler = watchify(bundler);
   bundler.on('update', rebundle);
- 
+
   function rebundle() {
     console.log('building new version')
     // gulp.src('./client/platform/index.css')
@@ -43,7 +44,7 @@ gulp.task('watch', function() {
       .pipe(source(destFile))
       .pipe(gulp.dest(destFolder));
   }
- 
+
   return rebundle();
 });
 
@@ -51,7 +52,7 @@ gulp.task('compress', function() {
   var bundler = browserify(sourceFile,{cache: {}, packageCache: {} }),
       bundle = function() {
         gulp.src('./client/platform/index.css')
-          .pipe(duo())
+          .pipe(importCSS())
           .pipe(minifyCSS({cache:true}))
           .pipe(rename("index.css"))
           .pipe(gulp.dest(destFolder))
@@ -80,5 +81,5 @@ function duo(opts) {
       });
   });
 }
- 
+
 gulp.task('default', ['browserify', 'watch']);

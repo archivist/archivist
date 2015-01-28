@@ -1,30 +1,30 @@
-@import './node_modules/backgrid/lib/backgrid.css';
-@import './local_modules/backgrid-paginator/backgrid-paginator.css';
-@import './node_modules/backgrid-filter/backgrid-filter.css';
-@import './local_modules/bootstrap-form/bootstrap.css');
-/*@import './node_modules/animate.css/animate.css';*/
-@import './local_modules/notify/notification.css';
-@import './styles/bootstrap.css');
-@import './styles/jstree.css');
-@import './styles/reset.css';
-@import './styles/substance.css';
+@import url('./node_modules/backgrid/lib/backgrid.css');
+@import url('./local_modules/backgrid-paginator/backgrid-paginator.css');
+@import url('./node_modules/backgrid-filter/backgrid-filter.css');
+@import url('./local_modules/bootstrap-form/bootstrap.css');
+@import url('./node_modules/animate.css/animate.css');
+@import url('./local_modules/notify/notification.css');
+@import url('./styles/bootstrap.css');
+@import url('./styles/jstree.css');
+@import url('./styles/reset.css');
+@import url('./styles/substance.css');
 
 body {
   background: #F8F8F8;
 }
- 
+
 /* Clearfix solution */
- 
+
 .container:after {
   content:"";
   display:table;
   clear:both;
 }
- 
+
 .header {
- 
+
 }
- 
+
 .animate,
 .animate * {
 	-webkit-transition: all 0.3s ease-in-out;
@@ -65,22 +65,22 @@ body {
 .document-cell:hover {
 	background: #F8F8F8;
 }
- 
+
 .document-cell .subject {
   color: #999;
   font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
 }
- 
+
 .document-cell .title {
   font-size: 20px;
   line-height: 35px;
   padding: 10px 0px;
   margin: 0 210px 0 10px;
 }
- 
- 
+
+
 .document-cell .authors {
   float: left;
   margin-right: 20px;
@@ -88,7 +88,7 @@ body {
 	font-style: italic;
 	line-height: 15px;
 }
- 
+
 .document-cell .updated-at {
   float: right;
   font-style: italic;
@@ -98,7 +98,7 @@ body {
   right: 20px;
   top: 38px;
 }
- 
+
 .document-cell .delete-document {
   display: block;
   position: absolute;
@@ -113,25 +113,25 @@ body {
 	font-style: italic;
 	padding-right: 13px;
 }
- 
-/* Actions */ 
+
+/* Actions */
 /* -------------------------- */
- 
+
 /* Create Document */
 .actions {
   padding: 20px;
 }
- 
- 
+
+
 /* Stacks */
 
 #stackView, .stacks {
   height: 100%;
 }
 
- 
+
 /* Subjects Panel */
- 
+
 .panel.subjects .available-subjects {
   padding: 20px;
 }
@@ -332,11 +332,11 @@ body {
 .dd-placeholder,
 .dd-empty { margin: 5px 0; padding: 0; min-height: 30px; background: #f2fbff; border: 1px dashed #b6bcbf; box-sizing: border-box; -moz-box-sizing: border-box; }
 .dd-empty { border: 1px dashed #bbb; min-height: 100px; background-color: #e5e5e5;
-    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image: -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                       -webkit-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image:    -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                          -moz-linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
-    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff), 
+    background-image:         linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff),
                               linear-gradient(45deg, #fff 25%, transparent 25%, transparent 75%, #fff 75%, #fff);
     background-size: 60px 60px;
     background-position: 0 0, 30px 30px;
