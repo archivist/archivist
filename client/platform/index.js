@@ -19,13 +19,17 @@ Backbone.middle = _.extend({
 	},
 	goToExt: function(url) {
 		window.location = url;
+	},
+	changeTitle: function(title) {
+		document.title = title;
 	}
 }, Backbone.Events);
 
 Backbone.middle.on({
 	"goTo": Backbone.middle.goTo,
 	"goToPrevious": Backbone.middle.goToPrev,
-	"goToExt": Backbone.middle.goToExt
+	"goToExt": Backbone.middle.goToExt,
+	"domchange:title": Backbone.middle.changeTitle
 });
 
 AppStart();

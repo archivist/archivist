@@ -19,6 +19,7 @@ var Backbone = require('backbone'),
 
 var MainGrid = Backbone.Layout.extend({
   icon: '',
+  title: 'Archivist',
   initialize: function() {
     this.grid = new Backgrid.Grid({
       row: ClickableRow,
@@ -35,6 +36,7 @@ var MainGrid = Backbone.Layout.extend({
     this.contextMenu.reset(this.panel);
   },
   afterRender: function() {
+    Backbone.middle.trigger('domchange:title', this.title);
     $('#' + this.icon).addClass('active');
     this.$el.addClass(this.options.class);
     this.filters();
@@ -311,6 +313,7 @@ exports.stackView = StackView
 
 var DocumentsGrid = MainGrid.extend({
   icon: 'dashboard',
+  title: 'Dashboard',
   className: 'dashboard',
   initialize: function() {
     this.grid = new Backgrid.Grid({
@@ -786,6 +789,7 @@ exports.subjectsView = SubjectsView
 
 var SubjectsTreeView = Backbone.Layout.extend({
   icon: 'subjects',
+  title: 'Subjects',
   className: 'subjects',
   template: '#subjectsTreeLayout',
 
@@ -799,6 +803,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
   },
   afterRender: function() {
     var self = this;
+    Backbone.middle.trigger('domchange:title', this.title);
     $('#' + this.icon).addClass('active');
     this.contextMenu.reset(this.panel);
     $('.tree')
