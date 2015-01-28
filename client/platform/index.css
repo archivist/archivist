@@ -4,7 +4,6 @@
 @import url('./local_modules/bootstrap-form/bootstrap.css');
 @import url('./node_modules/animate.css/animate.css');
 @import url('./local_modules/notify/notification.css');
-@import url('./styles/bootstrap.css');
 @import url('./styles/jstree.css');
 @import url('./styles/subject-tree.css');
 @import url('./styles/reset.css');
@@ -471,7 +470,8 @@ MODAL
 
 
 /* Modal positioning */
-.subject-modal-wrapper {
+.subject-modal-wrapper,
+.subject-dialog-wrapper {
   box-sizing: border-box;
   position: fixed;
   left: 0;
@@ -484,11 +484,17 @@ MODAL
   background-color: rgba(255, 255, 255, 0.5);
 }
 
-.subject-modal-wrapper * {
+.subject-dialog-wrapper {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.subject-modal-wrapper *,
+.subject-dialog-wrapper * {
   box-sizing: border-box; 
 }
 
-.subject-modal-modal {
+.subject-modal-modal,
+.subject-dialog-modal {
   -moz-transition: opacity 200ms ease,-moz-transform 200ms ease;
   -o-transition: opacity 200ms ease,-o-transform 200ms ease;
   -webkit-transition: opacity 200ms ease,-webkit-transform 200ms ease;
@@ -508,14 +514,89 @@ MODAL
   backface-visibility: hidden;
 }
 
-.subject-modal {
-  border-radius: 3px;
-  margin: auto;
-  width: auto;
-  max-width: 550px; 
+.dialog-header {
+  padding: 20px 30px 10px;
+  font-size: 15px;
+  color: #1AA0DD;
 }
 
-.subject-modal-views {
-  width: 100%;
-  box-sizing: border-box; 
+.dialog-body {
+  padding: 20px 30px;
+  line-height: 20px;
+  font-size: 13px;
+}
+
+.dialog-footer {
+  padding: 15px 30px 20px;
+}
+
+.dialog-footer .run {
+  color: red;
+  border: 2px solid red;
+  padding: 15px 30px;
+  background: none;
+}
+
+.dialog-footer .cancel {
+  color: gray;
+  border: 2px solid gray;
+  padding: 15px 30px;
+  margin-left: 15px;
+  background: none;
+}
+
+.dialog-footer button[disabled] {
+  opacity: 0.5;
+}
+
+#meter{
+  display: none;
+  position: absolute;
+  margin-top: 10px;
+  width: 0px;
+  height: 0.5px;
+  border-right: 5px solid white;
+  background-color: #E65C5C;
+  box-shadow: 0 0 10px #E65C5C;
+  -webkit-transition: width 0.5s;
+  -webkit-transition: background-color 0.5s;
+  -webkit-transition: box-shadow 0.5s;
+  -webkit-animation: loading 1.5s ease-out infinite;
+}
+
+#meter.ok {
+  background-color: #22B503;
+  box-shadow: 0 0 10px #22B503;
+}
+
+#meter.error {
+  background-color: red;
+  box-shadow: 0 0 10px red;
+}
+
+@-webkit-keyframes loading{
+  0%{
+    width: 0px;}
+
+  100%{
+    opacity: 0;
+    width: 500px;
+  }
+}
+
+#state {
+  text-align: center;
+  position: relative;
+  top: 20px;
+  font-style: italic;
+  color: #E65C5C;
+  -webkit-transition: color 0.5s;
+}
+
+#state.ok {
+  color: #22B503;
+}
+
+#state.error {
+  color: red;
 }

@@ -15,8 +15,9 @@ script#subjectsLayout(type='text/template')
 	<div id="context-panel" class="context-panel"></div>
 	<div class="sidebar"></div>
 script#subjectsTreeLayout(type='text/template')
-	<div id="context-panel" class="context-panel"><input type="text" id="search_subject" placeholder="Type to search ..."/></div>
-	<div class="tree"></div>script#subjectModal(type='text/template')
+	<div id="context-panel" class="context-panel"></div>
+	<div class="tree"></div>
+script#subjectModal(type='text/template')
 	<div class="modal-body">
 	<textarea id="description" placeholder="Describe subject here..."><% if (typeof(description) != "undefined"){ %><%= description %><% } %></textarea>
 	</div>
@@ -31,9 +32,11 @@ script#subjectDialog(type='text/template')
 	</div>
 	<div class="dialog-body">
 	<%= description %>
+	<div id="meter"></div>
+	<div id="state"></div>
 	</div>
 	<div class="dialog-footer">
-	<a href="#" class="bbm-button run"><%= description %></a>
-	<a href="#" class="bbm-button cancel">Cancel</a>
+	<button class="bbm-button run"><%= action %></button>
+	<button class="bbm-button cancel">Cancel</button>
 	</div>
 	</script>

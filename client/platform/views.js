@@ -939,23 +939,37 @@ var SubjectsTreeView = Backbone.Layout.extend({
         
         console.log('deleting...', obj.id);
 
-        obj.model.destroy({
-          success: function(model,resp) {
-            if(inst.is_selected(obj)) {
-              inst.delete_node(inst.get_selected());
-            } else {
-              inst.delete_node(obj);
-            }
+        var dialog = new Backbone.Model({
+          title: "Delete Subject",
+          description: "Deleting a subject is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+          action: "Confirm deletion",
+          submitState: "Deleting...",
+          initState: "Removing subject from documents..."
+        })
 
-            Notify.spinner('hide');
-            Notify.info('Subject ' + obj.model.get('name') + ' has been removed!');
-          },
-          error: function(model,err) { 
-            Notify.spinner('hide');
-            Notify.info('Sorry an error occurred!', err.responseText);
-            console.log(err);
-          }
+        dialog.on('confirm', function(dialog){
+          obj.model.destroy({
+            success: function(model,resp) {
+              if(inst.is_selected(obj)) {
+                inst.delete_node(inst.get_selected());
+              } else {
+                inst.delete_node(obj);
+              }
+              dialog.submit('Done! Exiting from maintenance mode...', 'ok');
+              Notify.spinner('hide');
+              Notify.info('Subject ' + obj.model.get('name') + ' has been removed!');
+            },
+            error: function(model,err) { 
+              Notify.spinner('hide');
+              Notify.info('Sorry an error occurred!', err.responseText);
+              dialog.submit(err, 'error');
+              console.log(err);
+            }
+          });
         });
+
+        var editDialog = new subjectDialog({model: dialog});
+        $('#main').append(editDialog.render().el);
       }
     };
 
@@ -1009,22 +1023,35 @@ var SubjectsTreeView = Backbone.Layout.extend({
         
         console.log('completing merge of ', nodeToMerge.id, 'into ', targetNode.id);
 
-        request
-          .get('/api/subjects/merge')
-          .query({ one: nodeToMerge.id, into: targetNode.id })
-          .end(function(res) {
-            if (res.ok) {
-              Notify.spinner('hide');
+        var dialog = new Backbone.Model({
+          title: "Merge Subjects",
+          description: "Merging subjects is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+          submitState: "Merging...",
+          initState: "Changing subjects in documents..."
+        })
 
-              inst.delete_node(nodeToMerge);
-              $.jstree.currentState.nodeToMerge = null;
+        dialog.on('confirm', function(dialog){
+          request
+            .get('/api/subjects/merge')
+            .query({ one: nodeToMerge.id, into: targetNode.id })
+            .end(function(res) {
+              if (res.ok) {
+                Notify.spinner('hide');
 
-              Notify.info('Merge has been completed!');
-            } else {
-              Notify.spinner('hide');
-              var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
-            }
-          });
+                inst.delete_node(nodeToMerge);
+                $.jstree.currentState.nodeToMerge = null;
+                dialog.submit('Done! Exiting from maintenance mode...', 'ok');
+                Notify.info('Merge has been completed!');
+              } else {
+                Notify.spinner('hide');
+                dialog.submit(err, res.text);
+                var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+              }
+            });
+        });
+
+        var mergeDialog = new subjectDialog({model: dialog});
+        $('#main').append(mergeDialog.render().el);
       }
     };
 
@@ -1139,6 +1166,34 @@ var subjectModal = Backbone.Modal.extend({
         console.log(err);
       }
     })
+  }
+});
+
+var subjectDialog = Backbone.Modal.extend({
+  prefix: 'subject-dialog',
+  keyControl: false,
+  template: _.template($('#subjectDialog').html()),
+  cancelEl: '.cancel',
+  submitEl: '.run',
+  beforeSubmit: function() {
+    debugger;
+    this.$el.find('button').prop('disabled', true);
+    this.$el.find('.run').text(this.model.get('submitState'));
+    this.$el.find('#meter').show();
+    this.$el.find('#state').html(this.model.get('initState'))
+    this.model.trigger('confirm', this);
+    return false;
+  },
+  submit: function(msg, state) {
+    this.$el.find('#meter').addClass(state);
+    this.$el.find('#state').addClass(state).html(msg);
+    this.model.stopListening();
+    setTimeout(function(dialog){
+      dialog.destroy();
+    }, 500, this);
+  },
+  cancel: function() {
+    this.model.stopListening();
   }
 });
 
