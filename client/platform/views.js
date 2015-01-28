@@ -897,7 +897,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
         var id = new ObjectId().toString();
 
-        inst.create_node(obj, {id: id}, "last", function (new_node) {
+        inst.create_node(obj, {id: id, text: 'New Subject'}, "last", function (new_node) {
           //setTimeout(function () { inst.edit(new_node); },0);
           o.collection.create({ _id: new_node.id, name: new_node.text, parent: new_node.parent }, {
             success: function(model,resp) {
@@ -1044,6 +1044,24 @@ var SubjectsTreeView = Backbone.Layout.extend({
     this.remove();
     this.unbind();
   },
+  _addNewSubject: function() {
+    var id = new ObjectId().toString(),
+        new_node = {'id': id, 'text': 'New Subject'};
+    
+    $('.tree').jstree('create_node', '#', new_node, 'last');
+
+    this.collection.create({ _id: new_node.id, name: new_node.text, parent: '' }, {
+      success: function(model, resp) {
+        Notify.spinner('hide');
+        Notify.info('Subject ' + model.get('name') + ' has been created!');
+      },
+      error: function(model, err) { 
+        Notify.spinner('hide');
+        Notify.info('Sorry, the error occured! Please reload the page and try again.');
+        console.log(err);
+      }
+    });
+  },
   _onMoveNode: function(e, data, context) {
     console.log('node moved yay', e, data);
       
@@ -1096,19 +1114,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
   },
   panel: [
     {
-      name: "save",
-      icon: "save",
-      fn: "_save"
-    },
-    {
       name: "Add new subject",
       icon: "plus",
-      fn: "_add"
-    },
-    {
-      name: "import",
-      icon: "file-text-o",
-      fn: "_import"
+      fn: "_addNewSubject"
     }
   ]
 })
