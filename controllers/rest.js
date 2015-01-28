@@ -113,7 +113,7 @@ var loadMetadata = function(req, res, next) {
 
 rest.route('/subjects')
   .post(mode.checkCurrentMode, createSubject)
-  .get(mode.checkCurrentMode, listSubjects)
+  .get(listSubjects)
 
 // Provides all metadata for the client including version strings
 rest.route('/metadata')
