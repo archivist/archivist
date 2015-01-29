@@ -20,7 +20,6 @@ var mongoose = require('mongoose')
 
 // Substance stuff
 // --------------------
-
 if (process.env.NODE_ENV === "development") {
   var CJSServer = require('substance-cjs');
   var config = require("./.screwdriver/project.json");
@@ -88,10 +87,7 @@ app.use(session({
 	resave: true,
   saveUninitialized: true,
   secret: 'archivistSecretWeapon',
-  store: new MongoStore({
-    mongooseConnection: mongoose.connections[0],
-    ttl: 2 * 3600
-  })
+  store: sessionStore
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -100,10 +96,16 @@ app.use(express.static(__dirname + '/public'));
 
 // MONGOOSE CONNECTION
 
-mongoose.connection.on("open", function(ref) {
-	app.listen(port, function() {
+var sessionStore = new MongoStore({
+    mongooseConnection: mongoose.connections[0],
+    ttl: 2 * 3600
+  }, function(e){
+  	app.listen(port, function() {
 		console.log("Archivist server listening on port %d", port);
 	});
+})
+
+mongoose.connection.on("fullsetup", function(ref) {
 	return console.log("Connected to mongo server!");
 });
 
