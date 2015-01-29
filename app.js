@@ -119,7 +119,7 @@ app.use('/api', rest);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('admin');
+    res.render('admin', {user: req.user});
   })
 
 app.route('/editor/new')
@@ -131,9 +131,9 @@ app.route('/editor/new')
 	  });
   });
 
-app.route('/:var(subjects)*?')
+app.route('/:var(subjects|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('admin');
+    res.render('admin', {user: req.user});
   })
 
 // ERROR ROUTES

@@ -416,11 +416,7 @@ MODAL
 }
 
 .modal-body {
-  padding-bottom: 10px;
-}
-
-.modal-body .form-group:last-child {
-  border-bottom: none;
+  padding: 10px;
 }
 
 .modal-footer {
@@ -437,6 +433,7 @@ MODAL
   text-align: center;
   border-top: 1px solid #e5e5e5;
   background-color: #f5f5f5;
+  height: 50px;
 }
 .modal-footer a.btn {
   font-size: 13px;
@@ -599,4 +596,16 @@ MODAL
 
 #state.error {
   color: red;
+}
+
+
+
+/* USER LIST */
+
+.userlist .string-cell {
+  display: table-cell;
+  font-size: 20px;
+  line-height: 35px;
+  padding: 10px 0;
+  text-align: center;
 }

@@ -18,6 +18,13 @@ var menuData = [
     id: 'subjects',
     icon: 'tags',
     url: '/subjects'
+  },
+  {
+    name: 'Users',
+    id: 'users',
+    super: true,
+    icon: 'users',
+    url: '/users'
   }
 ]
 
@@ -33,9 +40,8 @@ var Router = Backbone.Router.extend({
 	},
 	routes: {
     '': 'dashboard',
-    'subjects': 'subjects',
-    'subjects/add': 'subjectAdd',
-    'subjects/:id': 'subjectEdit'
+    'subjects': 'subjectsList',
+    'users': 'usersList'
 	},
   dashboard: function(callback, id) {
     var dashboardGrid = [
@@ -49,7 +55,7 @@ var Router = Backbone.Router.extend({
     this.grid(dashboardGrid, 'documents', 'documentsGrid', callback, id);
   },
 
-  subjects: function(callback, id) {
+  subjectsList: function(callback, id) {
     Notify.spinner('show');
 
     var self = this;
@@ -64,21 +70,36 @@ var Router = Backbone.Router.extend({
     });
   },
 
-  subjectPage: function(id) {
-      Notify.spinner('show');
+  usersList: function(callback, id) {
+    var usersGrid = [
+      {
+        name: 'name',
+        label: 'name',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'email',
+        label: 'email',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'access',
+        label: 'access',
+        editable: true,
+        cell: 'boolean'
+      },
+      {
+        name: 'super',
+        label: 'super user',
+        editable: true,
+        cell: 'boolean'
+      }
+    ];
+   
+    this.grid(usersGrid, 'users', 'usersGrid', callback, id);
 
-      var self = this,
-          model = models.subject.create({_id:id}),
-          terms = new models.terms([],{ queryParams: {query: {dictionary: id}}, state: {pageSize: 500}})
-
-      model.fetch().done(function() {
-        terms.fetch().done(function() {
-          var view = new views.categoryView({ model: model, collection: self.dictionaries, contextMenu: self.contextMenu, layout: self.layout, terms: terms });   
-          self.layout.stackView.push(view);
-          Notify.spinner('hide');
-          Notify.info( 'Data has been loaded' );
-        });
-      });
   },
 
   grid: function(grid, colName, viewName, callback, id) {

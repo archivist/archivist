@@ -98,6 +98,7 @@ var mergeSubjects = function(req, res, next) {
   });
 }
 
+// Subjects metadata
 var loadMetadata = function(req, res, next) {
   db.getSubjectDBVersion(function(err, subjectDBVersion) {
     db.listSubjects(req.query, function(err, subjects) {
@@ -120,12 +121,42 @@ rest.route('/metadata')
   .get(mode.checkCurrentMode, loadMetadata)
 
 rest.route('/subjects/merge')
-  .get(mode.checkCurrentMode, mergeSubjects)
+  .get(mode.checkCurrentMode, db.checkSuperUser, mergeSubjects)
 
 rest.route('/subjects/:id')
   .get(mode.checkCurrentMode, readSubject)
   .put(mode.checkCurrentMode, updateSubject)
-  .delete(mode.checkCurrentMode, deleteSubject)
+  .delete(mode.checkCurrentMode, db.checkSuperUser, deleteSubject)
+
+
+/* The Users controller */
+
+var readUser = function(req, res, next) {
+  db.getUser(req.params.id, function(err, user) {
+    if (err) return next(err);
+    res.json(user);
+  });
+}
+
+var updateUser = function(req, res, next) {
+  db.updateUser(req.params.id, req.body, function(err, user) {
+    if (err) return next(err);
+    res.json(user);
+  });
+}
+var listUsers = function(req, res, next) {
+  db.listUsers(req.query, function(err, users) {
+    if (err) return next(err);
+    res.json(users);
+  });
+}
+
+rest.route('/users')
+  .get(db.checkSuperUser, listUsers)
+
+rest.route('/users/:id')
+  .get(db.checkSuperUser, readUser)
+  .put(db.checkSuperUser, updateUser)
 
 
 module.exports = rest;

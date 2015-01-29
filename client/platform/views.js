@@ -927,9 +927,12 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "icon"        : false,
       "separator_after" : false,
       "_disabled"   : function (data) {
+        if (!window.superaccess) return true;
+        
         var inst = $.jstree.reference(data.reference),
             obj = inst.get_node(data.reference);
             hasChildren = obj.children.length > 0;
+
         return hasChildren; // Only leaf nodes can be deleted
       },
       "label"       : "Delete",
@@ -981,6 +984,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "_disabled"     : false,
       "label"       : "Merge",
       "_disabled"   : function (data) {
+        if (!window.superaccess) return true;
+
         var inst = $.jstree.reference(data.reference),
             obj = inst.get_node(data.reference);
             hasChildren = obj.children.length > 0;
@@ -1002,6 +1007,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "separator_before"  : false,
       "separator_after" : true,
       "_disabled"     : function (data) {
+        if (!window.superaccess) return true;
         return !$.jstree.currentState.nodeToMerge;
       },
       "label"       : "Merge into",
@@ -1240,6 +1246,24 @@ var SubjectsEdit = Backbone.View.extend({
   }
 })
 exports.subjectsEdit = SubjectsEdit
+
+// USERS GRID
+var UsersGrid = MainGrid.extend({
+  icon: 'users',
+  title: 'Users',
+  className: 'userlist',
+  initialize: function() {
+    $('#' + this.icon).addClass('active');
+    this.grid = new Backgrid.Grid({
+      columns: this.options.columns,
+      collection: this.options.collection
+    });
+    $(this.$el).append(this.grid.render().$el);
+  },
+  filters: function() {
+  }
+})
+exports.usersGrid = UsersGrid
 
 
 //MENU

@@ -1,10 +1,19 @@
 script#mainmenu(type='text/template')
 	<ul>
 	<% items.each(function(item) { %>
+	<% if(item.get('super')){ %>
+	<% if(!{JSON.stringify(user.super)}){ %>
 	<li id="<%= item.get('id') %>" data-url="<%= item.get('url') %>">
 	<i class="fa fa-<%= item.get('icon') %> fa-2x"></i>
 	<span class="title"><%= item.get('name') %></span>
 	</li>
+	<% } %>
+	<% } else { %>
+	<li id="<%= item.get('id') %>" data-url="<%= item.get('url') %>">
+	<i class="fa fa-<%= item.get('icon') %> fa-2x"></i>
+	<span class="title"><%= item.get('name') %></span>
+	</li>
+	<% } %>
 	<% }) %>
 	</ul>
 script#contextmenu(type='text/template')
@@ -15,7 +24,12 @@ script#subjectsLayout(type='text/template')
 	<div id="context-panel" class="context-panel"></div>
 	<div class="sidebar"></div>
 script#subjectsTreeLayout(type='text/template')
-	<div id="context-panel" class="context-panel"><input type="text" id="search_subject" placeholder="Type to search ..."/></div>
+	<div id="context-panel" class="context-panel">
+	<div class="subject-search animate">
+	<span class="search">&nbsp;</span>
+	<input type="search" id="search_subject" placeholder="Type to search..."/>
+	</div>
+	</div>
 	<div class="tree"></div>
 script#subjectModal(type='text/template')
 	<div class="modal-body">

@@ -460,15 +460,12 @@ db.getUser = function(id, done) {
  */
 
 db.updateUser = function(id, data, cb) {
-  var data = req.body
-    , id = req.params.id;
-
   delete data._id;
   delete data._v;
 
   User.findByIdAndUpdate(id, { $set: data }, function (err, user) {
     if (err) return next(err);
-    cb(user);
+    cb(err, user);
   });
 } 
 
