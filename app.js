@@ -15,8 +15,7 @@ var mongoose = require('mongoose')
 	, _ = require('underscore')
 	, db = require('./controllers/db.js')
 	, oauth = require('./controllers/oauth.js')
-	, mode = require('./controllers/mode.js')
-	, DocumentFactory = require('./models/document_factory.js');
+	, mode = require('./controllers/mode.js');
 
 // Substance stuff
 // --------------------
@@ -126,11 +125,10 @@ app.route('/')
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
-		var newDoc = DocumentFactory.createEmptyDoc();
-	  db.createDocument(newDoc, function(err, doc) {
-	    if (err) return next(err);
-	    res.redirect('/archivist.html#state=composer.main;0.path='+doc.id+';1.contextId=toc');
-	  });
+		db.createEmptyDocument(function(err, doc) {
+			if (err) return next(err);
+			res.redirect('/archivist.html#state=composer.main;0.path=' + doc._id + ';1.contextId=toc');
+		})
   });
 
 app.route('/:var(subjects|users)*?')

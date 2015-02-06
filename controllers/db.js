@@ -36,6 +36,17 @@ db.createDocument = function(document, cb) {
 
 
 /** 
+ * Creates empty Document
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+db.createEmptyDocument = function(cb) {
+  Document.createEmpty(cb);
+}
+
+
+/** 
  * Gets Document record by unique id 
  *
  * @param {string} id - The unique id of target document record
@@ -116,7 +127,7 @@ db.listDocuments = function(opt, cb) {
     var query = util.getQuery(opt.query),
         options = util.getOptions(opt);
 
-  Document.find(query, 'nodes.document.title nodes.document.created_at nodes.document.authors id', options, function(err, documents) {
+  Document.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.authors id', options, function(err, documents) {
     cb(err, documents);
   });
 }

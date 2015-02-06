@@ -10,7 +10,7 @@ var Documents = Utility.collection.extend({
   url: "/api/documents",
   state: {
     pageSize: 20,
-    sortKey: "created_at",
+    sortKey: "nodes.document.updated_at",
     order: 1
   }
 })
