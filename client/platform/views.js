@@ -1032,6 +1032,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         var dialog = new Backbone.Model({
           title: "Merge Subjects",
           description: "Merging subjects is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+          action: "Confirm merging",
           submitState: "Merging...",
           initState: "Changing subjects in documents..."
         })
@@ -1182,7 +1183,6 @@ var subjectDialog = Backbone.Modal.extend({
   cancelEl: '.cancel',
   submitEl: '.run',
   beforeSubmit: function() {
-    debugger;
     this.$el.find('button').prop('disabled', true);
     this.$el.find('.run').text(this.model.get('submitState'));
     this.$el.find('#meter').show();

@@ -1,162 +1,186 @@
-/* The REST controller */
- 
-var db = require('./db.js')
-  , mode = require('./mode.js')
-	,	express = require('express')
-  , rest = express.Router();
+var Document = require('../models/document.js')
+  , System = require('../models/system.js') 
+  , util = require('./util.js')
+  , sUtil = require('substance-util')
+  , _ = require('underscore');
+
+module.exports = function(schema, options) {
+  options = options || {};
 
 
-/* The Documents REST controller */
+  /** 
+   * Creates record from JSON
+   *
+   * @param {string} data - JSON represenation of new record
+   * @param {callback} cb - The callback that handles the results 
+   */
 
-var createDocument = function(req, res, next) {
-  db.createDocument(req.body, function(err) {
-    if (err) return next(err);
-    res.json(200);
-  });
-}
+  schema.statics.add = function(data, cb) {
+    var self = this;
 
-var readDocument = function(req, res, next) {
-  db.getDocument(req.params.id, function(err, document) {
-    if (err) return next(err);
-    res.json(document);
-  });
-}
+    new self(data).save(function(err, record) {
+      if (err) return cb(err);
+      cb(err, record);
+    })
+  }
 
-var updateDocument = function(req, res, next) {
-  db.updateDocument(req.params.id, req.body, function(err, document) {
-    if (err) return next(err);
-    res.json(document);
-  });
-}
+  /** 
+   * Updates record unique JSON
+   *
+   * @param {string} id - The unique id of target record
+   * @param {string} data - JSON with updated properties
+   * @param {callback} cb - The callback that handles the results 
+   */
 
-var deleteDocument = function(req, res, next) {
-  db.removeDocument(req.params.id, function(err) {
-    if (err) return next(err);
-    res.json(200);
-  });
-}
+  schema.statics.update = function(id, data, cb) {
+    var self = this;
 
-var listDocuments = function(req, res, next) {
-  db.listDocuments(req.query, function(err, documents) {
-    if (err) return next(err);
-    res.json(documents);
-  });
-}
-
-
-rest.route('/documents')
-  .post(mode.checkCurrentMode, createDocument)
-  .get(listDocuments)
-
-rest.route('/documents/:id')
-  .get(readDocument)
-  .put(mode.checkCurrentMode, updateDocument)
-  .delete(mode.checkCurrentMode, deleteDocument)
-
-
-/* The Subjects REST controller */
-
-var createSubject = function(req, res, next) {
-  db.createSubject(req.body, function(err, subject) {
-    if (err) return next(err);
-    res.json(subject);
-  });
-}
-
-var readSubject = function(req, res, next) {
-  db.getSubject(req.params.id, function(err, subject) {
-    if (err) return next(err);
-    res.json(subject);
-  });
-}
-
-var updateSubject = function(req, res, next) {
-  db.updateSubject(req.params.id, req.body, function(err, subject) {
-    if (err) return next(err);
-    res.json(subject);
-  });
-}
-
-var deleteSubject = function(req, res, next) {
-  db.removeSubject(req.params.id, function(err) {
-    if (err) return next(err);
-    res.json(200);
-  });
-}
-
-var listSubjects = function(req, res, next) {
-  db.listSubjects(req.query, function(err, subjects) {
-    if (err) return next(err);
-    res.json(subjects);
-  });
-}
-
-var mergeSubjects = function(req, res, next) {
-  db.mergeSubjects(req.query.one, req.query.into, function(err) {
-    if (err) return next(err);
-    res.json(200);
-  });
-}
-
-// Subjects metadata
-var loadMetadata = function(req, res, next) {
-  db.getSubjectDBVersion(function(err, subjectDBVersion) {
-    db.listSubjects(req.query, function(err, subjects) {
-      if (err) return next(err);
-      res.json({
-        subjectDBVersion: subjectDBVersion,
-        subjects: subjects 
+    delete data.__v;
+    self.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, record) {
+      if (err) return err;
+      self.incrementDBVersion(function(err) {
+        cb(err, record);
       });
     });
-  });
+  }
+
+  /** 
+   * Gets record by unique id 
+   *
+   * @param {string} id - The unique id of target record
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  schema.statics.get = function(id, cb) {
+    this.findById(id, function(err, record) {
+      cb(err, record);
+    });
+  }
+
+  /** 
+   * List Subjects
+   *
+   * @param {string} opt - The query options from request
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  schema.statics.list = function(opt, cb) {
+    var query = util.getQuery(opt.query),
+        options = util.getOptions(opt);
+
+    this.find(query, null, options, function(err, records) {
+      cb(err, records);
+    });
+  }
+
+  /** 
+   * Removes record by unique id 
+   *
+   * @param {string} id - The unique id of target record
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  schema.statics.delete = function(id, cb) {
+    var self = this;
+    // Unsave op (needs to be wrapped in a transaction)
+    this.propagateChange(id, {mode: "delete"}, function(err) {
+      if (err) return cb(err);
+      self.findByIdAndRemove(id, function (err) {
+        if (err) return cb(err);
+        self.incrementDBVersion(cb);
+      });
+    });
+  };
+
+  /** 
+   * Updates references in a document, either removing them or replacing them with a new id
+   *
+   * @param {string} doc - Substance document as JSON
+   * @param {string} data - subject to be updated
+   * @param {object} options - mode = delete|replace, replace mode has newSubjectId
+   */
+   
+  schema.statics.updateForDoc = function(docId, id, opt, cb) {
+    Document.get(docId, function(err, doc) {
+      if (err) return cb(err);
+
+      var subjectReferences = [];
+      var hasChanged = false;
+      _.each(doc.nodes, function(node) {
+        if (node.type === options.referenceType) {
+          console.log('node.target#before', node.id, node.target);
+          // Skip nodes subject refs that don't have targets
+          if (!node.target) return;
+          var pos = node.target.indexOf(id);
+          if (pos > -1) {
+            if (opt.mode === "delete") {
+              node.target.splice(pos, 1);
+            } else {
+              node.target[pos] = opt.newSubjectId;
+              node.target = _.uniq(node.target);
+            }
+            hasChanged = true;
+          }
+          console.log('node.target#after', node.id, node.target);
+        }
+      });
+
+      if (hasChanged) {
+        Document.update(docId, doc, function(err) {
+          cb(err);
+        });
+      } else {
+        console.log(docId, 'did not change... move along');
+        cb(null);
+      }
+    });
+  }
+
+  /** 
+   * Updates references in a document, either removing them or replacing them with a new id
+   *
+   * @param {string} data - entity to be updated
+   * @param {object} options - mode = delete|replace, replace mode has newId
+   */
+   
+  schema.statics.propagateChange = function(id, opt, cb) {
+    var self = this;
+
+    Document.find({}, 'id', {}, function(err, documents) {
+      sUtil.async.each({
+        items: documents,
+        iterator: function(doc, cb) {
+          self.updateForDoc(doc._id, id, opt, cb);
+        }
+      }, function(err) {
+        console.log('done with everything yay!');
+        cb(err);
+      });
+    });
+  };
+
+  /**
+   * Increment entity db version variable
+   *
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  schema.statics.incrementDBVersion = function(cb) {
+    System.findOneAndUpdate({name: options.systemCounter}, { $inc: {'version': 1 }}, {new: true, upsert: true}, function(err, variable) {
+      cb(err, variable);
+    });
+  };
+
+  /**
+   * Get entity db version variable
+   *
+   * @param {callback} cb - The callback that handles the results 
+   */
+
+  schema.statics.getDBVersion = function(cb) {
+    System.findOne({name: options.systemCounter}, function(err, variable) {
+      if (err) return err;
+      cb(err, variable.get('version'));
+    });
+  };
 }
-
-
-rest.route('/subjects')
-  .post(mode.checkCurrentMode, createSubject)
-  .get(listSubjects)
-
-// Provides all metadata for the client including version strings
-rest.route('/metadata')
-  .get(mode.checkCurrentMode, loadMetadata)
-
-rest.route('/subjects/merge')
-  .get(mode.checkCurrentMode, db.checkSuperUser, mergeSubjects)
-
-rest.route('/subjects/:id')
-  .get(mode.checkCurrentMode, readSubject)
-  .put(mode.checkCurrentMode, updateSubject)
-  .delete(mode.checkCurrentMode, db.checkSuperUser, deleteSubject)
-
-
-/* The Users controller */
-
-var readUser = function(req, res, next) {
-  db.getUser(req.params.id, function(err, user) {
-    if (err) return next(err);
-    res.json(user);
-  });
-}
-
-var updateUser = function(req, res, next) {
-  db.updateUser(req.params.id, req.body, function(err, user) {
-    if (err) return next(err);
-    res.json(user);
-  });
-}
-var listUsers = function(req, res, next) {
-  db.listUsers(req.query, function(err, users) {
-    if (err) return next(err);
-    res.json(users);
-  });
-}
-
-rest.route('/users')
-  .get(db.checkSuperUser, listUsers)
-
-rest.route('/users/:id')
-  .get(db.checkSuperUser, readUser)
-  .put(db.checkSuperUser, updateUser)
-
-
-module.exports = rest;

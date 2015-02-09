@@ -2,8 +2,10 @@
  
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
+  , System = require('./system.js')
   , async = require('async')
-  , backup = require('../controllers/backup.js');
+  , backup = require('../controllers/backup.js')
+  , util = require('../controllers/util.js');
 
 var documentSchema = new Schema({
   	_schema: [String]
@@ -16,6 +18,33 @@ var documentShadowSchema = new Schema({}, {collection: 'documents_backup', stric
 		documentShadow = mongoose.model('documentShadow', documentShadowSchema);
 
 documentSchema.plugin(backup, { shadow: documentShadow });
+
+/** 
+ * Creates Document record from JSON
+ *
+ * @param {string} document - JSON represenation of new document
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.add = function(document, cb) {
+  if (document.hasOwnProperty('schema')) {
+    document._schema = document.schema;
+    delete document.schema;
+    document._id = document.id;
+    delete document.id;
+  }
+
+  var newDoc = new this(document);
+  newDoc.save(function(err) {
+    cb(err, newDoc);
+  });
+}
+
+/** 
+ * Creates empty Document record from JSON
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
 
 documentSchema.statics.createEmpty = function(cb) {
 	var docId = mongoose.Types.ObjectId();
@@ -152,6 +181,103 @@ documentSchema.statics.createEmpty = function(cb) {
 	var emptyDoc = new this(emptyDocJson);
   emptyDoc.save(function(err, emptyDoc) {
     cb(err, emptyDoc);
+  });
+}
+
+/** 
+ * Gets Document record by unique id 
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.get = function(id, cb) {
+  this.findById(id, function(err, document) {
+    doc = document.toJSON();
+    if (doc.hasOwnProperty('_schema')) {
+      delete doc._schema;
+      doc.schema = document._schema;
+    }
+
+    cb(err, doc);
+  });
+}
+
+/** 
+ * Updates Document record unique JSON
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {string} data - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.update = function(id, data, cb) {
+  var self = this;
+
+  if (data.hasOwnProperty('schema')) {
+    data._schema = data.schema;
+    delete data.schema;
+  }
+
+  self.findById(id, "__v", function(err, currentDoc) {
+    console.log('currentDoc.__v', currentDoc.__v, 'data', data.__v);
+    // Perform version check
+    if (currentDoc.__v !== data.__v) {
+      return cb('Document can not be saved becuase your local version is outdated. Please open document in a new tab and re-apply your changes.');
+    }
+
+    delete data.__v; // clear __v property, so $inc can do its job
+
+    self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
+      self.getSubjectDBVersion(function(err, subjectDBVersion) {
+        cb(err, {
+          documentVersion: document.__v,
+          subjectDBVersion: subjectDBVersion
+        });
+      });
+    });
+  });
+}
+
+/** 
+ * Removes Document record by unique id 
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.delete = function(id, cb) {
+  this.findByIdAndRemove(id, function (err) {
+    cb(err);
+  });
+}
+
+/** 
+ * List Documents
+ *
+ * @param {string} opt - The query options from request
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.list = function(opt, cb) {
+  var query = util.getQuery(opt.query),
+      options = util.getOptions(opt);
+
+  this.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.authors id', options, function(err, documents) {
+    cb(err, documents);
+  });
+}
+
+/**
+ * Get subjects_db_version variable
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.getSubjectDBVersion = function(cb) {
+  System.findOne({name: 'subjects_db_version'}, function(err, variable) {
+    if (err) return err;
+    cb(err, variable.get('version'));
   });
 }
  

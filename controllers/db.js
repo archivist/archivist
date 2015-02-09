@@ -1,3 +1,5 @@
+// OUTDATED VERSION, moved to rest plugin API.js, maintenance.js
+
 /* The DB controller */
  
 var Document = require('../models/document.js')

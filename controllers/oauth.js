@@ -1,4 +1,4 @@
-var db = require('./db.js')
+var User = require('../models/user.js')
   , express = require('express')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy
@@ -19,11 +19,11 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 passport.deserializeUser(function(id, done) {
-  db.getUser(id, done);
+  User.get(id, done);
 });
 
 passport.use(new GoogleStrategy(googleClient, function(accessToken, refreshToken, profile, done) {
-  db.findOrCreateUser(profile, done);
+  User.findOrCreate(profile, done);
 }));
 
 oauth.ensureAuthenticated = function(req, res, next) {
@@ -33,7 +33,7 @@ oauth.ensureAuthenticated = function(req, res, next) {
 
 oauth.ensureSuperAuth = function(req, res, next) {
   if (req.isAuthenticated()) { 
-    db.checkSuperUser(req, res, next);
+    User.checkSuper(req, res, next);
   } else {
     res.redirect('/login');
   }

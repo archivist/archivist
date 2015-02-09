@@ -1,3 +1,5 @@
+var System = require('../models/system.js');
+
 exports.getQuery = function(query) {
   if(query){
     if(query instanceof Object){
@@ -32,4 +34,33 @@ exports.getOptions = function(query) {
     options.limit = query.page_limit;
   }
   return options;
+}
+
+/* System variables API */
+
+/**
+ * Set system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {string} value - JSON with updated properties
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+exports.setSystemVariable = function(name, value, cb) {
+  System.findOneAndUpdate({name: name}, { $set: value }, {new: true, upsert: true}, function(err, variable) {
+    cb(err, variable);
+  });
+}
+
+/**
+ * Get system variable
+ *
+ * @param {string} name - The unique name of variable
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+exports.getSystemVariable = function(name, cb) {
+  System.findOne({name: name}, function(err, variable) {
+    cb(err, variable);
+  });
 }

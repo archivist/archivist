@@ -13,9 +13,10 @@ var mongoose = require('mongoose')
 	, path = require('path')
 	, fs = require('fs')
 	, _ = require('underscore')
-	, db = require('./controllers/db.js')
+	, api = require('./controllers/api.js')
 	, oauth = require('./controllers/oauth.js')
-	, mode = require('./controllers/mode.js');
+	, maintenance = require('./controllers/maintenance.js')
+	, Document = require('./models/document.js');
 
 // Substance stuff
 // --------------------
@@ -115,8 +116,8 @@ mongoose.connection.on("error", function(err) {
 
 app.use('/', oauth);
 
-app.use('/api', mode);
-app.use('/api', rest);
+app.use('/api', maintenance);
+app.use('/api', api);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
@@ -125,7 +126,7 @@ app.route('/')
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
-		db.createEmptyDocument(function(err, doc) {
+		Document.createEmpty(function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/archivist.html#state=composer.main;0.path=' + doc._id + ';1.contextId=toc');
 		})
