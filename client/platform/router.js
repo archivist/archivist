@@ -3,7 +3,7 @@ var Backbone = require('backbone')
   , moment = require('moment')
   , _ = require('underscore')
   , models = require('./models/index.js')
-  , views = require('./views.js')
+  , views = require('./views/index.js')
   , Notify = require('./local_modules/notify/notify.js');
 
 var menuData = [
@@ -18,6 +18,18 @@ var menuData = [
     id: 'subjects',
     icon: 'tags',
     url: '/subjects'
+  },
+  {
+    name: 'Prisons',
+    id: 'prisons',
+    icon: 'prisons',
+    url: '/prisons'
+  },
+  {
+    name: 'Toponyms',
+    id: 'topo',
+    icon: 'toponyms',
+    url: '/toponyms'
   },
   {
     name: 'Users',

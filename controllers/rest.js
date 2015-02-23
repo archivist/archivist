@@ -58,7 +58,7 @@ module.exports = function(schema, options) {
   }
 
   /** 
-   * List Subjects
+   * List records
    *
    * @param {string} opt - The query options from request
    * @param {callback} cb - The callback that handles the results 

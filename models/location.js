@@ -7,12 +7,13 @@ var mongoose = require('mongoose')
 var locationSchema = new Schema({
   	type: String
   ,	name: { type: String, index: true }
+  , current_name: String
   , synonyms: [{ type: String, index: true }]
   , prison_type: Array
   , nearest_locality: String
   , description: String
   , country: String
-  , latlong: { type: [Number], index: { type: '2dsphere' } }
+  , point: { type: [Number], index: '2dsphere' }
 });
 
 locationSchema.set('toJSON', { getters: true, virtuals: true })
