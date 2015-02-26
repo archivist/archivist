@@ -135,7 +135,7 @@ app.route('/editor/new')
 		})
   });
 
-app.route('/:var(subjects|users)*?')
+app.route('/:var(prisons|subjects|toponyms|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('admin', {user: req.user});
   })

@@ -65,11 +65,15 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.list = function(opt, cb) {
-    var query = util.getQuery(opt.query),
+    var self = this,
+        query = util.getQuery(opt.query),
         options = util.getOptions(opt);
 
-    this.find(query, null, options, function(err, records) {
-      cb(err, records);
+    self.count(query, function(err, counter) {
+      if (err) return cb(err);
+      self.find(query, null, options, function(err, records) {
+        cb(err, [{total_entries: counter}, records]);
+      });
     });
   }
 

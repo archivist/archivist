@@ -260,11 +260,15 @@ documentSchema.statics.delete = function(id, cb) {
  */
 
 documentSchema.statics.list = function(opt, cb) {
-  var query = util.getQuery(opt.query),
+  var self = this,
+  		query = util.getQuery(opt.query),
       options = util.getOptions(opt);
 
-  this.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.authors id', options, function(err, documents) {
-    cb(err, documents);
+  self.count(query, function(err, counter) {
+    if (err) return cb(err);
+    self.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.authors id', options, function(err, records) {
+      cb(err, [{total_entries: counter}, records]);
+    });
   });
 }
 

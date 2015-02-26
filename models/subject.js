@@ -24,6 +24,23 @@ subjectSchema.plugin(rest, { referenceType: 'subject_reference', systemCounter: 
 
 
 /** 
+ * List records
+ *
+ * @param {string} opt - The query options from request
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+subjectSchema.statics.list = function(opt, cb) {
+  var query = util.getQuery(opt.query),
+      options = util.getOptions(opt);
+
+  this.find(query, null, options, function(err, records) {
+    cb(err, records);
+  });
+}
+  
+
+/** 
  * Removes record by unique id 
  *
  * @param {string} id - The unique id of target record

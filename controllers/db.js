@@ -136,8 +136,6 @@ db.listDocuments = function(opt, cb) {
 
 
 
-
-
 /* The Subject REST api */
 
 /** 

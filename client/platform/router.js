@@ -53,6 +53,8 @@ var Router = Backbone.Router.extend({
 	routes: {
     '': 'dashboard',
     'subjects': 'subjectsList',
+    'prisons': 'prisonsList',
+    'toponyms': 'toponymsList',
     'users': 'usersList'
 	},
   dashboard: function(callback, id) {
@@ -80,6 +82,32 @@ var Router = Backbone.Router.extend({
       Notify.spinner('hide');
       Notify.info( 'Data has been loaded' );
     });
+  },
+
+  toponymsList: function(callback, id) {
+    var toponymsGrid = [
+      {
+        name: 'name',
+        label: 'name',
+        editable: false,
+        cell: 'string'
+      }
+    ];
+   
+    this.grid(toponymsGrid, 'locationsToponyms', 'toponymsGrid', callback, id);
+  },
+
+  prisonsList: function(callback, id) {
+    var prisonsGrid = [
+      {
+        name: 'name',
+        label: 'name',
+        editable: false,
+        cell: 'string'
+      }
+    ];
+   
+    this.grid(prisonsGrid, 'locationsPrisons', 'prisonsGrid', callback, id);
   },
 
   usersList: function(callback, id) {

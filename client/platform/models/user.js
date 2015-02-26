@@ -26,7 +26,7 @@ var Users = Utility.collection.extend({
   model: User,
   url: "/api/users",
   state: {
-    pageSize: null,
+    pageSize: 20,
     sortKey: "_id",
     order: 1
   }

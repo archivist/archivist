@@ -1,4 +1,5 @@
-var System = require('../models/system.js');
+var System = require('../models/system.js')
+  , _ = require('underscore');
 
 exports.getQuery = function(query) {
   if(query){
@@ -34,6 +35,15 @@ exports.getOptions = function(query) {
     options.limit = query.page_limit;
   }
   return options;
+}
+
+exports.reduceQuery = function(query, obj) {
+  if(_.isUndefined(query)) {
+    query = obj;
+  } else {
+    query = _.extend(query, obj);
+  }
+  return query;
 }
 
 /* System variables API */

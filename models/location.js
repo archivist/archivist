@@ -2,7 +2,9 @@
  
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , backup = require('../controllers/backup.js');
+  , backup = require('../controllers/backup.js')
+  , maintenance = require('../controllers/maintenance.js')
+  , rest = require('../controllers/rest.js');
 
 var locationSchema = new Schema({
   	type: String
@@ -22,5 +24,7 @@ var locationShadowSchema = new Schema({}, {collection: 'locations_backup', stric
 		locationShadow = mongoose.model('locationShadow', locationShadowSchema);
 
 locationSchema.plugin(backup, { shadow: locationShadow });
+locationSchema.plugin(rest, { referenceType: 'location_reference', systemCounter: 'locations_db_version' });
+
 
 module.exports = mongoose.model('Location', locationSchema);

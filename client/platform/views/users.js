@@ -15,6 +15,11 @@ var UsersGrid = Grid.main.extend({
       collection: this.options.collection
     });
     $(this.$el).append(this.grid.render().$el);
+    this.paginator = new Backgrid.Extension.Paginator({
+      columns: this.options.columns,
+      collection: this.options.collection
+    });
+    $(this.$el).append(this.paginator.render().$el);
   },
   filters: function() {
   }

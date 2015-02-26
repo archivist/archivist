@@ -4,7 +4,7 @@ var Location = require('../models/location.js')
   , GoogleSpreadsheets = require("google-spreadsheets")
   , importer = express.Router();
 
-var importLocations = function(req, res, next) {
+var importPrisonLocations = function(req, res, next) {
   GoogleSpreadsheets({
     key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
   }, function(err, spreadsheet) {
@@ -13,9 +13,9 @@ var importLocations = function(req, res, next) {
       }, function(err, result) {
         var locations = [];
         _.each(result.cells, function(row, key) {
-          if( key != '1' ) {
+          if( key != '1' && row.hasOwnProperty(8)) {
             var prison = {
-              type: 'imprisonment',
+              type: 'prison',
               name: '',
               synonyms: [],
               prison_type: '',
@@ -47,7 +47,52 @@ var importLocations = function(req, res, next) {
   });
 }
 
-importer.route('/locations')
-  .get(importLocations)
+var importToponymLocations = function(req, res, next) {
+  GoogleSpreadsheets({
+    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
+  }, function(err, spreadsheet) {
+      spreadsheet.worksheets[2].cells({
+          ///range: "R1C1:R5C5"
+      }, function(err, result) {
+        var locations = [];
+        _.each(result.cells, function(row, key) {
+          if( key != '1' && row.hasOwnProperty(5)) {
+            var toponym = {
+              type: 'toponym',
+              name: '',
+              synonyms: [],
+              current_name: '',
+              country: '',
+              description: '',
+              point: []
+            }
+            if(row.hasOwnProperty(1)) toponym.name = row[1].value;
+            if(row.hasOwnProperty(2)) toponym.synonyms = toponym.synonyms.concat(row[2].value.split(','));
+            if(row.hasOwnProperty(3)) toponym.synonyms = toponym.synonyms.concat(row[3].value.split(','));
+            if(row.hasOwnProperty(6)) toponym.synonyms = toponym.synonyms.concat(row[6].value.split(','));
+            if(row.hasOwnProperty(3)) toponym.current_name = row[3].value;
+            if(row.hasOwnProperty(4)) toponym.point = row[4].value.split(',');
+            if(row.hasOwnProperty(5)) toponym.country = row[5].value;
+            if(row.hasOwnProperty(8)) toponym.description = row[8].value;
+            locations.push(toponym);
+          }
+        });
+        Location.create(locations, function (err) {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err.stack);
+          } else {
+            res.status(200).send(locations.length + ' locations have been imported!');
+          }
+        });
+      });
+  });
+}
+
+importer.route('/locations/prisons')
+  .get(importPrisonLocations)
+
+importer.route('/locations/toponyms')
+  .get(importToponymLocations)
 
 module.exports = importer;
