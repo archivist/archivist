@@ -5,7 +5,8 @@ var mongoose = require('mongoose')
   , async = require('async')
   , backup = require('../controllers/backup.js')
   , maintenance = require('../controllers/maintenance.js')
-  , rest = require('../controllers/rest.js');
+  , rest = require('../controllers/rest.js')
+  , util = require('../controllers/util.js');
 
 var subjectSchema = new Schema({
   	type: String

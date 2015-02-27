@@ -5,7 +5,7 @@ var Backgrid = require('backgrid'),
     Grid = require('./grid.js');
 
 var ToponymsGrid = Grid.main.extend({
-  icon: 'toponyms',
+  icon: 'topo',
   title: 'Toponyms',
   className: 'toponymslist',
   initialize: function() {

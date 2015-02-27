@@ -22,13 +22,13 @@ var menuData = [
   {
     name: 'Prisons',
     id: 'prisons',
-    icon: 'prisons',
+    icon: 'th',
     url: '/prisons'
   },
   {
     name: 'Toponyms',
     id: 'topo',
-    icon: 'toponyms',
+    icon: 'globe',
     url: '/toponyms'
   },
   {
