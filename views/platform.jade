@@ -1,0 +1,21 @@
+extends platform/layout
+
+block mainContent
+	div#main
+		div#sidebar
+			header.branding
+				img.logo(src='/assets/logo.png')
+			nav.sidebar
+			div.user-section
+					div.userpic
+						img(src='#{user.picture}')
+					div.username
+						span #{user.firstname}<br>#{user.lastname}
+						a(href='/logout')
+							i.fa.fa-power-off
+		div#data-container
+			div.data-toolbox
+				div.toolbox
+					div#meter
+					div.counter
+			div#stackView.stackViewContainer

@@ -124,7 +124,7 @@ app.use('/import', importer);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('admin', {user: req.user});
+    res.render('platform', {user: req.user});
   })
 
 app.route('/editor/new')
@@ -137,7 +137,7 @@ app.route('/editor/new')
 
 app.route('/:var(prisons|subjects|toponyms|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('admin', {user: req.user});
+    res.render('platform', {user: req.user});
   })
 
 // ERROR ROUTES

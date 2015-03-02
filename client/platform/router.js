@@ -91,6 +91,24 @@ var Router = Backbone.Router.extend({
         label: 'name',
         editable: false,
         cell: 'string'
+      },
+      {
+        name: 'current_name',
+        label: 'current name',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'synonyms',
+        label: 'synonyms',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'country',
+        label: 'current country',
+        editable: false,
+        cell: 'string'
       }
     ];
    
@@ -102,6 +120,24 @@ var Router = Backbone.Router.extend({
       {
         name: 'name',
         label: 'name',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'synonyms',
+        label: 'synonyms',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'prison_type',
+        label: 'type',
+        editable: false,
+        cell: 'string'
+      },
+      {
+        name: 'nearest_locality',
+        label: 'nearest locality',
         editable: false,
         cell: 'string'
       }
@@ -218,7 +254,7 @@ var Router = Backbone.Router.extend({
   buildMenu: function() {
     var menuItems = new models.menuItems();
     menuItems.set(menuData);
-    var menu = new views.mainMenu({ collection: menuItems, el: $('div.toolbox') });
+    var menu = new views.mainMenu({ collection: menuItems, el: $('nav.sidebar') });
   },
 
   buildContextMenu: function() {

@@ -1,4 +1,6 @@
 var Location = require('../models/location.js')
+  , Person = require('../models/person.js')
+  , Definition = require('../models/definition.js') 
   , express = require('express')
   , _ = require('underscore')
   , GoogleSpreadsheets = require("google-spreadsheets")
@@ -94,5 +96,111 @@ importer.route('/locations/prisons')
 
 importer.route('/locations/toponyms')
   .get(importToponymLocations)
+
+var importPersons = function(req, res, next) {
+  GoogleSpreadsheets({
+    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
+  }, function(err, spreadsheet) {
+      spreadsheet.worksheets[6].cells({
+          ///range: "R1C1:R5C5"
+      }, function(err, result) {
+        var persons = [];
+        _.each(result.cells, function(row, key) {
+          if( key != '1' && row.hasOwnProperty(1)) {
+            var person = {
+              name: row[1].value,
+              description: ''
+            }
+            if(row.hasOwnProperty(1)) person.name = row[1].value;
+            if(row.hasOwnProperty(3)) person.description = row[3].value;
+
+            persons.push(person);
+          }
+        });
+        Person.create(persons, function (err) {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err.stack);
+          } else {
+            res.status(200).send(persons.length + ' persons have been imported!');
+          }
+        });
+      });
+  });
+}
+
+importer.route('/persons')
+  .get(importPersons)
+
+
+var importDefinitions = function(req, res, next) {
+  GoogleSpreadsheets({
+    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
+  }, function(err, spreadsheet) {
+      spreadsheet.worksheets[4].cells({
+          ///range: "R1C1:R5C5"
+      }, function(err, result) {
+        var definitions = [];
+        _.each(result.cells, function(row, key) {
+          if( key != '1' && row.hasOwnProperty(1)) {
+            var definition = {
+              title: row[1].value,
+              description: ''
+            }
+            if(row.hasOwnProperty(1)) definition.title = row[1].value;
+            if(row.hasOwnProperty(3)) definition.description = row[3].value;
+
+            definitions.push(definition);
+          }
+        });
+        Definition.create(definitions, function (err) {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err.stack);
+          } else {
+            res.status(200).send(definitions.length + ' definitions have been imported!');
+          }
+        });
+      });
+  });
+}
+
+var importDefinitionsAdditional = function(req, res, next) {
+  GoogleSpreadsheets({
+    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
+  }, function(err, spreadsheet) {
+      spreadsheet.worksheets[5].cells({
+          ///range: "R1C1:R5C5"
+      }, function(err, result) {
+        var definitions = [];
+        _.each(result.cells, function(row, key) {
+          if( key != '1' && row.hasOwnProperty(1)) {
+            var definition = {
+              title: row[1].value,
+              description: ''
+            }
+            if(row.hasOwnProperty(1)) definition.title = row[1].value;
+            if(row.hasOwnProperty(3)) definition.description = row[3].value;
+
+            definitions.push(definition);
+          }
+        });
+        Definition.create(definitions, function (err) {
+          if (err) {
+            console.log(err);
+            res.status(500).send(err.stack);
+          } else {
+            res.status(200).send(definitions.length + ' definitions have been imported!');
+          }
+        });
+      });
+  });
+}
+
+importer.route('/definitions/abr')
+  .get(importDefinitions)
+
+importer.route('/definitions/jargon')
+  .get(importDefinitionsAdditional)
 
 module.exports = importer;

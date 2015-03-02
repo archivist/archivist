@@ -1,6 +1,8 @@
 var Document = require('../models/document.js')
   , Subject = require('../models/subject.js')
   , Location = require('../models/location.js')
+  , Person = require('../models/person.js')
+  , Definition = require('../models/definition.js')
   , User = require('../models/user.js')
   , maintenance = require('./maintenance.js')
   , oauth = require('./oauth.js')
@@ -145,6 +147,100 @@ rest.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
   .put(maintenance.checkCurrentMode, updateSubject)
   .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteSubject)
+
+
+/* The Person REST api */
+
+var createPerson = function(req, res, next) {
+  Person.add(req.body, function(err, person) {
+    if (err) return next(err);
+    res.json(person);
+  });
+}
+
+var readPerson = function(req, res, next) {
+  Person.get(req.params.id, function(err, person) {
+    if (err) return next(err);
+    res.json(person);
+  });
+}
+
+var updatePerson = function(req, res, next) {
+  Person.update(req.params.id, req.body, function(err, person) {
+    if (err) return next(err);
+    res.json(person);
+  });
+}
+
+var deletePerson = function(req, res, next) {
+  Person.delete(req.params.id, function(err) {
+    if (err) return next(err);
+    res.json(200);
+  });
+}
+
+var listPersons = function(req, res, next) {
+  Person.list(req.query, function(err, persons) {
+    if (err) return next(err);
+    res.json(persons);
+  });
+}
+
+rest.route('/persons')
+  .post(maintenance.checkCurrentMode, createPerson)
+  .get(listPersons)
+
+rest.route('/persons/:id')
+  .get(maintenance.checkCurrentMode, readPerson)
+  .put(maintenance.checkCurrentMode, updatePerson)
+  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deletePerson)
+
+
+/* The definition REST api */
+
+var createDefinition = function(req, res, next) {
+  Definition.add(req.body, function(err, definition) {
+    if (err) return next(err);
+    res.json(definition);
+  });
+}
+
+var readDefinition = function(req, res, next) {
+  Definition.get(req.params.id, function(err, definition) {
+    if (err) return next(err);
+    res.json(definition);
+  });
+}
+
+var updateDefinition = function(req, res, next) {
+  Definition.update(req.params.id, req.body, function(err, definition) {
+    if (err) return next(err);
+    res.json(definition);
+  });
+}
+
+var deleteDefinition = function(req, res, next) {
+  Definition.delete(req.params.id, function(err) {
+    if (err) return next(err);
+    res.json(200);
+  });
+}
+
+var listDefinitions = function(req, res, next) {
+  Definition.list(req.query, function(err, definitions) {
+    if (err) return next(err);
+    res.json(definitions);
+  });
+}
+
+rest.route('/definitions')
+  .post(maintenance.checkCurrentMode, createDefinition)
+  .get(listDefinitions)
+
+rest.route('/definitions/:id')
+  .get(maintenance.checkCurrentMode, readDefinition)
+  .put(maintenance.checkCurrentMode, updateDefinition)
+  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteDefinition)
 
 
 /* The Location REST api */
