@@ -24,21 +24,19 @@ var MainGrid = Backbone.Layout.extend({
     $('#' + this.icon).addClass('active');
     this.$el.addClass(this.options.class);
     this.filters();
+    this.contextMenu.reset(this.panel);
   },
   filters: function() {},
   createContextPanel: function() {
-    var contextPanel = document.createElement("div");
-    contextPanel.id = "context-panel";
-    contextPanel.className = "context-panel";
-    contextPanel.innerHTML = '<div class="context-filters"></div>';
-    this.$el.prepend(contextPanel);
   },
   close: function() {
     $('#' + this.icon).removeClass('active');
+    this.beforeClose();
     this.grid.remove();
     this.remove();
     this.unbind();
   },
+  beforeClose: function() {},
   panel: []
 })
 exports.main = MainGrid

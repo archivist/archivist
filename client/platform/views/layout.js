@@ -8,14 +8,17 @@ var MainLayout = Backbone.Layout.extend({
   el: 'body',
   
   changeLayout: function(v) {
-  	this.parentView.close();
+    var self = this;
+    this.contextMenu.reset();
+    this.parentView.close();
+    this.rootView.close();
     this.parentView = new ParentView();
     this.parentView.setRootView(v);
     this.setView('#stackView', this.parentView).render();
   },
 
   addContext: function(v) {
-    this.parentView.insertView('#context-panel', v).render();
+    this.insertView('#context-panel', v).render();
   },
 	
   initialize: function() {

@@ -164,13 +164,13 @@ var Router = Backbone.Router.extend({
         name: 'access',
         label: 'access',
         editable: true,
-        cell: 'boolean'
+        cell: views.permissionCell
       },
       {
         name: 'super',
         label: 'super user',
         editable: true,
-        cell: 'boolean'
+        cell: views.permissionCell
       }
     ];
    
@@ -246,7 +246,7 @@ var Router = Backbone.Router.extend({
       this.buildContextMenu()
     } else {
       this.layout.changeLayout(v);
-      this.buildContextMenu()
+      //this.buildContextMenu()
     }
     if (callback) this[callback](id);
   },

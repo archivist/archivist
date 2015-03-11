@@ -24,8 +24,6 @@ var DocumentsGrid = Grid.main.extend({
       collection: this.options.collection
     });
     $(this.$el).append(this.paginator.render().$el);
-    this.createContextPanel();
-    this.contextMenu.reset(this.panel);
   },
   filters: function() {
     this.titleFilter = new Utils.filter({
@@ -33,7 +31,10 @@ var DocumentsGrid = Grid.main.extend({
       placeholder: "Enter a title to search",
       name: "nodes.document.title",
     });
-    this.$el.find('.context-filters').prepend(this.titleFilter.render().el);
+    $('.toolbox').prepend(this.titleFilter.render().el);
+  },
+  beforeClose: function() {
+    this.titleFilter.remove();
   },
   _add: function() {
     Backbone.middle.trigger("goToExt", 'editor/new')

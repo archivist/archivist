@@ -45,7 +45,7 @@ var ContextMenu = Backbone.View.extend({
   },
   _run: function(e) {
     e.preventDefault();
-    var view = this.layout.getRoot(),
+    var view = this.layout.parentView.getView(''),
         fn = e.currentTarget.dataset.fn;
 
     view[fn]();

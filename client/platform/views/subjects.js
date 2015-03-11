@@ -7,6 +7,7 @@ var Backbone = require('backbone'),
     request = require('superagent'),
     ObjectId = require('../local_modules/objectid/Objectid.js'),
     Grid = require('./grid.js'),
+    Notify = require('../local_modules/notify/notify.js'),
     Utils = require('./util.js');
 
 var SubjectsTreeView = Backbone.Layout.extend({
@@ -36,6 +37,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
       }, 250);
     });
 
+    $('.subject-search').appendTo('.toolbox');
     var self = this;
     Backbone.middle.trigger('domchange:title', this.title);
     $('#' + this.icon).addClass('active');
@@ -289,6 +291,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
   },
   close: function() {
     $('#' + this.icon).removeClass('active');
+    $('#search_subject').off();
+    $('.subject-search').remove();
     this.remove();
     this.unbind();
   },

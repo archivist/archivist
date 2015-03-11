@@ -25,3 +25,22 @@ var UsersGrid = Grid.main.extend({
   }
 })
 exports.usersGrid = UsersGrid
+
+var PermissionCell = Backgrid.BooleanCell.extend({
+  editor: Backgrid.BooleanCellEditor.extend({
+    render: function () {
+      var model = this.model;
+      var columnName = this.column.get("name");
+      var val = this.formatter.fromRaw(model.get(columnName), model);
+
+      /*
+       * Toggle checked property since a click is what triggered enterEditMode
+      */
+      this.$el.prop("checked", !val);
+      model.set(columnName, !val);
+
+      return this;
+    }
+  })
+});
+exports.permissionCell = PermissionCell

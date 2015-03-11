@@ -65,7 +65,7 @@ nav.sidebar ul li {
   width: auto;
   padding: 0px;
   margin-bottom: 10px;
-  font-size: 11px;
+  font-size: 20px;
   line-height: 12px;
   text-decoration: none;
   font-weight: 400;
@@ -77,7 +77,7 @@ nav.sidebar ul li {
   font-weight: 500;
   cursor: pointer;
   clear: both;
-  height: 37px;
+  height: 65px;
   -webkit-font-smoothing: antialiased;
   color: rgba(255,255,255,0.625);
   -webkit-transition: all 0.18s ease-in-out;
@@ -107,6 +107,7 @@ nav.sidebar .navicon {
 nav.sidebar span.title {
   line-height: 30px;
   font-size: 13px;
+  display: block;
 }
 
 #sidebar {
@@ -114,7 +115,7 @@ nav.sidebar span.title {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 150px;
+  width: 100px;
   display: block;
   z-index: 1;
   color: #fff;
@@ -123,8 +124,8 @@ nav.sidebar span.title {
   max-height: 100%;
   height: 100%;
   background-color: #7A4040;
-  background-image: -webkit-radial-gradient(40% 0%, #DC3F2A 0%, rgba(84, 90, 182, 0)100%),-webkit-radial-gradient(0% 100%, rgba(237, 161, 45, 1) 0%, rgba(118, 72, 160, 0) 50%);
-  background-image: radial-gradient(at 40% 0,#DC3F2A 0,rgba(84,90,182,0) 100%),radial-gradient(at 0 100%,rgba(237, 161, 45, 1) 0,rgba(118,72,160,0) 50%);
+  background-image: -webkit-radial-gradient(40% 0%, #2ABADC 0%, rgba(84, 90, 182, 0)100%),-webkit-radial-gradient(0% 100%, rgba(42, 117, 216, 1) 0%, rgba(118, 72, 160, 0) 50%);
+  background-image: radial-gradient(at 40% 0,#2ABADC 0,rgba(84,90,182,0) 100%),radial-gradient(at 0 100%,rgba(42, 117, 216, 1) 0,rgba(118,72,160,0) 50%);
   background-position: left bottom,left bottom;
   background-repeat: repeat,no-repeat;
   background-size: 6000px 1400px,600px 600px;
@@ -137,7 +138,7 @@ nav.sidebar span.title {
   height: 55px;
   line-height: 55px;
   margin-bottom: 22px;
-  font-size: 19px;
+  font-size: 15px;
 }
 
 .branding .logo {
@@ -150,7 +151,7 @@ nav.sidebar span.title {
   background: white;
   position: relative;
   float: right;
-  width: calc(100% - 150px);
+  width: calc(100% - 100px);
 }
 
 .data-toolbox {
@@ -275,7 +276,6 @@ nav.sidebar span.title {
 }
 
 .toolbox {
-	float: left;
 }
 
 .toolbox ul {
@@ -314,21 +314,94 @@ nav.sidebar span.title {
 
 .context-toolbar {
 	float: right;
-	margin: 20px;
+  margin: 13px 5px;
 }
 
 .context-toolbar button:hover {
 	background-color: #FAFAFA;
 }
 
-/* Filters */
+/*
+FILTERS
+*/
 
-.form-search input {
-	border-color: rgba(38, 38, 38, 0.3);
+.backgrid-filter.form-search,
+.subject-search {
+  height: 35px;
+  margin: 10px 0px;
+  float: left;
 }
 
-.form-search input:focus {
-	border-color: rgba(38, 38, 38, 0.5);
+.backgrid-filter input[type=search],
+#search_subject {
+  border: none;
+  box-shadow: none;
+  padding-left: 30px;
+  height: 27px;
+}
+
+#search_subject {
+  padding-top: 14px;
+}
+
+.backgrid-filter .search {
+  width: 20px;
+  height: 35px;
+  padding: 10px 0px;
+  top: 0px;
+}
+
+.backgrid-filter .search:before {
+  left: 0;
+  width: 8px;
+  height: 8px;
+  margin-top: -8px;
+  background: 0 0;
+  border: 2px solid gray;
+}
+
+.backgrid-filter .search:after {
+  left: 12px;
+  width: 2px;
+  height: 9px;
+  margin-top: 1px;
+}
+
+.backgrid-filter .clear {
+  width: 20px;
+  height: 40px;
+  padding: 10px 0;
+  top: 0px;
+  right: initial;
+  left: 6px;
+  background: #fff;
+  margin-top: -2px;
+  font-weight: 100;
+  font-size: 23px;
+}
+
+.backgrid thead {
+  position: absolute;
+  top: 14px;
+  right: 240px;
+}
+
+.backgrid thead th {
+  background-color: #fff;
+  border: none;
+}
+
+.backgrid th.sortable a {
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  color: #888;
+  font-weight: 200;
+}
+
+#context-panel {
+  float: right;
+  height: 35px;
 }
 
 /* Subject List */
@@ -748,6 +821,8 @@ MODAL
 .user-section {
   position: absolute;
   bottom: 0px;
+  width: 100px;
+  background: rgba(0,0,0,.1);
 }
 
 .user-section .title {
@@ -770,10 +845,8 @@ MODAL
 
 .user-section .username {
   padding: 6px 10px;
-  line-height: 25px;
-  font-size: 12px;
-  width: 115px;
-  background: rgba(0, 0, 0, 0.1);
+  line-height: 30px;
+  font-size: 18px;
 }
 
 .user-section .username span {
