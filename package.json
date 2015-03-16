@@ -21,6 +21,7 @@
     "lodash": "^2.4.1",
     "method-override": "*",
     "mongoose": "*",
+    "mongoose-text-search": "0.0.2",
     "morgan": "*",
     "passport": "*",
     "passport-google-oauth": "*",

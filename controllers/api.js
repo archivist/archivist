@@ -6,6 +6,7 @@ var Document = require('../models/document.js')
   , User = require('../models/user.js')
   , maintenance = require('./maintenance.js')
   , oauth = require('./oauth.js')
+  , searchQuery = require('./search.js')
   , util = require('./util.js')
   , sUtil = require('substance-util')
   , _ = require('underscore')
@@ -341,5 +342,27 @@ rest.route('/users/:id')
   .get(oauth.ensureSuperAuth, readUser)
   .put(oauth.ensureSuperAuth, updateUser)
 
+
+/* SEARCH API */
+
+var search = function(req, res, next) {
+  // var query = '/' + req.query.search + '/';
+
+  // var options = {
+  //     limit: 10
+  //   //, language: 'russian'
+  // }
+  // // Location.textSearch(query, options, function (err, output) {
+  // //   if (err) return next(err);
+  // //   res.json(output);
+  // // });
+  searchQuery(req.query, function (err, output) {
+    if (err) return next(err);
+    res.json(output);
+  });
+}
+
+rest.route('/search')
+  .get(maintenance.checkCurrentMode, search)
 
 module.exports = rest;

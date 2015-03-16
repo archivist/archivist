@@ -3,7 +3,9 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , backup = require('../controllers/backup.js')
-  , rest = require('../controllers/rest.js');
+  , rest = require('../controllers/rest.js')
+  , util = require('../controllers/util.js')
+  , _ = require('underscore');
 
 var definitionSchema = new Schema({
   	title: { type: String, index: true }
@@ -17,5 +19,20 @@ var definitionShadowSchema = new Schema({}, {collection: 'definitions_backup', s
 
 definitionSchema.plugin(backup, { shadow: definitionShadow });
 definitionSchema.plugin(rest, { referenceType: 'definition_reference', systemCounter: 'defenitions_db_version' });
+
+definitionSchema.statics.search = function(opt, cb) {
+  var self = this,
+      searchString = opt.query,
+      options = util.getOptions(opt),
+      query = {
+        title: new RegExp(searchString, 'i')
+      };
+
+  if(_.isEmpty(options.limit)) options.limit = 30;
+
+  self.find(query, {}, options, function(err, records) {
+    cb(err, records);
+  });
+}
 
 module.exports = mongoose.model('Defenition', definitionSchema);

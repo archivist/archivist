@@ -50,7 +50,7 @@ var DocumentsGrid = Grid.main.extend({
 exports.documentsGrid = DocumentsGrid
 
 var DocumentCell = Backgrid.Cell.extend({
-  className: "string-cell document-cell animate",
+  className: "string-cell document-cell grid-cell animate",
   render: function () {
     this.$el.empty();
     var formattedValue = this.formatter.fromRaw(this.model.get('nodes'));

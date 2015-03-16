@@ -47,3 +47,27 @@ var PrisonsGrid = Grid.main.extend({
   }
 })
 exports.prisonsGrid = PrisonsGrid
+
+var PrisonCell = Backgrid.Cell.extend({
+  className: "string-cell document-cell grid-cell animate",
+  render: function () {
+    this.$el.empty();
+    var formattedValue = this.formatter.fromRaw(this.model.get('nodes'));
+    if(_.isNull(formattedValue) || _.isEmpty(formattedValue)){
+      this.delegateEvents();
+      return this;
+    }
+    else {
+      var metadata = formattedValue.document;
+
+      var markup = '<div class="title">' + metadata.title + '</div> \
+                    <span class="delete-document">Delete</span> \
+                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + '</div>';
+
+      this.$el.append(markup)
+      this.delegateEvents()
+      return this;
+    }
+  }
+});
+exports.prisonCell = PrisonCell
