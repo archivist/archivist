@@ -6,6 +6,7 @@ var Document = require('../models/document.js')
   , User = require('../models/user.js')
   , maintenance = require('./maintenance.js')
   , oauth = require('./oauth.js')
+  , getEntities = require('./entities.js')
   , searchQuery = require('./search.js')
   , util = require('./util.js')
   , sUtil = require('substance-util')
@@ -342,6 +343,20 @@ rest.route('/users/:id')
   .get(oauth.ensureSuperAuth, readUser)
   .put(oauth.ensureSuperAuth, updateUser)
 
+/* ENTITIES API */
+
+var entitiesGetter = function(req, res, next) {
+  var query = req.query,
+      entityIds = query.entityIds || [];
+
+  getEntities(entityIds, function (err, output) {
+    if (err) return next(err);
+    res.json(output);
+  });
+}
+
+rest.route('/entities')
+  .get(maintenance.checkCurrentMode, entitiesGetter)
 
 /* SEARCH API */
 
