@@ -1,89 +1,19 @@
 {
   "modules": [
     {
-      "repository": "https://github.com/substance/application.git",
-      "folder": "node_modules/substance-application",
-      "branch": "master"
+      "repository": "https://github.com/substance/archivist-composer.git",
+      "folder": "node_modules/archivist-composer",
+      "branch": "next"
     },
     {
-      "repository": "https://github.com/substance/chronicle.git",
-      "folder": "node_modules/substance-chronicle",
-      "branch": "master"
+      "repository": "https://github.com/substance/substance.git",
+      "folder": "node_modules/substance",
+      "branch": "next"
     },
     {
-      "repository": "https://github.com/substance/compiler.git",
-      "folder": "node_modules/substance-compiler",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/templates.git",
-      "folder": "node_modules/substance-templates",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/commander.git",
-      "folder": "node_modules/substance-commander",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/data.git",
-      "folder": "node_modules/substance-data",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/document.git",
-      "folder": "node_modules/substance-document",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/article.git",
-      "folder": "node_modules/substance-article",
-      "branch": "archivist"
-    },
-    {
-      "repository": "https://github.com/substance/nodes.git",
-      "folder": "node_modules/substance-nodes",
-      "branch": "archivist"
-    },
-    {
-      "repository": "https://github.com/substance/outline.git",
-      "folder": "node_modules/substance-outline",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/toc.git",
-      "folder": "node_modules/substance-toc",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/converter.git",
-      "folder": "node_modules/substance-converter",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/operator.git",
-      "folder": "node_modules/substance-operator",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/regexp.git",
-      "folder": "node_modules/substance-regexp",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/surface.git",
-      "folder": "node_modules/substance-surface",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/test.git",
-      "folder": "node_modules/substance-test",
-      "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/util.git",
-      "folder": "node_modules/substance-util",
-      "branch": "substance-next"
+      "repository": "https://github.com/substance/writer.git",
+      "folder": "node_modules/substance-writer",
+      "branch": "react"
     },
     {
       "repository": "https://github.com/substance/cjs.git",
@@ -91,66 +21,30 @@
       "branch": "master"
     },
     {
-      "repository": "https://github.com/michael/substance-composer.git",
-      "folder": "node_modules/substance-composer",
-      "branch": "archivist_web"
+      "repository": "https://github.com/substance/util.git",
+      "folder": "node_modules/substance-util",
+      "branch": "substance-next"
     }
   ],
   "node_modules": {
   },
+  "npm": {
+    "engines": {
+      "node": ">=0.8.x",
+      "npm": ">=1.1.x"
+    }
+  },
   "styles": {
-    "styles/nodes/text.css": "node_modules/substance-article/nodes/text/text.css",
-    "styles/nodes/paragraph.css": "node_modules/substance-article/nodes/paragraph/paragraph.css",
-    "styles/nodes/heading.css": "node_modules/substance-article/nodes/heading/heading.css",
-    "styles/nodes/blockquote.css": "node_modules/substance-article/nodes/blockquote/blockquote.css",
-    "styles/nodes/list_item.css": "node_modules/substance-article/nodes/list_item/list_item.css",
-    "styles/nodes/code_block.css": "node_modules/substance-article/nodes/code_block/code_block.css",
-    "styles/nodes/contributor.css": "node_modules/substance-article/nodes/contributor/contributor.css",
-    "styles/nodes/figure.css": "node_modules/substance-article/nodes/figure/figure.css",
-    "styles/nodes/cover.css": "node_modules/substance-article/nodes/cover/cover.css",
-    "styles/nodes/issue.css": "node_modules/substance-article/nodes/issue/issue.css",
-    "styles/nodes/web_resource.css": "node_modules/substance-article/nodes/web_resource/web_resource.css",
-    "styles/nodes/web_page.css": "node_modules/substance-article/nodes/web_page/web_page.css",
-    "styles/nodes/video.css": "node_modules/substance-article/nodes/video/video.css",
-    "styles/nodes/audio.css": "node_modules/substance-article/nodes/audio/audio.css",
-    "styles/nodes/publication_info.css": "node_modules/substance-article/nodes/publication_info/publication_info.css",
-    "styles/nodes/code.css": "node_modules/substance-article/nodes/code/code.css",
-    "styles/nodes/cross_reference.css": "node_modules/substance-article/nodes/cross_reference/cross_reference.css",
-    "styles/nodes/emphasis.css": "node_modules/substance-article/nodes/emphasis/emphasis.css",
-    "styles/nodes/figure_reference.css": "node_modules/substance-article/nodes/figure_reference/figure_reference.css",
-    "styles/nodes/remark_reference.css": "node_modules/substance-article/nodes/remark_reference/remark_reference.css",
-    "styles/nodes/error_reference.css": "node_modules/substance-article/nodes/error_reference/error_reference.css",
-    "styles/nodes/citation_reference.css": "node_modules/substance-article/nodes/citation_reference/citation_reference.css",
-    "styles/nodes/strong.css": "node_modules/substance-article/nodes/strong/strong.css",
-    "styles/nodes/subscript.css": "node_modules/substance-article/nodes/subscript/subscript.css",
-    "styles/nodes/superscript.css": "node_modules/substance-article/nodes/superscript/superscript.css",
-
-    "styles/font-awesome.css": "node_modules/substance-composer/styles/font-awesome.css",
-    "styles/toc.css": "node_modules/substance-toc/toc.css",
-    "styles/surface.css": "node_modules/substance-surface/styles/surface.css",
-    "styles/substance-outline.css": "node_modules/substance-outline/outline.css",
-    "styles/substance.css": "node_modules/substance-composer/styles/substance.css",
-    "styles/writer.css": "node_modules/substance-composer/styles/writer.css",
-
-    "styles/nodes/location_reference/location_reference.css": "src/nodes/location_reference/location_reference.css",
-    "styles/nodes/person_reference/person_reference.css": "src/nodes/person_reference/person_reference.css",
-    "styles/nodes/definition_reference/definition_reference.css": "src/nodes/definition_reference/definition_reference.css",
-    "styles/nodes/subject_reference/subject_reference.css": "src/nodes/subject_reference/subject_reference.css",
-
-    "styles/composer.css": "styles/composer.css"
   },
   "assets": {
-    "lib/jquery-2.0.3.min.js": "./lib/jquery-2.0.3.min.js",
-    "lib/jquery-2.0.3.min.map": "./lib/jquery-2.0.3.min.map",
-    "lib/jquery.timeago.js": "./lib/jquery.timeago.js",
-    "lib/base64.js": "./lib/base64.js",
-    "lib/jstree": "./lib/jstree",
-    "lib/select2": "./lib/select2"
+    "styles": "styles",
+    "lib/jquery-2.1.3.min.js": "lib/jquery-2.1.3.min.js",
+    "lib/jquery-2.1.3.min.map": "lib/jquery-2.1.3.min.map"
   },
   "bundle": {
-    "name": "archivist_composer",
-    "folder": "./public",
-    "source": "./boot_archivist_composer.js",
-    "ignores": []
+    "name": "composer",
+    "folder": "./dist",
+    "source": "./boot.js",
+    "index": "./index.html"
   }
 }

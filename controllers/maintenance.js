@@ -10,6 +10,8 @@ var Document = require('../models/document.js')
  * @param {callback} cb - The callback that handles the results 
  */
 
+console.log('=================', express.Router)
+
 maintenance.beginTransaction = function(cb) {
   console.log('beginning transaction ...');
   // turn on maintenance mode
