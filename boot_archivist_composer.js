@@ -1,4 +1,3 @@
 "use strict";
-
-  console.log('booting the composer!');
-});
+  
+window.app = require("archivist-composer/src/app");

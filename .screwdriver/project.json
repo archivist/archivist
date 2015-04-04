@@ -3,7 +3,7 @@
     {
       "repository": "https://github.com/substance/archivist-composer.git",
       "folder": "node_modules/archivist-composer",
-      "branch": "next"
+      "branch": "react"
     },
     {
       "repository": "https://github.com/substance/substance.git",
@@ -37,9 +37,8 @@
   "styles": {
   },
   "assets": {
-    "styles": "styles",
-    "lib/jquery-2.1.3.min.js": "lib/jquery-2.1.3.min.js",
-    "lib/jquery-2.1.3.min.map": "lib/jquery-2.1.3.min.map"
+    "styles": "node_modules/archivist-composer/styles",
+    "lib": "node_modules/archivist-composer/lib"
   },
   "bundle": {
     "name": "composer",

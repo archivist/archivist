@@ -23,6 +23,7 @@
     "mongoose": "*",
     "mongoose-text-search": "0.0.2",
     "morgan": "*",
+    "lodash": "3.3.1",
     "passport": "*",
     "passport-google-oauth": "*",
     "underscore": "1.7.0",
