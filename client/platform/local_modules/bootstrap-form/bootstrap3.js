@@ -27,13 +27,12 @@ var Backbone = require('backbone'),
 
   Form.Field.template = _.template('\
     <div class="form-group field-<%= key %>">\
-      <div class="details">\
-        <label class="control-label" for="<%= editorId %>"><%= title %></label>\
-        <p class="help-block"><%= help %></p>\
-      </div>\
       <div class="field">\
         <span data-editor></span>\
         <p class="help-block" data-error></p>\
+      </div>\
+      <div class="details">\
+        <p class="help-block"><%= help %></p>\
       </div>\
     </div>\
   ');
