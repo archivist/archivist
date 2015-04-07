@@ -3,7 +3,7 @@
 1 verbose cli   '/usr/local/bin/npm',
 1 verbose cli   'install',
 1 verbose cli   '--save',
-1 verbose cli   'backbone.bootstrap-modal' ]
+1 verbose cli   'select2-bootstrap-theme' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.32
 4 warn package.json archivist-platform@0.0.1 No description
@@ -13,8 +13,8 @@
 8 warn package.json backbone-forms@0.14.0 No repository field.
 9 warn package.json nestable@1.0.0 No repository field.
 10 verbose readDependencies using package.json deps
-11 verbose cache add [ 'backbone.bootstrap-modal', null ]
-12 verbose cache add name=undefined spec="backbone.bootstrap-modal" args=["backbone.bootstrap-modal",null]
+11 verbose cache add [ 'select2-bootstrap-theme', null ]
+12 verbose cache add name=undefined spec="select2-bootstrap-theme" args=["select2-bootstrap-theme",null]
 13 verbose parsed url { protocol: null,
 13 verbose parsed url   slashes: null,
 13 verbose parsed url   auth: null,
@@ -24,69 +24,69 @@
 13 verbose parsed url   hash: null,
 13 verbose parsed url   search: null,
 13 verbose parsed url   query: null,
-13 verbose parsed url   pathname: 'backbone.bootstrap-modal',
-13 verbose parsed url   path: 'backbone.bootstrap-modal',
-13 verbose parsed url   href: 'backbone.bootstrap-modal' }
-14 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
-15 verbose lock backbone.bootstrap-modal /Users/danielbeilinson/.npm/56360d86-backbone-bootstrap-modal.lock
-16 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
-17 silly lockFile 56360d86-backbone-bootstrap-modal backbone.bootstrap-modal
-18 verbose addNamed [ 'backbone.bootstrap-modal', '' ]
+13 verbose parsed url   pathname: 'select2-bootstrap-theme',
+13 verbose parsed url   path: 'select2-bootstrap-theme',
+13 verbose parsed url   href: 'select2-bootstrap-theme' }
+14 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
+15 verbose lock select2-bootstrap-theme /Users/danielbeilinson/.npm/b37f230f-select2-bootstrap-theme.lock
+16 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
+17 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
+18 verbose addNamed [ 'select2-bootstrap-theme', '' ]
 19 verbose addNamed [ null, '*' ]
-20 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
-21 verbose lock backbone.bootstrap-modal@ /Users/danielbeilinson/.npm/ce9f08af-backbone-bootstrap-modal.lock
-22 silly addNameRange { name: 'backbone.bootstrap-modal', range: '*', hasData: false }
-23 verbose request where is /backbone.bootstrap-modal
+20 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
+21 verbose lock select2-bootstrap-theme@ /Users/danielbeilinson/.npm/5358d560-select2-bootstrap-theme.lock
+22 silly addNameRange { name: 'select2-bootstrap-theme', range: '*', hasData: false }
+23 verbose request where is /select2-bootstrap-theme
 24 verbose request registry https://registry.npmjs.org/
-25 verbose request id 222e1d0c4b42c6c2
-26 verbose url raw /backbone.bootstrap-modal
-27 verbose url resolving [ 'https://registry.npmjs.org/', './backbone.bootstrap-modal' ]
-28 verbose url resolved https://registry.npmjs.org/backbone.bootstrap-modal
-29 verbose request where is https://registry.npmjs.org/backbone.bootstrap-modal
-30 info trying registry request attempt 1 at 02:00:52
-31 http GET https://registry.npmjs.org/backbone.bootstrap-modal
-32 http 404 https://registry.npmjs.org/backbone.bootstrap-modal
-33 verbose headers { date: 'Mon, 26 Jan 2015 23:00:52 GMT',
+25 verbose request id f5cf575d45ef0cbe
+26 verbose url raw /select2-bootstrap-theme
+27 verbose url resolving [ 'https://registry.npmjs.org/', './select2-bootstrap-theme' ]
+28 verbose url resolved https://registry.npmjs.org/select2-bootstrap-theme
+29 verbose request where is https://registry.npmjs.org/select2-bootstrap-theme
+30 info trying registry request attempt 1 at 11:34:31
+31 http GET https://registry.npmjs.org/select2-bootstrap-theme
+32 http 404 https://registry.npmjs.org/select2-bootstrap-theme
+33 verbose headers { date: 'Tue, 07 Apr 2015 08:34:30 GMT',
 33 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
 33 verbose headers   'content-type': 'application/json',
 33 verbose headers   'cache-control': 'max-age=0',
-33 verbose headers   'content-length': '52',
+33 verbose headers   'content-length': '51',
 33 verbose headers   'accept-ranges': 'bytes',
 33 verbose headers   via: '1.1 varnish',
 33 verbose headers   age: '0',
-33 verbose headers   'x-served-by': 'cache-fra1244-FRA',
+33 verbose headers   'x-served-by': 'cache-fra1242-FRA',
 33 verbose headers   'x-cache': 'MISS',
 33 verbose headers   'x-cache-hits': '0',
-33 verbose headers   'x-timer': 'S1422313252.371933,VS0,VE184',
+33 verbose headers   'x-timer': 'S1428395670.674244,VS0,VE179',
 33 verbose headers   'keep-alive': 'timeout=10, max=50',
 33 verbose headers   connection: 'Keep-Alive' }
 34 silly registry.get cb [ 404,
-34 silly registry.get   { date: 'Mon, 26 Jan 2015 23:00:52 GMT',
+34 silly registry.get   { date: 'Tue, 07 Apr 2015 08:34:30 GMT',
 34 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
 34 silly registry.get     'content-type': 'application/json',
 34 silly registry.get     'cache-control': 'max-age=0',
-34 silly registry.get     'content-length': '52',
+34 silly registry.get     'content-length': '51',
 34 silly registry.get     'accept-ranges': 'bytes',
 34 silly registry.get     via: '1.1 varnish',
 34 silly registry.get     age: '0',
-34 silly registry.get     'x-served-by': 'cache-fra1244-FRA',
+34 silly registry.get     'x-served-by': 'cache-fra1242-FRA',
 34 silly registry.get     'x-cache': 'MISS',
 34 silly registry.get     'x-cache-hits': '0',
-34 silly registry.get     'x-timer': 'S1422313252.371933,VS0,VE184',
+34 silly registry.get     'x-timer': 'S1428395670.674244,VS0,VE179',
 34 silly registry.get     'keep-alive': 'timeout=10, max=50',
 34 silly registry.get     connection: 'Keep-Alive' } ]
-35 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
-36 silly lockFile ce9f08af-backbone-bootstrap-modal backbone.bootstrap-modal@
-37 error 404 404 Not Found: backbone.bootstrap-modal
+35 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
+36 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
+37 error 404 404 Not Found: select2-bootstrap-theme
 37 error 404
-37 error 404 'backbone.bootstrap-modal' is not in the npm registry.
+37 error 404 'select2-bootstrap-theme' is not in the npm registry.
 37 error 404 You should bug the author to publish it
 37 error 404 It was specified as a dependency of 'archivist-platform'
 37 error 404
 37 error 404 Note that you can also install from a
 37 error 404 tarball, folder, or http url, or git url.
-38 error System Darwin 14.0.0
-39 error command "node" "/usr/local/bin/npm" "install" "--save" "backbone.bootstrap-modal"
+38 error System Darwin 14.1.0
+39 error command "node" "/usr/local/bin/npm" "install" "--save" "select2-bootstrap-theme"
 40 error cwd /Users/danielbeilinson/Documents/code/archivist/client/platform
 41 error node -v v0.10.32
 42 error npm -v 1.4.28

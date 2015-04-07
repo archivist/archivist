@@ -22,7 +22,6 @@
     "mongoose": "*",
     "mongoose-text-search": "0.0.2",
     "morgan": "*",
-    "lodash": "3.3.1",
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
     "underscore": "1.7.0",
@@ -38,7 +37,7 @@
     "gulp-rename": "^1.2.0",
     "gulp-streamify": "0.0.5",
     "gulp-uglify": "^1.0.1",
-    "lodash": "^2.4.1",
+    "lodash": "3.6.0",
     "vinyl-source-stream": "*",
     "watchify": "git://github.com/substack/watchify.git"
   },
