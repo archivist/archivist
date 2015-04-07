@@ -105,7 +105,7 @@ var PrisonCell = Backgrid.Cell.extend({
 exports.prisonCell = PrisonCell
 
 var editorDialog = Backbone.Modal.extend({
-  prefix: 'subject-dialog',
+  prefix: 'editor-dialog',
   keyControl: false,
   template: _.template($('#editorDialog').html()),
   cancelEl: '.cancel',

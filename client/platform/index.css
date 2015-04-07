@@ -7,7 +7,7 @@
 @import url('./styles/jstree.css');
 @import url('./styles/subject-tree.css');
 @import url('./styles/leaflet.css');
-@import url('./node_modules/leaflet-control-geocoder/Control.Geocoder.css');
+@import url('./styles/Control.Geocoder.css');
 @import url('./node_modules/select2/dist/css/select2.css');
 @import url('./node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css');
 @import url('./styles/reset.css');
@@ -499,6 +499,16 @@ FILTERS
   height: 150px;
 }
 
+.form.location {
+  width: 300px;
+  float: left;
+  margin-right: 30px;
+}
+
+#map-form {
+  height: 300px;
+}
+
 /**
  * Nestable
  */
@@ -678,7 +688,9 @@ MODAL
 
 /* Modal positioning */
 .subject-modal-wrapper,
-.subject-dialog-wrapper {
+.subject-dialog-wrapper,
+.editor-dialog-wrapper
+ {
   box-sizing: border-box;
   position: fixed;
   left: 0;
@@ -696,12 +708,14 @@ MODAL
 }
 
 .subject-modal-wrapper *,
-.subject-dialog-wrapper * {
+.subject-dialog-wrapper *,
+.editor-dialog-wrapper * {
   box-sizing: border-box; 
 }
 
 .subject-modal-modal,
-.subject-dialog-modal {
+.subject-dialog-modal,
+.editor-dialog-modal {
   -moz-transition: opacity 200ms ease,-moz-transform 200ms ease;
   -o-transition: opacity 200ms ease,-o-transform 200ms ease;
   -webkit-transition: opacity 200ms ease,-webkit-transform 200ms ease;
@@ -721,6 +735,10 @@ MODAL
   backface-visibility: hidden;
 }
 
+.editor-dialog-modal {
+  max-width: 900px;
+}
+
 .dialog-header {
   padding: 20px 30px 10px;
   font-size: 15px;
@@ -731,6 +749,10 @@ MODAL
   padding: 20px 30px;
   line-height: 20px;
   font-size: 13px;
+}
+
+.editor-dialog-modal .dialog-body {
+  padding: 20px 15px 20px 30px;
 }
 
 .dialog-footer {

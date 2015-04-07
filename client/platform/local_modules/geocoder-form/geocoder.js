@@ -1,53 +1,30 @@
 var Backbone = require('backbone'),
     geocoder = require('leaflet-control-geocoder');
 
-
-/**
- * Select2
- *
- * Renders Select2 - jQuery based replacement for select boxes
- * https://gist.github.com/jbugwadia/9303389
- *
- * Usage: Works the same as Select editor, with the following extensions for Select2:
- *    schema.config: configuration object passed to Select2
- *    schema.multiple: sets 'multiple' property on the HTML <select>
- *
- * Example:
- *    schema: {title: {type:'Select2', options:['Mr','Mrs',Ms], config: {}, multiple: false}
- *
- * Also see:
- *    https://gist.github.com/powmedia/5161061
- *    https://gist.github.com/Integral/5156170
- * Changelog:
- *    removed hard tabs (@fonji)
- *    added blur and focus events (fonji)
- *    delayed blur event (fonji) (it was fired when an element was clicked on)
- */
-
-Backbone.Form.editors.Geocoder = Backbone.Form.editors.Base.extend ({
-  tagName: 'div',
-
-  className: 'map',
-
+Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
   events: {
   },
 
   initialize: function(options) {
-    Backbone.Form.editors.Base.prototype.initialize.call(this, options);
+    var that = this;
+    Backbone.Form.editors.Hidden.prototype.initialize.call(this, options);
+    setTimeout(function(){that.createMap();}, 500);
   },
 
-  render: function() {
-
-    var map = L.map(this.el).setView([0, 0], 2),
+  createMap: function() {
+    var map = L.map('map-form').setView([0, 0], 2),
         geocoders = {
             'Nominatim': L.Control.Geocoder.nominatim(),
-            'Bing': L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy')
+            'Bing': L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy'),
+            'Google': L.Control.Geocoder.google('AIzaSyC5W2oY1NB6pWI0RATM8BhkPdfxNWnlg4o')
         },
         selector = L.DomUtil.get('geocode-selector'),
         control = new L.Control.Geocoder({ geocoder: null }),
         btn,
         selection,
         marker;
+
+    L.Icon.Default.imagePath = '/assets/leaflet'
 
     function select(geocoder, el) {
         if (selection) {
@@ -91,6 +68,8 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Base.extend ({
         })
     });
 
-    return this;
+    setTimeout(function(){map.invalidateSize();}, 0);
   }
+
+
 });
