@@ -131,7 +131,7 @@ app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
 		Document.createEmpty(function(err, doc) {
 			if (err) return next(err);
-			res.redirect('/archivist.html#state=composer.main;0.path=' + doc._id + ';1.contextId=toc');
+			res.redirect('/archivist.html#' + doc._id);
 		})
   });
 

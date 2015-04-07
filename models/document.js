@@ -50,133 +50,89 @@ documentSchema.statics.createEmpty = function(cb) {
 	var docId = mongoose.Types.ObjectId();
 
 	var emptyDocJson = {
-	  "id": docId,
-	  "_schema": [
-	    "archivist-interview",
-	    "0.1.0"
-	  ],
-	  "nodes": {
-	    "document": {
-	      "id": "document",
-	      "type": "document",
-	      "views": [
-	        "content",
-	        "citations",
-	        "remarks",
-	        "info"
-	      ],
-	      "license": "licence",
-	      "guid": docId,
-	      "creator": "",
-	      "title": "Untitled",
-	      "authors": [],
-	      "abstract": "",
-	      "abstract_en": "",
-	      "created_at": new Date().toJSON(),
-	      "updated_at": new Date().toJSON(),
-	      "published_on": new Date().toJSON()
-	    },
-	    "cover": {
-	      "id": "cover",
-	      "type": "cover",
-	      "authors": []
-	    },
-	    "content": {
-	      "type": "view",
-	      "id": "content",
-	      "nodes": [
-	        "cover",
-	        "text1"
-	      ]
-	    },
-	    "citations": {
-	      "type": "view",
-	      "id": "citations",
-	      "nodes": []
-	    },
-	    "remarks": {
-	      "type": "view",
-	      "id": "remarks",
-	      "nodes": []
-	    },
-	    "info": {
-	      "type": "view",
-	      "id": "info",
-	      "nodes": [
-	        "publication_info",
-	        "interview_subject",
-	        "interview_conductor",
-	        "interview_operator",
-	        "interview_sound_operator"
-	      ]
-	    },
-	    "text1": {
-	      "type": "text",
-	      "id": "text1",
-	      "content": "Please write interview here"
-	    },
-	    "publication_info": {
-	      "id": "publication_info",
-	      "type": "publication_info"
-	    },
-	    "interview_subject": {
-	      "type": "interview_subject",
-	      "id": "interview_subject",
-	      "name": "The Interviewed",
-	      "role": "Interview Subject",
-	      "forced_labor": "intracamp work; earthworks (construction of barracks); digging tunnels for military factories",
-	      "categories": [
-	        "Ost arbeiter",
-	        "Cocentration camp worker"
-	      ],
-	      "prisons": [
-	        "location_komorn"
-	      ],
-	      "movement": [
-	        "location_danzig:33",
-	        "location_komorn:67"
-	      ],
-	      "description": "",
-	      "image": ""
-	    },
-	    "interview_conductor": {
-	      "type": "contributor",
-	      "id": "interview_conductor",
-	      "source_id": "",
-	      "name": "Daniel Beilinson",
-	      "role": "Interview Conductor",
-	      "description": "",
-	      "image": ""
-	    },
-	    "interview_operator": {
-	      "type": "contributor",
-	      "id": "interview_operator",
-	      "source_id": "",
-	      "name": "Oliver Buchtala",
-	      "role": "Operator",
-	      "description": "",
-	      "image": ""
-	    },
-	    "interview_sound_operator": {
-	      "type": "contributor",
-	      "id": "interview_sound_operator",
-	      "source_id": "",
-	      "name": "Michael Aufreiter",
-	      "role": "Sound Operator",
-	      "description": "",
-	      "image": ""
-	    },
-	    "license": {
-	      "id": "license",
-	      "type": "license",
-	      "name": "None",
-	      "code": "none",
-	      "description": "",
-	      "version": "1.0",
-	      "url": ""
-	    }
-	  }
-	};
+    "id": "9cc2e4def8b39bc234bf5e186bafa743",
+    "_schema": [
+      "substance-interview",
+      "0.1.0"
+    ],
+    "nodes": {
+      "document": {
+        "id": "document",
+        "type": "document",
+        "containers": [
+          "content"
+        ],
+        "guid": "9cc2e4def8b39bc234bf5e186bafa743",
+        "creator": "",
+        "title": "New Composer Document!",
+        "abstract": "Test",
+        "created_at": "2015-03-04T10:56:18.229Z",
+        "updated_at": "2015-03-04T10:56:47.425Z",
+        "published_on": "2015-03-04T10:56:18.230Z"
+      },
+      "content": {
+        "type": "container",
+        "id": "content",
+        "nodes": [
+          "text_1",
+          "text_2"
+        ]
+      },
+      "text_1": {
+        "type": "text",
+        "id": "text_1",
+        "content": 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus quis scelerisque ligula. Proin tristique ligula id magna finibus rhoncus. Quisque dictum viverra sapien, vel elementum metus condimentum nec. Donec ac tellus nunc. Nullam fermentum pharetra justo, accumsan tristique quam tempus a. Quisque vitae luctus velit. Praesent lacinia enim ex, sed pulvinar neque dictum ultricies. Sed est metus, bibendum sed suscipit ut, cursus ut mi. Pellentesque sagittis mi nisi, eu blandit metus congue id. Pellentesque eget magna porta, rutrum odio et, commodo lacus. Sed vitae vehicula ante. Quisque suscipit iaculis est, vitae aliquet lacus dictum ut. Nulla enim dolor, pulvinar at odio vitae, sollicitudin eleifend ex. Maecenas eget ligula eget sem efficitur consectetur nec vel sem. In massa mauris, consequat vitae enim eget, vehicula aliquet turpis.'
+      },
+      
+      "text_2": {
+        "type": "text",
+        "id": "text_2",
+        "content": 'Proin in luctus sapien, ultrices commodo augue. Phasellus ultrices commodo augue, in blandit nibh euismod nibh vitae erat luctus ac. Aliquam euismod nibh vitae erat pulvinar, at semper libero tincidunt. Nulla finibus est ac consequat consequat. Sed at condimentum purus. Aliquam vulputate ipsum ut justo posuere, quis varius risus finibus. Ut scelerisque laoreet vehicula. Nullam gravida fringilla justo, nec efficitur nunc sagittis et. Suspendisse nibh ligula, imperdiet id interdum et, sollicitudin non mauris. Suspendisse potenti. Suspendisse luctus iaculis nulla sed efficitur. Nullam sed viverra metus. Etiam dictum blandit enim tincidunt maximus. Nullam tempus nibh at varius interdum.'
+      },
+
+      "entity_reference_1": {
+        "id": "entity_reference_1",
+        "type": "entity_reference",
+        "path": [
+          "text_2",
+          "content"
+        ],
+        "target": "54ef1331afda2d3c024e4817", // this is an external object
+        "range": [
+          24,
+          47
+        ]
+      },
+
+      "subject_reference_1": {
+        "id": "subject_reference_1",
+        "type": "subject_reference",
+        "path": [
+          "text_2",
+          "content"
+        ],
+        "target": ["54bae4cda868bc6fab4bcd0e", "54bae99ca868bc3ec7fb5ad8"], // these are external objects
+        "range": [
+          99,
+          122
+        ]
+      },
+
+      "subject_reference_2": {
+        "id": "subject_reference_2",
+        "type": "subject_reference",
+        "path": [
+          "text_2",
+          "content"
+        ],
+        "target": ["54bae4d0a868bc6fab4bcd16", "54bae99ca868bc3ec7fb5ad8"], // these are external objects
+        "range": [
+          614,
+          628
+        ]
+      }
+    }
+  };
 	
 	var emptyDoc = new this(emptyDocJson);
   emptyDoc.save(function(err, emptyDoc) {
