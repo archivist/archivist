@@ -12,7 +12,7 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
   },
 
   createMap: function() {
-    var map = L.map('map-form').setView([0, 0], 2),
+    var map = L.map('map-form').setView([51, 28], 4),
         geocoders = {
             'Nominatim': L.Control.Geocoder.nominatim(),
             'Bing': L.Control.Geocoder.bing('AoArA0sD6eBGZyt5PluxhuN7N7X1vloSEIhzaKVkBBGL37akEVbrr0wn17hoYAMy'),
@@ -37,7 +37,7 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
     }
 
     for (var name in geocoders) {
-        btn = L.DomUtil.create('button', '', selector);
+        btn = L.DomUtil.create('button', 'btn btn-default btn-xs', selector);
         btn.innerHTML = name;
         (function(n) {
             L.DomEvent.addListener(btn, 'click', function() {

@@ -115,7 +115,7 @@ var editorDialog = Backbone.Modal.extend({
     this.form = new Backbone.Form({
       model: this.model
     }).render();
-    this.$el.find('.form').append(this.form.el);
+    this.$el.find('.form').prepend(this.form.el);
   },
   beforeSubmit: function() {
     this.$el.find('button').prop('disabled', true);
