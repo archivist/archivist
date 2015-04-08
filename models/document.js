@@ -50,7 +50,8 @@ documentSchema.statics.createEmpty = function(cb) {
 	var docId = mongoose.Types.ObjectId();
 
 	var emptyDocJson = {
-    "id": "9cc2e4def8b39bc234bf5e186bafa743",
+    "_id": docId,
+    "id": docId,
     "_schema": [
       "substance-interview",
       "0.1.0"
@@ -62,7 +63,7 @@ documentSchema.statics.createEmpty = function(cb) {
         "containers": [
           "content"
         ],
-        "guid": "9cc2e4def8b39bc234bf5e186bafa743",
+        "guid": docId,
         "creator": "",
         "title": "New Composer Document!",
         "abstract": "Test",
@@ -154,7 +155,6 @@ documentSchema.statics.get = function(id, cb) {
       delete doc._schema;
       doc.schema = document._schema;
     }
-
     cb(err, doc);
   });
 }
@@ -176,6 +176,8 @@ documentSchema.statics.update = function(id, data, cb) {
   }
 
   self.findById(id, "__v", function(err, currentDoc) {
+    if (err) return cb(err);
+
     console.log('currentDoc.__v', currentDoc.__v, 'data', data.__v);
     // Perform version check
     if (currentDoc.__v !== data.__v) {
