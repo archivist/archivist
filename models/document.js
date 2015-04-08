@@ -186,8 +186,9 @@ documentSchema.statics.update = function(id, data, cb) {
 
     delete data.__v; // clear __v property, so $inc can do its job
 
-    self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, function (err, document) {
+    self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, {new: true}, function (err, document) {
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
+      	console.log(document.__v)
         cb(err, {
           documentVersion: document.__v,
           subjectDBVersion: subjectDBVersion
