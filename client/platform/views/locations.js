@@ -6,6 +6,7 @@ var Backbone = require('backbone'),
     bootstrapForm = require('../local_modules/bootstrap-form/bootstrap3.js'),
     select2form = require('../local_modules/select2-form/select2.js'),
     geocoderform = require('../local_modules/geocoder-form/geocoder.js'),
+    geocoded = require('../local_modules/geocoded-form/geocoded.js'),
     modal = require('../node_modules/backbone.modal/backbone.modal.js'),
     models = require('../models/index.js'),
     $ = require('jquery'),
@@ -33,7 +34,7 @@ var ToponymsGrid = Grid.main.extend({
   },
   _add: function() {
     var dialogModel = new models.toponym();
-    var dialog = new editorDialog({model: dialogModel});
+    var dialog = new editorDialog({model: dialogModel, collection: this.options.collection});
     $('#main').append(dialog.render().el);
   },
   panel: [
@@ -109,7 +110,7 @@ var editorDialog = Backbone.Modal.extend({
   keyControl: false,
   template: _.template($('#editorDialog').html()),
   cancelEl: '.cancel',
-  submitEl: '.run',
+  submitEl: '.save',
   onRender: function() {
     var model = this.model;
     this.form = new Backbone.Form({
@@ -118,10 +119,23 @@ var editorDialog = Backbone.Modal.extend({
     this.$el.find('.form').prepend(this.form.el);
   },
   beforeSubmit: function() {
-    this.$el.find('button').prop('disabled', true);
-    //this.$el.find('.run').text(this.model.get('submitState'));
-    this.$el.find('#meter').show();
-    //this.$el.find('#state').html(this.model.get('initState'))
+    var self = this;
+    var errors = self.form.commit();
+    if(!errors) {
+      this.$el.find('button').prop('disabled', true);
+      //this.$el.find('.save').text('Saving...');
+      this.$el.find('#meter').show();
+      this.$el.find('#state').html('Saving...');
+      self.collection.create(self.model, {
+        wait: true,
+        success: function(model,resp) { 
+          self.submit('Your new location has been added to collection.','Saved!');
+        },
+        error: function(model,err) { 
+          self.submit('Something went wrong.','Error!');
+        }
+      });
+    }
     //this.model.trigger('confirm', this);
     return false;
   },

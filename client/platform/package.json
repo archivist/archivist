@@ -16,7 +16,7 @@
     "jquery.mousewheel": "^3.1.9",
     "leaflet-control-geocoder": "perliedman/leaflet-control-geocoder",
     "moment": "^2.8.3",
-    "select2-bootstrap-theme": "fk/select2-bootstrap-theme",
+    "select2-bootstrap-theme": "git://github.com/fk/select2-bootstrap-theme",
     "superagent": "*",
     "underscore": "*"
   }

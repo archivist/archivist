@@ -3,7 +3,7 @@ var Utility = require('./util.js');
 var Prison = Utility.model.extend({
   urlRoot: "/api/locations",
   schema: {
-    name: { type: 'Text', validators: ['required'], editorAttrs: {placeholder: 'Name', autofocus:'autofocus'} },
+    name: { type: 'Geocoded', validators: ['required'], editorAttrs: {placeholder: 'Name', autofocus:'autofocus'} },
     synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [',']}, multiple: true},
     nearest_locality: { type: 'Text', editorAttrs: {placeholder: 'Nearest locality'} },
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
@@ -30,16 +30,17 @@ exports.locationsPrisons = LocationsPrisons
 var Toponym = Utility.model.extend({
   urlRoot: "/api/locations",
   schema: {
-    name: { type: 'Text', validators: ['required'], editorAttrs: {placeholder: 'Name', autofocus:'autofocus'} },
-    current_name: { type: 'Text', editorAttrs: {placeholder: 'Current name' }},
-    synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [',']}, multiple: true},
+    name: { type: 'Geocoded', validators: ['required'], editorAttrs: {placeholder: 'Name', autofocus:'autofocus'} },
+    current_name: { type: 'Geocoded', editorAttrs: {placeholder: 'Current name' }},
+    synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description'} },
-    Geocoder: {type:'Geocoder'},
+    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '7'} },
+    point: { type:'Geocoder' },
     type: { type: 'Hidden' }
   },
   defaults: {
-    type: 'toponym'
+    type: 'toponym',
+    name: 'Unknown'
   }
 })
 exports.toponym = Toponym
