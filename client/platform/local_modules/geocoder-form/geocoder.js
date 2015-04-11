@@ -199,7 +199,7 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
         })
     });
 
-    setTimeout(function(){map.invalidateSize();}, 0);
+    setTimeout(function(){map.invalidateSize();debugger;}, 0);
   },
 
   addInfoControl: function(map, control) {
@@ -231,8 +231,6 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
       } else {
         this.field.setValue('');
       }
-
-
     };
 
     map.info.addTo(map);

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "Select2": "git://github.com/select2/select2",
+    "select2": "git://github.com/select2/select2",
     "animate.css": "^3.1.1",
     "backbone": "^1.1.2",
     "backbone-forms": "powmedia/backbone-forms",
@@ -16,6 +16,7 @@
     "jquery.mousewheel": "^3.1.9",
     "leaflet-control-geocoder": "perliedman/leaflet-control-geocoder",
     "moment": "^2.8.3",
+    "select2": "select2/select2",
     "select2-bootstrap-theme": "git://github.com/fk/select2-bootstrap-theme",
     "superagent": "*",
     "underscore": "*"

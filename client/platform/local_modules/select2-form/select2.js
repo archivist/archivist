@@ -56,9 +56,14 @@ Backbone.Form.editors.Select2 = Backbone.Form.editors.Select.extend ({
       }
 
       elem.$el.select2(config);
+      elem.$el.val(elem.value).trigger('change');
     }, 0);
 
     return this;
+  },
+
+  setValue: function(val) {
+    this.$el.select2({data: val});
   },
 
   disable: function() {

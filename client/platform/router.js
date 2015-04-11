@@ -55,6 +55,7 @@ var Router = Backbone.Router.extend({
     'subjects': 'subjectsList',
     'prisons': 'prisonsList',
     'toponyms': 'toponymsList',
+    'toponyms/:id': 'toponymsEdit',
     'users': 'usersList'
 	},
   dashboard: function(callback, id) {
@@ -113,6 +114,18 @@ var Router = Backbone.Router.extend({
     ];
    
     this.grid(toponymsGrid, 'locationsToponyms', 'toponymsGrid', callback, id);
+  },
+
+  toponymsEdit: function(id) {
+    var that = this;
+    if(!this.initialized) {
+      this.toponymsList('toponymsEdit', id);
+    } else {
+      var model = new models.toponym({_id:id});
+      model.fetch().done(function() {
+        that.layout.rootView._edit(model);
+      });
+    }
   },
 
   prisonsList: function(callback, id) {

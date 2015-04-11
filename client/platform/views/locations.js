@@ -20,6 +20,7 @@ var ToponymsGrid = Grid.main.extend({
   initialize: function() {
     $('#' + this.icon).addClass('active');
     this.grid = new Backgrid.Grid({
+      row: LocationRow,
       columns: this.options.columns,
       collection: this.options.collection
     });
@@ -35,6 +36,10 @@ var ToponymsGrid = Grid.main.extend({
   _add: function() {
     var dialogModel = new models.toponym();
     var dialog = new editorDialog({model: dialogModel, collection: this.options.collection});
+    $('#main').append(dialog.render().el);
+  },
+  _edit: function(model) {
+    var dialog = new editorDialog({model: model, collection: this.options.collection});
     $('#main').append(dialog.render().el);
   },
   panel: [
@@ -104,6 +109,25 @@ var PrisonCell = Backgrid.Cell.extend({
   }
 });
 exports.prisonCell = PrisonCell
+
+var LocationRow = Backgrid.Row.extend({
+  events: {
+    "click": "onClick",
+    "click .delete-document": "onRemove"
+  },
+  onClick: function (e) {
+    e.preventDefault();
+    Backbone.middle.trigger("goTo", '/toponyms/' + this.model.get('id'));
+  },
+  onRemove: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
+    if(confirm) {
+      this.model.destroy();
+    }
+  }
+});
 
 var editorDialog = Backbone.Modal.extend({
   prefix: 'editor-dialog',
