@@ -35,11 +35,11 @@ var ToponymsGrid = Grid.main.extend({
   },
   _add: function() {
     var dialogModel = new models.toponym();
-    var dialog = new editorDialog({model: dialogModel, collection: this.options.collection});
+    var dialog = new editorDialog({model: dialogModel, collection: this.options.collection, new: true});
     $('#main').append(dialog.render().el);
   },
   _edit: function(model) {
-    var dialog = new editorDialog({model: model, collection: this.options.collection});
+    var dialog = new editorDialog({model: model, collection: this.options.collection, new: false});
     $('#main').append(dialog.render().el);
   },
   panel: [
@@ -59,6 +59,7 @@ var PrisonsGrid = Grid.main.extend({
   initialize: function() {
     $('#' + this.icon).addClass('active');
     this.grid = new Backgrid.Grid({
+      row: LocationRow,
       columns: this.options.columns,
       collection: this.options.collection
     });
@@ -73,7 +74,11 @@ var PrisonsGrid = Grid.main.extend({
   },
   _add: function() {
     var dialogModel = new models.prison();
-    var dialog = new editorDialog({model: dialogModel});
+    var dialog = new editorDialog({model: dialogModel, collection: this.options.collection, new: true});
+    $('#main').append(dialog.render().el);
+  },
+  _edit: function(model) {
+    var dialog = new editorDialog({model: model, collection: this.options.collection, new: false});
     $('#main').append(dialog.render().el);
   },
   panel: [
@@ -86,21 +91,25 @@ var PrisonsGrid = Grid.main.extend({
 })
 exports.prisonsGrid = PrisonsGrid
 
-var PrisonCell = Backgrid.Cell.extend({
-  className: "string-cell document-cell grid-cell animate",
+var LocationCell = Backgrid.Cell.extend({
+  className: "string-cell location-cell grid-cell animate",
   render: function () {
     this.$el.empty();
-    var formattedValue = this.formatter.fromRaw(this.model.get('nodes'));
+    var formattedValue = this.formatter.fromRaw(this.model);
     if(_.isNull(formattedValue) || _.isEmpty(formattedValue)){
       this.delegateEvents();
       return this;
     }
     else {
-      var metadata = formattedValue.document;
+      var name = formattedValue.get('name'),
+          synonyms = formattedValue.get('synonyms'),
+          type = formattedValue.get('prison_type'),
+          country = formattedValue.get('country');
 
-      var markup = '<div class="title">' + metadata.title + '</div> \
+      var markup = '<div class="title">' + name + '</div> \
+                    <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + (type.length > 0 ? ", Type: " + type.join(", ") : "" ) + '</div> \
                     <span class="delete-document">Delete</span> \
-                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + '</div>';
+                    <div class="country">Country: ' + country + '</div>';
 
       this.$el.append(markup)
       this.delegateEvents()
@@ -108,7 +117,7 @@ var PrisonCell = Backgrid.Cell.extend({
     }
   }
 });
-exports.prisonCell = PrisonCell
+exports.locationCell = LocationCell
 
 var LocationRow = Backgrid.Row.extend({
   events: {
@@ -117,7 +126,8 @@ var LocationRow = Backgrid.Row.extend({
   },
   onClick: function (e) {
     e.preventDefault();
-    Backbone.middle.trigger("goTo", '/toponyms/' + this.model.get('id'));
+    var url = this.model.collection.url.split('/')[this.model.collection.url.split('/').length - 1];
+    Backbone.middle.trigger("goTo", '/' + url + '/' + this.model.get('id'));
   },
   onRemove: function(e) {
     e.preventDefault();
@@ -136,11 +146,35 @@ var editorDialog = Backbone.Modal.extend({
   cancelEl: '.cancel',
   submitEl: '.save',
   onRender: function() {
-    var model = this.model;
+    var that = this,
+        model = this.model;
     this.form = new Backbone.Form({
       model: this.model
     }).render();
+    this.$el.find('.delete').on('click', function() {
+      that.delete();
+    });
     this.$el.find('.form').prepend(this.form.el);
+    this.gridUrl = this.collection.url.split('/')[this.collection.url.split('/').length - 1];
+  },
+  serializeData: function () {
+    return {remove: (this.model.id ? true : false)};
+  },
+  delete: function() {
+    var self = this;
+    this.$el.find('button').prop('disabled', true);
+    this.$el.find('#meter').show();
+    this.$el.find('#state').html('Deleting...');
+    this.collection.remove(this.model);
+    this.model.destroy({
+      wait: true,
+      success: function(model,resp) { 
+        self.submit('Your location has been removed.','Removed!');
+      },
+      error: function(model,err) { 
+        self.submit('Something went wrong.','Error!');
+      }
+    });
   },
   beforeSubmit: function() {
     var self = this;
@@ -150,28 +184,44 @@ var editorDialog = Backbone.Modal.extend({
       //this.$el.find('.save').text('Saving...');
       this.$el.find('#meter').show();
       this.$el.find('#state').html('Saving...');
-      self.collection.create(self.model, {
-        wait: true,
-        success: function(model,resp) { 
-          self.submit('Your new location has been added to collection.','Saved!');
-        },
-        error: function(model,err) { 
-          self.submit('Something went wrong.','Error!');
-        }
-      });
+      //check if old model
+      if (this.model.id) {
+        this.model.save({}, {
+          wait: true,
+          success: function(model,resp) { 
+            self.submit('Your location has been saved.','Saved!');
+          },
+          error: function(model,err) { 
+            self.submit('Something went wrong.','Error!');
+          }
+        });
+      } else {
+        self.collection.create(self.model, {
+          wait: true,
+          success: function(model,resp) { 
+            self.submit('Your new location has been added to collection.','Saved!');
+          },
+          error: function(model,err) { 
+            self.submit('Something went wrong.','Error!');
+          }
+        });
+      }
     }
     //this.model.trigger('confirm', this);
     return false;
   },
   submit: function(msg, state) {
+    var that = this;
     this.$el.find('#meter').addClass(state);
     this.$el.find('#state').addClass(state).html(msg);
     //this.model.stopListening();
     setTimeout(function(dialog){
       dialog.destroy();
-    }, 500, this);
+      Backbone.middle.trigger("changeUrl", '/' + that.gridUrl);
+    }, 1000, this);
   },
   cancel: function() {
+    Backbone.middle.trigger("changeUrl", '/' + this.gridUrl);
     //this.model.stopListening();
   }
 });

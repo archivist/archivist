@@ -4,14 +4,17 @@ var Prison = Utility.model.extend({
   urlRoot: "/api/locations",
   schema: {
     name: { type: 'Geocoded', validators: ['required'], editorAttrs: {placeholder: 'Name', autofocus:'autofocus'} },
-    synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [',']}, multiple: true},
-    nearest_locality: { type: 'Text', editorAttrs: {placeholder: 'Nearest locality'} },
+    synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
+    nearest_locality: { type: 'Geocoded', editorAttrs: {placeholder: 'Nearest locality'} },
+    prison_type: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description'} },
+    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '7'} },
+    point: { type:'Geocoder' },
     type: { type: 'Hidden' }
   },
   defaults: {
-    type: 'prison'
+    type: 'prison',
+    name: 'Untitled'
   }
 })
 exports.prison = Prison

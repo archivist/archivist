@@ -23,9 +23,11 @@ L.Control.LocationGeocoder = L.Control.Geocoder.extend({
       .openPopup();
 
     this._map.info.update(false, [result.center.lng, result.center.lat]);
-      //lng, lat
     if(result.country) $('input[name="country"]').val(result.country);
-    if(result.locality) $('input[name="current_name"]').val(result.locality);
+    if(result.locality) {
+      $('input[name="current_name"]').val(result.locality);
+      $('input[name="nearest_locality"]').val(result.locality);
+    }
 
     return this;
   }
@@ -130,7 +132,8 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
   },
 
   createMap: function() {
-    var map = L.map('map-form').setView([51, 28], 4),
+    var coords = _.isArray(this.value) ? [this.value[1],this.value[0]] : [51, 28],
+        map = L.map('map-form').setView(coords, 4),
         geocoders = {
             'Google': L.Control.Geocoder.googleGeo('AIzaSyC5W2oY1NB6pWI0RATM8BhkPdfxNWnlg4o'),
             'Nominatim': L.Control.Geocoder.nominatim(),
@@ -194,12 +197,17 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
               map.info.update(false, [r.center.lng, r.center.lat]);
 
               if(r.country) $('input[name="country"]').val(r.country);
-              if(r.locality) $('input[name="current_name"]').val(r.locality);
+              if(r.locality) {
+                $('input[name="current_name"]').val(r.locality);
+                $('input[name="nearest_locality"]').val(r.locality);
+              }
             }
         })
     });
 
-    setTimeout(function(){map.invalidateSize();debugger;}, 0);
+    if (_.isArray(this.value)) {
+      control._geocodeMarker = new L.marker(coords).bindPopup(this.model.get('name')).addTo(map).openPopup();
+    }
   },
 
   addInfoControl: function(map, control) {
@@ -215,10 +223,10 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
       this._div.addEventListener("click", function(e) {
         e.preventDefault();
         e.stopPropagation();
-        map.removeLayer(control._geocodeMarker);
+        if (control._geocodeMarker) map.removeLayer(control._geocodeMarker);
         that.update(e);
       });
-      this.update();
+      this.update(null, that.field.value);
       return this._div;
     };
 

@@ -54,6 +54,7 @@ var Router = Backbone.Router.extend({
     '': 'dashboard',
     'subjects': 'subjectsList',
     'prisons': 'prisonsList',
+    'prisons/:id': 'prisonsEdit',
     'toponyms': 'toponymsList',
     'toponyms/:id': 'toponymsEdit',
     'users': 'usersList'
@@ -91,25 +92,7 @@ var Router = Backbone.Router.extend({
         name: 'name',
         label: 'name',
         editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'current_name',
-        label: 'current name',
-        editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'synonyms',
-        label: 'synonyms',
-        editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'country',
-        label: 'current country',
-        editable: false,
-        cell: 'string'
+        cell: views.locationCell
       }
     ];
    
@@ -134,29 +117,23 @@ var Router = Backbone.Router.extend({
         name: 'name',
         label: 'name',
         editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'synonyms',
-        label: 'synonyms',
-        editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'prison_type',
-        label: 'type',
-        editable: false,
-        cell: 'string'
-      },
-      {
-        name: 'nearest_locality',
-        label: 'nearest locality',
-        editable: false,
-        cell: 'string'
+        cell: views.locationCell
       }
     ];
    
     this.grid(prisonsGrid, 'locationsPrisons', 'prisonsGrid', callback, id);
+  },
+
+  prisonsEdit: function(id) {
+    var that = this;
+    if(!this.initialized) {
+      this.toponymsList('prisonsEdit', id);
+    } else {
+      var model = new models.prison({_id:id});
+      model.fetch().done(function() {
+        that.layout.rootView._edit(model);
+      });
+    }
   },
 
   usersList: function(callback, id) {

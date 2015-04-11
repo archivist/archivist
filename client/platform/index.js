@@ -20,6 +20,9 @@ Backbone.middle = _.extend({
 	goToExt: function(url) {
 		window.location = url;
 	},
+	changeUrl: function(url) {
+  	Backbone.AppRouter.navigate(url, {trigger: false});
+	},
 	changeTitle: function(title) {
 		document.title = title;
 	}
@@ -29,6 +32,7 @@ Backbone.middle.on({
 	"goTo": Backbone.middle.goTo,
 	"goToPrevious": Backbone.middle.goToPrev,
 	"goToExt": Backbone.middle.goToExt,
+	"changeUrl": Backbone.middle.changeUrl,
 	"domchange:title": Backbone.middle.changeTitle
 });
 
