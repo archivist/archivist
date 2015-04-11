@@ -1,5 +1,0 @@
-# Protect whitespace line ending.
-* text=auto
-
-# Ensure line endings are always LF.
-text eol=lf
