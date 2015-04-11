@@ -3,17 +3,12 @@
     {
       "repository": "https://github.com/substance/archivist-composer.git",
       "folder": "node_modules/archivist-composer",
-      "branch": "react"
+      "branch": "master"
     },
     {
       "repository": "https://github.com/substance/substance.git",
       "folder": "node_modules/substance",
       "branch": "next"
-    },
-    {
-      "repository": "https://github.com/substance/writer.git",
-      "folder": "node_modules/substance-writer",
-      "branch": "react"
     },
     {
       "repository": "https://github.com/substance/cjs.git",
