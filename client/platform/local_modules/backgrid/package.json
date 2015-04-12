@@ -1,0 +1,50 @@
+{
+  "name": "backgrid",
+  "version": "0.3.5",
+  "author": {
+    "name": "Jimmy Yuen Ho Wong and contributors",
+    "email": "wyuenho@gmail.com"
+  },
+  "description": "Backgrid.js is a set of components for building semantic and easily stylable data grid widgets with Backbone.",
+  "homepage": "http://backgridjs.com/",
+  "keywords": [
+    "backgrid",
+    "backbone"
+  ],
+  "main": "./lib/backgrid.js",
+  "scripts": {
+    "test": "grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/wyuenho/backgrid"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-cli": "~0.1.9",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-connect": "~0.3.0",
+    "grunt-contrib-clean": "~0.4.1",
+    "grunt-contrib-jasmine": "~0.5.1",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-contrib-watch": "~0.5.3",
+    "grunt-template-jasmine-istanbul": "~0.2.4",
+    "grunt-jsduck": "~0.1.4",
+    "grunt-recess": "~0.3.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=0.10"
+  },
+  "private": true,
+  "readme": "# Backgrid.js\n\n[![Build Status](https://travis-ci.org/wyuenho/backgrid.png?branch=master)](https://travis-ci.org/wyuenho/backgrid)\n\nBackgrid.js is a set of components for building semantic and easily stylable\ndata grid widgets. It offers a simple, intuitive programming interface that\nmakes easy things easy, but hard things possible when dealing with tabular data.\n\n## Features\n\nThe goal of Backgrid.js is to produce a set of core Backbone UI elements that\noffer you all the basic displaying, sorting and editing functionalities you'd\nexpect, and to create an elegant API that makes extending Backgrid.js with extra\nfunctionalities easy.\n\n## Advantages\n\n- No Hungarian notations.\n- Solid foundation. Based on Backbone.js.\n- Semantic and easily stylable. Just style with plain CSS like you would a normal HTML table.\n- Low learning curve. Works with plain old Backbone models and collections. Easy things are easy, hards things possible.\n- Highly modular and customizable. Components are just simple Backbone View classes, customization is easy if you already know Backbone.\n- Lightweight. Extra features are separated into extensions, which keeps the bloat away.\n- Good documentation.\n- Well tested. Comes with [100s of test cases](http://wyuenho.github.io/backgrid/test/).\n\n## Supported browsers [[1]](#note-1):\n\n- Internet Explorer 8 [[2]](#note-2)\n- Internet Exploror 9+\n- Chrome 4+\n- Safari 4+\n- Firefox 4+\n- Opera 9+\n\n### Notes:\n\n- <span id=\"note-1\">[1]</span>: Both the desktop and mobile versions of the above browsers are supported.\n- <span id=\"note-2\">[2]</span>: With the exception of the Filter extension's search icon CSS.\n\n## Example\n\n```javascript\nvar Territory = Backbone.Model.extend({});\n\nvar Territories = Backbone.Collection.extend({\n  model: Territory,\n  url: \"examples/territories.json\"\n});\n\nvar territories = new Territories();\n\n// Fetch some countries from the url\nterritories.fetch();\n\n// Column definitions\nvar columns = [{\n  name: \"id\", // The key of the model attribute\n  label: \"ID\", // The name to display in the header\n  editable: false, // By default every cell in a column is editable, but *ID* shouldn't be\n  // Defines a cell type, and ID is displayed as an integer without the ',' separating 1000s.\n  cell: Backgrid.IntegerCell.extend({\n    orderSeparator: ''\n  })\n}, {\n  name: \"name\",\n  label: \"Name\",\n  // The cell type can be a reference of a Backgrid.Cell subclass, any Backgrid.Cell subclass instances like *id* above, or a string\n  cell: \"string\" // This is converted to \"StringCell\" and a corresponding class in the Backgrid package namespace is looked up\n}, {\n  name: \"pop\",\n  label: \"Population\",\n  cell: \"integer\" // An integer cell is a number cell that displays humanized integers\n}, {\n  name: \"percentage\",\n  label: \"% of World Population\",\n  cell: \"number\" // A cell type for floating point value, defaults to have a precision 2 decimal numbers\n}, {\n  name: \"date\",\n  label: \"Date\",\n  cell: \"date\",\n}, {\n  name: \"url\",\n  label: \"URL\",\n  cell: \"uri\" // Renders the value in an HTML <a> element\n}];\n\n// Initialize a new Grid instance\nvar grid = new Backgrid.Grid({\n  columns: columns,\n  collection: territories,\n});\n\n// Render the grid and attach the Grid's root to your HTML document\n$(\"#example-1-result\").append(grid.render().el);\n```\n\n# Result:\n\nTake a look [here](http://backgridjs.com/index.html#basic-example).\n\n## More Examples\n\nAre you kidding me? This is a README file. Go to the [documentation](http://backgridjs.com/\n\"Backbone.js Documentation\") to find out more :)\n\n## Commercial Support\n\nIf there's a feature that you would like me to implement or a bug you'd like me\nto fix, you can contact me at this [email address](mailto:wyuenho@gmail.com).\n\n## License\nCopyright (c) 2013 Jimmy Yuen Ho Wong  \nLicensed under the [MIT license](LICENSE-MIT \"MIT License\").\n",
+  "readmeFilename": "README.md",
+  "bugs": {
+    "url": "https://github.com/wyuenho/backgrid/issues"
+  },
+  "_id": "backgrid@0.3.5",
+  "_shasum": "09b4116645c3bc2c74afed2bee33cc8793a87a00",
+  "_resolved": "git://github.com/wyuenho/backgrid#3b9f08c89281f3e0c13a63c559a6b76f4c940783",
+  "_from": "git://github.com/wyuenho/backgrid",
+  "_fromGithub": true
+}

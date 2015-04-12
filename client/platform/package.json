@@ -4,14 +4,13 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "select2": "git://github.com/select2/select2",
     "animate.css": "^3.1.1",
     "backbone": "^1.1.2",
     "backbone-forms": "powmedia/backbone-forms",
     "backbone.layoutmanager": "^0.9.5",
     "backbone.modal": "^1.1.2",
     "backbone.paginator": "^2.0.2",
-    "backgrid": "^0.3.5",
+    "backgrid-filter": "git://github.com/wyuenho/backgrid-filter",
     "jquery": "^2.1.1",
     "jquery.mousewheel": "^3.1.9",
     "leaflet-control-geocoder": "perliedman/leaflet-control-geocoder",
@@ -20,5 +19,8 @@
     "select2-bootstrap-theme": "git://github.com/fk/select2-bootstrap-theme",
     "superagent": "*",
     "underscore": "*"
+  },
+  "scripts": {
+    "preinstall": "npm install local_modules/backgrid"
   }
 }

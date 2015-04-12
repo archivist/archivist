@@ -45,6 +45,7 @@
     "start": "NODE_ENV=development foreman start",
     "devmode": "NODE_ENV=development foreman start & gulp watch",
     "prepare": "gulp compress",
+    "preinstall": "cd client/platform && npm install",
     "postinstall": "gulp compress"
   }
 }

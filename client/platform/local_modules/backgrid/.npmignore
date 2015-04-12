@@ -1,0 +1,17 @@
+api
+lib/*.min.*
+test/coverage
+bower_components
+components
+.grunt
+node_modules
+.rbenv-gemsets
+.rvmrc
+\#*\#
+.*~
+*~
+.\#*
+.DS_Store
+.localized
+Thumb.db
+*.ithmb

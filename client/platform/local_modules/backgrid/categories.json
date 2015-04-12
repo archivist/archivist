@@ -1,0 +1,65 @@
+[
+  {
+    "name": "Backgrid.js Core",
+    "groups": [
+      {
+        "name": "Cells",
+        "classes": [
+          "Backgrid.Cell",
+          "Backgrid.DatetimeCell",
+          "Backgrid.DateCell",
+          "Backgrid.TimeCell",
+          "Backgrid.NumberCell",
+          "Backgrid.IntegerCell",
+          "Backgrid.PercentCell",
+          "Backgrid.StringCell",
+          "Backgrid.UriCell",
+          "Backgrid.EmailCell",
+          "Backgrid.BooleanCell",
+          "Backgrid.SelectCell"
+        ]
+      }, {
+        "name": "CellEditors",
+        "classes": [
+          "Backgrid.CellEditor",
+          "Backgrid.InputCellEditor",
+          "Backgrid.BooleanCellEditor",
+          "Backgrid.SelectCellEditor"
+        ]
+      }, {
+        "name": "Formatters",
+        "classes": [
+          "Backgrid.CellFormatter",
+          "Backgrid.StringFormatter",
+          "Backgrid.EmailFormatter",
+          "Backgrid.NumberFormatter",
+          "Backgrid.PercentFormatter",
+          "Backgrid.DatetimeFormatter",
+          "Backgrid.SelectFormatter"
+        ]
+      }, {
+        "name": "Columns",
+        "classes": [
+          "Backgrid.*Column*"
+        ]
+      }, {
+        "name": "Headers",
+        "classes": [
+          "Backgrid.HeaderCell",
+          "Backgrid.HeaderRow",
+          "Backgrid.Header"
+        ]
+      }, {
+        "name": "Others",
+        "classes": [
+          "Backgrid.Command",
+          "Backgrid.Grid",
+          "Backgrid.Body",
+          "Backgrid.Row",
+          "Backgrid.EmptyRow",
+          "Backgrid.Footer"
+        ]
+      }
+    ]
+  }
+]

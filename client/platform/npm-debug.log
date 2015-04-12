@@ -1,94 +1,25 @@
 0 info it worked if it ends with ok
-1 verbose cli [ 'node',
-1 verbose cli   '/usr/local/bin/npm',
-1 verbose cli   'install',
-1 verbose cli   '--save',
-1 verbose cli   'select2-bootstrap-theme' ]
+1 verbose cli [ '/usr/bin/node',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'link',
+1 verbose cli   './local_modules/backgrid' ]
 2 info using npm@1.4.28
-3 info using node@v0.10.32
-4 warn package.json archivist-platform@0.0.1 No description
-5 warn package.json archivist-platform@0.0.1 No repository field.
-6 warn package.json archivist-platform@0.0.1 No README data
-7 warn package.json animate.css@3.1.1 No repository field.
-8 warn package.json backbone-forms@0.14.0 No repository field.
-9 warn package.json nestable@1.0.0 No repository field.
-10 verbose readDependencies using package.json deps
-11 verbose cache add [ 'select2-bootstrap-theme', null ]
-12 verbose cache add name=undefined spec="select2-bootstrap-theme" args=["select2-bootstrap-theme",null]
-13 verbose parsed url { protocol: null,
-13 verbose parsed url   slashes: null,
-13 verbose parsed url   auth: null,
-13 verbose parsed url   host: null,
-13 verbose parsed url   port: null,
-13 verbose parsed url   hostname: null,
-13 verbose parsed url   hash: null,
-13 verbose parsed url   search: null,
-13 verbose parsed url   query: null,
-13 verbose parsed url   pathname: 'select2-bootstrap-theme',
-13 verbose parsed url   path: 'select2-bootstrap-theme',
-13 verbose parsed url   href: 'select2-bootstrap-theme' }
-14 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
-15 verbose lock select2-bootstrap-theme /Users/danielbeilinson/.npm/b37f230f-select2-bootstrap-theme.lock
-16 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
-17 silly lockFile b37f230f-select2-bootstrap-theme select2-bootstrap-theme
-18 verbose addNamed [ 'select2-bootstrap-theme', '' ]
-19 verbose addNamed [ null, '*' ]
-20 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
-21 verbose lock select2-bootstrap-theme@ /Users/danielbeilinson/.npm/5358d560-select2-bootstrap-theme.lock
-22 silly addNameRange { name: 'select2-bootstrap-theme', range: '*', hasData: false }
-23 verbose request where is /select2-bootstrap-theme
-24 verbose request registry https://registry.npmjs.org/
-25 verbose request id f5cf575d45ef0cbe
-26 verbose url raw /select2-bootstrap-theme
-27 verbose url resolving [ 'https://registry.npmjs.org/', './select2-bootstrap-theme' ]
-28 verbose url resolved https://registry.npmjs.org/select2-bootstrap-theme
-29 verbose request where is https://registry.npmjs.org/select2-bootstrap-theme
-30 info trying registry request attempt 1 at 11:34:31
-31 http GET https://registry.npmjs.org/select2-bootstrap-theme
-32 http 404 https://registry.npmjs.org/select2-bootstrap-theme
-33 verbose headers { date: 'Tue, 07 Apr 2015 08:34:30 GMT',
-33 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-33 verbose headers   'content-type': 'application/json',
-33 verbose headers   'cache-control': 'max-age=0',
-33 verbose headers   'content-length': '51',
-33 verbose headers   'accept-ranges': 'bytes',
-33 verbose headers   via: '1.1 varnish',
-33 verbose headers   age: '0',
-33 verbose headers   'x-served-by': 'cache-fra1242-FRA',
-33 verbose headers   'x-cache': 'MISS',
-33 verbose headers   'x-cache-hits': '0',
-33 verbose headers   'x-timer': 'S1428395670.674244,VS0,VE179',
-33 verbose headers   'keep-alive': 'timeout=10, max=50',
-33 verbose headers   connection: 'Keep-Alive' }
-34 silly registry.get cb [ 404,
-34 silly registry.get   { date: 'Tue, 07 Apr 2015 08:34:30 GMT',
-34 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
-34 silly registry.get     'content-type': 'application/json',
-34 silly registry.get     'cache-control': 'max-age=0',
-34 silly registry.get     'content-length': '51',
-34 silly registry.get     'accept-ranges': 'bytes',
-34 silly registry.get     via: '1.1 varnish',
-34 silly registry.get     age: '0',
-34 silly registry.get     'x-served-by': 'cache-fra1242-FRA',
-34 silly registry.get     'x-cache': 'MISS',
-34 silly registry.get     'x-cache-hits': '0',
-34 silly registry.get     'x-timer': 'S1428395670.674244,VS0,VE179',
-34 silly registry.get     'keep-alive': 'timeout=10, max=50',
-34 silly registry.get     connection: 'Keep-Alive' } ]
-35 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
-36 silly lockFile 5358d560-select2-bootstrap-theme select2-bootstrap-theme@
-37 error 404 404 Not Found: select2-bootstrap-theme
-37 error 404
-37 error 404 'select2-bootstrap-theme' is not in the npm registry.
-37 error 404 You should bug the author to publish it
-37 error 404 It was specified as a dependency of 'archivist-platform'
-37 error 404
-37 error 404 Note that you can also install from a
-37 error 404 tarball, folder, or http url, or git url.
-38 error System Darwin 14.1.0
-39 error command "node" "/usr/local/bin/npm" "install" "--save" "select2-bootstrap-theme"
-40 error cwd /Users/danielbeilinson/Documents/code/archivist/client/platform
-41 error node -v v0.10.32
-42 error npm -v 1.4.28
-43 error code E404
-44 verbose exit [ 1, true ]
+3 info using node@v0.10.38
+4 verbose node symlink /usr/bin/node
+5 verbose linkPkg /home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid
+6 error Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid'
+6 error  { [Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid']
+6 error   errno: 3,
+6 error   code: 'EACCES',
+6 error   path: '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid' }
+7 error Please try running this command again as root/Administrator.
+8 error System Linux 3.16.0-34-generic
+9 error command "/usr/bin/node" "/usr/bin/npm" "link" "./local_modules/backgrid"
+10 error cwd /home/daniel/Documents/code/archivist/client/platform
+11 error node -v v0.10.38
+12 error npm -v 1.4.28
+13 error path /home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid
+14 error code EACCES
+15 error errno 3
+16 error stack Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid'
+17 verbose exit [ 3, true ]
