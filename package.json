@@ -26,7 +26,9 @@
     "passport-google-oauth": "*",
     "underscore": "1.7.0",
     "vinyl-source-stream": "*",
-    "watchify": "git://github.com/substack/watchify.git"
+    "watchify": "git://github.com/substack/watchify.git",
+    "substance-util": "git://github.com/substance/util.git#substance-next",
+    "substance-cjs": "git://github.com/substance/cjs.git#master"
   },
   "url": "http://github.com/substance/archivist/",
   "devDependencies": {
@@ -42,7 +44,7 @@
     "watchify": "git://github.com/substack/watchify.git"
   },
   "scripts": {
-    "start": "NODE_ENV=development foreman start",
+    "start": "NODE_ENV=production foreman start",
     "devmode": "NODE_ENV=development foreman start & gulp watch",
     "prepare": "gulp compress",
     "preinstall": "cd client/platform && npm install",
