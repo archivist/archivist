@@ -36,9 +36,9 @@
     "lib": "node_modules/archivist-composer/lib"
   },
   "bundle": {
-    "name": "composer",
-    "folder": "./dist",
-    "source": "./boot.js",
-    "index": "./index.html"
+    "name": "archivist_composer",
+    "folder": "./public",
+    "source": "./boot_archivist_composer.js",
+    "index": "index.html"
   }
 }
