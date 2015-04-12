@@ -14,11 +14,6 @@
       "repository": "https://github.com/substance/cjs.git",
       "folder": "node_modules/substance-cjs",
       "branch": "master"
-    },
-    {
-      "repository": "https://github.com/substance/util.git",
-      "folder": "node_modules/substance-util",
-      "branch": "substance-next"
     }
   ],
   "node_modules": {
