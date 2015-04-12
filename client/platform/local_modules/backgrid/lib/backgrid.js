@@ -1368,6 +1368,7 @@ var BooleanCell = Backgrid.BooleanCell = Cell.extend({
      uncheck otherwise.
   */
   render: function () {
+    var $ = Backbone.$;
     this.$el.empty();
     var model = this.model, column = this.column;
     var editable = Backgrid.callByNeed(column.editable(), column, model);

@@ -106,7 +106,8 @@ var Router = Backbone.Router.extend({
     } else {
       var model = new models.toponym({_id:id});
       model.fetch().done(function() {
-        that.layout.rootView._edit(model);
+        var view = that.layout.parentView.getView();
+        view._edit(model);
       });
     }
   },
@@ -127,11 +128,12 @@ var Router = Backbone.Router.extend({
   prisonsEdit: function(id) {
     var that = this;
     if(!this.initialized) {
-      this.toponymsList('prisonsEdit', id);
+      this.prisonsList('prisonsEdit', id);
     } else {
       var model = new models.prison({_id:id});
       model.fetch().done(function() {
-        that.layout.rootView._edit(model);
+        var view = that.layout.parentView.getView();
+        view._edit(model);
       });
     }
   },

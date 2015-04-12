@@ -106,6 +106,9 @@ var LocationCell = Backgrid.Cell.extend({
           type = formattedValue.get('prison_type'),
           country = formattedValue.get('country');
 
+      if(_.isNull(synonyms)) synonyms = [];
+      if(_.isNull(type)) type = [];
+
       var markup = '<div class="title">' + name + '</div> \
                     <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + (type.length > 0 ? ", Type: " + type.join(", ") : "" ) + '</div> \
                     <span class="delete-document">Delete</span> \

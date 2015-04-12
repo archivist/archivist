@@ -8,7 +8,7 @@
 @import url('./styles/subject-tree.css');
 @import url('./styles/leaflet.css');
 @import url('./styles/Control.Geocoder.css');
-@import url('./node_modules/Select2/dist/css/select2.css');
+@import url('./node_modules/select2/dist/css/select2.css');
 @import url('./node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css');
 @import url('./styles/reset.css');
 @import url('./styles/substance.css');
@@ -51,7 +51,7 @@ body {
   position: absolute;
   bottom: 48px;
   top: 98px;
-  left : 0;
+  left: 0;
   width: 100%;
   overflow-y: hidden;
   overflow-x: hidden;
@@ -213,7 +213,7 @@ nav.sidebar span.title {
 }
 
 .document-cell:hover {
-	background: #F8F8F8;
+  background: #F8F8F8;
 }
 
 .document-cell .subject {
@@ -235,8 +235,8 @@ nav.sidebar span.title {
   float: left;
   margin-right: 20px;
   font-size: 15px;
-	font-style: italic;
-	line-height: 15px;
+  font-style: italic;
+  line-height: 15px;
 }
 
 .document-cell .updated-at {
@@ -258,10 +258,49 @@ nav.sidebar span.title {
 }
 
 .dashboard th.sortable a {
-	float: right;
-	font-size: 15px;
-	font-style: italic;
-	padding-right: 13px;
+  float: right;
+  font-size: 15px;
+  font-style: italic;
+  padding-right: 13px;
+}
+
+.location-cell {
+  position: relative;
+  padding: 10px;
+  background: #fff;
+  margin-bottom: 1px;
+  cursor: pointer;
+}
+
+.location-cell .title {
+  font-size: 18px;
+  line-height: 30px;
+  padding: 2px 0;
+  margin: 0 210px 0 10px;
+}
+
+.location-cell .delete-document {
+  display: block;
+  position: absolute;
+  right: 20px;
+  top: 12px;
+  color: #D50A46;
+}
+
+.location-cell .synonyms {
+  margin: 0 210px 0 10px;
+  font-style: italic;
+  height: 20px;
+}
+
+.location-cell .country {
+  float: right;
+  font-style: italic;
+  font-size: 14px;
+  color: #999;
+  position: absolute;
+  right: 20px;
+  top: 38px;
 }
 
 /* Actions */
@@ -283,46 +322,46 @@ nav.sidebar span.title {
 }
 
 .toolbox ul {
-	list-style: none;
+  list-style: none;
 }
 
 .toolbox ul li {
-	float: left;
-	padding: 3px 10px;
-	width: 70px;
-	display: block;
-	text-align: center;
-	cursor: pointer;
+  float: left;
+  padding: 3px 10px;
+  width: 70px;
+  display: block;
+  text-align: center;
+  cursor: pointer;
 }
 
 .toolbox ul li.active {
-	color: #f8f8f8;
-	border-bottom: 2px solid #f8f8f8;
+  color: #f8f8f8;
+  border-bottom: 2px solid #f8f8f8;
 }
 
 .toolbox ul li:hover {
-	color: #f8f8f8;
+  color: #f8f8f8;
 }
 
 .toolbox ul li .title {
-	font-size: 10px;
-	clear: both;
-	display: block;
+  font-size: 10px;
+  clear: both;
+  display: block;
 }
 
 .context-filters {
-	float: left;
+  float: left;
 }
 
 /* Context Toolbar */
 
 .context-toolbar {
-	float: right;
+  float: right;
   margin: 13px 5px;
 }
 
 .context-toolbar button:hover {
-	background-color: #FAFAFA;
+  background-color: #FAFAFA;
 }
 
 /*
@@ -610,10 +649,10 @@ FILTERS
 .editor-dialog-modal #state {
   text-align: center;
   position: absolute;
-  top: 50px;
+  top: 15px;
   margin-left: 415px;
   z-index: 999;
-  background-color: rgba(255, 255, 255, 0.7);
+  color: #fff;
   font-size: 18px;
   padding: 10px;
 }
@@ -645,7 +684,7 @@ FILTERS
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     -webkit-border-radius: 3px 0px 0px 3px;
-		border-radius: 3px 0px 0px 3px;
+    border-radius: 3px 0px 0px 3px;
 }
 .dd-handle:before { content: '≡'; display: block; position: absolute; left: 0; top: 5px; width: 100%; text-align: center; text-indent: 0; color: #fff; font-size: 20px; font-weight: normal; }
 .dd-handle:hover { background: #9E9E9E; }
@@ -687,12 +726,12 @@ FILTERS
 }
 
 i.edit {
-	margin: 7px;
-	float:right;
+  margin: 7px;
+  float:right;
 }
 
 i.edit:hover {
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .btn {

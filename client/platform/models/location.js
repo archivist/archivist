@@ -8,7 +8,7 @@ var Prison = Utility.model.extend({
     nearest_locality: { type: 'Geocoded', editorAttrs: {placeholder: 'Nearest locality'} },
     prison_type: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '7'} },
+    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '5'} },
     point: { type:'Geocoder' },
     type: { type: 'Hidden' }
   },
