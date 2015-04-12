@@ -1,5 +1,5 @@
 var Backbone = require('backbone'),
-    select2 = require('select2');
+    select2 = require('Select2');
 
 
 /**
