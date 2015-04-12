@@ -15,12 +15,6 @@ if(process.env.NODE_ENV == 'development') {
     clientSecret: '1uvqMWT3BmbgQuKIBb4lr4IF',
     callbackURL: "http://localhost:5000/auth/google/callback"
   }
-} else {
-  googleClient = {
-    clientID: '311588520740-f2dgfnpr2modtbjg8i06ec69e72lk89q.apps.googleusercontent.com',
-    clientSecret: '1uvqMWT3BmbgQuKIBb4lr4IF',
-    callbackURL: "http://localhost:5000/auth/google/callback"
-  }
 }
 
 passport.serializeUser(function(user, done) {

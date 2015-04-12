@@ -44,7 +44,7 @@
     "watchify": "git://github.com/substack/watchify.git"
   },
   "scripts": {
-    "start": "NODE_ENV=production foreman start",
+    "start": "NODE_ENV=development foreman start",
     "devmode": "NODE_ENV=development foreman start & gulp watch",
     "prepare": "gulp compress",
     "preinstall": "cd client/platform && npm install",
