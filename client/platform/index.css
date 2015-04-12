@@ -8,7 +8,7 @@
 @import url('./styles/subject-tree.css');
 @import url('./styles/leaflet.css');
 @import url('./styles/Control.Geocoder.css');
-@import url('./node_modules/select2/dist/css/select2.css');
+@import url('./node_modules/Select2/dist/css/select2.css');
 @import url('./node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css');
 @import url('./styles/reset.css');
 @import url('./styles/substance.css');
