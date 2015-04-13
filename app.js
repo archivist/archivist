@@ -135,7 +135,7 @@ app.route('/editor/new')
 		})
   });
 
-app.route('/:var(prisons|subjects|toponyms|users)*?')
+app.route('/:var(definitions|persons|prisons|subjects|toponyms|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('platform', {user: req.user});
   })

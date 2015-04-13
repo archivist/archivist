@@ -32,10 +32,22 @@ var menuData = [
     url: '/toponyms'
   },
   {
+    name: 'Definitions',
+    id: 'definition',
+    icon: 'bookmark',
+    url: '/definitions'
+  },
+  {
+    name: 'Persons',
+    id: 'person',
+    icon: 'users',
+    url: '/persons'
+  },
+  {
     name: 'Users',
     id: 'users',
     super: true,
-    icon: 'users',
+    icon: 'user-plus',
     url: '/users'
   }
 ]
@@ -57,6 +69,10 @@ var Router = Backbone.Router.extend({
     'prisons/:id': 'prisonsEdit',
     'toponyms': 'toponymsList',
     'toponyms/:id': 'toponymsEdit',
+    'definitions': 'definitionsList',
+    'definitions/:id': 'definitionsEdit',
+    'persons': 'personsList',
+    'persons/:id': 'personsEdit',
     'users': 'usersList'
 	},
   dashboard: function(callback, id) {
@@ -100,16 +116,7 @@ var Router = Backbone.Router.extend({
   },
 
   toponymsEdit: function(id) {
-    var that = this;
-    if(!this.initialized) {
-      this.toponymsList('toponymsEdit', id);
-    } else {
-      var model = new models.toponym({_id:id});
-      model.fetch().done(function() {
-        var view = that.layout.parentView.getView();
-        view._edit(model);
-      });
-    }
+    this.edit(id, 'toponymsList', 'toponymsEdit', 'toponym');
   },
 
   prisonsList: function(callback, id) {
@@ -126,16 +133,41 @@ var Router = Backbone.Router.extend({
   },
 
   prisonsEdit: function(id) {
-    var that = this;
-    if(!this.initialized) {
-      this.prisonsList('prisonsEdit', id);
-    } else {
-      var model = new models.prison({_id:id});
-      model.fetch().done(function() {
-        var view = that.layout.parentView.getView();
-        view._edit(model);
-      });
-    }
+    this.edit(id, 'prisonsList', 'prisonsEdit', 'prison');
+  },
+
+  definitionsList: function(callback, id) {
+    var definitionsGrid = [
+      {
+        name: 'title',
+        label: 'title',
+        editable: false,
+        cell: 'string'
+      }
+    ];
+   
+    this.grid(definitionsGrid, 'definitions', 'definitionsGrid', callback, id);
+  },
+
+  definitionsEdit: function(id) {
+    this.edit(id, 'definitionsList', 'definitionsEdit', 'definition');
+  },
+
+  personsList: function(callback, id) {
+    var personsGrid = [
+      {
+        name: 'name',
+        label: 'name',
+        editable: false,
+        cell: 'string'
+      }
+    ];
+   
+    this.grid(personsGrid, 'persons', 'personsGrid', callback, id);
+  },
+
+  personsEdit: function(id) {
+    this.edit(id, 'personsList', 'personsEdit', 'person');
   },
 
   usersList: function(callback, id) {
@@ -185,20 +217,15 @@ var Router = Backbone.Router.extend({
     });
   },
 
-  edit: function(id, parentName, name, modelName, colName) {
+  edit: function(id, parentName, name, modelName) {
+    var that = this;
     if(!this.initialized) {
       this[parentName](name, id);
     } else {
-      Notify.spinner('show');
-
-      var self = this,
-          model = models[modelName].create({_id:id});
-
+      var model = new models[modelName]({_id:id});
       model.fetch().done(function() {
-        var view = new views.editPage({ model: model, collection: self[colName], add: false, contextMenu: self.contextMenu, layout: self.layout, sidebarItems: relations });   
-        self.layout.stackView.push(view);
-        Notify.spinner('hide');
-        Notify.info( 'Data has been loaded' );
+        var view = that.layout.parentView.getView();
+        view._edit(model);
       });
     }
   },
