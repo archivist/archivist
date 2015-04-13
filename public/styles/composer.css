@@ -74,10 +74,10 @@ a {
   color: #1B6685;
   font-weight: normal;
   text-decoration: none;
-  -moz-transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;
+/*   -moz-transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;
   -o-transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;
   -webkit-transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;
-  transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;
+  transition: background-color 100ms linear, color 100ms linear, opacity 100ms linear;*/
 }
 
 a:hover {
@@ -278,7 +278,7 @@ a:hover {
 -----------------------------------------------------*/
 
 .panel.dialog {
-  /*top: 0px;*/
+  top: 0px;
   background: #F8F8F8;
 }
 
@@ -289,44 +289,75 @@ a:hover {
   right: 0px;
   overflow: hidden;
   height: 40px;
-  /*background: #fff;*/
   border-bottom: 1px solid #ddd;
+}
+
+.panel.dialog .dialog-header .back {
+  padding-left: 20px;
+  display: block;
+  float: left;
+  line-height: 40px;
+  font-size: 16px;
 }
 
 .panel.dialog .dialog-header .label {
   padding: 0px 20px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 600;
   line-height: 39px;
   /*color: white;*/
   float: left;
 }
 
-.panel.dialog .dialog-header .cancel, .panel.dialog .dialog-header .done {
-  font-size: 12px;
-  /*color: #fff;*/
-  font-weight: bold;
-  line-height: 40px;
-  padding: 0px 20px;
+.panel.dialog .dialog-header .actions {
+  overflow: hidden;
   float: right;
 }
 
-.panel.dialog .dialog-header .cancel:hover, .panel.dialog .dialog-header .done:hover {
-  background: rgba(0,0,0,0.1);
+.panel.dialog .dialog-header .actions a {
+  display: block;
+  float: left;
+  font-weight: 600;
+  padding: 0px 4px;
+  font-size: 12px;
+  line-height: 40px;
+  margin-right: 20px;
 }
 
-/*.panel.dialog .panel-content {
+.panel.dialog .panel-content {
   top: 40px;
-}*/
-
-/* Custom headers for entity tagging and subject tagging */
-.panel.dialog.tag-entity-panel-component .dialog-header {
-  /*background: rgba(11, 157, 217, 1);*/
 }
 
+
+/* Custom styles for subject references */
 .panel.dialog.edit-subject-reference-panel-component .dialog-header {
-  /*background: rgba(145, 187, 4, 1);*/
+  border-bottom: 3px solid rgba(145, 187, 4, 1);
 }
+
+.panel.dialog.edit-subject-reference-panel-component .dialog-header .label {
+  color: rgba(145, 187, 4, 1);
+}
+
+.panel.dialog.edit-subject-reference-panel-component .dialog-header .back {
+  color: rgba(145, 187, 4, 1);
+}
+
+/* Custom styles for entity references */
+.panel.dialog.show-entity-reference-panel-component .dialog-header,
+.panel.dialog.tag-entity-panel-component .dialog-header {
+  border-bottom: 3px solid rgba(11, 157, 217, 1);
+}
+
+.panel.dialog.show-entity-reference-panel-component .dialog-header .label,
+.panel.dialog.tag-entity-panel-component .dialog-header .label {
+  color: rgba(11, 157, 217, 1);
+}
+
+.panel.dialog.show-entity-reference-panel-component .dialog-header .back,
+.panel.dialog.tag-entity-panel-component .dialog-header .back {
+  color: rgba(11, 157, 217, 1);
+}
+
 
 
 /* Content Tools
@@ -646,6 +677,15 @@ a:hover {
   cursor: pointer;
 }
 
+.show-entity-reference-panel-component .entity {
+  cursor: auto;
+  border: none;
+}
+
+.show-entity-reference-panel-component .entity:hover, .show-entity-reference-panel-component .entity.active {
+  border: none;
+}
+
 
 .entity:hover {
   border-left: 2px solid rgba(11, 157, 217, 0.3);
@@ -749,6 +789,10 @@ a:hover {
 
 /* Custom scrollbar styles */
 .scrollbar-component.entities .highlight {
+  background-color: rgba(11, 157, 217, 1);
+}
+
+.scrollbar-component.showEntityReference .highlight {
   background-color: rgba(11, 157, 217, 1);
 }
 
