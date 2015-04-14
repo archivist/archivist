@@ -619,7 +619,7 @@ a:hover {
   right: 0px;
   top: 0px;
   bottom: 0px;
-  width: 50px;
+  width: 30px;
 }
 
 .container-node.content .subject-references .subject-reference {
@@ -627,7 +627,7 @@ a:hover {
   border-top: 1px solid rgba(145, 187, 4, 1);
   border-right: 1px solid rgba(145, 187, 4, 1);
 
-  width: 10px;
+  width: 15px;
   position: absolute;
   top: 30px;
   height: 100px;
@@ -638,9 +638,9 @@ a:hover {
   border-width: 2px;
 }
 
-.container-node.content .subject-references .subject-reference:nth-child(even) {
+/*.container-node.content .subject-references .subject-reference:nth-child(even) {
   right: 15px;
-}
+}*/
 
 .container-node.content .subject-references .subject-reference.selected {
   border-width: 3px;
@@ -792,7 +792,8 @@ a:hover {
   background-color: rgba(11, 157, 217, 1);
 }
 
-.scrollbar-component.showEntityReference .highlight {
+.scrollbar-component.showEntityReference .highlight,
+.scrollbar-component.tagentity .highlight {
   background-color: rgba(11, 157, 217, 1);
 }
 
@@ -889,4 +890,13 @@ a:hover {
 .subject.active {
   background: white;
   border-left: 2px solid rgba(145, 187, 4, 1);
+}
+
+.clipboard {
+  visibility: hidden;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  height: 0px;
+  width: 0px;
 }
