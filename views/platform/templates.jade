@@ -53,7 +53,7 @@ script#subjectDialog(type='text/template')
 	<button class="bbm-button cancel">Cancel</button>
 	</div>
 	</script>
-script#editorDialog(type='text/template')
+script#editorLocationsDialog(type='text/template')
 	<div class="dialog-body">
 	<div id="meter"></div>
 	<div id="state"></div>
@@ -68,5 +68,20 @@ script#editorDialog(type='text/template')
 	</div>
 	<div id="map-form"></div>
 	<div id="geocode-selector" class="btn-group btn-group-xs" role="group" aria-label="..."></div>
+	</div>
+	</script>
+script#editorDialog(type='text/template')
+	<div class="dialog-body">
+	<div id="meter"></div>
+	<div id="state"></div>
+	<div class="form">
+	<div class="editor-dialog-footer">
+	<button class="cancel btn btn-default">Cancel</button>
+	<button class="save btn btn-default">Save</button>
+	<% if(remove) { %>
+	<button class="delete btn btn-danger">Delete</button>
+	<% } %>
+	</div>
+	</div>
 	</div>
 	</script>

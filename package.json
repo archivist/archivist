@@ -21,14 +21,15 @@
     "method-override": "*",
     "mongoose": "*",
     "mongoose-text-search": "0.0.2",
+    "mongoose-timestamp": "^0.4.0",
     "morgan": "*",
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
+    "substance-cjs": "git://github.com/substance/cjs.git#master",
+    "substance-util": "git://github.com/substance/util.git#substance-next",
     "underscore": "1.7.0",
     "vinyl-source-stream": "*",
-    "watchify": "git://github.com/substack/watchify.git",
-    "substance-util": "git://github.com/substance/util.git#substance-next",
-    "substance-cjs": "git://github.com/substance/cjs.git#master"
+    "watchify": "git://github.com/substack/watchify.git"
   },
   "url": "http://github.com/substance/archivist/",
   "devDependencies": {

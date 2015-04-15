@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
   , backup = require('../controllers/backup.js')
   , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
+  , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js');
 
 var subjectSchema = new Schema({
@@ -13,6 +14,8 @@ var subjectSchema = new Schema({
   ,	name: String
   , description: String
   , parent: String
+  , created: { type: Schema.Types.ObjectId, ref: 'User' }
+  , edited: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 subjectSchema.set('toJSON', { getters: true, virtuals: true })
@@ -22,7 +25,7 @@ var subjectShadowSchema = new Schema({}, {collection: 'subjects_backup', strict:
 
 subjectSchema.plugin(backup, { shadow: subjectShadow });
 subjectSchema.plugin(rest, { referenceType: 'subject_reference', systemCounter: 'subjects_db_version' });
-
+subjectSchema.plugin(timestamps);
 
 /** 
  * List records

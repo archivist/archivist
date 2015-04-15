@@ -32,6 +32,15 @@ var ToponymsGrid = Grid.main.extend({
     $(this.$el).append(this.paginator.render().$el);
   },
   filters: function() {
+    this.nameFilter = new Utils.filter({
+      collection: this.options.collection,
+      placeholder: "Enter a name to search",
+      name: "synonyms",
+    });
+    $('.toolbox').prepend(this.nameFilter.render().el);
+  },
+  beforeClose: function() {
+    this.nameFilter.remove();
   },
   _add: function() {
     var dialogModel = new models.toponym();
@@ -71,6 +80,15 @@ var PrisonsGrid = Grid.main.extend({
     $(this.$el).append(this.paginator.render().$el);
   },
   filters: function() {
+    this.nameFilter = new Utils.filter({
+      collection: this.options.collection,
+      placeholder: "Enter a name to search",
+      name: "synonyms",
+    });
+    $('.toolbox').prepend(this.nameFilter.render().el);
+  },
+  beforeClose: function() {
+    this.nameFilter.remove();
   },
   _add: function() {
     var dialogModel = new models.prison();
@@ -92,7 +110,7 @@ var PrisonsGrid = Grid.main.extend({
 exports.prisonsGrid = PrisonsGrid
 
 var LocationCell = Backgrid.Cell.extend({
-  className: "string-cell location-cell grid-cell animate",
+  className: "string-cell definition-cell grid-cell animate",
   render: function () {
     this.$el.empty();
     var formattedValue = this.formatter.fromRaw(this.model);
@@ -104,15 +122,23 @@ var LocationCell = Backgrid.Cell.extend({
       var name = formattedValue.get('name'),
           synonyms = formattedValue.get('synonyms'),
           type = formattedValue.get('prison_type'),
-          country = formattedValue.get('country');
+          country = formattedValue.get('country'),
+          description = formattedValue.get('description'),
+          updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
+          edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name;
 
       if(_.isNull(synonyms)) synonyms = [];
       if(_.isNull(type)) type = [];
 
-      var markup = '<div class="title">' + name + '</div> \
-                    <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + (type.length > 0 ? ", Type: " + type.join(", ") : "" ) + '</div> \
-                    <span class="delete-document">Delete</span> \
-                    <div class="country">Country: ' + country + '</div>';
+      var markup = '<div class="meta-info">';
+      if (!_.isEmpty(type)) markup += '<div class="definition-type">' + type + '</div>';
+         markup += '<div class="country">' + country + '</div> \
+                    <div class="edited">' + edited + '</div> \
+                    <div class="updated">updated at ' + updatedAt + '</div> \
+                    </div> \
+                    <div class="title">' + name + '</div> \
+                    <div class="description">' + description + '</div> \
+                    <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + '</div>';
 
       this.$el.append(markup)
       this.delegateEvents()
@@ -143,9 +169,9 @@ var LocationRow = Backgrid.Row.extend({
 });
 
 var editorDialog = Backbone.Modal.extend({
-  prefix: 'editor-dialog',
+  prefix: 'editor-dialog-locations',
   keyControl: false,
-  template: _.template($('#editorDialog').html()),
+  template: _.template($('#editorLocationsDialog').html()),
   cancelEl: '.cancel',
   submitEl: '.save',
   onRender: function() {

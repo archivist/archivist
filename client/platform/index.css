@@ -646,7 +646,7 @@ FILTERS
   color: #fff;
 }
 
-.editor-dialog-modal #state {
+.editor-dialog-locations-modal #state {
   text-align: center;
   position: absolute;
   top: 15px;
@@ -657,12 +657,24 @@ FILTERS
   padding: 10px;
 }
 
-.editor-dialog-modal #meter {
+.editor-dialog-locations-modal #meter {
   display: none;
   position: absolute;
   margin-top: 0px;
   width: 0;
   height: 2.5px;
+}
+
+.editor-dialog-modal #meter {
+  position: absolute;
+  margin-top: -40px;
+  margin-left: -40px;
+  height: 2px;
+}
+
+.editor-dialog-modal #state {
+  top: -20px;
+  font-size: 17px;
 }
 
 /**
@@ -845,6 +857,7 @@ MODAL
 /* Modal positioning */
 .subject-modal-wrapper,
 .subject-dialog-wrapper,
+.editor-dialog-locations-wrapper,
 .editor-dialog-wrapper
  {
   box-sizing: border-box;
@@ -853,25 +866,28 @@ MODAL
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 1000;
   padding: 50px 10px;
   overflow: auto; 
   background-color: rgba(255, 255, 255, 0.5);
 }
 
 .subject-dialog-wrapper,
+.editor-dialog-locations-wrapper,
 .editor-dialog-wrapper {
   background-color: rgba(0, 0, 0, 0.5);
 }
 
 .subject-modal-wrapper *,
 .subject-dialog-wrapper *,
+.editor-dialog-locations-wrapper *,
 .editor-dialog-wrapper * {
   box-sizing: border-box; 
 }
 
 .subject-modal-modal,
 .subject-dialog-modal,
+.editor-dialog-locations-modal,
 .editor-dialog-modal {
   -moz-transition: opacity 200ms ease,-moz-transform 200ms ease;
   -o-transition: opacity 200ms ease,-o-transform 200ms ease;
@@ -892,8 +908,13 @@ MODAL
   backface-visibility: hidden;
 }
 
-.editor-dialog-modal {
+.editor-dialog-locations-modal {
   max-width: 900px;
+}
+
+.editor-dialog-modal {
+  max-width: 500px;
+  height: 600px;
 }
 
 .dialog-header {
@@ -908,14 +929,18 @@ MODAL
   font-size: 13px;
 }
 
-.editor-dialog-modal .dialog-body {
+.editor-dialog-locations-modal .dialog-body {
   padding: 0px;
+}
+
+.editor-dialog-modal .dialog-body {
+  padding: 40px;
 }
 
 .dialog-footer {
   padding: 15px 30px 20px;
 }
-
+.editor-dialog-locations-modal .dialog-footer,
 .editor-dialog-modal .dialog-footer {
   padding: 6px;
 }
@@ -1059,4 +1084,85 @@ MODAL
   position: relative;
   top: 3px;
   padding-left: 7px;
+}
+
+/* DEFINITIONS */
+
+.definitionslist .definition-cell,
+.personslist .definition-cell,
+.toponymslist .definition-cell,
+.prisonslist .definition-cell {
+  padding: 20px;
+  position: relative;
+  display: block;
+  overflow: auto;
+  white-space: normal;
+  border-bottom: none;
+}
+
+.definition-cell:hover {
+  cursor: pointer;
+}
+
+.definition-cell .meta-info {
+  overflow: auto;
+  color: #888;
+  font-style: italic;
+  font-size: 14px;
+}
+
+.definition-cell .meta-info .definition-type {
+  font-style: normal;
+}
+
+.definition-type.abbr {
+  color: #2D2781;
+}
+
+.definition-type.reality {
+  color: #27813D;
+}
+
+.definition-type.jargon {
+  color: #812727;
+}
+
+.definition-cell .meta-info > div {
+  float: left;
+  margin-right: 20px;
+  padding-bottom: 5px;
+}
+
+.definition-cell .title {
+  display: block;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 26px;
+  padding-bottom: 5px;
+}
+
+.definition-cell .description {
+  font-style: italic;
+  color: rgba(0,0,0,0.6);
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-size: 14px;
+}
+
+.definition-cell .synonyms {
+  font-size: 16px;
+  line-height: 20px;
+}
+
+/* PERSONS */ 
+
+.field-global input {
+  position: relative;
+  height: 20px;
+  top: 29px;
+  right: 50px;
+}
+
+.editor-dialog-modal .field-description textarea {
+  resize: none;
 }

@@ -29,6 +29,15 @@ var PersonsGrid = Grid.main.extend({
     $(this.$el).append(this.paginator.render().$el);
   },
   filters: function() {
+    this.nameFilter = new Utils.filter({
+      collection: this.options.collection,
+      placeholder: "Enter a name to search",
+      name: "name",
+    });
+    $('.toolbox').prepend(this.nameFilter.render().el);
+  },
+  beforeClose: function() {
+    this.nameFilter.remove();
   },
   _add: function() {
     var dialogModel = new models.person();
@@ -50,7 +59,14 @@ var PersonsGrid = Grid.main.extend({
 exports.personsGrid = PersonsGrid
 
 var PersonCell = Backgrid.Cell.extend({
-  className: "string-cell person-cell grid-cell animate",
+  className: "string-cell definition-cell grid-cell animate",
+  initialize: function(options) {
+    var that = this;
+    Backgrid.Cell.prototype.initialize.call(this, options);
+    this.model.on('change', function() {
+      that.render();
+    });
+  },
   render: function () {
     this.$el.empty();
     var formattedValue = this.formatter.fromRaw(this.model);
@@ -59,18 +75,20 @@ var PersonCell = Backgrid.Cell.extend({
       return this;
     }
     else {
+
       var name = formattedValue.get('name'),
-          synonyms = formattedValue.get('synonyms'),
-          type = formattedValue.get('prison_type'),
-          country = formattedValue.get('country');
+          description = formattedValue.get('description'),
+          global = _.isUndefined(formattedValue.get('global')) ? 'not global' : 'global',
+          updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
+          edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name;
 
-      if(_.isNull(synonyms)) synonyms = [];
-      if(_.isNull(type)) type = [];
-
-      var markup = '<div class="title">' + name + '</div> \
-                    <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + (type.length > 0 ? ", Type: " + type.join(", ") : "" ) + '</div> \
-                    <span class="delete-document">Delete</span> \
-                    <div class="country">Country: ' + country + '</div>';
+      var markup = '<div class="meta-info"> \
+                    <div class="definition-type">' + global + '</div> \
+                    <div class="edited">' + edited + '</div> \
+                    <div class="updated">updated at ' + updatedAt + '</div> \
+                    </div> \
+                    <div class="title">' + name + '</div> \
+                    <div class="description">' + description + '</div>';
 
       this.$el.append(markup)
       this.delegateEvents()
@@ -129,7 +147,7 @@ var editorDialog = Backbone.Modal.extend({
     this.model.destroy({
       wait: true,
       success: function(model,resp) { 
-        self.submit('Your location has been removed.','Removed!');
+        self.submit('Your definition has been removed.','Removed!');
       },
       error: function(model,err) { 
         self.submit('Something went wrong.','Error!');
@@ -149,7 +167,7 @@ var editorDialog = Backbone.Modal.extend({
         this.model.save({}, {
           wait: true,
           success: function(model,resp) { 
-            self.submit('Your location has been saved.','Saved!');
+            self.submit('Your definition has been saved.','Saved!');
           },
           error: function(model,err) { 
             self.submit('Something went wrong.','Error!');
@@ -159,7 +177,7 @@ var editorDialog = Backbone.Modal.extend({
         self.collection.create(self.model, {
           wait: true,
           success: function(model,resp) { 
-            self.submit('Your new location has been added to collection.','Saved!');
+            self.submit('Your new definition has been added to collection.','Saved!');
           },
           error: function(model,err) { 
             self.submit('Something went wrong.','Error!');

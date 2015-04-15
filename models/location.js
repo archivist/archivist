@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
   , backup = require('../controllers/backup.js')
   , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
+  , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js')
   , _ = require('underscore');
 
@@ -19,6 +20,8 @@ var locationSchema = new Schema({
   , description: String
   , country: String
   , point: { type: [Number], index: '2dsphere' }
+  , created: { type: Schema.Types.ObjectId, ref: 'User' }
+  , edited: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 locationSchema.index({ name: 'text', current_name: 'text', nearest_locality: 'text', synonyms: 'text' }, { default_language: 'russian' });
@@ -31,6 +34,7 @@ var locationShadowSchema = new Schema({}, {collection: 'locations_backup', stric
 locationSchema.plugin(backup, { shadow: locationShadow });
 locationSchema.plugin(rest, { referenceType: 'location_reference', systemCounter: 'locations_db_version' });
 locationSchema.plugin(textSearch);
+locationSchema.plugin(timestamps);
 
 locationSchema.statics.search = function(opt, cb) {
   var self = this,

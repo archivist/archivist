@@ -79,7 +79,7 @@ rest.route('/documents/:id')
 /* The Subject REST api */
 
 var createSubject = function(req, res, next) {
-  Subject.add(req.body, function(err, subject) {
+  Subject.add(req.body, req.user, function(err, subject) {
     if (err) return next(err);
     res.json(subject);
   });
@@ -93,7 +93,7 @@ var readSubject = function(req, res, next) {
 }
 
 var updateSubject = function(req, res, next) {
-  Subject.update(req.params.id, req.body, function(err, subject) {
+  Subject.update(req.params.id, req.body, req.user, function(err, subject) {
     if (err) return next(err);
     res.json(subject);
   });
@@ -154,7 +154,7 @@ rest.route('/subjects/:id')
 /* The Person REST api */
 
 var createPerson = function(req, res, next) {
-  Person.add(req.body, function(err, person) {
+  Person.add(req.body, req.user, function(err, person) {
     if (err) return next(err);
     res.json(person);
   });
@@ -168,7 +168,7 @@ var readPerson = function(req, res, next) {
 }
 
 var updatePerson = function(req, res, next) {
-  Person.update(req.params.id, req.body, function(err, person) {
+  Person.update(req.params.id, req.body, req.user, function(err, person) {
     if (err) return next(err);
     res.json(person);
   });
@@ -201,7 +201,7 @@ rest.route('/persons/:id')
 /* The definition REST api */
 
 var createDefinition = function(req, res, next) {
-  Definition.add(req.body, function(err, definition) {
+  Definition.add(req.body, req.user, function(err, definition) {
     if (err) return next(err);
     res.json(definition);
   });
@@ -215,7 +215,7 @@ var readDefinition = function(req, res, next) {
 }
 
 var updateDefinition = function(req, res, next) {
-  Definition.update(req.params.id, req.body, function(err, definition) {
+  Definition.update(req.params.id, req.body, req.user, function(err, definition) {
     if (err) return next(err);
     res.json(definition);
   });
@@ -248,7 +248,7 @@ rest.route('/definitions/:id')
 /* The Location REST api */
 
 var createLocation = function(req, res, next) {
-  Location.add(req.body, function(err, location) {
+  Location.add(req.body, req.user, function(err, location) {
     if (err) return next(err);
     res.json(location);
   });
@@ -262,7 +262,7 @@ var readLocation = function(req, res, next) {
 }
 
 var updateLocation = function(req, res, next) {
-  Location.update(req.params.id, req.body, function(err, location) {
+  Location.update(req.params.id, req.body, req.user, function(err, location) {
     if (err) return next(err);
     res.json(location);
   });

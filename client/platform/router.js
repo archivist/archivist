@@ -116,7 +116,7 @@ var Router = Backbone.Router.extend({
   },
 
   toponymsEdit: function(id) {
-    this.edit(id, 'toponymsList', 'toponymsEdit', 'toponym');
+    this.edit(id, 'toponymsList', 'toponymsEdit', 'toponym', 'locationsToponyms');
   },
 
   prisonsList: function(callback, id) {
@@ -133,7 +133,7 @@ var Router = Backbone.Router.extend({
   },
 
   prisonsEdit: function(id) {
-    this.edit(id, 'prisonsList', 'prisonsEdit', 'prison');
+    this.edit(id, 'prisonsList', 'prisonsEdit', 'prison', 'locationsPrisons');
   },
 
   definitionsList: function(callback, id) {
@@ -142,7 +142,7 @@ var Router = Backbone.Router.extend({
         name: 'title',
         label: 'title',
         editable: false,
-        cell: 'string'
+        cell: views.definitionCell
       }
     ];
    
@@ -150,7 +150,7 @@ var Router = Backbone.Router.extend({
   },
 
   definitionsEdit: function(id) {
-    this.edit(id, 'definitionsList', 'definitionsEdit', 'definition');
+    this.edit(id, 'definitionsList', 'definitionsEdit', 'definition', 'definitions');
   },
 
   personsList: function(callback, id) {
@@ -159,7 +159,7 @@ var Router = Backbone.Router.extend({
         name: 'name',
         label: 'name',
         editable: false,
-        cell: 'string'
+        cell: views.personCell
       }
     ];
    
@@ -167,7 +167,7 @@ var Router = Backbone.Router.extend({
   },
 
   personsEdit: function(id) {
-    this.edit(id, 'personsList', 'personsEdit', 'person');
+    this.edit(id, 'personsList', 'personsEdit', 'person', 'persons');
   },
 
   usersList: function(callback, id) {
@@ -217,12 +217,12 @@ var Router = Backbone.Router.extend({
     });
   },
 
-  edit: function(id, parentName, name, modelName) {
+  edit: function(id, parentName, name, modelName, colName) {
     var that = this;
     if(!this.initialized) {
       this[parentName](name, id);
     } else {
-      var model = new models[modelName]({_id:id});
+      var model = that[colName].get(id);
       model.fetch().done(function() {
         var view = that.layout.parentView.getView();
         view._edit(model);

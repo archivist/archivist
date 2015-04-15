@@ -4,12 +4,16 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , backup = require('../controllers/backup.js')
   , rest = require('../controllers/rest.js')
+  , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js')
   , _ = require('underscore');
 
 var definitionSchema = new Schema({
   	title: { type: String, index: true }
   , description: String
+  , type: String
+  , created: { type: Schema.Types.ObjectId, ref: 'User' }
+  , edited: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 
 definitionSchema.set('toJSON', { getters: true, virtuals: true })
@@ -19,6 +23,7 @@ var definitionShadowSchema = new Schema({}, {collection: 'definitions_backup', s
 
 definitionSchema.plugin(backup, { shadow: definitionShadow });
 definitionSchema.plugin(rest, { referenceType: 'definition_reference', systemCounter: 'defenitions_db_version' });
+definitionSchema.plugin(timestamps);
 
 definitionSchema.statics.search = function(opt, cb) {
   var self = this,

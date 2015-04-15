@@ -12,11 +12,15 @@ module.exports = function(schema, options) {
    * Creates record from JSON
    *
    * @param {string} data - JSON represenation of new record
+   * @param {string} user - JSON represenation of user record
    * @param {callback} cb - The callback that handles the results 
    */
 
-  schema.statics.add = function(data, cb) {
+  schema.statics.add = function(data, user, cb) {
     var self = this;
+
+    data.edited = user._id;
+    data.created = user._id;
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
@@ -29,14 +33,18 @@ module.exports = function(schema, options) {
    *
    * @param {string} id - The unique id of target record
    * @param {string} data - JSON with updated properties
+   * @param {string} user - JSON represenation of user record
    * @param {callback} cb - The callback that handles the results 
    */
 
-  schema.statics.update = function(id, data, cb) {
+  schema.statics.update = function(id, data, user, cb) {
     var self = this;
 
+    data.edited = user._id;
+    data.updatedAt = new Date;
+
     delete data.__v;
-    self.findByIdAndUpdate(id, { $set: data }, { upsert: true }, function (err, record) {
+    self.findByIdAndUpdate(id, { $set: data }, { upsert: true, new: true }, function (err, record) {
       if (err) return err;
       self.incrementDBVersion(function(err) {
         cb(err, record);
@@ -71,9 +79,12 @@ module.exports = function(schema, options) {
 
     self.count(query, function(err, counter) {
       if (err) return cb(err);
-      self.find(query, null, options, function(err, records) {
-        cb(err, [{total_entries: counter}, records]);
-      });
+      self
+        .find(query, null, options)
+        .populate('edited', 'name')
+        .exec(function(err, records) {
+          cb(err, [{total_entries: counter}, records]);
+        });
     });
   }
 
