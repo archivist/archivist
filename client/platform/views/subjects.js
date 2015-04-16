@@ -266,7 +266,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
           request
             .get('/api/subjects/merge')
             .query({ one: nodeToMerge.id, into: targetNode.id })
-            .end(function(res) {
+            .end(function(err, res) {
               if (res.ok) {
                 Notify.spinner('hide');
 
