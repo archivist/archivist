@@ -128,7 +128,8 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
 
   getValue: function() {
     var data = this.$el.val();
-    return data.split(',');
+    var output = _.isEmpty(data) ? null : data.split(',');
+    return output;
   },
 
   createMap: function() {
