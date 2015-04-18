@@ -25,7 +25,6 @@
     "morgan": "*",
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
-    "substance-cjs": "git://github.com/substance/cjs.git#master",
     "substance-util": "git://github.com/substance/util.git#substance-next",
     "substance": "git://github.com/substance/substance.git#next",
     "archivist-composer": "git://github.com/substance/archivist-composer.git#master",

@@ -68,13 +68,16 @@ gulp.task('compress', function() {
   return bundle();
 });
 
-gulp.task('compress-composer', function() {
+gulp.task('bundle-composer', function() {
   var bundler = browserify(composerSourceFile, {cache: {}, packageCache: {} }),
       bundle = function() {
         gulp.src('./node_modules/archivist-composer/styles/composer.css')
           .pipe(minifyCSS({cache:true}))
           .pipe(rename("composer.css"))
           .pipe(gulp.dest(composerDestFolder));
+
+        gulp.src("./node_modules/archivist-composer/lib/**/*")
+          .pipe(gulp.dest(composerDestFolder+"/lib"));
 
         bundler
           .bundle()
