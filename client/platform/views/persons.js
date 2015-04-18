@@ -78,7 +78,7 @@ var PersonCell = Backgrid.Cell.extend({
 
       var name = formattedValue.get('name'),
           description = formattedValue.get('description'),
-          global = _.isUndefined(formattedValue.get('global')) ? 'not global' : 'global',
+          global = (_.isUndefined(formattedValue.get('global')) || formattedValue.get('global') == false) ? 'not global' : 'global',
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
           edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name;
 

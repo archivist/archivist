@@ -1157,10 +1157,13 @@ MODAL
 /* PERSONS */ 
 
 .field-global input {
-  position: relative;
-  height: 20px;
+  height: 15px;
   top: 29px;
   right: 50px;
+  float: left;
+  width: 25px;
+  box-shadow: none;
+  margin-top: 3px;
 }
 
 .editor-dialog-modal .field-description textarea {
