@@ -102,7 +102,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(morgan('tiny'));
-app.use(express.static(__dirname + '/public'));
+
 
 // MONGOOSE CONNECTION
 
@@ -167,6 +167,8 @@ app.route('/:var(definitions|persons|prisons|subjects|toponyms|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('platform', {user: req.user});
   })
+
+app.use(express.static(__dirname + '/public'));
 
 // ERROR ROUTES
 

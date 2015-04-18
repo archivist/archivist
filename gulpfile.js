@@ -82,7 +82,7 @@ gulp.task('bundle-composer', function() {
         bundler
           .bundle()
           .pipe(source(destFile))
-          // .pipe(streamify(uglify()))
+          .pipe(streamify(uglify()))
           .pipe(rename("composer.js"))
           .pipe(gulp.dest(composerDestFolder));
       };
@@ -107,4 +107,4 @@ gulp.task('bundle-composer', function() {
 //   });
 // }
 
-gulp.task('default', ['browserify', 'watch']);
+gulp.task('default', ['browserify', 'watch', 'bundle-composer']);
