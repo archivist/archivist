@@ -91,8 +91,13 @@ app.use(flash());
 app.use(session({
 	resave: true,
   saveUninitialized: true,
-  secret: 'archivistSecretWeapon',
-  store: sessionStore
+  cookie: {maxAge: 2 * 24 * 3600000}, 
+  secret: 'archivistSecretWeapon', 
+  store: new MongoStore({
+    mongooseConnection: mongoose.connections[0],
+    collection: 'sessions',
+    autoReconnect: true
+  })
 }));
 app.use(passport.initialize());
 app.use(passport.session());

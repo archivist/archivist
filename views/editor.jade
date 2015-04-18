@@ -10,10 +10,10 @@ html(xmlns:mml='http://www.w3.org/1998/Math/MathML')
     script(src='./composer/lib/jquery-2.1.3.min.js')
     script(src='./composer/composer.js')
   body
-    div#sidebar
+    div#topbar
       header.branding
         | A
-      nav.sidebar
+      nav.topbar
         each item in menu
           a(id="#{item.id}", href="#{item.url}")
             i(class="fa fa-#{item.icon} fa-2x")
