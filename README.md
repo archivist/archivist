@@ -45,6 +45,21 @@ $ cd archivist-project
 $ git clone https://github.com/substance/archivist.git
 $ git clone https://github.com/substance/archivist-composer.git
 $ git clone https://github.com/substance/substance.git
+$ cd archivist
+$ npm install
+```
+
+Now npm link stuff:
+
+```bash
+$ cd ..
+$ cd archivist-composer
+$ sudo npm link
+$ cd ../substance
+$ sudo npm link
+$ cd ../archivist
+$ npm link archivist-composer
+$ npm link substance
 ```
 
 To make use of the Substance Sublime helpers, make a [Sublime project](http://github.com/substance/sublime) and add all three folders to it. Then you can press `ctrl+shift+s` to bring up a nice git Status dialog.
