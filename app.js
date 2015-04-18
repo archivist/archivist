@@ -139,6 +139,14 @@ app.route('/')
 // On the fly browserify-ication of composer
 if (process.env.NODE_ENV === "development") {
   app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
+
+  app.get('/composer/composer.css', function(req, res) {
+  	var cssFile = fs.readFileSync('./node_modules/archivist-composer/styles/composer.css', 'utf8');
+
+  	res.set('Content-Type', 'text/css');
+
+  	res.send(cssFile);
+  });
 }
 
 app.route('/editor')
