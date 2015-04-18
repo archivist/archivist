@@ -88,7 +88,7 @@ nav.topbar ul li {
 nav.topbar ul li:hover, nav.topbar ul li.active {
   color:#fff;
   opacity: 1;
-  background: rgba(0,0,0,.2);
+  background: rgba(255,255,255,.2);
 }
 
 nav.topbar ul li i {
@@ -126,10 +126,10 @@ nav.topbar span.title {
   overflow: hidden;
   max-height: 100%;
   height: 30px;
-  background-image: linear-gradient( to right, rgb(122, 138, 250) 50%, rgb(205, 134, 134) 100% );
-  -webkit-box-shadow: 0 8px 6px -6px rgb(148, 148, 148);
-  -moz-box-shadow: 0 8px 6px -6px rgb(148, 148, 148);
-  box-shadow: 0 8px 6px -6px rgb(148, 148, 148);
+  background-image: linear-gradient(to right,#444 50%,#A0A0A0 100%);
+  -webkit-box-shadow: 0 8px 6px -6px #949494;
+  -moz-box-shadow: 0 8px 6px -6px #949494;
+  box-shadow: 0 8px 6px -6px #949494;
 }
 
 #topbar header {
@@ -1074,7 +1074,7 @@ MODAL
 
 .user-section .username a:hover {
   opacity: 1;
-  background: rgba(0,0,0,.2);
+  background: rgba(255,255,255,.2);
 }
 
 .user-section .userpic img {

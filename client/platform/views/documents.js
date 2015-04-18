@@ -80,7 +80,7 @@ var DocumentRow = Backgrid.Row.extend({
   },
   onClick: function (e) {
     e.preventDefault();
-    Backbone.middle.trigger("goToExt", '/archivist.html#'+this.model.get('id'));
+    Backbone.middle.trigger("goToExt", '/editor#'+this.model.get('id'));
   },
   onRemove: function(e) {
     e.preventDefault();
