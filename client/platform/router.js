@@ -223,6 +223,7 @@ var Router = Backbone.Router.extend({
       this[parentName](name, id);
     } else {
       var model = that[colName].get(id);
+      if (_.isUndefined(model)) model = new models[modelName]({_id: id});
       model.fetch().done(function() {
         var view = that.layout.parentView.getView();
         view._edit(model);
