@@ -53,23 +53,22 @@ Now npm link stuff:
 
 ```bash
 $ cd ..
-$ cd archivist-composer
-$ sudo npm link
 $ cd ../substance
 $ sudo npm link
+$ cd archivist-composer
+$ sudo npm link
+$ npm link substance
 $ cd ../archivist
 $ npm link archivist-composer
-$ npm link substance
 ```
 
-To make use of the Substance Sublime helpers, make a [Sublime project](http://github.com/substance/sublime) and add all three folders to it. Then you can press `ctrl+shift+s` to bring up a nice git Status dialog.
+To make use of the Substance Sublime helpers, make a [Sublime project](http://github.com/substance/sublime) and add all three folders to it. Then you can press `ctrl+shift+s` to bring up a nice git status dialog.
 
 Rebundling of the composer happens automatically when you do npm install. For manual rebundling do:
 
 ```bash
 $ gulp bundle-composer
 ```
-
 
 
 # Deploy
