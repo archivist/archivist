@@ -20,7 +20,7 @@ var db = exports;
 /* The Document REST api */
 
 var createDocument = function(req, res, next) {
-  Document.add(req.body, function(err) {
+  Document.add(req.user, function(err) {
     if (err) return next(err);
     res.json(200);
   });
@@ -43,7 +43,7 @@ var readDocument = function(req, res, next) {
 
 
 var updateDocument = function(req, res, next) {
-  Document.update(req.params.id, req.body, function(err, document) {
+  Document.update(req.params.id, req.body, req.user, function(err, document) {
     if (err) return next(err);
     res.json(document);
   });

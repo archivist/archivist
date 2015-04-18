@@ -61,9 +61,11 @@ var DocumentCell = Backgrid.Cell.extend({
     else {
       var metadata = formattedValue.document;
 
+      if (_.isEmpty(metadata.creator)) metadata.creator = 'unknown person';
+
       var markup = '<div class="title">' + metadata.title + '</div> \
                     <span class="delete-document">Delete</span> \
-                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + '</div>';
+                    <div class="updated-at">updated at ' + moment(metadata.updated_at).fromNow() + ' by ' + metadata.creator + '</div>';
 
       this.$el.append(markup)
       this.delegateEvents()

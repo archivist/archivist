@@ -46,7 +46,7 @@ documentSchema.statics.add = function(document, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-documentSchema.statics.createEmpty = function(cb) {
+documentSchema.statics.createEmpty = function(user, cb) {
 	var docId = mongoose.Types.ObjectId();
 
 	var emptyDocJson = {
@@ -64,11 +64,11 @@ documentSchema.statics.createEmpty = function(cb) {
           "content"
         ],
         "guid": docId,
-        "creator": "",
+        "creator": user.name,
         "title": "Untitled interview",
         "abstract": "Test",
-        "created_at": "2015-03-04T10:56:18.229Z",
-        "updated_at": "2015-03-04T10:56:47.425Z",
+        "created_at": new Date().toJSON(),
+        "updated_at": new Date().toJSON(),
         "interview_subject_name": "Please enter interview subject name.",
         "interview_subject_bio": "Please enter interview subject bio.",
         "published_on": "2015-03-04T10:56:18.230Z"
@@ -121,7 +121,7 @@ documentSchema.statics.get = function(id, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-documentSchema.statics.update = function(id, data, cb) {
+documentSchema.statics.update = function(id, data, user, cb) {
   var self = this;
 
   if (data.hasOwnProperty('schema')) {
@@ -139,6 +139,11 @@ documentSchema.statics.update = function(id, data, cb) {
     }
 
     delete data.__v; // clear __v property, so $inc can do its job
+
+    // update document edition date and last author
+
+    data.nodes.document.updated_at = new Date().toJSON();
+    data.nodes.document.creator = user.name;
 
     self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, {new: true}, function (err, document) {
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
@@ -178,7 +183,7 @@ documentSchema.statics.list = function(opt, cb) {
 
   self.count(query, function(err, counter) {
     if (err) return cb(err);
-    self.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.authors id', options, function(err, records) {
+    self.find(query, 'nodes.document.title nodes.document.created_at nodes.document.updated_at nodes.document.creator id', options, function(err, records) {
       cb(err, [{total_entries: counter}, records]);
     });
   });

@@ -165,9 +165,9 @@ app.route('/editor')
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
-		Document.createEmpty(function(err, doc) {
+		Document.createEmpty(req.user, function(err, doc) {
 			if (err) return next(err);
-			res.redirect('/archivist.html#' + doc._id);
+			res.redirect('/editor#' + doc._id);
 		})
   });
 
