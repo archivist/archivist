@@ -19,34 +19,37 @@ var mongoose = require('mongoose')
 	, importer = require('./controllers/import.js')
 	, Document = require('./models/document.js');
 
+var browserify = require('browserify-middleware');
+
+
 // Substance stuff
 // --------------------
-if (process.env.NODE_ENV === "development") {
-  var CJSServer = require('substance-cjs');
-  var config = require("./.screwdriver/project.json");
-  var cjsServer = new CJSServer(app, __dirname, 'archivist_composer')
-    // ATTENTION: the second argument is the script which is resembled by injecting a list
-    // of script tags instead. It must be exactly the same string which is used in the script src.
-    .scripts('./boot_archivist_composer.js', './archivist_composer.js')
-    // the same applies to the css file
-    .styles(config.styles, './archivist_composer.css')
-    // page: route and file
-    .page('/archivist.html', './public/archivist.html');
+// if (process.env.NODE_ENV === "development") {
+//   var CJSServer = require('substance-cjs');
+//   var config = require("./.screwdriver/project.json");
+//   var cjsServer = new CJSServer(app, __dirname, 'archivist_composer')
+//     // ATTENTION: the second argument is the script which is resembled by injecting a list
+//     // of script tags instead. It must be exactly the same string which is used in the script src.
+//     .scripts('./boot_archivist_composer.js', './archivist_composer.js')
+//     // the same applies to the css file
+//     .styles(config.styles, './archivist_composer.css')
+//     // page: route and file
+//     .page('/archivist.html', './public/archivist.html');
 
-  // Serve assets with alias as configured in project.json (~dist like setup)
-  _.each(config.assets, function(srcPath, distPath) {
-    var absPath = path.join(__dirname, srcPath);
-    var route = "/" + distPath;
-    console.log("Adding route for asset", route, "->", absPath);
-    if (fs.lstatSync(absPath).isDirectory()) {
-      app.use( route, express.static(absPath) );
-    } else {
-      app.use(route, function(req, res) {
-        res.sendFile(absPath);
-      });
-    }
-  });
-}
+//   // Serve assets with alias as configured in project.json (~dist like setup)
+//   _.each(config.assets, function(srcPath, distPath) {
+//     var absPath = path.join(__dirname, srcPath);
+//     var route = "/" + distPath;
+//     console.log("Adding route for asset", route, "->", absPath);
+//     if (fs.lstatSync(absPath).isDirectory()) {
+//       app.use( route, express.static(absPath) );
+//     } else {
+//       app.use(route, function(req, res) {
+//         res.sendFile(absPath);
+//       });
+//     }
+//   });
+// }
 
 // MONGOOSE CONNECT
 
@@ -119,13 +122,17 @@ app.use('/', oauth);
 
 app.use('/api', maintenance);
 app.use('/api', api);
-
 app.use('/import', importer);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('platform', {user: req.user});
   })
+
+// On the fly browserify-ication of composer
+if (process.env.NODE_ENV === "development") {
+  app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
+}
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {

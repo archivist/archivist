@@ -32,7 +32,7 @@
   },
   "bundle": {
     "name": "archivist_composer",
-    "folder": "./public",
+    "folder": "./public/composer",
     "source": "./boot_archivist_composer.js",
     "index": "index.html"
   }

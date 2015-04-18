@@ -12,7 +12,9 @@ var browserify = require('browserify'),
     //map = require('map-stream'),
     sourceFile = './client/platform/index.js',
     destFolder = './public/platform/',
-    destFile = 'index.js';
+    destFile = 'index.js',
+    composerSourceFile = './boot_archivist_composer.js',
+    composerDestFolder = './public/composer/';
 
 gulp.task('browserify', function() {
   var bundler = browserify(sourceFile,{ debug: true, cache: {}, packageCache: {} }),
@@ -36,7 +38,7 @@ gulp.task('watch', function() {
     //   .pipe(duo())
     //   .pipe(rename("index.css"))
     //   .pipe(gulp.dest(destFolder))
-    return bundler.bundle()
+    bundler.bundle()
       .on('error', function(err){
           console.log(err.message);
           this.end();
@@ -62,6 +64,25 @@ gulp.task('compress', function() {
           .pipe(streamify(uglify()))
           .pipe(gulp.dest(destFolder));
       };
+  return bundle();
+});
+
+gulp.task('compress-composer', function() {
+  var bundler = browserify(composerSourceFile, {cache: {}, packageCache: {} }),
+      bundle = function() {
+        gulp.src('./node_modules/archivist-composer/styles/composer.css')
+          .pipe(minifyCSS({cache:true}))
+          .pipe(rename("composer.css"))
+          .pipe(gulp.dest(composerDestFolder));
+
+        bundler
+          .bundle()
+          .pipe(source(destFile))
+          // .pipe(streamify(uglify()))
+          .pipe(rename("composer.js"))
+          .pipe(gulp.dest(composerDestFolder));
+      };
+
   return bundle();
 });
 
