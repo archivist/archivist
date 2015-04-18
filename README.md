@@ -14,7 +14,6 @@ Install Heroku Toolbelt. Then pull in npm and Substance modules
 
 ```
 $ npm install
-$ substance --update
 ```
 
 Now you can run the server
@@ -22,7 +21,8 @@ Now you can run the server
 ```
 npm run devmode
 ```
-it'll start server app and recompile js bundle when you change source of platform app
+
+It'll start server app and recompile js bundle when you change source of platform app
 
 For starting server without watch mode use
 ```
@@ -33,6 +33,29 @@ You could also prepare compress bundle (js&css) without starting server, use
 ```
 npm run prepare
 ```
+
+# Development
+
+If you want to make changes in some of the modules you need to check them out with git instead of npm and use npm link. Do this:
+
+```bash
+$ mkdir archivist-project
+$ cd archivist-project
+
+$ git clone https://github.com/substance/archivist.git
+$ git clone https://github.com/substance/archivist-composer.git
+$ git clone https://github.com/substance/substance.git
+```
+
+To make use of the Substance Sublime helpers, make a [Sublime project](http://github.com/substance/sublime) and add all three folders to it. Then you can press `ctrl+shift+s` to bring up a nice git Status dialog.
+
+Rebundling of the composer happens automatically when you do npm install. For manual rebundling do:
+
+```bash
+$ gulp bundle-composer
+```
+
+
 
 # Deploy
 
