@@ -1,0 +1,162 @@
+#sidebar nav {
+  display: block;
+  position: absolute;
+  bottom: 48px;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+nav.sidebar a {
+  display: block;
+  width: auto;
+  font-size: 14px;
+  line-height: 12px;
+  text-decoration: none;
+  text-align: center;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 1px;
+  opacity: .7;
+  font-weight: 500;
+  cursor: pointer;
+  clear: both;
+  height: 50px;
+  -webkit-font-smoothing: antialiased;
+  color: rgba(255,255,255,.625);
+  -webkit-transition: all .18s ease-in-out;
+  -moz-transition: all .18s ease-in-out;
+  -o-transition: all .18s ease-in-out;
+  transition: all .18s ease-in-out;
+  background: rgba(0,0,0,.1);
+  padding: 3px 0px;
+}
+
+nav.sidebar a:hover, nav.sidebar a.active {
+  color:#fff;
+  opacity: 1;
+  background: rgba(0,0,0,.2);
+}
+
+nav.sidebar .navicon {
+  width: 35px;
+  height: 35px;
+  display: block;
+  float: left;
+  margin-left: 5px;
+  line-height: normal;
+  vertical-align: baseline;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+nav.sidebar span.title {
+  line-height: 20px;
+  font-size: 8px;
+  display: block;
+}
+
+#sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  display: block;
+  z-index: 1;
+  color: #fff;
+  font-weight: 200;
+  overflow: hidden;
+  max-height: 100%;
+  height: 100%;
+  background-color: #7A4040;
+  background-image: -webkit-radial-gradient(40% 0%, #2ABADC 0%, rgba(84, 90, 182, 0)100%),-webkit-radial-gradient(0% 100%, rgba(42, 117, 216, 1) 0%, rgba(118, 72, 160, 0) 50%);
+  background-image: radial-gradient(at 40% 0,#2ABADC 0,rgba(84,90,182,0) 100%),radial-gradient(at 0 100%,rgba(42, 117, 216, 1) 0,rgba(118,72,160,0) 50%);
+  background-position: left bottom,left bottom;
+  background-repeat: repeat,no-repeat;
+  background-size: 6000px 1400px,600px 600px;
+}
+
+#sidebar header {
+  background: rgba(255,255,255,.04);
+  box-shadow: 0 1px 0 rgba(0,0,0,.1);
+  padding: 0 10px;
+  height: 55px;
+  line-height: 55px;
+  margin-bottom: 22px;
+  font-size: 30px;
+  text-align: center;
+}
+
+/* USER MENU */
+
+.user-section {
+  position: absolute;
+  bottom: 0px;
+  background: rgba(0,0,0,.1);
+}
+
+.user-section .title {
+  float: right;
+  left: 0;
+  right: 0;
+  text-align: center;
+  position: absolute;
+  font-size: 18px;
+  color: #444;
+  font-weight: 200;
+  line-height: 34px;
+}
+
+.user-section .userpic,
+.user-section .username  {
+  height: 50px;
+}
+
+.user-section .username {
+  line-height: 20px;
+  font-size: 23px;
+  text-align: center;
+  height: 50px;
+}
+
+.user-section .username span {
+  max-width: 80px;
+  overflow: hidden;
+  display: block;
+  line-height: 12px;
+  float: left;
+}
+
+.user-section .username a {
+  color: #E7E7E7;
+  padding: 14px;
+  display: block;
+  opacity: .7;
+  background: rgba(0,0,0,.1);
+}
+
+.user-section .username a:hover {
+  opacity: 1;
+  background: rgba(0,0,0,.2);
+}
+
+.user-section .userpic img {
+  height: 50px;
+  width: 50px;
+}
+
+.user-section .userpic a {
+  color: #333;
+  position: relative;
+  top: 3px;
+  padding-left: 7px;
+}
+
+#container .writer-component, 
+#container .status-bar-component {
+  left: 50px;
+}

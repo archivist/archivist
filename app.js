@@ -19,6 +19,7 @@ var mongoose = require('mongoose')
 	, importer = require('./controllers/import.js')
 	, Document = require('./models/document.js');
 
+
 var browserify = require('browserify-middleware');
 
 
@@ -129,10 +130,25 @@ app.route('/')
     res.render('platform', {user: req.user});
   })
 
+
 // On the fly browserify-ication of composer
 if (process.env.NODE_ENV === "development") {
   app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
 }
+
+app.route('/editor')
+	.get(oauth.ensureAuthenticated, function(req, res, next) {
+		var menu = [
+			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
+	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
+	  	{name: 'Prisons',id: 'prisons',icon: 'th',url: '/prisons'},
+		  {name: 'Toponyms',id: 'topo',icon: 'globe',url: '/toponyms'},
+	  	{name: 'Definitions',id: 'definition',icon: 'bookmark',url: '/definitions'},
+	  	{name: 'Persons',id: 'person',icon: 'users',url: '/persons'},
+	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
+		];
+		res.render('editor', {user: req.user, menu: menu});
+  });
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
