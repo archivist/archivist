@@ -2,17 +2,16 @@ extends platform/layout
 
 block mainContent
 	div#main
-		div#sidebar
+		div#topbar
 			header.branding
-				| Archivist
-			nav.sidebar
+				| A
+			nav.topbar
 			div.user-section
-					div.userpic
-						img(src='#{user.picture}')
-					div.username
-						span #{user.firstname}<br>#{user.lastname}
-						a(href='/logout')
-							i.fa.fa-power-off
+				div.username
+					a(href='/logout')
+						i.fa.fa-power-off
+				div.userpic
+					img(src='#{user.picture}')
 		div#data-container
 			div.data-toolbox
 				div.toolbox

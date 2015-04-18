@@ -32,11 +32,12 @@ gulp.task('watch', function() {
 
   function rebundle() {
     console.log('building new version')
-    // gulp.src('./client/platform/index.css')
-    //   .pipe(duo())
-    //   .pipe(rename("index.css"))
-    //   .pipe(gulp.dest(destFolder))
-    return bundler.bundle()
+    gulp.src('./client/platform/index.css')
+      .pipe(importCSS())
+      .pipe(minifyCSS({cache:true}))
+      .pipe(rename("index.css"))
+      .pipe(gulp.dest(destFolder))
+    bundler.bundle()
       .on('error', function(err){
           console.log(err.message);
           this.end();
@@ -56,7 +57,7 @@ gulp.task('compress', function() {
           .pipe(minifyCSS({cache:true}))
           .pipe(rename("index.css"))
           .pipe(gulp.dest(destFolder))
-        return bundler
+        bundler
           .bundle()
           .pipe(source(destFile))
           .pipe(streamify(uglify()))

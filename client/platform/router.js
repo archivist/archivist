@@ -273,7 +273,7 @@ var Router = Backbone.Router.extend({
   buildMenu: function() {
     var menuItems = new models.menuItems();
     menuItems.set(menuData);
-    var menu = new views.mainMenu({ collection: menuItems, el: $('nav.sidebar') });
+    var menu = new views.mainMenu({ collection: menuItems, el: $('nav.topbar') });
   },
 
   buildContextMenu: function() {

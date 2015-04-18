@@ -19,6 +19,7 @@ var mongoose = require('mongoose')
 	, importer = require('./controllers/import.js')
 	, Document = require('./models/document.js');
 
+
 // Substance stuff
 // --------------------
 if (process.env.NODE_ENV === "development") {
@@ -29,9 +30,11 @@ if (process.env.NODE_ENV === "development") {
     // of script tags instead. It must be exactly the same string which is used in the script src.
     .scripts('./boot_archivist_composer.js', './archivist_composer.js')
     // the same applies to the css file
-    .styles(config.styles, './archivist_composer.css')
+    //.styles(config.styles, './archivist_composer.css')
     // page: route and file
-    .page('/archivist.html', './public/archivist.html');
+
+
+    .page('/archivist', './public/archivist.html');
 
   // Serve assets with alias as configured in project.json (~dist like setup)
   _.each(config.assets, function(srcPath, distPath) {
@@ -126,6 +129,20 @@ app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('platform', {user: req.user});
   })
+
+app.route('/editor')
+	.get(oauth.ensureAuthenticated, function(req, res, next) {
+		var menu = [
+			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
+	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
+	  	{name: 'Prisons',id: 'prisons',icon: 'th',url: '/prisons'},
+		  {name: 'Toponyms',id: 'topo',icon: 'globe',url: '/toponyms'},
+	  	{name: 'Definitions',id: 'definition',icon: 'bookmark',url: '/definitions'},
+	  	{name: 'Persons',id: 'person',icon: 'users',url: '/persons'},
+	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
+		];
+		res.render('editor', {user: req.user, menu: menu});
+  });
 
 app.route('/editor/new')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
