@@ -442,66 +442,6 @@ FILTERS
 
 /* Subject List */
 
-.list { position: relative; display: block; margin: 0; padding: 0; list-style: none; font-size: 13px; line-height: 20px; }
-.list ol { display: block; position: relative; margin: 0; padding: 0; list-style: none; }
-.list ol ol { padding-left: 30px; }
-.list li { display: block; position: relative; margin: 0; padding: 0; min-height: 20px; font-size: 13px; line-height: 20px; }
-.list li span { display: block; margin: 5px; padding: 5px 10px; color: #333; text-decoration: none; border: 1px solid #ccc;
-    background: #fafafa;
-    background: -webkit-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:    -moz-linear-gradient(top, #fafafa 0%, #eee 100%);
-    background:         linear-gradient(top, #fafafa 0%, #eee 100%);
-    -webkit-border-radius: 3px;
-            border-radius: 3px;
-    box-sizing: border-box; -moz-box-sizing: border-box;
-    cursor: pointer;
-}
-
-.list li.active > span {
-  box-shadow: 0 0 8px 2px #ccc;
-}
-
-.list button {
-  float: left;
-  background: none;
-  border: 0px;
-  padding: 6px 10px 6px 1px;
-}
-.list button:first-child {
-  margin-left: 6px;
-  padding-left: 10px;
-  cursor: move;
-}
-
-.list #dropzone {border: 1px dashed #ccc; background: #fafafa; height: 30px;}
-.list #dropzone.active {border: 1px dashed #000;}
-
-.subjects {
-  height: 100%;
-}
-
-.subjects .context-panel {
-  height: 70px;
-  clear: both;
-  border-bottom: 1px solid #eee;
-}
-
-.subjects .list {
-  float: left;
-  width: 50%;
-  padding: 10px;
-  height: 100%;
-  border-right: 1px solid #eee;
-  overflow: scroll;
-  padding-bottom: 120px;
-}
-
-.subjects .topbar {
-  float: right;
-  width: 50%;
-  clear: both;
-  padding: 10px;
-}
 
 /* Forms */
 

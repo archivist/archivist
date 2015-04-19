@@ -49,6 +49,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
       .on("rename_node.jstree", function(e, data) {
         self._onRenameNode(e, data, self);
       })
+      .on("description:change", function(e, data) {
+        self._onDescriptionChange(e, data, self);
+      })
       .jstree({
         "core" : {
           "animation" : 0,
@@ -64,7 +67,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         "types": {
           "default": {"icon": "glyphicon hidden-icon"}
         },
-        "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow", "sort"]
+        "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow"]
       });
   },
 
@@ -369,6 +372,14 @@ var SubjectsTreeView = Backbone.Layout.extend({
       }
     })
   },
+  _onDescriptionChange: function(e, data, context) {
+    var id = data.get('id');
+    var node = $('.tree').jstree('get_node', id);
+    var hasDescription = 'not-empty';
+    if (_.isEmpty(data.get('description'))) hasDescription = 'empty';
+    node.li_attr.class = hasDescription;
+    $('.tree').jstree('redraw', node, false);
+  },
   panel: [
     {
       name: "Add new subject",
@@ -393,6 +404,7 @@ var subjectModal = Backbone.Modal.extend({
       success: function(model, resp) { 
         Notify.spinner('hide');
         var notice = Notify.info('Subject ' + self.model.get('name') + ' has been updated');
+        $('.tree').trigger('description:change', self.model);
       },
       error: function(model, err) { 
         Notify.spinner('hide');

@@ -45,10 +45,15 @@ var Subjects = Utility.collection.extend({
       if (nodes.length === 0) return res; // exit condition
 
       _.each(nodes, function(node) {
+        var hasDescription = 'not-empty';
+        if (_.isEmpty(node.get('description'))) hasDescription = 'empty';
         var entry = {
           id: node.id,
           text: node.get('name'),
-          children: getChildren(node.id) // get children for subj
+          children: getChildren(node.id), // get children for subj
+          li_attr: {
+            class: hasDescription
+          }
         };
         res.push(entry);
       });

@@ -101,5 +101,13 @@
 }
 
 .subjects #search_subject:focus {
-border-color: rgba(38,38,38,.5);
+  border-color: rgba(38,38,38,.5);
+}
+
+.subjects li.not-empty > .jstree-wholerow {
+  background: rgba(233, 255, 227, 0.5);
+}
+
+.subjects li.not-empty > .jstree-wholerow:hover {
+  background-color: #e8eff7;
 }

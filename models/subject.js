@@ -14,6 +14,7 @@ var subjectSchema = new Schema({
   ,	name: String
   , description: String
   , parent: String
+  , position: Number
   , created: { type: Schema.Types.ObjectId, ref: 'User' }
   , edited: { type: Schema.Types.ObjectId, ref: 'User' }
 });
