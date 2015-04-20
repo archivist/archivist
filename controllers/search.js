@@ -5,7 +5,39 @@ var Location = require('../models/location.js')
   , _ = require('underscore');
 
 
+
+
 var search = function(query, cb) {
+  var type = query.type || false;
+  if (!query.type) {
+    plainSearch(query, cb);
+  } else {
+    switch (type) {
+      case 'location':
+        Location.search(query, function (err, output) {
+          if (err) return callback(err);
+          cb(null, output);
+        });
+        break;
+      case 'person':
+        Person.search(query, function (err, output) {
+          if (err) return callback(err);
+          cb(null, output);
+        });
+        break;
+      case 'definition':
+        Definition.search(query, function (err, output) {
+          if (err) return callback(err);
+          cb(null, output);
+        });
+        break;
+      default:
+        plainSearch(query, cb);
+    }
+  }
+}
+
+var plainSearch = function(query, cb) {
   async.parallel([
     function(callback){
       Location.search(query, function (err, output) {
