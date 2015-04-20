@@ -9,20 +9,20 @@ var Location = require('../models/location.js')
 
 var search = function(query, cb) {
   var type = query.type || false,
-      result = [];
+      result = {};
   if (!query.type) {
     plainSearch(query, function(err, searchResult){
       var total = searchResult.length;
       if (total == 0) {
         plainSearch('', function(err, res) {
           var total = searchResult.length;
-          result.push({ state: "We didn't found anything matching your query, but here are our suggestions" });
-          result.push(res);
+          result.state = "We didn't found anything matching your query, but here are our suggestions";
+          result.results = res;
           cb(null, result);
         })
       } else {
-        result.push({ state: total + ' items matching your query' });
-        result.push(searchResult);
+        result.state = total + ' items matching your query';
+        result.results = searchResult;
         cb(null, result);
       }
     });
@@ -32,8 +32,8 @@ var search = function(query, cb) {
         Location.search(query, function (err, output) {
           if (err) return callback(err);
           var total = output.length;
-          result.push({ state: total + ' locations matching your query' });
-          result.push(output);
+          result.state = total + ' locations matching your query';
+          result.results = output;
           cb(null, result);
         });
         break;
@@ -41,8 +41,8 @@ var search = function(query, cb) {
         Person.search(query, function (err, output) {
           if (err) return callback(err);
           var total = output.length;
-          result.push({ state: total + ' persons matching your query' });
-          result.push(output);
+          result.state = total + ' persons matching your query';
+          result.results = output;
           cb(null, result);
         });
         break;
@@ -50,8 +50,8 @@ var search = function(query, cb) {
         Definition.search(query, function (err, output) {
           if (err) return callback(err);
           var total = output.length;
-          result.push({ state: total + ' definitions matching your query' });
-          result.push(output);
+          result.state = total + ' definitions matching your query';
+          result.results = output;
           cb(null, result);
         });
         break;
