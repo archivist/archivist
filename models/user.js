@@ -56,7 +56,7 @@ userSchema.statics.get = function(id, done) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-userSchema.statics.update = function(id, data, cb) {
+userSchema.statics.change = function(id, data, cb) {
   delete data._id;
   delete data._v;
 

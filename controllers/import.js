@@ -1,9 +1,12 @@
-var Location = require('../models/location.js')
+var mongoose = require('mongoose')
+  , Location = require('../models/location.js')
   , Person = require('../models/person.js')
-  , Definition = require('../models/definition.js') 
+  , Definition = require('../models/definition.js')
+  , Subject = require('../models/subject.js')
   , express = require('express')
   , _ = require('underscore')
   , GoogleSpreadsheets = require("google-spreadsheets")
+  , Spreadsheet = require('edit-google-spreadsheet')
   , importer = express.Router();
 
 var importPrisonLocations = function(req, res, next) {
@@ -202,5 +205,100 @@ importer.route('/definitions/abr')
 
 importer.route('/definitions/jargon')
   .get(importDefinitionsAdditional)
+
+
+var importSubjects = function(req, res, next) {
+  mongoose.connection.collections['subjects'].drop( function(err) {
+    Spreadsheet.load({
+      debug: true,
+      username: process.env.GUSER || '',
+      password: process.env.GPASS || '',
+      spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
+      worksheetId: 'opogbz4'
+    }, function run(err, spreadsheet) {
+      if(err) throw err;
+      //receive all cells
+      spreadsheet.receive({},function(err, rows, info) {
+        if(err) throw err;
+        var tree = [],
+            indexObj = {
+              1: {
+                index: 0,
+                lastItem: ''
+              },
+              2: {
+                index: 0,
+                lastItem: ''
+              },
+              3: {
+                index: 0,
+                lastItem: ''
+              },
+              4: {
+                index: 0,
+                lastItem: ''
+              },
+              5: {
+                index: 0,
+                lastItem: ''
+              }, 
+              6: {
+                index: 0,
+                lastItem: ''
+              }
+            },
+            lastEl = {
+              level: 0
+            };
+
+        _.each(rows, function(row, n){
+          if (n != 1) {
+            var record = {},
+                cellFound = false;
+
+            _.each(row, function(cell, column) {
+              if(!cellFound) {
+                if(column < 8 && column > 1 && cell != '' && cell != ' ' && cell != '\n') {
+                  record.name = cell;
+                  record.level = column - 1;
+                  record.position = indexObj[record.level].index;
+                  record.parent = record.level == 1 ? '' : indexObj[record.level - 1].lastItem;
+                  var subject = new Subject(record);
+                  tree.push(subject);
+                  indexObj[record.level].index++;
+                  indexObj[record.level].lastItem = subject.id;
+                  if(lastEl.level > record.level) {
+                    var last = lastEl.level;
+                    while (last > record.level) {
+                      indexObj[lastEl.level].index = 0;
+                      last--;
+                    }
+                  }
+                  lastEl = record;
+                  cellFound = true;
+
+                  var spreadsheetData = {};
+                  spreadsheetData[n] = { 1: subject.id };
+                  spreadsheet.add(spreadsheetData);
+                }
+              }
+            });
+          }
+        });
+        spreadsheet.send(function(err) {
+          if(err) throw err;
+          Subject.create(tree, function(err, subjects) {
+            if(err) throw err;
+            console.log("Subject importing has been completed!");
+            res.status(200).send(subjects.length + ' subjects have been imported!');
+          });
+        });
+      });
+    });
+  });
+}
+
+importer.route('/subjects')
+  .get(importSubjects)
 
 module.exports = importer;

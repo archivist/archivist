@@ -37,7 +37,7 @@ module.exports = function(schema, options) {
    * @param {callback} cb - The callback that handles the results 
    */
 
-  schema.statics.update = function(id, data, user, cb) {
+  schema.statics.change = function(id, data, user, cb) {
     var self = this;
 
     data.edited = user._id;

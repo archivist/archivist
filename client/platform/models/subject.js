@@ -16,7 +16,7 @@ var Subjects = Utility.collection.extend({
   url: "/api/subjects",
   state: {
     pageSize: null,
-    sortKey: "name",
+    sortKey: "position",
     order: -1,
   },
   buildIndexes: function() {
@@ -53,7 +53,8 @@ var Subjects = Utility.collection.extend({
           children: getChildren(node.id), // get children for subj
           li_attr: {
             class: hasDescription
-          }
+          },
+          px: node.get('position')
         };
         res.push(entry);
       });

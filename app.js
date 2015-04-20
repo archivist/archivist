@@ -106,22 +106,16 @@ app.use(morgan('tiny'));
 
 // MONGOOSE CONNECTION
 
-var sessionStore = new MongoStore({
-    mongooseConnection: mongoose.connections[0],
-    ttl: 2 * 3600
-  }, function(e){
-  	app.listen(port, function() {
-		console.log("Archivist server listening on port %d", port);
-	});
-})
-
-mongoose.connection.on("fullsetup", function(ref) {
-	return console.log("Connected to mongo server!");
+mongoose.connection.on("open", function(ref) { 
+  app.listen(port, function() {
+    console.log("Express server listening on port %d", port);
+  });
+  return console.log("Connected to mongo server!");
 });
 
 mongoose.connection.on("error", function(err) {
-	console.log("Could not connect to mongo server!");
-	return console.log(err.message);
+  console.log("Could not connect to mongo server!");
+  return console.log(err.message.red);
 });
 
 app.use('/', oauth);

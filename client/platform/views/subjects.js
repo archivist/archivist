@@ -64,6 +64,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
             return self.itemsFunc(o, cb, self);
           }
         },
+        // "sort": function (a, b) {
+        //   return this.get_node(a).original.px > this.get_node(b).original.px ? 1 : -1;
+        // },
         "types": {
           "default": {"icon": "glyphicon hidden-icon"}
         },
@@ -324,29 +327,33 @@ var SubjectsTreeView = Backbone.Layout.extend({
   _onMoveNode: function(e, data, context) {
     console.log('node moved yay', e, data);
       
-    var movedNode = data.node;
-    var newParent = data.parent;
-    var oldParent = data.old_parent;
+    var movedNode = data.node,
+        newParent = data.parent,
+        oldParent = data.old_parent,
+        oldPos = data.old_position,
+        newPos = data.position;
 
-    console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
+    var parentChanged = (oldParent != newParent),
+        positionChanged = (oldPos != newPos);
 
-    // Use backbone stuff to retrieve the model with that id
-    var subject = context.collection.get(movedNode.id);
+    if (parentChanged) console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
+    if (positionChanged) console.log('changing position from ', oldPos, 'to', newPos);
 
-    if(newParent == '#') newParent = '';
+    request
+      .get('/api/subjects/move')
+      .query({ oldparent: oldParent, newparent: newParent, node: movedNode.id, oldpos: oldPos, newpos: newPos })
+      .end(function(err, res) {
+        if (res.ok) {
+          Notify.spinner('hide');
+          var notice = Notify.info('Subject has been moved to new position.');
+        } else {
+          Notify.spinner('hide');
+          var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+          alert('Sorry an error occurred: ', err);
+          window.location.href = "/subjects";
+        }
+      });
 
-    subject.save('parent', newParent, {
-      success: function(model, resp) { 
-        Notify.spinner('hide');
-        var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
-      },
-      error: function(model, err) { 
-        Notify.spinner('hide');
-        console.log(err);
-        alert('Sorry an error occurred: ', err);
-        window.location.href = "/subjects";
-      }
-    })
   },
   _onRenameNode: function(e, data, context) {
     var updatedNode = data.node;

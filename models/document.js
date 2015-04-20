@@ -121,7 +121,7 @@ documentSchema.statics.get = function(id, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-documentSchema.statics.update = function(id, data, user, cb) {
+documentSchema.statics.change = function(id, data, user, cb) {
   var self = this;
 
   if (data.hasOwnProperty('schema')) {

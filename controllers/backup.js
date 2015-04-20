@@ -30,7 +30,7 @@ module.exports = function(schema, options) {
 			self.find().remove(function(err, result) {
 				shadowCollection.find().exec(function(err, documents) {
 					async.eachLimit(documents, 100, function(doc, callback) {
-						var personClone = new self(doc);
+						var documentClone = new self(doc);
 						documentClone.save(function(err){
 							callback(err);
 						});

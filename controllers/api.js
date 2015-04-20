@@ -43,7 +43,7 @@ var readDocument = function(req, res, next) {
 
 
 var updateDocument = function(req, res, next) {
-  Document.update(req.params.id, req.body, req.user, function(err, document) {
+  Document.change(req.params.id, req.body, req.user, function(err, document) {
     if (err) return next(err);
     res.json(document);
   });
@@ -93,7 +93,7 @@ var readSubject = function(req, res, next) {
 }
 
 var updateSubject = function(req, res, next) {
-  Subject.update(req.params.id, req.body, req.user, function(err, subject) {
+  Subject.change(req.params.id, req.body, req.user, function(err, subject) {
     if (err) return next(err);
     res.json(subject);
   });
@@ -116,6 +116,13 @@ var listSubjects = function(req, res, next) {
 var mergeSubjects = function(req, res, next) {
   Subject.merge(req.query.one, req.query.into, function(err) {
     if (err) return next(err);
+    res.json(200);
+  });
+}
+
+var moveSubjects = function(req, res, next) {
+  Subject.move(req.query.oldparent, req.query.newparent, req.query.node, req.query.oldpos, req.query.newpos, req.user, function(err) {
+    if (err) res.status(500).send(err.stack);
     res.json(200);
   });
 }
@@ -145,6 +152,9 @@ rest.route('/metadata')
 rest.route('/subjects/merge')
   .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, mergeSubjects)
 
+rest.route('/subjects/move')
+  .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, moveSubjects)
+
 rest.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
   .put(maintenance.checkCurrentMode, updateSubject)
@@ -168,7 +178,7 @@ var readPerson = function(req, res, next) {
 }
 
 var updatePerson = function(req, res, next) {
-  Person.update(req.params.id, req.body, req.user, function(err, person) {
+  Person.change(req.params.id, req.body, req.user, function(err, person) {
     if (err) return next(err);
     res.json(person);
   });
@@ -215,7 +225,7 @@ var readDefinition = function(req, res, next) {
 }
 
 var updateDefinition = function(req, res, next) {
-  Definition.update(req.params.id, req.body, req.user, function(err, definition) {
+  Definition.change(req.params.id, req.body, req.user, function(err, definition) {
     if (err) return next(err);
     res.json(definition);
   });
@@ -262,7 +272,7 @@ var readLocation = function(req, res, next) {
 }
 
 var updateLocation = function(req, res, next) {
-  Location.update(req.params.id, req.body, req.user, function(err, location) {
+  Location.change(req.params.id, req.body, req.user, function(err, location) {
     if (err) return next(err);
     res.json(location);
   });
@@ -324,7 +334,7 @@ var readUser = function(req, res, next) {
 }
 
 var updateUser = function(req, res, next) {
-  User.update(req.params.id, req.body, function(err, user) {
+  User.change(req.params.id, req.body, function(err, user) {
     if (err) return next(err);
     res.json(user);
   });
