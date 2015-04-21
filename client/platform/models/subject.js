@@ -19,6 +19,9 @@ var Subjects = Utility.collection.extend({
     sortKey: "position",
     order: -1,
   },
+  parseRecords: function (resp, options) {
+    return resp.subjects;
+  },
   buildIndexes: function() {
     // Build a map of parents referencing their kids
     this.parentIndex = {};

@@ -107,9 +107,14 @@ var deleteSubject = function(req, res, next) {
 }
 
 var listSubjects = function(req, res, next) {
-  Subject.list(req.query, function(err, subjects) {
-    if (err) return next(err);
-    res.json(subjects);
+  Subject.getDBVersion(function(err, DBVersion) {
+    Subject.list(req.query, function(err, subjects) {
+      if (err) return next(err);
+      res.json({
+        subjectDBVersion: DBVersion,
+        subjects: subjects 
+      });
+    });
   });
 }
 
@@ -361,7 +366,7 @@ var entitiesGetter = function(req, res, next) {
 
   getEntities(entityIds, function (err, output) {
     if (err) return next(err);
-    res.json(output);
+    res.json({results: output});
   });
 }
 
