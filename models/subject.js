@@ -92,6 +92,7 @@ subjectSchema.statics.change = function(id, data, user, cb) {
  */
 
 subjectSchema.statics.delete = function(id, cb) {
+
   var self = this;
   // Unsave op (needs to be wrapped in a transaction)
   function updateDocsAndRemoveSubject(cb) {
@@ -114,10 +115,9 @@ subjectSchema.statics.delete = function(id, cb) {
     if (subjects.length > 0) {
       return cb('can not delete subject that has child subjects');
     }
-
+    
     maintenance.beginTransaction(function(err) {
       if (err) return cb(err);
-
       updateDocsAndRemoveSubject(function(err) {
         if (err) {
           maintenance.cancelTransaction(function(terr) {

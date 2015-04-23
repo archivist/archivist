@@ -141,7 +141,8 @@ module.exports = function(schema, options) {
       });
 
       if (hasChanged) {
-        Document.update(docId, doc, function(err) {
+        var user = {name: 'Archivist'}
+        Document.change(docId, doc, user, function(err) {
           cb(err);
         });
       } else {
