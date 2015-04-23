@@ -5,52 +5,54 @@ var Location = require('../models/location.js')
   , _ = require('underscore');
 
 
-
-
 var search = function(query, cb) {
   var type = query.type || false,
       result = {};
   if (!query.type) {
     plainSearch(query, function(err, searchResult){
-      var total = searchResult.length;
+      var total = searchResult.counter;
       if (total == 0) {
         plainSearch('', function(err, res) {
-          var total = searchResult.length;
-          result.state = "We didn't found anything matching your query, but here are our suggestions";
-          result.results = res;
+          result.state = "No results found, suggestions:";
+          result.results = res.results;
           cb(null, result);
         })
       } else {
         result.state = total + ' items matching your query';
-        result.results = searchResult;
+        result.results = searchResult.results;
         cb(null, result);
       }
     });
   } else {
     switch (type) {
       case 'location':
-        Location.search(query, function (err, output) {
+        Location.search(query, function (err, output, counter) {
           if (err) return callback(err);
-          var total = output.length;
-          result.state = total + ' locations matching your query';
+          result.state = counter + ' locations matching your query';
           result.results = output;
           cb(null, result);
         });
         break;
       case 'person':
-        Person.search(query, function (err, output) {
+        Person.search(query, function (err, output, counter) {
           if (err) return callback(err);
-          var total = output.length;
-          result.state = total + ' persons matching your query';
+          result.state = counter + ' persons matching your query';
+          _.each(output, function(val, i){
+            output[i] = output[i].toJSON();
+            output[i].type = 'person';
+          })
           result.results = output;
           cb(null, result);
         });
         break;
       case 'definition':
-        Definition.search(query, function (err, output) {
+        Definition.search(query, function (err, output, counter) {
           if (err) return callback(err);
-          var total = output.length;
-          result.state = total + ' definitions matching your query';
+          result.state = counter + ' definitions matching your query';
+          _.each(output, function(val, i){
+            output[i] = output[i].toJSON();
+            output[i].type = 'definition';
+          })
           result.results = output;
           cb(null, result);
         });
@@ -64,35 +66,51 @@ var search = function(query, cb) {
 var plainSearch = function(query, cb) {
   async.parallel([
     function(callback){
-      Location.search(query, function (err, output) {
+      Location.search(query, function (err, output, counter) {
         if (err) return callback(err);
-        callback(null, output);
+        var result = {
+          counter: counter,
+          results: output
+        }
+        callback(null, result);
       });
     },
     function(callback){
-      Person.search(query, function (err, output) {
+      Person.search(query, function (err, output, counter) {
         if (err) return callback(err);
         _.each(output, function(val, i){
           output[i] = output[i].toJSON();
           output[i].type = 'person';
         })
-        callback(null, output);
+        var result = {
+          counter: counter,
+          results: output
+        }
+        callback(null, result);
       });
     },
     function(callback){
-      Definition.search(query, function (err, output) {
+      Definition.search(query, function (err, output, counter) {
         if (err) return callback(err);
         _.each(output, function(val, i){
           output[i] = output[i].toJSON();
           output[i].type = 'definition';
         })
-        callback(null, output);
+        var result = {
+          counter: counter,
+          results: output
+        }
+        callback(null, result);
       });
     }
   ],
   function(err, results){
     if (err) return cb(err);
-    var result = results[0].concat(results[1],results[2]);
+    var sorted = _.sortBy(_.union(results[0].results, results[1].results, results[2].results), 'updatedAt');
+    var result = {
+      counter: results[0].counter + results[1].counter + results[2].counter,
+      results: sorted
+    }
     cb(null, result);
   });
 }

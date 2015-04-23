@@ -34,10 +34,17 @@ definitionSchema.statics.search = function(opt, cb) {
       };
 
   if(_.isEmpty(options.limit)) options.limit = 30;
+  if(_.isEmpty(options.sort)) {
+    options.sort = {
+      'updatedAt': -1
+    }
+  }
 
-  self.find(query, {}, options, function(err, records) {
-    cb(err, records);
-  });
+  self.count(query, function(err, count) {
+    self.find(query, {}, options, function(err, records) {
+      cb(err, records, count);
+    });
+  })
 }
 
 module.exports = mongoose.model('Defenition', definitionSchema);
