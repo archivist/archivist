@@ -40,12 +40,6 @@ documentSchema.statics.add = function(document, cb) {
   });
 }
 
-/** 
- * Creates empty Document record from JSON
- *
- * @param {callback} cb - The callback that handles the results 
- */
-
 documentSchema.statics.createEmpty = function(user, cb) {
 	var docId = mongoose.Types.ObjectId();
 
@@ -67,11 +61,29 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "creator": user.name,
         "title": "Untitled interview",
         "abstract": "Test",
+        "abstract_en": "Enter english abstract here",
         "created_at": new Date().toJSON(),
         "updated_at": new Date().toJSON(),
-        "interview_subject_name": "Please enter interview subject name.",
-        "interview_subject_bio": "Please enter interview subject bio.",
-        "published_on": "2015-03-04T10:56:18.230Z"
+        "published_on": "0000-00-00",
+
+        // Project related
+        "project_name": "Internationales Sklaven-und Zwangsarbeiter Befragungsprojekt",
+        "project_location": "",
+        "conductor": "Irina Ostrovskaya",
+        "operator": "Eduard Kechedjiyan",
+        "sound_operator": "Eduard Kechedjiyan",
+        "record_type": "video",
+        "interview_location": "respondent's apartment",
+        "interview_date": "2005-07-16",
+        "persons_present": "Nikolay Bogoslavec, Irina Ostrovskaya, Eduard Kechedjiyan, Alexey Bogoslavec",
+        "interview_duration": "247",
+
+        // Interview subject related
+        "interviewee_bio": "Please enter interview subject bio.",
+        "interviewee_category": "Ost-Arbeiter, concentration camp prisoner",
+        "interviewee_prisons": [],
+        "interviewee_forced_labor_type": "intracamp work, earthworks (construction of barracks), digging tunnels for military factories",
+        "interviewee_waypoints": []
       },
       "content": {
         "type": "container",

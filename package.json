@@ -28,7 +28,7 @@
     "morgan": "*",
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
-    "substance": "git://github.com/substance/substance.git#next",
+    "substance": "git://github.com/substance/substance.git#master",
     "substance-util": "git://github.com/substance/util.git#substance-next",
     "underscore": "1.7.0",
     "vinyl-source-stream": "*",
