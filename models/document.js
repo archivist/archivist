@@ -153,7 +153,7 @@ documentSchema.statics.change = function(id, data, user, cb) {
     console.log('currentDoc.__v', currentDoc.__v, 'data', data.__v);
     // Perform version check
     if (currentDoc.__v !== data.__v) {
-      return cb('Document can not be saved becuase your local version is outdated. Please open document in a new tab and re-apply your changes.');
+      return cb('Document can not be saved because your local version is outdated. Please open document in a new tab and re-apply your changes.');
     }
 
     delete data.__v; // clear __v property, so $inc can do its job
