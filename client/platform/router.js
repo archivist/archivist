@@ -66,12 +66,16 @@ var Router = Backbone.Router.extend({
     '': 'dashboard',
     'subjects': 'subjectsList',
     'prisons': 'prisonsList',
+    'prisons/add': 'prisonsAdd',
     'prisons/:id': 'prisonsEdit',
     'toponyms': 'toponymsList',
+    'toponyms/add': 'toponymsAdd',
     'toponyms/:id': 'toponymsEdit',
     'definitions': 'definitionsList',
+    'definitions/add': 'definitionsAdd',
     'definitions/:id': 'definitionsEdit',
     'persons': 'personsList',
+    'persons/add': 'personsAdd',
     'persons/:id': 'personsEdit',
     'users': 'usersList'
 	},
@@ -115,6 +119,10 @@ var Router = Backbone.Router.extend({
     this.grid(toponymsGrid, 'locationsToponyms', 'toponymsGrid', callback, id);
   },
 
+  toponymsAdd: function() {
+    this.add('toponymsList', 'toponymsAdd', 'toponym', 'locationsToponyms');
+  },
+
   toponymsEdit: function(id) {
     this.edit(id, 'toponymsList', 'toponymsEdit', 'toponym', 'locationsToponyms');
   },
@@ -130,6 +138,10 @@ var Router = Backbone.Router.extend({
     ];
    
     this.grid(prisonsGrid, 'locationsPrisons', 'prisonsGrid', callback, id);
+  },
+
+  prisonsAdd: function() {
+    this.add('prisonsList', 'prisonsAdd', 'prison', 'locationsPrisons');
   },
 
   prisonsEdit: function(id) {
@@ -149,6 +161,10 @@ var Router = Backbone.Router.extend({
     this.grid(definitionsGrid, 'definitions', 'definitionsGrid', callback, id);
   },
 
+  definitionsAdd: function() {
+    this.add('definitionsList', 'definitionsAdd', 'definition', 'definitions');
+  },
+
   definitionsEdit: function(id) {
     this.edit(id, 'definitionsList', 'definitionsEdit', 'definition', 'definitions');
   },
@@ -164,6 +180,10 @@ var Router = Backbone.Router.extend({
     ];
    
     this.grid(personsGrid, 'persons', 'personsGrid', callback, id);
+  },
+
+  personsAdd: function() {
+    this.add('personsList', 'personsAdd', 'person', 'persons');
   },
 
   personsEdit: function(id) {
@@ -232,15 +252,12 @@ var Router = Backbone.Router.extend({
   },
 
   add: function(parentName, name, modelName, colName) {
+    var that = this;
     if(!this.initialized) {
       this[parentName](name);
     } else {
-
-      var self = this,
-          model = models[modelName].create();
-
-      var view = new views.editPage({ model: model, collection: self[colName], add: true, contextMenu: self.contextMenu, layout: self.layout });   
-      self.layout.stackView.push(view)
+      var view = that.layout.parentView.getView();
+      view._add();
     }
   },
 
