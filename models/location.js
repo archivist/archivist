@@ -32,7 +32,7 @@ var locationShadowSchema = new Schema({}, {collection: 'locations_backup', stric
 		locationShadow = mongoose.model('locationShadow', locationShadowSchema);
 
 locationSchema.plugin(backup, { shadow: locationShadow });
-locationSchema.plugin(rest, { referenceType: 'location_reference', systemCounter: 'locations_db_version' });
+locationSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'locations_db_version' });
 locationSchema.plugin(textSearch);
 locationSchema.plugin(timestamps);
 

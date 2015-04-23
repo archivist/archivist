@@ -22,7 +22,7 @@ var personShadowSchema = new Schema({}, {collection: 'persons_backup', strict: f
 		personShadow = mongoose.model('personShadow', personShadowSchema);
 
 personSchema.plugin(backup, { shadow: personShadow });
-personSchema.plugin(rest, { referenceType: 'person_reference', systemCounter: 'persons_db_version' });
+personSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'persons_db_version' });
 personSchema.plugin(timestamps);
 
 personSchema.statics.search = function(opt, cb) {

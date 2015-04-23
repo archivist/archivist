@@ -146,7 +146,7 @@ subjectSchema.statics.merge = function(subjectId, newSubjectId, cb) {
   console.log("Let's merge " + subjectId + " into " + newSubjectId + "!");
 
   function updateDocsAndMergeSubjects(cb) {
-    self.propagateChange(subjectId, {mode: "replace", newSubjectId: newSubjectId}, function(err) {
+    self.propagateChange(subjectId, {mode: "replace", newReferenceId: newSubjectId}, function(err) {
       if (err) return cb(err);
       self.findByIdAndRemove(subjectId, function (err, subject) {
         if (err) return cb(err);

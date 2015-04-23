@@ -110,33 +110,48 @@ module.exports = function(schema, options) {
   /** 
    * Updates references in a document, either removing them or replacing them with a new id
    *
-   * @param {string} doc - Substance document as JSON
-   * @param {string} data - subject to be updated
-   * @param {object} options - mode = delete|replace, replace mode has newSubjectId
+   * @param {string} docId - Substance document as JSON
+   * @param {string} id - entity to be updated
+   * @param {object} options - mode = delete|replace, replace mode has entityId
    */
    
   schema.statics.updateForDoc = function(docId, id, opt, cb) {
     Document.get(docId, function(err, doc) {
       if (err) return cb(err);
 
+      console.log("docid;", docId, "referenceId", id, "options", opt);
       var subjectReferences = [];
       var hasChanged = false;
       _.each(doc.nodes, function(node) {
+
         if (node.type === options.referenceType) {
-          console.log('node.target#before', node.id, node.target);
-          // Skip nodes subject refs that don't have targets
-          if (!node.target) return;
-          var pos = node.target.indexOf(id);
-          if (pos > -1) {
-            if (opt.mode === "delete") {
-              node.target.splice(pos, 1);
-            } else {
-              node.target[pos] = opt.newSubjectId;
-              node.target = _.uniq(node.target);
+
+          if (_.isArray(node.target)) {
+           console.log('node.target#before', node.id, node.target);
+            // Skip nodes subject refs that don't have targets
+            if (!node.target) return;
+            var pos = node.target.indexOf(id);
+            if (pos > -1) {
+              if (opt.mode === "delete") {
+                node.target.splice(pos, 1);
+              } else {
+                node.target[pos] = opt.newReferenceId;
+                node.target = _.uniq(node.target);
+              }
+              hasChanged = true;
             }
-            hasChanged = true;
+            console.log('node.target#after', node.id, node.target)
+          } else {
+            console.log(id, node.target)
+            if (id === node.target) {
+              hasChanged = true;
+              if (opt.mode === "delete") {
+                delete doc.nodes[node.id];
+              } else {
+                node.target = opt.newReferenceId;
+              }
+            }
           }
-          console.log('node.target#after', node.id, node.target);
         }
       });
 

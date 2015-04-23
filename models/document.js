@@ -83,7 +83,13 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "interviewee_category": "Ost-Arbeiter, concentration camp prisoner",
         "interviewee_prisons": [],
         "interviewee_forced_labor_type": "intracamp work, earthworks (construction of barracks), digging tunnels for military factories",
-        "interviewee_waypoints": []
+        "interviewee_waypoints": [],
+
+        // Other
+        "media_id": "",
+        "transcripted": false,
+        "verified": false,
+        "finished": false
       },
       "content": {
         "type": "container",
