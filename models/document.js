@@ -73,6 +73,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "operator": "Eduard Kechedjiyan",
         "sound_operator": "Eduard Kechedjiyan",
         "record_type": "video",
+        "media_id": "",
         "interview_location": "respondent's apartment",
         "interview_date": "2005-07-16",
         "persons_present": "Nikolay Bogoslavec, Irina Ostrovskaya, Eduard Kechedjiyan, Alexey Bogoslavec",
@@ -85,8 +86,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "interviewee_forced_labor_type": "intracamp work, earthworks (construction of barracks), digging tunnels for military factories",
         "interviewee_waypoints": [],
 
-        // Other
-        "media_id": "",
+        // Workflow
         "transcripted": false,
         "verified": false,
         "finished": false
