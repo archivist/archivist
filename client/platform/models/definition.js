@@ -6,7 +6,7 @@ var Definition = Utility.model.extend({
   schema: {
     title: { type: 'Text', validators: ['required'], title: 'Title', editorAttrs: {placeholder: "Title", autofocus:'autofocus'} },
     description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: "Enter description", rows: 17 } },
-    type: { title: 'Type', type:'Select2', options:['жаргонизм', 'реалия', 'сокращение'], config: {placeholder: "Definition type", theme: "bootstrap"}}
+    type: { title: 'Type', type:'Select2', options:['общий комментарий', 'лагерная реалия', 'сокращение'], config: {placeholder: "Definition type", theme: "bootstrap"}}
   }
 })
 exports.definition = Definition

@@ -101,35 +101,61 @@ importer.route('/locations/toponyms')
   .get(importToponymLocations)
 
 var importPersons = function(req, res, next) {
-  GoogleSpreadsheets({
-    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
-  }, function(err, spreadsheet) {
-      spreadsheet.worksheets[6].cells({
-          ///range: "R1C1:R5C5"
-      }, function(err, result) {
-        var persons = [];
-        _.each(result.cells, function(row, key) {
-          if( key != '1' && row.hasOwnProperty(1)) {
-            var person = {
-              name: row[1].value,
-              description: ''
-            }
-            if(row.hasOwnProperty(1)) person.name = row[1].value;
-            if(row.hasOwnProperty(3)) person.description = row[3].value;
+  mongoose.connection.collections['persons'].drop( function(err) {
+    Spreadsheet.load({
+        debug: true,
+        username: process.env.GUSER || '',
+        password: process.env.GPASS || '',
+        spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
+        //worksheetName: 'Имена'
+        worksheetId: 'oqthas0'
+      }, function run(err, spreadsheet) {
+        if(err) throw err;
+        //receive all cells
+        spreadsheet.receive({},function(err, rows, info) {
+          var personsCollection = [];
 
-            persons.push(person);
-          }
-        });
-        Person.create(persons, function (err) {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err.stack);
-          } else {
-            res.status(200).send(persons.length + ' persons have been imported!');
-          }
-        });
-      });
-  });
+          if(err) throw err;
+          _.each(rows, function(row, n){
+            if (n != 1) {
+              var record = {},
+                  cellFound = false;
+
+              _.each(row, function(cell, column) {
+                if((column == 2 || column == 4 || column == 7) && cell != '' && cell != ' ' && cell != '\n') {
+                  if(column == 2) record.name = cell;
+                  if(column == 4) record.description = cell;
+                  if(column == 7) {
+                    record.global = true;
+                  } else {
+                    record.global = false;
+                  }
+
+                  cellFound = true;
+                }
+              });
+
+              if(cellFound) {
+                var person = new Person(record);
+                personsCollection.push(person);
+
+                var spreadsheetData = {};
+                spreadsheetData[n] = { 1: person.id };
+                spreadsheet.add(spreadsheetData);
+              }
+            }
+          });
+          spreadsheet.send(function(err) {
+            if(err) throw err;
+            Person.create(personsCollection, function(err, persons) {
+              if(err) throw err;
+              console.log("Persons importing has been completed!");
+              res.status(200).send(persons.length + ' persons have been imported!');
+            });
+          });
+        })
+    })
+  })
 }
 
 importer.route('/persons')
@@ -137,73 +163,121 @@ importer.route('/persons')
 
 
 var importDefinitions = function(req, res, next) {
-  GoogleSpreadsheets({
-    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
-  }, function(err, spreadsheet) {
-      spreadsheet.worksheets[4].cells({
-          ///range: "R1C1:R5C5"
-      }, function(err, result) {
-        var definitions = [];
-        _.each(result.cells, function(row, key) {
-          if( key != '1' && row.hasOwnProperty(1)) {
-            var definition = {
-              title: row[1].value,
-              description: ''
-            }
-            if(row.hasOwnProperty(1)) definition.title = row[1].value;
-            if(row.hasOwnProperty(3)) definition.description = row[3].value;
+  mongoose.connection.collections['definitions'].drop( function(err) {
+    Spreadsheet.load({
+      debug: true,
+      username: process.env.GUSER || '',
+      password: process.env.GPASS || '',
+      spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
+      //worksheetName: 'Жаргонизмы/реалии'
+      worksheetId: 'o4yren4'
+    }, function run(err, spreadsheet) {
+      if(err) throw err;
+      //receive all cells
+      spreadsheet.receive({},function(err, rows, info) {
+        var definitionsCollection = [];
 
-            definitions.push(definition);
+        if(err) throw err;
+        _.each(rows, function(row, n){
+          if (n != 1) {
+            var record = {},
+                cellFound = false;
+
+            _.each(row, function(cell, column) {
+              if((column == 2 || column == 4 || column == 6) && cell != '' && cell != ' ' && cell != '\n') {
+                if(column == 2) record.title = cell;
+                if(column == 4) record.description = cell;
+                if(column == 6) {
+                  if(cell == 'да') {
+                    record.type = 'лагерная реалия';
+                  } else {
+                    record.type = 'общий комментарий';
+                  }   
+                } else {
+                  record.type = 'общий комментарий';
+                }
+                cellFound = true;
+              }
+            });
+
+            if(cellFound) {
+              var definition = new Definition(record);
+              definitionsCollection.push(definition);
+
+              var spreadsheetData = {};
+              spreadsheetData[n] = { 1: definition.id };
+              spreadsheet.add(spreadsheetData);
+            }
           }
         });
-        Definition.create(definitions, function (err) {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err.stack);
-          } else {
+        spreadsheet.send(function(err) {
+          if(err) throw err;
+          Definition.create(definitionsCollection, function(err, definitions) {
+            if(err) throw err;
+            console.log("Definitions importing has been completed!");
             res.status(200).send(definitions.length + ' definitions have been imported!');
-          }
+          });
         });
-      });
-  });
+      })
+    })
+  })
 }
 
 var importDefinitionsAdditional = function(req, res, next) {
-  GoogleSpreadsheets({
-    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
-  }, function(err, spreadsheet) {
-      spreadsheet.worksheets[5].cells({
-          ///range: "R1C1:R5C5"
-      }, function(err, result) {
-        var definitions = [];
-        _.each(result.cells, function(row, key) {
-          if( key != '1' && row.hasOwnProperty(1)) {
-            var definition = {
-              title: row[1].value,
-              description: ''
-            }
-            if(row.hasOwnProperty(1)) definition.title = row[1].value;
-            if(row.hasOwnProperty(3)) definition.description = row[3].value;
+  Spreadsheet.load({
+    debug: true,
+    username: process.env.GUSER || '',
+    password: process.env.GPASS || '',
+    spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
+    //worksheetName: 'Сокращения'
+    worksheetId: 'ow0uer7'
+  }, function run(err, spreadsheet) {
+    if(err) throw err;
+    //receive all cells
+    spreadsheet.receive({},function(err, rows, info) {
+      var definitionsCollection = [];
 
-            definitions.push(definition);
+      if(err) throw err;
+      _.each(rows, function(row, n){
+        if (n != 1) {
+          var record = {},
+              cellFound = false;
+
+          _.each(row, function(cell, column) {
+            if((column == 2 || column == 4) && cell != '' && cell != ' ' && cell != '\n') {
+              if(column == 2) record.title = cell;
+              if(column == 4) record.description = cell;
+              record.type = 'сокращение';
+              cellFound = true;
+            }
+          });
+
+          if(cellFound) {
+            var definition = new Definition(record);
+            definitionsCollection.push(definition);
+
+            var spreadsheetData = {};
+            spreadsheetData[n] = { 1: definition.id };
+            spreadsheet.add(spreadsheetData);
           }
-        });
-        Definition.create(definitions, function (err) {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err.stack);
-          } else {
-            res.status(200).send(definitions.length + ' definitions have been imported!');
-          }
+        }
+      });
+      spreadsheet.send(function(err) {
+        if(err) throw err;
+        Definition.create(definitionsCollection, function(err, definitions) {
+          if(err) throw err;
+          console.log("Definitions importing has been completed!");
+          res.status(200).send(definitions.length + ' definitions have been imported!');
         });
       });
-  });
+    })
+  })
 }
 
-importer.route('/definitions/abr')
+importer.route('/definitions/comments')
   .get(importDefinitions)
 
-importer.route('/definitions/jargon')
+importer.route('/definitions/abr')
   .get(importDefinitionsAdditional)
 
 
@@ -295,6 +369,7 @@ var importSubjects = function(req, res, next) {
         });
       });
     });
+    res.send(200)
   });
 }
 

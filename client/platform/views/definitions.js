@@ -86,9 +86,9 @@ var DefinitionCell = Backgrid.Cell.extend({
 
       if (type == 'сокращение') {
         typeClass = 'abbr';
-      } else if (type == 'реалия') {
+      } else if (type == 'лагерная реалия') {
         typeClass = 'reality';
-      } else if (type == 'жаргонизм') {
+      } else if (type == 'общий комментарий') {
         typeClass = 'jargon';
       }
 

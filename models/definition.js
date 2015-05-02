@@ -22,7 +22,7 @@ var definitionShadowSchema = new Schema({}, {collection: 'definitions_backup', s
 		definitionShadow = mongoose.model('definitionShadow', definitionShadowSchema);
 
 definitionSchema.plugin(backup, { shadow: definitionShadow });
-definitionSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'defenitions_db_version' });
+definitionSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'definitions_db_version' });
 definitionSchema.plugin(timestamps);
 
 definitionSchema.statics.search = function(opt, cb) {
@@ -47,4 +47,4 @@ definitionSchema.statics.search = function(opt, cb) {
   })
 }
 
-module.exports = mongoose.model('Defenition', definitionSchema);
+module.exports = mongoose.model('Definition', definitionSchema);
