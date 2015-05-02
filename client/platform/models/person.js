@@ -16,7 +16,7 @@ var Persons = Utility.collection.extend({
   url: "/api/persons",
   state: {
     pageSize: 40,
-    sortKey: "name",
+    sortKey: "updatedAt",
     order: 1,
   }
 })
