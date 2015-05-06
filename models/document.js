@@ -153,6 +153,7 @@ documentSchema.statics.change = function(id, data, user, cb) {
     console.log('currentDoc.__v', currentDoc.__v, 'data', data.__v);
     // Perform version check
     if (currentDoc.__v !== data.__v) {
+      console.log('fall update')
       return cb('Document can not be saved because your local version is outdated. Please open document in a new tab and re-apply your changes.');
     }
 
@@ -162,9 +163,11 @@ documentSchema.statics.change = function(id, data, user, cb) {
 
     data.nodes.document.updated_at = new Date().toJSON();
     data.nodes.document.creator = user.name;
-
+    console.log('before update')
     self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, {new: true}, function (err, document) {
+          console.log('before update')
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
+        console.log(data)
         cb(err, {
           documentVersion: document.__v,
           subjectDBVersion: subjectDBVersion

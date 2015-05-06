@@ -16,7 +16,7 @@ var mongoose = require('mongoose')
 	, api = require('./controllers/api.js')
 	, oauth = require('./controllers/oauth.js')
 	, maintenance = require('./controllers/maintenance.js')
-	, importer = require('./controllers/import.js')
+	//, importer = require('./controllers/import.js')
 	, Document = require('./models/document.js');
 
 
@@ -122,7 +122,7 @@ app.use('/', oauth);
 
 app.use('/api', maintenance);
 app.use('/api', api);
-app.use('/import', importer);
+//app.use('/import', importer);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
