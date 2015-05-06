@@ -42,7 +42,7 @@ oauth.ensureSuperAuth = function(req, res, next) {
 }
 
 oauth.route('/auth/google')
-  .get(passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login'] }),
+  .get(passport.authenticate('google', { scope: ['https://www.googleapis.com/auth/plus.login', 'https://www.googleapis.com/auth/plus.profile.emails.read'] }),
     function(req, res){
     }
   );

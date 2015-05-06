@@ -25,9 +25,9 @@ var userSchema = new Schema({
 userSchema.statics.create = function(profile, cb) {
   new this({
     id: profile._json.id,
-    name: profile._json.name,
-    email: profile._json.email,
-    picture: profile._json.picture
+    name: profile._json.displayName,
+    email: profile._json.emails[0].value,
+    picture: profile._json.image.url
   }).save(function(err){
     cb(err);
   });
