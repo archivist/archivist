@@ -70,8 +70,8 @@ rest.route('/documents')
   .get(listDocuments)
 
 rest.route('/documents/:id')
-  .get(readDocument)
-  .put(maintenance.checkCurrentMode, updateDocument)
+  .get(oauth.ensureAuthenticated, readDocument)
+  .put(maintenance.checkCurrentMode, oauth.ensureAuthenticated, updateDocument)
   .delete(maintenance.checkCurrentMode, deleteDocument)
 
 

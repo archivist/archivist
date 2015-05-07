@@ -38,6 +38,7 @@ var PermissionCell = Backgrid.BooleanCell.extend({
       */
       this.$el.prop("checked", !val);
       model.set(columnName, !val);
+      model.save();
 
       return this;
     }

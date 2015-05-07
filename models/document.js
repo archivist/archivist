@@ -163,11 +163,8 @@ documentSchema.statics.change = function(id, data, user, cb) {
 
     data.nodes.document.updated_at = new Date().toJSON();
     data.nodes.document.creator = user.name;
-    console.log('before update')
     self.findByIdAndUpdate(id, { $set: data, $inc: { __v: 1 } }, {new: true}, function (err, document) {
-          console.log('before update')
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
-        console.log(data)
         cb(err, {
           documentVersion: document.__v,
           subjectDBVersion: subjectDBVersion

@@ -5,10 +5,6 @@ var Backbone = require('backbone')
 var User = Utility.model.extend({
 	 initialize: function () {
     Backbone.Model.prototype.initialize.apply(this, arguments);
-    this.on("change", function (model, options) {
-      if (options && options.save === false) return;
-      model.save();
-    });
     var that = this;
     this.on('request', function(model, req, options) {
       Notify.spinner('show');
