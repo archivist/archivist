@@ -115,7 +115,7 @@ mongoose.connection.on("open", function(ref) {
 
 mongoose.connection.on("error", function(err) {
   console.log("Could not connect to mongo server!");
-  return console.log(err.message.red);
+  return console.log(err.message);
 });
 
 app.use('/', oauth);
