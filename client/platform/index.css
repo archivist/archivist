@@ -48,6 +48,7 @@ body {
   float: left;
   overflow-y: hidden;
   overflow-x: hidden;
+  padding: 0px 8px;
 }
 
 nav.topbar ul {
@@ -59,9 +60,9 @@ nav.topbar ul {
 
 nav.topbar ul li {
   display: block;
-  width: 120px;
-  font-size: 10px;
-  line-height: 12px;
+  width: 110px;
+  font-size: 7px;
+  line-height: 10px;
   text-decoration: none;
   text-align: center;
   border-color: transparent;
@@ -70,26 +71,49 @@ nav.topbar ul li {
   opacity: .7;
   font-weight: 500;
   cursor: pointer;
-  height: 30px;
+  height: 45px;
   -webkit-font-smoothing: antialiased;
-  color: rgba(255,255,255,.625);
+  color: #A3A3A3;
   -webkit-transition: all .18s ease-in-out;
   -moz-transition: all .18s ease-in-out;
   -o-transition: all .18s ease-in-out;
   transition: all .18s ease-in-out;
-  background: rgba(0,0,0,.1);
-  padding: 3px 10px;
+  padding: 12px 10px;
   float: left;
+}
+
+li#subjects {
+  width: 102px;
+}
+
+li#prisons {
+  width: 92px;
+}
+
+li#topo {
+  width: 107px;
+}
+
+li#definition {
+  width: 105px;
+}
+
+li#person {
+  width: 95px;
+}
+
+li#users {
+  width: 82px;
 }
 
 nav.topbar ul li:hover, nav.topbar ul li.active {
-  color:#fff;
+  color:#A3A3A3;
   opacity: 1;
-  background: rgba(255,255,255,.2);
 }
 
 nav.topbar ul li i {
-  float: left;
+  text-align: center;
+  display: inline-block;
 }
 
 nav.topbar .navicon {
@@ -108,7 +132,9 @@ nav.topbar .navicon {
 nav.topbar span.title {
   line-height: 20px;
   font-size: 13px;
-  display: block;
+  display: inline-block;
+  text-align: center;
+  padding-left: 5px;
 }
 
 #topbar {
@@ -118,37 +144,39 @@ nav.topbar span.title {
   width: 100%;
   display: block;
   z-index: 1;
-  color: #fff;
+  color: #747B7E;
   font-weight: 200;
   overflow: hidden;
   max-height: 100%;
-  height: 30px;
-  background-image: linear-gradient(to right,#444 50%,#A0A0A0 100%);
-  -webkit-box-shadow: 0 8px 6px -6px #949494;
+  height: 45px;
   -moz-box-shadow: 0 8px 6px -6px #949494;
-  box-shadow: 0 8px 6px -6px #949494;
+  transition: top cubic-bezier(0.4,0.0,0.2,1) 0.2s;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+  background-color: #fff;
 }
 
 #topbar header {
   background: rgba(255,255,255,.04);
-  box-shadow: 0 1px 0 rgba(0,0,0,.1);
   padding: 0 10px;
-  height: 30px;
+  height: 45px;
   line-height: 27px;
-  font-size: 23px;
+  font-size: 17px;
   text-align: center;
   float: left;
-  width: 35px;
+  width: 100px;
+  font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+  padding: 10px 0px 10px 18px;
 }
 
 #data-container {
-  height: calc(100% - 30px);
+  height: calc(100% - 45px);
   overflow: hidden;
   background: white;
   position: relative;
   float: right;
   width: 100%;
-  top: 30px;
+  top: 45px;
 }
 
 .data-toolbox {
@@ -964,7 +992,8 @@ MODAL
 /* USER MENU */
 
 .user-section {
-  background: rgba(0,0,0,.1);
+  height: 45px;
+  padding-top: 7px;
 }
 
 .user-section .title {
@@ -989,8 +1018,7 @@ MODAL
   line-height: 22px;
   font-size: 18px;
   text-align: center;
-  height: 30px;
-  width: 30px;
+  width: 40px;
 }
 
 .user-section .username span {
@@ -1002,21 +1030,22 @@ MODAL
 }
 
 .user-section .username a {
-  color: #E7E7E7;
-  padding: 4px;
+  color: #A3A3A3;
+  padding: 5px;
   display: block;
   opacity: .7;
-  background: rgba(0,0,0,.1);
 }
 
 .user-section .username a:hover {
+  color: #909090;
   opacity: 1;
-  background: rgba(255,255,255,.2);
 }
 
 .user-section .userpic img {
   height: 30px;
   width: 30px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
 }
 
 .user-section .userpic a {
