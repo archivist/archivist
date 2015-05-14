@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "animate.css": "^3.1.1",
-    "backbone": "^1.1.2",
+    "backbone": "1.1.2",
     "backbone-forms": "powmedia/backbone-forms",
     "backbone.layoutmanager": "^0.9.5",
     "backbone.modal": "^1.1.2",
