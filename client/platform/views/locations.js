@@ -262,54 +262,152 @@ var LocationsMap = Backbone.Layout.extend({
   initialize: function() {
   },
   afterRender: function() {
+    this.drawMap();
+  },
+  drawMap: function() {
     var self = this;
 
     //render map element
-    var map = this.map = L.map('location-map')
-      .setView([50.47304, 28.13243], 5)
+    var map = this.map = L.map('location-map', {
+      center: [50.47304, 28.13243],
+      zoom: 5,
+      attributionControl: false
+    });
     
     L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 15,
-        attribution: ''
+        maxZoom: 15
     }).addTo(map);
     
     this.sidebar = document.getElementById('map-sidebar');
 
     this.markers = new L.MarkerClusterGroup();
 
+    this.orphans = new Backbone.Collection();
     //render each marker
     this.collection.map(function(location) {
       if(!_.isUndefined(location.get('point'))) {
-        var marker = L.circleMarker(location.get('point').reverse(), {
+        var latlon = location.get('point').slice();
+        var marker = L.circleMarker(latlon.reverse(), {
           color: '#eb8100',
           //fillColor: '#ce0909',
           fillOpacity: 0.1,
           weight: 7
         });
         marker.on('click', function(e) {
-          self.updateInfo(location);
-          self.zoomToFeature(e)
+          self.updateInfo(location, e.target);
+          self.zoomToFeature(e.target)
         });
-        self.markers.addLayer(marker)
+        self.markers.addLayer(marker);
       } else {
-        return false;
+        self.orphans.add(location);
       }
     });
+  
+    this.drawOrphansList();
 
     map.addLayer(this.markers);
-    map.invalidateSize();
-  },
-  updateInfo: function(model) {
-    this.sidebar.innerHTML = '<div class="title">' + model.get('name') + '</div> \
-                              <div class="description">' + model.get('description') + '</div>'; 
 
+    //debugger;
   },
-  zoomToFeature: function(e) {
-    if(this.activeMarker) this.activeMarker.setRadius(10);
-    this.activeMarker = e.target;
-    e.target.setRadius(20);
-    var cM = this.map.project(e.target._latlng);
-        cM.y -= e.target._container.clientHeight/2;
+  drawOrphansList: function() {
+    var self = this;
+
+    var helper = L.DomUtil.create('div', 'helper', this.sidebar);
+    helper.innerHTML = '<i class="fa fa-hand-o-up"></i> Click on a location to see details'
+
+    var orphansIntro = L.DomUtil.create('div', 'intro', this.sidebar);
+    orphansIntro.innerHTML = self.orphans.length + ' orphaned locations found:'
+
+    var orphansTable = L.DomUtil.create('table', 'orphans', this.sidebar);
+    self.orphans.each(function(orphan) {
+      var row = L.DomUtil.create('tr', 'row orphan', orphansTable);
+      var title = L.DomUtil.create('td', 'title-cell', row);
+      title.innerHTML = orphan.get('name');
+      var editLink = L.DomUtil.create('td', 'edit-cell', row);
+      editLink.innerHTML = 'edit location →';
+
+      L.DomEvent.addListener(editLink, 'click', function() {
+        self.editLocation(orphan);
+      });
+    });
+  },
+  editLocation: function(model, marker) {
+    var self = this;
+
+    var marker = marker || null;
+
+    var dialog = new editorDialog({model: model, collection: this.collection, new: false});
+    $('#main').append(dialog.render().el);
+    model.once('change', function(){
+      if (!_.isUndefined(model.get('point')) && !_.isNull(marker)) {
+        var latlon = model.get('point').slice();
+        marker.setLatLng(latlon.reverse());
+        marker.redraw();
+        self.zoomToFeature(marker);
+        self.updateInfo(model, marker);
+      }
+      if (!_.isUndefined(model.get('point')) && _.isNull(marker)) {
+        var latlon = model.get('point').slice();
+        var marker = L.circleMarker(latlon.reverse(), {
+          color: '#eb8100',
+          //fillColor: '#ce0909',
+          fillOpacity: 0.1,
+          weight: 7
+        });
+        marker.on('click', function(e) {
+          self.updateInfo(location, e.target);
+          self.zoomToFeature(e.target)
+        });
+        self.markers.addLayer(marker);
+        self.map.addLayer(marker);
+        self.zoomToFeature(marker);
+        self.updateInfo(model, marker);
+      }
+    })
+  },
+  updateInfo: function(model, marker) {
+    var self = this;
+
+    var editLocation = function(){
+      self.editLocation(model, marker);
+    }
+
+    if(!_.isUndefined(this.editLink)) L.DomEvent.removeListener(this.editLink, 'click', editLocation);
+
+    this.sidebar.innerHTML = '';
+
+    var title = L.DomUtil.create('div', 'title', this.sidebar);
+    title.innerHTML = model.get('name');
+
+    var country = L.DomUtil.create('div', 'country', this.sidebar);
+    country.innerHTML = model.get('country');
+
+    var currentName = L.DomUtil.create('div', 'current-name', this.sidebar);
+    var current = model.get('current_name');
+    currentName.innerHTML = 'Current name: ' + (_.isUndefined(current) ? 'unknown' : current);
+
+    var knownAs = L.DomUtil.create('div', 'synonyms', this.sidebar);
+    var synonyms = model.get('synonyms');
+    knownAs.innerHTML = 'Known as: ' + synonyms.join(', ');
+
+    var description = L.DomUtil.create('div', 'description', this.sidebar);
+    description.innerHTML = model.get('description');
+
+    this.editLink = L.DomUtil.create('div', 'edit helper', this.sidebar);
+    this.editLink.innerHTML = 'edit location →';
+   
+    L.DomEvent.addListener(this.editLink, 'click', editLocation);
+  },
+  zoomToFeature: function(marker) {
+    if(this.activeMarker) {
+      this.activeMarker.setRadius(10);
+      this.activeMarker.setStyle({color: '#eb8100'})
+    }
+    this.activeMarker = marker;
+    marker.setRadius(20);
+    marker.setStyle({color: '#007CF5'})
+    var cM = this.map.project(marker._latlng);
+        cM.y -= marker._container.clientHeight/2;
 
     this.map.setView(this.map.unproject(cM), 10, {animate: true});
   }

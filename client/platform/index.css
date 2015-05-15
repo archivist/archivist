@@ -348,18 +348,80 @@ nav.topbar span.title {
   bottom: 0px;
   right: 0px;
   background: rgba(255, 255, 255, 0.7);
-  padding: 10px;
+  padding: 45px 10px 10px;
+  overflow-y: scroll; 
 }
 
 #map-sidebar .title {
-  padding: 15px 0px;
+  padding: 5px 0px;
   font-size: 13px;
+  font-weight: 700;
+  margin-right: 100px;
 }
 
+#map-sidebar .country {
+  font-size: 12px;
+  border: 1px #ADADAD solid;
+  float: right;
+  padding: 5px;
+  top: 45px;
+  position: absolute;
+  right: 10px;
+}
+
+#map-sidebar .synonyms,
+#map-sidebar .current-name,
 #map-sidebar .description {
-  padding: 10px 0px;
+  padding: 10px 0 0;
   font-size: 11px;
   line-height: 18px;
+}
+
+#map-sidebar .helper {
+  position: absolute;
+  width: 300px;
+  top: 0px;
+  background: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  font-size: 13px;
+  height: 30px;
+  border-bottom: 1px #E8E8E8 solid;
+  right: 0px;
+  line-height: 30px;
+  color: #505050;
+  -moz-box-shadow: 0 8px 6px -6px #949494;
+  transition: top cubic-bezier(.4,0,.2,1) .2s;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  box-shadow: 0 1px 4px rgba(0,0,0,.12);
+  -webkit-transition: background-color 0.5s;
+}
+
+#map-sidebar .edit {
+  cursor: pointer;
+}
+
+#map-sidebar .edit:hover {
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.9)
+}
+
+#map-sidebar .intro {
+  font-size: 15px;
+  padding: 0px 10px 10px;
+  text-align: center;
+}
+
+#map-sidebar .orphans td {
+  padding: 8px;
+  line-height: 20px;
+  vertical-align: top;
+  border-top: 1px solid #ddd;
+  font-size: 12px;
+}
+
+#map-sidebar .orphans td.edit-cell {
+  width: 100px;
+  cursor: pointer;
 }
 
 /* Actions */

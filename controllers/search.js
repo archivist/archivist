@@ -106,7 +106,7 @@ var plainSearch = function(query, cb) {
   ],
   function(err, results){
     if (err) return cb(err);
-    var sorted = _.sortBy(_.union(results[0].results, results[1].results, results[2].results), 'updatedAt');
+    var sorted = _.sortBy(_.union(results[0].results, results[1].results, results[2].results), 'updatedAt').reverse();
     var result = {
       counter: results[0].counter + results[1].counter + results[2].counter,
       results: sorted

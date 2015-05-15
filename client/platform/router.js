@@ -242,8 +242,8 @@ var Router = Backbone.Router.extend({
     Notify.spinner('show');
 
     var self = this;
-        
-    self[colName] = new models[colName]()
+    
+    if(_.isUndefined(self[colName])) self[colName] = new models[colName]()
 
     self[colName].fetch().done(function(){
       var gridView = new views[viewName]({ collection: self[colName], columns: grid, contextMenu: self.contextMenu });
