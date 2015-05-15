@@ -3,6 +3,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , async = require('async')
+  , _ = require('underscore')
   , backup = require('../controllers/backup.js')
   , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
@@ -72,7 +73,7 @@ subjectSchema.statics.change = function(id, data, user, cb) {
 
   if(!data.position && data.name == 'New Subject') {
     self.findOne({parent: data.parent}).sort({position: -1}).exec(function(err, res){
-      if (res.length != 0) {
+      if (!_.isNull(res)) {
         data.position = res.position + 1;
       } else {
         data.position = 0;

@@ -69,6 +69,7 @@ var Router = Backbone.Router.extend({
     'prisons/add': 'prisonsAdd',
     'prisons/:id': 'prisonsEdit',
     'toponyms': 'toponymsList',
+    'toponyms/map': 'toponymsMap',
     'toponyms/add': 'toponymsAdd',
     'toponyms/:id': 'toponymsEdit',
     'definitions': 'definitionsList',
@@ -117,6 +118,21 @@ var Router = Backbone.Router.extend({
     ];
    
     this.grid(toponymsGrid, 'locationsToponyms', 'toponymsGrid', callback, id);
+  },
+
+  toponymsMap: function(callback, id) {
+    Notify.spinner('show');
+
+    var self = this;
+        
+    self.locationsToponyms = new models.locationsToponyms();
+    self.locationsToponyms.state.pageSize = null;
+    self.locationsToponyms.fetch().done(function(){
+      var mapView = new views.locationsMap({ collection: self.locationsToponyms, contextMenu: self.contextMenu });
+      self.changeLayout(mapView, callback, id);
+      Notify.spinner('hide');
+      Notify.info( 'Data has been loaded' );
+    });
   },
 
   toponymsAdd: function() {

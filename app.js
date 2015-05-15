@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
   , session = require('express-session')
   , MongoStore = require('connect-mongostore')(session)
   , flash = require('connect-flash')
+  , favicon = require('serve-favicon')
   , passport = require('passport')
 	, rest = require('./controllers/rest.js')
 	, port = process.env.PORT || 5000
@@ -88,6 +89,7 @@ app.use(bodyParser.json({limit: '1mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
 app.use(flash());
+app.use(favicon(__dirname + '/public/assets/favicon.png'));
 app.use(session({
 	resave: true,
   saveUninitialized: true,

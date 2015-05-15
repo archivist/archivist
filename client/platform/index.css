@@ -6,8 +6,10 @@
 @import url('./local_modules/notify/notification.css');
 @import url('./styles/jstree.css');
 @import url('./styles/subject-tree.css');
-@import url('./styles/leaflet.css');
 @import url('./styles/Control.Geocoder.css');
+@import url('./styles/mapbox.css');
+@import url('./node_modules/leaflet.markercluster/dist/MarkerCluster.css');
+@import url('./node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css');
 @import url('./node_modules/Select2/dist/css/select2.css');
 @import url('./node_modules/select2-bootstrap-theme/dist/select2-bootstrap.css');
 @import url('./styles/reset.css');
@@ -322,6 +324,42 @@ nav.topbar span.title {
   position: absolute;
   right: 20px;
   top: 38px;
+}
+
+/* MAPS */
+
+#location-map-wrapper {
+  padding: 0px;
+}
+
+#location-map {
+  height: calc(100% - 56px);
+  position: absolute;
+  top:56px;
+  bottom:0;
+  width:100%;
+  overflow: hidden;
+}
+
+#map-sidebar {
+  width: 300px;
+  height: calc(100% - 56px);
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 10px;
+}
+
+#map-sidebar .title {
+  padding: 15px 0px;
+  font-size: 13px;
+}
+
+#map-sidebar .description {
+  padding: 10px 0px;
+  font-size: 11px;
+  line-height: 18px;
 }
 
 /* Actions */

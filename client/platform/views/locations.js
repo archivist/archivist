@@ -7,6 +7,7 @@ var Backbone = require('backbone'),
     select2form = require('../local_modules/select2-form/select2.js'),
     geocoderform = require('../local_modules/geocoder-form/geocoder.js'),
     geocoded = require('../local_modules/geocoded-form/geocoded.js'),
+    markercluster = require('leaflet.markercluster'),
     modal = require('../node_modules/backbone.modal/backbone.modal.js'),
     models = require('../models/index.js'),
     $ = require('jquery'),
@@ -254,3 +255,65 @@ var editorDialog = Backbone.Modal.extend({
     //this.model.stopListening();
   }
 });
+
+var LocationsMap = Backbone.Layout.extend({
+  id: "location-map-wrapper",
+  template: "#locationsMap",
+  initialize: function() {
+  },
+  afterRender: function() {
+    var self = this;
+
+    //render map element
+    var map = this.map = L.map('location-map')
+      .setView([50.47304, 28.13243], 5)
+    
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 15,
+        attribution: ''
+    }).addTo(map);
+    
+    this.sidebar = document.getElementById('map-sidebar');
+
+    this.markers = new L.MarkerClusterGroup();
+
+    //render each marker
+    this.collection.map(function(location) {
+      if(!_.isUndefined(location.get('point'))) {
+        var marker = L.circleMarker(location.get('point').reverse(), {
+          color: '#eb8100',
+          //fillColor: '#ce0909',
+          fillOpacity: 0.1,
+          weight: 7
+        });
+        marker.on('click', function(e) {
+          self.updateInfo(location);
+          self.zoomToFeature(e)
+        });
+        self.markers.addLayer(marker)
+      } else {
+        return false;
+      }
+    });
+
+    map.addLayer(this.markers);
+    map.invalidateSize();
+  },
+  updateInfo: function(model) {
+    this.sidebar.innerHTML = '<div class="title">' + model.get('name') + '</div> \
+                              <div class="description">' + model.get('description') + '</div>'; 
+
+  },
+  zoomToFeature: function(e) {
+    if(this.activeMarker) this.activeMarker.setRadius(10);
+    this.activeMarker = e.target;
+    e.target.setRadius(20);
+    var cM = this.map.project(e.target._latlng);
+        cM.y -= e.target._container.clientHeight/2;
+
+    this.map.setView(this.map.unproject(cM), 10, {animate: true});
+  }
+});
+exports.locationsMap = LocationsMap
+
+L.Icon.Default.imagePath = '/assets/leaflet';

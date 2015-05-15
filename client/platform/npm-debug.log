@@ -1,25 +1,60 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/bin/node',
-1 verbose cli   '/usr/bin/npm',
-1 verbose cli   'link',
-1 verbose cli   './local_modules/backgrid' ]
+1 verbose cli [ 'node',
+1 verbose cli   '/usr/local/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'https://github.com/LuizArmesto/backbone.leaflet' ]
 2 info using npm@1.4.28
-3 info using node@v0.10.38
-4 verbose node symlink /usr/bin/node
-5 verbose linkPkg /home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid
-6 error Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid'
-6 error  { [Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid']
-6 error   errno: 3,
-6 error   code: 'EACCES',
-6 error   path: '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid' }
-7 error Please try running this command again as root/Administrator.
-8 error System Linux 3.16.0-34-generic
-9 error command "/usr/bin/node" "/usr/bin/npm" "link" "./local_modules/backgrid"
-10 error cwd /home/daniel/Documents/code/archivist/client/platform
-11 error node -v v0.10.38
-12 error npm -v 1.4.28
-13 error path /home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid
-14 error code EACCES
-15 error errno 3
-16 error stack Error: EACCES, symlink '/home/daniel/Documents/code/archivist/client/platform/local_modules/backgrid'
-17 verbose exit [ 3, true ]
+3 info using node@v0.10.32
+4 warn package.json archivist-platform@0.0.1 No description
+5 warn package.json archivist-platform@0.0.1 No repository field.
+6 warn package.json archivist-platform@0.0.1 No README data
+7 warn package.json backbone-forms@0.14.0 No repository field.
+8 verbose readDependencies using package.json deps
+9 verbose cache add [ 'https://github.com/LuizArmesto/backbone.leaflet', null ]
+10 verbose cache add name=undefined spec="https://github.com/LuizArmesto/backbone.leaflet" args=["https://github.com/LuizArmesto/backbone.leaflet",null]
+11 verbose parsed url { protocol: 'https:',
+11 verbose parsed url   slashes: true,
+11 verbose parsed url   auth: null,
+11 verbose parsed url   host: 'github.com',
+11 verbose parsed url   port: null,
+11 verbose parsed url   hostname: 'github.com',
+11 verbose parsed url   hash: null,
+11 verbose parsed url   search: null,
+11 verbose parsed url   query: null,
+11 verbose parsed url   pathname: '/LuizArmesto/backbone.leaflet',
+11 verbose parsed url   path: '/LuizArmesto/backbone.leaflet',
+11 verbose parsed url   href: 'https://github.com/LuizArmesto/backbone.leaflet' }
+12 silly lockFile d294a1ee-com-LuizArmesto-backbone-leaflet https://github.com/LuizArmesto/backbone.leaflet
+13 verbose lock https://github.com/LuizArmesto/backbone.leaflet /Users/danielbeilinson/.npm/d294a1ee-com-LuizArmesto-backbone-leaflet.lock
+14 verbose addRemoteTarball [ 'https://github.com/LuizArmesto/backbone.leaflet', null ]
+15 info retry fetch attempt 1 at 16:32:56
+16 verbose fetch to= /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+17 http GET https://github.com/LuizArmesto/backbone.leaflet
+18 http 200 https://github.com/LuizArmesto/backbone.leaflet
+19 verbose tar unpack /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+20 silly lockFile fa3f5a25-zArmesto-backbone-leaflet-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack
+21 verbose lock tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack /Users/danielbeilinson/.npm/fa3f5a25-zArmesto-backbone-leaflet-unpack.lock
+22 silly lockFile 77de966c-com-LuizArmesto-backbone-leaflet tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+23 verbose lock tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet /Users/danielbeilinson/.npm/77de966c-com-LuizArmesto-backbone-leaflet.lock
+24 silly gunzTarPerm modes [ '755', '644' ]
+25 error not a package /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+26 silly lockFile fa3f5a25-zArmesto-backbone-leaflet-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack
+27 silly lockFile fa3f5a25-zArmesto-backbone-leaflet-unpack tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack
+28 silly lockFile 77de966c-com-LuizArmesto-backbone-leaflet tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+29 silly lockFile 77de966c-com-LuizArmesto-backbone-leaflet tar:///var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet
+30 silly lockFile d294a1ee-com-LuizArmesto-backbone-leaflet https://github.com/LuizArmesto/backbone.leaflet
+31 silly lockFile d294a1ee-com-LuizArmesto-backbone-leaflet https://github.com/LuizArmesto/backbone.leaflet
+32 error Error: ENOENT, open '/var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack/package.json'
+33 error If you need help, you may report this *entire* log,
+33 error including the npm and node versions, at:
+33 error     <http://github.com/npm/npm/issues>
+34 error System Darwin 14.3.0
+35 error command "node" "/usr/local/bin/npm" "install" "--save" "https://github.com/LuizArmesto/backbone.leaflet"
+36 error cwd /Users/danielbeilinson/Documents/code/archivist-project/archivist/client/platform
+37 error node -v v0.10.32
+38 error npm -v 1.4.28
+39 error path /var/folders/j2/xxdbw7r11cj6qkw04tv6y1f40000gn/T/npm-4966-I9LNRWZk/github.com/LuizArmesto/backbone.leaflet-unpack/package.json
+40 error code ENOENT
+41 error errno 34
+42 verbose exit [ 34, true ]
