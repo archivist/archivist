@@ -262,6 +262,17 @@ var LocationsMap = Backbone.Layout.extend({
   initialize: function() {
   },
   afterRender: function() {
+    var self = this;
+
+    this.collection.on('reset', function (e) {
+      this.queryRedraw();
+    }, self);
+    this.nameFilter = new Utils.filter({
+      collection: this.options.collection,
+      placeholder: "Enter a name to search",
+      name: "synonyms",
+    });
+    $('.toolbox').prepend(this.nameFilter.render().el);
     this.drawMap();
   },
   drawMap: function() {
@@ -285,7 +296,7 @@ var LocationsMap = Backbone.Layout.extend({
     this.orphans = new Backbone.Collection();
     //render each marker
     this.collection.map(function(location) {
-      if(!_.isUndefined(location.get('point'))) {
+      if(!_.isUndefined(location.get('point')) && !_.isNull(location.get('point'))) {
         var latlon = location.get('point').slice();
         var marker = L.circleMarker(latlon.reverse(), {
           color: '#eb8100',
@@ -293,12 +304,19 @@ var LocationsMap = Backbone.Layout.extend({
           fillOpacity: 0.1,
           weight: 7
         });
+        marker._leaflet_id = location.cid;
         marker.on('click', function(e) {
           self.updateInfo(location, e.target);
           self.zoomToFeature(e.target)
         });
         self.markers.addLayer(marker);
       } else {
+        location.on('change', self.drawOrphansList, self);
+        location.on('change:point', function(model){
+          if(_.isArray(model.get('point'))) {
+            self.orphans.remove(model);
+          }
+        }, self);
         self.orphans.add(location);
       }
     });
@@ -309,8 +327,66 @@ var LocationsMap = Backbone.Layout.extend({
 
     //debugger;
   },
+  queryRedraw: function() {
+    var self = this;
+
+    this.map.removeLayer(this.markers);
+
+    this.markers = new L.MarkerClusterGroup();
+
+    this.collection.map(function(location) {
+      if(!_.isUndefined(location.get('point')) && !_.isNull(location.get('point'))) {
+        var latlon = location.get('point').slice();
+        var marker = L.circleMarker(latlon.reverse(), {
+          color: '#eb8100',
+          //fillColor: '#ce0909',
+          fillOpacity: 0.1,
+          weight: 7
+        });
+        marker._leaflet_id = location.cid;
+        marker.on('click', function(e) {
+          self.updateInfo(location, e.target);
+          self.zoomToFeature(e.target)
+        });
+        self.markers.addLayer(marker);
+      }
+    });
+    var layers = this.markers.getLayers();
+    if (layers.length == 1) this.markers = layers[0];
+    this.map.addLayer(this.markers);
+    layers.length > 0 ? this.map.fitBounds(this.markers.getBounds()) : this.map.setView([50.47304, 28.13243], 5);
+    this.drawSearchResults();
+  },
+  drawSearchResults: function() {
+    var self = this;
+
+    this.sidebar.innerHTML = '';
+
+    var helper = L.DomUtil.create('div', 'helper', this.sidebar);
+    helper.innerHTML = '<i class="fa fa-hand-o-up"></i> Click on a location to see details'
+
+    var resultsIntro = L.DomUtil.create('div', 'intro', this.sidebar);
+    resultsIntro.innerHTML = self.collection.length > 0 ? self.collection.length + ' locations found:' : 'No locations found, try another query';
+
+    var resultsTable = L.DomUtil.create('table', 'orphans', this.sidebar);
+    self.collection.each(function(item) {
+      var row = L.DomUtil.create('tr', 'row orphan', resultsTable);
+      var title = L.DomUtil.create('td', 'title-cell', row);
+      title.innerHTML = item.get('name');
+      var editLink = L.DomUtil.create('td', 'edit-cell', row);
+      editLink.innerHTML = 'focus on →';
+
+      L.DomEvent.addListener(editLink, 'click', function() {
+        var marker = self.markers.getLayer(item.cid);
+        self.updateInfo(item, marker);
+        self.map.fitBounds(marker.getBounds());
+      });
+    });
+  },
   drawOrphansList: function() {
     var self = this;
+
+    this.sidebar.innerHTML = '';
 
     var helper = L.DomUtil.create('div', 'helper', this.sidebar);
     helper.innerHTML = '<i class="fa fa-hand-o-up"></i> Click on a location to see details'
@@ -334,19 +410,18 @@ var LocationsMap = Backbone.Layout.extend({
   editLocation: function(model, marker) {
     var self = this;
 
-    var marker = marker || null;
-
     var dialog = new editorDialog({model: model, collection: this.collection, new: false});
     $('#main').append(dialog.render().el);
     model.once('change', function(){
-      if (!_.isUndefined(model.get('point')) && !_.isNull(marker)) {
+      var marker = marker || null;
+      if (!_.isUndefined(model.get('point')) && !_.isNull(model.get('point')) && !_.isNull(marker)) {
         var latlon = model.get('point').slice();
         marker.setLatLng(latlon.reverse());
         marker.redraw();
         self.zoomToFeature(marker);
         self.updateInfo(model, marker);
       }
-      if (!_.isUndefined(model.get('point')) && _.isNull(marker)) {
+      if (!_.isUndefined(model.get('point')) && !_.isNull(model.get('point')) && _.isNull(marker)) {
         var latlon = model.get('point').slice();
         var marker = L.circleMarker(latlon.reverse(), {
           color: '#eb8100',
@@ -355,7 +430,7 @@ var LocationsMap = Backbone.Layout.extend({
           weight: 7
         });
         marker.on('click', function(e) {
-          self.updateInfo(location, e.target);
+          self.updateInfo(model, e.target);
           self.zoomToFeature(e.target)
         });
         self.markers.addLayer(marker);
