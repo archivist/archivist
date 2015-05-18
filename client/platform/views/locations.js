@@ -138,7 +138,8 @@ var LocationCell = Backgrid.Cell.extend({
     else {
       var name = formattedValue.get('name'),
           synonyms = formattedValue.get('synonyms'),
-          type = formattedValue.get('prison_type'),
+          type = _.isArray(formattedValue.get('prison_type')) ? formattedValue.get('prison_type').join(', ') : '',
+          nearestLocality = formattedValue.get('nearest_locality'),
           country = formattedValue.get('country'),
           description = formattedValue.get('description'),
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
@@ -153,7 +154,7 @@ var LocationCell = Backgrid.Cell.extend({
                     <div class="edited">' + edited + '</div> \
                     <div class="updated">updated at ' + updatedAt + '</div> \
                     </div> \
-                    <div class="title">' + name + '</div> \
+                    <div class="title">' + (name.toLowerCase().indexOf("неизвестно") >= 0 ? nearestLocality : name) + '</div> \
                     <div class="description">' + description + '</div> \
                     <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + '</div>';
 

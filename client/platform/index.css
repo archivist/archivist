@@ -617,7 +617,7 @@ FILTERS
 }
 
 .form.location form {
-  height: 440px;
+  height: 495px;
 }
 
 .form.location textarea {
@@ -661,7 +661,7 @@ FILTERS
 }
 
 #map-form {
-  height: 500px;
+  height: 550px;
 }
 
 #map-form::before {
