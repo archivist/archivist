@@ -52,11 +52,19 @@ var ToponymsGrid = Grid.main.extend({
     var dialog = new editorDialog({model: model, collection: this.options.collection, new: false});
     $('#main').append(dialog.render().el);
   },
+  _showMap: function() {
+    Backbone.middle.trigger("goTo", '/toponyms/map');
+  },
   panel: [
     {
       name: "Add new toponym",
       icon: "plus",
       fn: "_add"
+    },
+    {
+      name: "",
+      icon: "map-marker",
+      fn: "_showMap"
     }
   ]
 })
@@ -100,11 +108,19 @@ var PrisonsGrid = Grid.main.extend({
     var dialog = new editorDialog({model: model, collection: this.options.collection, new: false});
     $('#main').append(dialog.render().el);
   },
+  _showMap: function() {
+    Backbone.middle.trigger("goTo", '/prisons/map');
+  },
   panel: [
     {
       name: "Add new prison",
       icon: "plus",
       fn: "_add"
+    },
+    {
+      name: "",
+      icon: "map-marker",
+      fn: "_showMap"
     }
   ]
 })
@@ -178,14 +194,21 @@ var editorDialog = Backbone.Modal.extend({
   onRender: function() {
     var that = this,
         model = this.model;
+
     this.form = new Backbone.Form({
       model: this.model
     }).render();
-    this.$el.find('.delete').on('click', function() {
-      that.delete();
+    this.$el.find('.delete').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
+      if(confirm) {
+        that.delete();
+      }
     });
     this.$el.find('.form').prepend(this.form.el);
-    this.gridUrl = this.collection.url.split('/')[this.collection.url.split('/').length - 1];
+    var path = window.location.pathname.split('/');
+    this.gridUrl = (path[path.length - 1] == 'map' ? path[path.length - 2] + '/' + path[path.length - 1] : this.collection.url.split('/')[this.collection.url.split('/').length - 1]);
   },
   serializeData: function () {
     return {remove: (this.model.id ? true : false)};
@@ -257,14 +280,19 @@ var editorDialog = Backbone.Modal.extend({
 });
 
 var LocationsMap = Backbone.Layout.extend({
+  icon: '',
+  title: '',
+  nameProperty: '',
+  model: '',
   id: "location-map-wrapper",
   template: "#locationsMap",
-  initialize: function() {
-  },
   afterRender: function() {
     var self = this;
 
-    this.collection.on('reset', function (e) {
+    $('#' + this.icon).addClass('active');
+    this.contextMenu.reset(this.panel);
+    Backbone.middle.trigger('domchange:title', this.title);
+    this.collection.on('reset', function() {
       this.queryRedraw();
     }, self);
     this.nameFilter = new Utils.filter({
@@ -309,6 +337,7 @@ var LocationsMap = Backbone.Layout.extend({
           self.updateInfo(location, e.target);
           self.zoomToFeature(e.target)
         });
+        location.on('destroy', self._onRemove, self);
         self.markers.addLayer(marker);
       } else {
         location.on('change', self.drawOrphansList, self);
@@ -317,6 +346,7 @@ var LocationsMap = Backbone.Layout.extend({
             self.orphans.remove(model);
           }
         }, self);
+        location.on('destroy', self._onRemove, self);
         self.orphans.add(location);
       }
     });
@@ -324,8 +354,6 @@ var LocationsMap = Backbone.Layout.extend({
     this.drawOrphansList();
 
     map.addLayer(this.markers);
-
-    //debugger;
   },
   queryRedraw: function() {
     var self = this;
@@ -348,6 +376,7 @@ var LocationsMap = Backbone.Layout.extend({
           self.updateInfo(location, e.target);
           self.zoomToFeature(e.target)
         });
+        location.on('destroy', self._onRemove, self);
         self.markers.addLayer(marker);
       }
     });
@@ -372,7 +401,7 @@ var LocationsMap = Backbone.Layout.extend({
     self.collection.each(function(item) {
       var row = L.DomUtil.create('tr', 'row orphan', resultsTable);
       var title = L.DomUtil.create('td', 'title-cell', row);
-      title.innerHTML = item.get('name');
+      title.innerHTML = item.get(self.nameProperty);
       var editLink = L.DomUtil.create('td', 'edit-cell', row);
       editLink.innerHTML = 'focus on →';
 
@@ -398,7 +427,7 @@ var LocationsMap = Backbone.Layout.extend({
     self.orphans.each(function(orphan) {
       var row = L.DomUtil.create('tr', 'row orphan', orphansTable);
       var title = L.DomUtil.create('td', 'title-cell', row);
-      title.innerHTML = orphan.get('name');
+      title.innerHTML = orphan.get(self.nameProperty);
       var editLink = L.DomUtil.create('td', 'edit-cell', row);
       editLink.innerHTML = 'edit location →';
 
@@ -433,6 +462,7 @@ var LocationsMap = Backbone.Layout.extend({
           self.updateInfo(model, e.target);
           self.zoomToFeature(e.target)
         });
+        marker._leaflet_id = location.cid;
         self.markers.addLayer(marker);
         self.map.addLayer(marker);
         self.zoomToFeature(marker);
@@ -440,6 +470,88 @@ var LocationsMap = Backbone.Layout.extend({
       }
     })
   },
+  addLocation: function() {
+    var self = this;
+    var model = new models[self.model]();
+    var dialog = new editorDialog({model: model, collection: this.options.collection, new: true});
+    $('#main').append(dialog.render().el);
+
+    model.once('change', function(){
+      if (!_.isUndefined(model.get('point')) && !_.isNull(model.get('point'))) {
+        var latlon = model.get('point').slice();
+        var marker = L.circleMarker(latlon.reverse(), {
+          color: '#eb8100',
+          //fillColor: '#ce0909',
+          fillOpacity: 0.1,
+          weight: 7
+        });
+        marker.on('click', function(e) {
+          self.updateInfo(model, e.target);
+          self.zoomToFeature(e.target)
+        });
+        marker._leaflet_id = model.cid;
+        model.on('destroy', self._onRemove, self);
+        if (!self.markers.options.hasOwnProperty('maxClusterRadius')) self.markers = new L.MarkerClusterGroup();
+        self.markers.addLayer(marker);
+        self.map.addLayer(marker);
+        self.zoomToFeature(marker);
+        self.updateInfo(model, marker);
+      } else {
+        model.on('change', self.drawOrphansList, self);
+        model.on('change:point', function(model){
+          if(_.isArray(model.get('point'))) {
+            self.orphans.remove(model);
+          }
+        }, self);
+        model.on('destroy', self._onRemove, self);
+        self.orphans.add(model);
+        self.drawOrphansList();
+      }
+    });
+  },
+  updateInfo: function(model, marker) {
+  },
+  zoomToFeature: function(marker) {
+    if(this.activeMarker) {
+      this.activeMarker.setRadius(10);
+      this.activeMarker.setStyle({color: '#eb8100'})
+    }
+    this.activeMarker = marker;
+    marker.setRadius(20);
+    marker.setStyle({color: '#007CF5'})
+    var cM = this.map.project(marker._latlng);
+        cM.y -= marker._container.clientHeight/2;
+
+    this.map.setView(this.map.unproject(cM), 10, {animate: true});
+  },
+  _onRemove: function(model) {
+    var self = this;
+    if (self.markers.options.hasOwnProperty('maxClusterRadius')) {
+      var marker = self.markers.getLayer(model.cid);
+      !_.isNull(marker) ? self.markers.removeLayer(marker) : self.orphans.remove(model);
+    } else {
+      self.map.removeLayer(self.markers);
+    }
+    self.map.setView([50.47304, 28.13243], 5);
+    self.drawOrphansList();
+  },
+  _showList: function() {
+  },
+  close: function() {
+    $('#' + this.icon).removeClass('active');
+    this.nameFilter.remove();
+    this.remove();
+    this.unbind();
+  },
+  panel: [
+  ]
+});
+
+var ToponymsMap = LocationsMap.extend({
+  icon: 'topo',
+  title: 'Toponyms',
+  nameProperty: 'name',
+  model: 'toponym',
   updateInfo: function(model, marker) {
     var self = this;
 
@@ -463,7 +575,7 @@ var LocationsMap = Backbone.Layout.extend({
 
     var knownAs = L.DomUtil.create('div', 'synonyms', this.sidebar);
     var synonyms = model.get('synonyms');
-    knownAs.innerHTML = 'Known as: ' + synonyms.join(', ');
+    if(_.isArray(synonyms)) knownAs.innerHTML = 'Known as: ' + synonyms.join(', ');
 
     var description = L.DomUtil.create('div', 'description', this.sidebar);
     description.innerHTML = model.get('description');
@@ -473,20 +585,101 @@ var LocationsMap = Backbone.Layout.extend({
    
     L.DomEvent.addListener(this.editLink, 'click', editLocation);
   },
-  zoomToFeature: function(marker) {
-    if(this.activeMarker) {
-      this.activeMarker.setRadius(10);
-      this.activeMarker.setStyle({color: '#eb8100'})
+  _showList: function() {
+    delete this.collection.queryParams.query;
+    this.collection.state.pageSize = 20;
+    this.collection.fetch({reset: true}).done(function(){
+      Backbone.middle.trigger("goTo", '/toponyms');
+    });
+  },
+  panel: [
+    {
+      name: "Add new toponym",
+      icon: "plus",
+      fn: "addLocation"
+    },
+    {
+      name: "",
+      icon: "list",
+      fn: "_showList"
     }
-    this.activeMarker = marker;
-    marker.setRadius(20);
-    marker.setStyle({color: '#007CF5'})
-    var cM = this.map.project(marker._latlng);
-        cM.y -= marker._container.clientHeight/2;
-
-    this.map.setView(this.map.unproject(cM), 10, {animate: true});
-  }
+  ]
 });
-exports.locationsMap = LocationsMap
+exports.toponymsMap = ToponymsMap
+
+var PrisonsMap = LocationsMap.extend({
+  icon: 'topo',
+  title: 'Prisons',
+  nameProperty: 'nearest_locality',
+  model: 'prison',
+  updateInfo: function(model, marker) {
+    var self = this;
+
+    var editLocation = function(){
+      self.editLocation(model, marker);
+    }
+
+    if(!_.isUndefined(this.editLink)) L.DomEvent.removeListener(this.editLink, 'click', editLocation);
+
+    this.sidebar.innerHTML = '';
+
+    var name = model.get('name');
+    if (name.toLowerCase().indexOf("неизвестно") >= 0) {
+      var title = L.DomUtil.create('div', 'title', this.sidebar);
+      title.innerHTML = model.get('nearest_locality');
+
+      var locationName = L.DomUtil.create('div', 'current-name', this.sidebar);
+      var location = model.get('name');
+      locationName.innerHTML = 'Name: ' + (_.isUndefined(location) ? 'unknown' : location);
+    } else {
+      
+      var title = L.DomUtil.create('div', 'title', this.sidebar);
+      title.innerHTML = model.get('name');
+
+      var nearestLocality = L.DomUtil.create('div', 'current-name', this.sidebar);
+      var nearest = model.get('nearest_locality');
+      nearestLocality.innerHTML = 'Nearest locality: ' + (_.isUndefined(nearest) ? 'unknown' : nearest);
+    }
+
+    var country = L.DomUtil.create('div', 'country', this.sidebar);
+    country.innerHTML = model.get('country');
+
+    var prisonType = L.DomUtil.create('div', 'prison-type', this.sidebar);
+    var types = model.get('prison_type');
+    if(_.isArray(types)) prisonType.innerHTML = 'Type: ' + types.join(', ');
+
+    var knownAs = L.DomUtil.create('div', 'synonyms', this.sidebar);
+    var synonyms = model.get('synonyms');
+    if(_.isArray(synonyms)) knownAs.innerHTML = 'Known as: ' + synonyms.join(', ');
+
+    var description = L.DomUtil.create('div', 'description', this.sidebar);
+    description.innerHTML = model.get('description');
+
+    this.editLink = L.DomUtil.create('div', 'edit helper', this.sidebar);
+    this.editLink.innerHTML = 'edit location →';
+   
+    L.DomEvent.addListener(this.editLink, 'click', editLocation);
+  },
+  _showList: function() {
+    delete this.collection.queryParams.query;
+    this.collection.state.pageSize = 20;
+    this.collection.fetch({reset: true}).done(function(){
+      Backbone.middle.trigger("goTo", '/prisons');
+    });
+  },
+  panel: [
+    {
+      name: "Add new prison",
+      icon: "plus",
+      fn: "addLocation"
+    },
+    {
+      name: "",
+      icon: "list",
+      fn: "_showList"
+    }
+  ]
+});
+exports.prisonsMap = PrisonsMap
 
 L.Icon.Default.imagePath = '/assets/leaflet';

@@ -66,6 +66,7 @@ var Router = Backbone.Router.extend({
     '': 'dashboard',
     'subjects': 'subjectsList',
     'prisons': 'prisonsList',
+    'prisons/map': 'prisonsMap',
     'prisons/add': 'prisonsAdd',
     'prisons/:id': 'prisonsEdit',
     'toponyms': 'toponymsList',
@@ -121,18 +122,7 @@ var Router = Backbone.Router.extend({
   },
 
   toponymsMap: function(callback, id) {
-    Notify.spinner('show');
-
-    var self = this;
-        
-    self.locationsToponyms = new models.locationsToponyms();
-    self.locationsToponyms.state.pageSize = null;
-    self.locationsToponyms.fetch().done(function(){
-      var mapView = new views.locationsMap({ collection: self.locationsToponyms, contextMenu: self.contextMenu });
-      self.changeLayout(mapView, callback, id);
-      Notify.spinner('hide');
-      Notify.info( 'Data has been loaded' );
-    });
+    this.map('locationsToponyms', 'toponymsMap', callback, id);
   },
 
   toponymsAdd: function() {
@@ -156,6 +146,10 @@ var Router = Backbone.Router.extend({
     this.grid(prisonsGrid, 'locationsPrisons', 'prisonsGrid', callback, id);
   },
 
+  prisonsMap: function(callback, id) {
+    this.map('locationsPrisons', 'prisonsMap', callback, id);
+  },
+
   prisonsAdd: function() {
     this.add('prisonsList', 'prisonsAdd', 'prison', 'locationsPrisons');
   },
@@ -174,7 +168,7 @@ var Router = Backbone.Router.extend({
       }
     ];
    
-    this.grid(definitionsGrid, 'definitions', 'definitionsGrid', callback, id);
+    viewName
   },
 
   definitionsAdd: function() {
@@ -236,6 +230,22 @@ var Router = Backbone.Router.extend({
    
     this.grid(usersGrid, 'users', 'usersGrid', callback, id);
 
+  },
+
+  map: function(colName, viewName, callback, id) {
+    Notify.spinner('show');
+
+    var self = this;
+        
+    self[colName] = new models[colName]();
+    self[colName].state.pageSize = null;
+    delete self[colName].queryParams.query;
+    self[colName].fetch().done(function(){
+      var mapView = new views[viewName]({ collection: self[colName], contextMenu: self.contextMenu });
+      self.changeLayout(mapView, callback, id);
+      Notify.spinner('hide');
+      Notify.info( 'Data has been loaded' );
+    });
   },
 
   grid: function(grid, colName, viewName, callback, id) {

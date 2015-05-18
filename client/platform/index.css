@@ -349,7 +349,8 @@ nav.topbar span.title {
   right: 0px;
   background: rgba(255, 255, 255, 0.7);
   padding: 45px 10px 10px;
-  overflow-y: scroll; 
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 #map-sidebar .title {
@@ -371,10 +372,15 @@ nav.topbar span.title {
 
 #map-sidebar .synonyms,
 #map-sidebar .current-name,
+#map-sidebar .prison-type,
 #map-sidebar .description {
   padding: 10px 0 0;
   font-size: 11px;
   line-height: 18px;
+}
+
+#map-sidebar .description {
+  font-style: italic;
 }
 
 #map-sidebar .helper {
@@ -409,6 +415,10 @@ nav.topbar span.title {
   font-size: 15px;
   padding: 0px 10px 10px;
   text-align: center;
+}
+
+#map-sidebar .orphans {
+  min-width: 280px;
 }
 
 #map-sidebar .orphans td {
