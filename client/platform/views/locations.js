@@ -608,7 +608,7 @@ var ToponymsMap = LocationsMap.extend({
 exports.toponymsMap = ToponymsMap
 
 var PrisonsMap = LocationsMap.extend({
-  icon: 'topo',
+  icon: 'prisons',
   title: 'Prisons',
   nameProperty: 'nearest_locality',
   model: 'prison',

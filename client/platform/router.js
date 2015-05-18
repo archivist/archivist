@@ -168,7 +168,7 @@ var Router = Backbone.Router.extend({
       }
     ];
    
-    viewName
+    this.grid(definitionsGrid, 'definitions', 'definitionsGrid', callback, id);
   },
 
   definitionsAdd: function() {
