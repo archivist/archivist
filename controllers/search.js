@@ -64,6 +64,12 @@ var search = function(query, cb) {
 }
 
 var plainSearch = function(query, cb) {
+  if(!_.isUndefined(query.query)) {
+    query.page = 1;
+    query.per_page = 100;
+    if (query.query.length > 2) query.per_page = 500;
+  }
+
   async.parallel([
     function(callback){
       Location.search(query, function (err, output, counter) {

@@ -33,7 +33,7 @@ definitionSchema.statics.search = function(opt, cb) {
         title: new RegExp(searchString, 'i')
       };
 
-  if(_.isEmpty(options.limit)) options.limit = 30;
+  if(options.limit == '') options.limit = 30;
   if(_.isEmpty(options.sort)) {
     options.sort = {
       'updatedAt': -1
