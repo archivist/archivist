@@ -194,7 +194,11 @@ nav.topbar span.title {
 
 /* Stacks */
 
-#stackView, .stacks {
+#stackView {
+  height: calc(100% - 56px);
+}
+
+.stacks {
   height: 100%;
 }
 
