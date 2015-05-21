@@ -361,7 +361,7 @@ rest.route('/users/:id')
 /* ENTITIES API */
 
 var entitiesGetter = function(req, res, next) {
-  var query = req.query,
+  var query = req.body,
       entityIds = query.entityIds || [];
 
   getEntities(entityIds, function (err, output) {
@@ -371,7 +371,7 @@ var entitiesGetter = function(req, res, next) {
 }
 
 rest.route('/entities')
-  .get(maintenance.checkCurrentMode, entitiesGetter)
+  .post(maintenance.checkCurrentMode, entitiesGetter)
 
 /* SEARCH API */
 
