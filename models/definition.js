@@ -31,7 +31,7 @@ definitionSchema.statics.search = function(opt, cb) {
       searchString = opt.query,
       options = util.getOptions(opt),
       query = {
-        title: new RegExp(searchString, 'i')
+        "$or": [{title: new RegExp(searchString, 'i')},{synonyms: {"$in": [new RegExp(searchString, 'i')]}}]
       };
 
   if(options.limit == '') options.limit = 30;

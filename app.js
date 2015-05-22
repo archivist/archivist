@@ -81,8 +81,11 @@ try {
 	console.log(("Setting up failed to connect"), err.message);
 }
 
+
+// Deal with CORS to make API work with reader
+
 var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'http://localhost:4001');
+  res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET');
   res.header('Access-Control-Allow-Headers', 'Content-Type');
 

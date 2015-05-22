@@ -33,7 +33,7 @@ var DefinitionsGrid = Grid.main.extend({
     this.titleFilter = new Utils.filter({
       collection: this.options.collection,
       placeholder: "Enter a title to search",
-      name: "title",
+      name: "synonyms",
     });
     $('.toolbox').prepend(this.titleFilter.render().el);
   },
@@ -78,7 +78,7 @@ var DefinitionCell = Backgrid.Cell.extend({
     else {
 
       var title = formattedValue.get('title'),
-          synonyms = formattedValue.get('synonyms'),
+          synonyms = formattedValue.get('synonyms') || [],
           description = formattedValue.get('description'),
           type = _.isUndefined(formattedValue.get('type')) ? 'unknown type' : formattedValue.get('type'),
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
@@ -170,6 +170,15 @@ var editorDialog = Backbone.Modal.extend({
     var self = this;
     var errors = self.form.commit();
     if(!errors) {
+
+      // push name and nearest_locality or current_name to synonyms
+      var synonyms = [];
+      var oldSynonyms = this.model.get('synonyms') || [];
+      var name = this.model.get('title');
+      if(name != '') synonyms.push(name);
+      var synonyms = _.union(synonyms, oldSynonyms);
+      this.model.set('synonyms', synonyms);
+
       this.$el.find('button').prop('disabled', true);
       //this.$el.find('.save').text('Saving...');
       this.$el.find('#meter').show();

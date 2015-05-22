@@ -234,6 +234,16 @@ var editorDialog = Backbone.Modal.extend({
     var self = this;
     var errors = self.form.commit();
     if(!errors) {
+      
+      // push name and nearest_locality or current_name to synonyms
+      var synonyms = [];
+      var name = this.model.get('name');
+      var secondName = (this.model.get('type') == 'prison' ? this.model.get('nearest_locality') : this.model.get('current_name'));
+      if((name.toLowerCase() != 'неизвестно') && (name != '')) synonyms.push(name);
+      if(secondName != '') synonyms.push(secondName);
+      var synonyms = _.union(synonyms, this.model.get('synonyms'));
+      this.model.set('synonyms', synonyms);
+
       this.$el.find('button').prop('disabled', true);
       //this.$el.find('.save').text('Saving...');
       this.$el.find('#meter').show();
