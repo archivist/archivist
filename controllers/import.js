@@ -6,9 +6,10 @@ var mongoose = require('mongoose')
   , Subject = require('../models/subject.js')
   , express = require('express')
   , _ = require('underscore')
+  , async = require('async')
   , GoogleSpreadsheets = require("google-spreadsheets")
   , Spreadsheet = require('edit-google-spreadsheet')
-  , Interview = require('./interview/index.js')
+  //, Interview = require('./interview/index.js')
   , Substance = require('Substance')
   , importer = express.Router();
 
@@ -106,48 +107,6 @@ var annotateInterview = function(req, res, next) {
 importer.route('/interview')
   .get(annotateInterview)
 
-var importPrisonLocations = function(req, res, next) {
-  GoogleSpreadsheets({
-    key: "1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE"
-  }, function(err, spreadsheet) {
-      spreadsheet.worksheets[3].cells({
-          ///range: "R1C1:R5C5"
-      }, function(err, result) {
-        var locations = [];
-        _.each(result.cells, function(row, key) {
-          if( key != '1' && row.hasOwnProperty(8)) {
-            var prison = {
-              type: 'prison',
-              name: '',
-              synonyms: [],
-              prison_type: '',
-              nearest_locality: '',
-              country: '',
-              description: '',
-              point: []
-            }
-            if(row.hasOwnProperty(1)) prison.name = row[1].value;
-            if(row.hasOwnProperty(2)) prison.synonyms = prison.synonyms.concat(row[2].value.split(','));
-            if(row.hasOwnProperty(3)) prison.synonyms = prison.synonyms.concat(row[3].value.split(','));
-            if(row.hasOwnProperty(4)) prison.prison_type = row[4].value;
-            if(row.hasOwnProperty(5)) prison.nearest_locality = row[5].value;
-            if(row.hasOwnProperty(7)) prison.point = row[7].value.split(',');
-            if(row.hasOwnProperty(8)) prison.country = row[8].value;
-            if(row.hasOwnProperty(9)) prison.description = row[9].value;
-            locations.push(prison);
-          }
-        });
-        Location.create(locations, function (err) {
-          if (err) {
-            console.log(err);
-            res.status(500).send(err.stack);
-          } else {
-            res.status(200).send(locations.length + ' locations have been imported!');
-          }
-        });
-      });
-  });
-}
 
 var importPrisonLocations = function(req, res, next) {
   Spreadsheet.load({
@@ -336,7 +295,7 @@ importer.route('/persons')
 
 
 var importDefinitions = function(req, res, next) {
-  mongoose.connection.collections['definitions'].drop( function(err) {
+  //mongoose.connection.collections['definitions'].drop( function(err) {
     Spreadsheet.load({
       debug: true,
       username: process.env.GUSER || '',
@@ -353,7 +312,7 @@ var importDefinitions = function(req, res, next) {
         if(err) throw err;
         _.each(rows, function(row, n){
           if (n != 1) {
-            var record = {},
+            var record = { synonyms: []},
                 cellFound = false;
 
             _.each(row, function(cell, column) {
@@ -371,6 +330,13 @@ var importDefinitions = function(req, res, next) {
                 }
                 cellFound = true;
               }
+              // parse additional attributes
+              // if(column == 1 || column == 2 || column == 3) {
+              //   if(column == 1) record.id = cell
+              //   if(column == 2) record.synonyms.push(cell)
+              //   if(column == 3) record.synonyms = _.union(record.synonyms, cell.split('; '));
+              //   cellFound = true;
+              // }
             });
 
             if(cellFound) {
@@ -381,8 +347,26 @@ var importDefinitions = function(req, res, next) {
               spreadsheetData[n] = { 1: definition.id };
               spreadsheet.add(spreadsheetData);
             }
+            // parse additional attributes
+            // if(cellFound) {
+            //   definitionsCollection.push(record)
+            // }
           }
         });
+        // parse additional attributes
+        // async.eachLimit(definitionsCollection, 10, function(def, callback){
+        //   Definition.findByIdAndUpdate(def.id, { $set: {synonyms: def.synonyms} }, { upsert: false }, function (err, record) {
+        //     if (err) return err;
+        //     console.log(def.id, 'has been edited')
+        //     callback();
+        //   });
+        // }, function(err){
+        //   if(err) {
+        //     console.log('something goes wrong');
+        //   } else {
+        //     console.log('Importing and editing are done!')
+        //   }
+        // });
         spreadsheet.send(function(err) {
           if(err) throw err;
           Definition.create(definitionsCollection, function(err, definitions) {
@@ -393,7 +377,7 @@ var importDefinitions = function(req, res, next) {
         });
       })
     })
-  })
+  //})
 }
 
 var importDefinitionsAdditional = function(req, res, next) {

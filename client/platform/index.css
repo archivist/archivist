@@ -989,7 +989,7 @@ MODAL
 
 .editor-dialog-modal {
   max-width: 500px;
-  height: 600px;
+  height: 650px;
 }
 
 .dialog-header {
@@ -1009,7 +1009,7 @@ MODAL
 }
 
 .editor-dialog-modal .dialog-body {
-  padding: 40px;
+  padding: 25px 40px;
 }
 
 .dialog-footer {

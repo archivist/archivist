@@ -78,6 +78,7 @@ var DefinitionCell = Backgrid.Cell.extend({
     else {
 
       var title = formattedValue.get('title'),
+          synonyms = formattedValue.get('synonyms'),
           description = formattedValue.get('description'),
           type = _.isUndefined(formattedValue.get('type')) ? 'unknown type' : formattedValue.get('type'),
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
@@ -98,7 +99,8 @@ var DefinitionCell = Backgrid.Cell.extend({
                     <div class="updated">updated at ' + updatedAt + '</div> \
                     </div> \
                     <div class="title">' + title + '</div> \
-                    <div class="description">' + description + '</div>';
+                    <div class="description">' + description + '</div> \
+                    <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + '</div>'
 
       this.$el.append(markup)
       this.delegateEvents()

@@ -81,6 +81,14 @@ try {
 	console.log(("Setting up failed to connect"), err.message);
 }
 
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'http://localhost:4001');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  next();
+}
+
 // APP CONFIGURATION
 
 app.set('views', __dirname + '/views');
@@ -88,6 +96,7 @@ app.set('view engine', 'jade');
 app.use(bodyParser.json({limit: '3mb'}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride());
+app.use(allowCrossDomain);
 app.use(flash());
 app.use(favicon(__dirname + '/public/assets/favicon.png'));
 app.use(session({

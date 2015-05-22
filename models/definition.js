@@ -10,6 +10,7 @@ var mongoose = require('mongoose')
 
 var definitionSchema = new Schema({
   	title: { type: String, index: true }
+  , synonyms: [{ type: String, index: true }]
   , description: String
   , type: String
   , created: { type: Schema.Types.ObjectId, ref: 'User' }
