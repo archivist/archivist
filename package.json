@@ -29,7 +29,7 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
     "serve-favicon": "^2.2.0",
-    "substance": "git://github.com/substance/substance.git#master",
+    "substance": "git://github.com/substance/substance.git#055e3d01178a5ae2fe776cc389ea15a1e4c9c4fe",
     "substance-util": "git://github.com/substance/util.git#substance-next",
     "underscore": "1.7.0",
     "vinyl-source-stream": "*",
