@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
   , async = require('async')
   , GoogleSpreadsheets = require("google-spreadsheets")
   , Spreadsheet = require('edit-google-spreadsheet')
-  //, Interview = require('./interview/index.js')
+  , Interview = require('./interview/index.js')
   , Substance = require('Substance')
   , importer = express.Router();
 
@@ -52,6 +52,17 @@ var annotateInterview = function(req, res, next) {
             })
           }
         });
+        var codes = {};
+        _.each(map, function(path, subject) {
+          _.each(path, function(subjectCodes){
+            if(_.isUndefined(codes[subjectCodes])) {
+              codes[subjectCodes] = [];
+              codes[subjectCodes].push(subject);
+            } else {
+              codes[subjectCodes].push(subject);
+            }
+          });
+        });
         Document.get(interviewDBId, function(err, doc){
           var interview = new Interview(doc);
           interview.version = doc.__v;
@@ -64,32 +75,34 @@ var annotateInterview = function(req, res, next) {
 
             timecodesMap[timecode] = code;
           })
-          _.each(map, function(path, subject){
-            console.log('Search for subject #' + subject);
+          _.each(codes, function(subjects, code){
+            //console.log('Search for subject #' + subject);
             //console.log(path)
-            _.each(path, function(subjectCodes){
+            var subjectCodes = code.split(',');
+            console.log(subjectCodes)
+            //_.each(path, function(subjectCodes){
               //console.log(subjectCodes)
-              if(subjectCodes.length > 1) {
-                //console.log('Starts with ' + timecodesMap[subjectCodes[0]].id)
-                //console.log('Ends with ' + timecodesMap[subjectCodes[1]].id)
-                var endNodeId = interviewContent.getComponent(timecodesMap[subjectCodes[1]].path[0]).content.previous.rootId;
-                //console.log(timecodesMap[subjectCodes[0]].startPath,timecodesMap[subjectCodes[0]].endOffset,subject,[endNodeId, 'content'],interview.get(endNodeId).content.length - 1, Substance.uuid())
-                var tx = interview.startTransaction();
-                tx.create({
-                  type: "subject_reference",
-                  startPath: timecodesMap[subjectCodes[0]].startPath,
-                  startOffset: timecodesMap[subjectCodes[0]].endOffset,
-                  target: [subject],
-                  id: 'subject_reference' + Substance.uuid(),
-                  endPath: [endNodeId, 'content'],
-                  endOffset: interview.get(endNodeId).content.length
-                })
-                tx.save()
-                tx.cleanup()
-              } else {
-                console.log('Some problems discovered, subject: #', subject, ', code: ', subjectCodes);
-              }
-            })
+            if(subjectCodes.length > 1) {
+              //console.log('Starts with ' + timecodesMap[subjectCodes[0]].id)
+              //console.log('Ends with ' + timecodesMap[subjectCodes[1]].id)
+              var endNodeId = interviewContent.getComponent(timecodesMap[subjectCodes[1]].path[0]).content.previous.rootId;
+              //console.log(timecodesMap[subjectCodes[0]].startPath,timecodesMap[subjectCodes[0]].endOffset,subject,[endNodeId, 'content'],interview.get(endNodeId).content.length - 1, Substance.uuid())
+              var tx = interview.startTransaction();
+              tx.create({
+                type: "subject_reference",
+                startPath: timecodesMap[subjectCodes[0]].startPath,
+                startOffset: timecodesMap[subjectCodes[0]].endOffset,
+                target: subjects,
+                container: "content",
+                id: 'subject_reference_' + Substance.uuid(),
+                endPath: [endNodeId, 'content'],
+                endOffset: interview.get(endNodeId).content.length
+              })
+              tx.save()
+              tx.cleanup()
+            } else {
+              console.log('Some problems discovered, subject: #', code, ', code: ', subjectCodes);
+            }
           })
           console.log(interview.version)
           var data = interview.toJSON();
@@ -226,11 +239,11 @@ var importToponymLocations = function(req, res, next) {
   })
 }
 
-importer.route('/locations/prisons')
-  .get(importPrisonLocations)
+// importer.route('/locations/prisons')
+//   .get(importPrisonLocations)
 
-importer.route('/locations/toponyms')
-  .get(importToponymLocations)
+// importer.route('/locations/toponyms')
+//   .get(importToponymLocations)
 
 var importPersons = function(req, res, next) {
   mongoose.connection.collections['persons'].drop( function(err) {
@@ -290,8 +303,8 @@ var importPersons = function(req, res, next) {
   })
 }
 
-importer.route('/persons')
-  .get(importPersons)
+// importer.route('/persons')
+//   .get(importPersons)
 
 
 var importDefinitions = function(req, res, next) {
@@ -431,11 +444,11 @@ var importDefinitionsAdditional = function(req, res, next) {
   })
 }
 
-importer.route('/definitions/comments')
-  .get(importDefinitions)
+// importer.route('/definitions/comments')
+//   .get(importDefinitions)
 
-importer.route('/definitions/abr')
-  .get(importDefinitionsAdditional)
+// importer.route('/definitions/abr')
+//   .get(importDefinitionsAdditional)
 
 
 var importSubjects = function(req, res, next) {
@@ -530,7 +543,7 @@ var importSubjects = function(req, res, next) {
   });
 }
 
-importer.route('/subjects')
-  .get(importSubjects)
+// importer.route('/subjects')
+//   .get(importSubjects)
 
 module.exports = importer;

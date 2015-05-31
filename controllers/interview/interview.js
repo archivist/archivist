@@ -3,44 +3,54 @@
 var Substance = require('substance');
 var Document = Substance.Document;
 
-var SubstanceCore = require("substance/article").CoreModule;
-var BaseModule = require("./modules/base");
-var SubjectsModule = require("./modules/subjects");
-var EntitiesModule = require("./modules/entities");
-var TimecodesModule = require("./modules/timecodes");
-var RemarksModule = require("./modules/remarks");
+// Nodes
+// --------------
 
-// We don't need an extension mechanism here.
-// TODO: import the nodes directly to setup the schema.
-// Put the initializers into the article's contructor.
-var modules = [
-  SubstanceCore,
-  BaseModule,
-  SubjectsModule,
-  EntitiesModule,
-  TimecodesModule,
-  RemarksModule
-];
+var DocumentNode = require("./nodes/document_node");
+var TextNode = require("./nodes/text_node");
+var Emphasis = require("./nodes/emphasis");
+var Strong = require("./nodes/strong");
+var Remark = require("./nodes/remark");
+var Timecode = require("./nodes/timecode");
+var SubjectReference = require("./nodes/subject_reference");
+var EntityReference = require("./nodes/entity_reference");
+var Waypoint = require("./nodes/waypoint");
 
-
-
-var schema = new Document.Schema("substance-interview", "0.1.0");
-Substance.each(modules, function(ext) {
-  schema.addNodes(ext.nodes);
-});
+var schema = new Document.Schema("substance-interview", "1.0.0");
+schema.addNodes([
+  DocumentNode,
+  TextNode,
+  Emphasis,
+  Strong,
+  Remark,
+  Timecode,
+  SubjectReference,
+  EntityReference,
+  Waypoint
+]);
 
 var Interview = function(data) {
   Document.call(this, schema, data);
-  // Call initializes of modules
-  Substance.each(modules, function(ext) {
-    if (ext.initialize) ext.initialize(this);
-  }, this);
+
+  this.entityReferencesIndex = this.addIndex('entityReferencesIndex', Substance.Data.Index.create({
+    type: "entity_reference",
+    property: "target"
+  }));
+
+  this.remarksIndex = this.addIndex('remarksIndex', Substance.Data.Index.create({
+    type: "remark",
+    property: "id"
+  }));
+
+  this.subjectReferencesIndex = this.addIndex('subjectReferencesIndex', Substance.Data.Index.create({
+    type: "subject_reference",
+    property: "target"
+  }));
+
 };
 
 Interview.Prototype = function() {};
 
 Substance.inherit(Interview, Document);
-
 Interview.schema = schema;
-
 module.exports = Interview;

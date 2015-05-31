@@ -20,6 +20,7 @@ var DocumentNode = Substance.Document.Node.extend({
     "operator": "string",
     "sound_operator": "string",
     "record_type": "string", // "video" or "audio"
+    "media_id": "string",
     "interview_location": "string",
     "interview_date": "string",
     "persons_present": "string",
@@ -30,7 +31,12 @@ var DocumentNode = Substance.Document.Node.extend({
     "interviewee_category": "string",
     "interviewee_forced_labor_type": "string",
     "interviewee_prisons": ["array", "string"],
-    "interviewee_waypoints": ["array", "waypoint"]
+    "interviewee_waypoints": ["array", "waypoint"],
+
+    // Workflow
+    "transcripted": "boolean",
+    "verified": "boolean",
+    "finished": "boolean"
   },
 
   getWaypoints: function() {
