@@ -147,7 +147,7 @@ var loadMetadata = function(req, res, next) {
 
 
 rest.route('/subjects')
-  .post(maintenance.checkCurrentMode, createSubject)
+  .post(maintenance.checkCurrentMode, oauth.ensureAuthenticated, createSubject)
   .get(listSubjects)
 
 // Provides all metadata for the client including version strings
@@ -158,11 +158,11 @@ rest.route('/subjects/merge')
   .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, mergeSubjects)
 
 rest.route('/subjects/move')
-  .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, moveSubjects)
+  .get(maintenance.checkCurrentMode, oauth.ensureAuthenticated, moveSubjects)
 
 rest.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
-  .put(maintenance.checkCurrentMode, updateSubject)
+  .put(maintenance.checkCurrentMode, oauth.ensureAuthenticated, updateSubject)
   .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteSubject)
 
 
