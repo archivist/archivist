@@ -26,13 +26,6 @@ var createDocument = function(req, res, next) {
   });
 }
 
-// var createEmptyDocument = function(req, res, next) {
-//   Document.add(req.body, function(err) {
-//     if (err) return next(err);
-//     res.json(200);
-//   });
-// }
-
 
 var readDocument = function(req, res, next) {
   Document.get(req.params.id, function(err, document) {
@@ -58,6 +51,14 @@ var deleteDocument = function(req, res, next) {
 }
 
 
+var validateDocument = function(req, res, next) {
+  Document.validateStructure(req.params.id, function(err, result) {
+    if (err) return next(err);
+    res.json(result);
+  });
+}
+
+
 var listDocuments = function(req, res, next) {
   Document.list(req.query, function(err, documents) {
     if (err) return next(err);
@@ -74,7 +75,8 @@ rest.route('/documents/:id')
   .put(maintenance.checkCurrentMode, oauth.ensureAuthenticated, updateDocument)
   .delete(maintenance.checkCurrentMode, deleteDocument)
 
-
+rest.route('/documents/:id/validate')
+  .get(validateDocument)
 
 /* The Subject REST api */
 

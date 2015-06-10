@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , System = require('./system.js')
   , async = require('async')
+  , _ = require('underscore')
   , backup = require('../controllers/backup.js')
   , util = require('../controllers/util.js');
 
@@ -220,6 +221,90 @@ documentSchema.statics.getSubjectDBVersion = function(cb) {
     if (err) return err;
     cb(err, variable.get('version'));
   });
+}
+
+documentSchema.statics.validateStructure = function(id, cb) {
+
+  this.findById(id, function(err, document) {
+    doc = document.toJSON();
+    var nodes = doc.nodes.content.nodes;
+    
+    var duplicates = checkForDuplicates(nodes);
+    var annotations = validateAnnotations(doc.nodes);
+
+    var response = {
+      result: duplicates + annotations
+    }
+    cb(err, response);
+  });
+
+  function checkForDuplicates(nodes) {
+    var response;
+
+    // Checks if conent nodes array is unique
+    var isUnique = _.uniq(nodes, JSON.stringify).length === nodes.length;
+    
+    if(isUnique) {
+      response = "Content container have no duplicates\n"
+    } else {
+      var duplicates = _.difference(nodes, _.uniq(nodes, JSON.stringify));
+      response = "Content container have following duplicates: " + duplicates.join(', ') + '\n';
+    }
+
+    return response;
+  }
+
+  function validateAnnotations(tree) {
+    var response = '';
+    var nodes = tree.content.nodes;
+    _.each(tree, function(leaf, id) {
+
+      // Check if current annotation is multiparagraph one
+      if(!_.isUndefined(leaf.startPath)) {
+        if(!_.contains(nodes, leaf.startPath[0])) {
+          response += 'Start path of ' + id + ' is belongs to ' + leaf.startPath[0] + ' which is outside of the content container\n';
+        }
+
+        if(_.isUndefined(tree[leaf.startPath[0]])) {
+          response += 'Start path of ' + id + ' is belongs to ' + leaf.startPath[0] + ' which does not exists\n';
+        }
+
+        if(!_.contains(nodes, leaf.endPath[0])) {
+          response += 'End path of ' + id + ' is belongs to ' + leaf.endPath[0] + ' which is outside of the content container\n';
+        }
+
+        if(_.isUndefined(tree[leaf.endPath[0]])) {
+          response += 'End path of ' + id + ' is belongs to ' + leaf.endPath[0] + ' which does not exists\n';
+        }
+
+        if(leaf.startPath[1] != 'content') {
+          response += 'Start path of ' + id + ' is not belongs to the content container\n';
+        }
+
+        if(leaf.endPath[1] != 'content') {
+          response += 'End path of ' + id + ' is not belongs to the content container\n';
+        }
+      } else if (!_.isUndefined(leaf.path)) {
+        // Check if current annotation is singlepararph one
+
+        if(!_.contains(nodes, leaf.path[0])) {
+          response += 'Path of ' + id + ' is belongs to ' + leaf.path[0] + ' which is outside of the content container\n';
+        }
+
+        if(_.isUndefined(tree[leaf.path[0]])) {
+          response += 'Path of ' + id + ' is belongs to ' + leaf.path[0] + ' which does not exists\n';
+        }
+
+        if(leaf.path[1] != 'content') {
+          response += 'Path of ' + id + ' is not belongs to the content container\n';
+        }
+      }
+    })
+
+    if(response == '') return 'All annotations are valid\n';
+
+    return response;
+  }
 }
  
 module.exports = mongoose.model('Document', documentSchema);
