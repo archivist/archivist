@@ -295,6 +295,10 @@ documentSchema.statics.validateStructure = function(id, cb) {
           response += 'Path of ' + id + ' is belongs to ' + leaf.path[0] + ' which does not exists\n';
         }
 
+        if(leaf.startOffset > leaf.endOffset) {
+          response += 'Start offset of ' + id + ' is after of the end offset\n';
+        }
+
         if(leaf.path[1] != 'content') {
           response += 'Path of ' + id + ' is not belongs to the content container\n';
         }
