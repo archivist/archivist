@@ -176,7 +176,7 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
         }
     }
 
-    L.tileLayer('http://api.tiles.mapbox.com/v3/liedman.jokgn3nn/{z}/{x}/{y}.png', {
+    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         //attribution: '<a href="http://osm.org/copyright">Terms & Feedback</a>'
     }).addTo(map);
 
