@@ -77,12 +77,14 @@ module.exports = function(schema, options) {
         query = util.getQuery(opt.query),
         options = util.getOptions(opt);
 
+    console.log('query', query, 'with options', options);
     self.count(query, function(err, counter) {
       if (err) return cb(err);
       self
         .find(query, null, options)
         .populate('edited', 'name')
         .exec(function(err, records) {
+          console.log('found', counter, 'items');
           cb(err, [{total_entries: counter}, records]);
         });
     });

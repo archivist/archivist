@@ -199,6 +199,7 @@ var deletePerson = function(req, res, next) {
 }
 
 var listPersons = function(req, res, next) {
+  console.log(req.user.name, 'is quering for persons');
   Person.list(req.query, function(err, persons) {
     if (err) return next(err);
     res.json(persons);
@@ -246,6 +247,7 @@ var deleteDefinition = function(req, res, next) {
 }
 
 var listDefinitions = function(req, res, next) {
+  console.log(req.user.name, 'is quering for definitions');
   Definition.list(req.query, function(err, definitions) {
     if (err) return next(err);
     res.json(definitions);
@@ -293,6 +295,7 @@ var deleteLocation = function(req, res, next) {
 }
 
 var listLocations = function(req, res, next) {
+  console.log(req.user.name, 'is quering for locations');
   Location.list(req.query, function(err, locations) {
     if (err) return next(err);
     res.json(locations);
@@ -300,6 +303,7 @@ var listLocations = function(req, res, next) {
 }
 
 var listPrisonLocations = function(req, res, next) {
+  console.log(req.user.name, 'is quering for prisons');
   req.query.query = util.reduceQuery(req.query.query, {type: 'prison'});
   Location.list(req.query, function(err, locations) {
     if (err) return next(err);
@@ -308,6 +312,7 @@ var listPrisonLocations = function(req, res, next) {
 }
 
 var listToponymLocations = function(req, res, next) {
+  console.log(req.user.name, 'is quering for toponyms');
   req.query.query = util.reduceQuery(req.query.query, {type: 'toponym'});
   Location.list(req.query, function(err, locations) {
     if (err) return next(err);
