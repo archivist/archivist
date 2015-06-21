@@ -30,7 +30,14 @@ passport.use(new GoogleStrategy(googleClient, function(accessToken, refreshToken
 
 oauth.ensureAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
+  console.log(req.url)
+  console.log(req.url.indexOf('/documents'))
+  if (req.url.indexOf('/documents') === 0 && req.method == 'PUT') {
+    res.status(401);
+    return res.send('Please login to continue');
+  } else {
+    res.redirect('/login');
+  }
 }
 
 oauth.ensureSuperAuth = function(req, res, next) {
