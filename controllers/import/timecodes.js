@@ -2,9 +2,6 @@ var _ = require('underscore')
 	, Substance = require('Substance')
 	, utils = require('./utils.js');
 
-// Interview = require('../interview/index.js')
-//   , Substance = require('Substance');
-
 var timecodesMap = [];
 
 var annotateTimecodes = function(doc, cb) {

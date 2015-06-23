@@ -14,6 +14,8 @@ var mongoose = require('mongoose')
 
 
 var timecodeAnnotator = require('./import/timecodes');
+var toponymAnnotator = require('./import/toponyms');
+var prisonAnnotator = require('./import/prisons');
 
 var annotateTimecodes = function(req, res, next) {
   var docId = req.params.id;
@@ -25,6 +27,30 @@ var annotateTimecodes = function(req, res, next) {
 
 importer.route('/:id/timecodes')
   .get(annotateTimecodes)
+
+var annotateToponyms = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  toponymAnnotator(docId, gsId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/toponyms/:gsid')
+  .get(annotateToponyms)
+
+var annotatePrisons = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  prisonAnnotator(docId, gsId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/prisons/:gsid')
+  .get(annotatePrisons)
 
 var annotateInterview = function(req, res, next) {
   var interviewDBId = '55451f3d1871404a0c7dff95';
