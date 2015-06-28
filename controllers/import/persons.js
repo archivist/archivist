@@ -1,18 +1,18 @@
 var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
-	, Location = require('../../models/location.js')
+//	, Person = require('../../models/person.js')
 	, Substance = require('Substance')
 	, utils = require('./utils.js');
 
 var indexerUrl = "http://ost-index.d4s.io/search/document";
 var SPId;//"16";
 var docId;//"5587f3485c8e9e4a10773fde";
-var tableId = 'oh4v067';
+var tableId = 'oqthas0';
 var entitiesMap = [];
 var found = {};
 
-var annotateToponyms = function(doc, cb) {
+var annotatePersons = function(doc, cb) {
 	var entities = doc.getIndex('type').get('entity_reference');
 	_.each(entities, function(entity){
 		if(_.isUndefined(entitiesMap[entity.target])) {
@@ -24,14 +24,10 @@ var annotateToponyms = function(doc, cb) {
 		});
 	})
 
-	utils.loadSPToponyms(SPId, function(err, toponyms){
+	utils.loadSPPersons(SPId, function(err, persons){
 		if (err) return cb(err);
-		async.eachSeries(toponyms, function(topo, callback){
-			Location.get(topo.id, function(err, location) {
-    		if (err) return cb(err);
-    		topo.synonyms = location.synonyms;
-    		findToponyms(topo, doc, callback);
-  		});
+		async.eachSeries(persons, function(person, callback){
+    	findPersons(person, doc, callback);
 		}, function(err){
 			if (err) return cb(err);
 			console.log('Done! Yay!')
@@ -41,9 +37,9 @@ var annotateToponyms = function(doc, cb) {
 }
 
 // Querying indexer for each synonym
-var findToponyms = function(topo, doc, cb){
-	//console.log('Starting to search for toponym', topo.id, 'synonyms...')
-	var synonyms = topo.synonyms;
+var findPersons = function(person, doc, cb){
+	//console.log('Starting to search for person', person.id, 'synonyms...')
+	var synonyms = person.synonyms;
 	async.each(synonyms, function(synonym, callback){
 		var data = {
 			searchString: synonym,
@@ -58,8 +54,8 @@ var findToponyms = function(topo, doc, cb){
 		  	if(err) return callback(err);
 		    var fragments = res.body.fragments;
 		  	_.each(fragments, function(fragment) {
-		  		// Detect toponym inside search result and annotate it 
-		  		detectToponym(fragment, doc, topo);
+		  		// Detect person inside search result and annotate it 
+		  		detectPerson(fragment, doc, topo);
 		  	});
 		  	callback();
 		  });
@@ -70,7 +66,7 @@ var findToponyms = function(topo, doc, cb){
 	});
 }
 
-var detectToponym = function(fragment, doc, toponym) {
+var detectPerson = function(fragment, doc, person) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 
@@ -79,21 +75,21 @@ var detectToponym = function(fragment, doc, toponym) {
 
 	var entities = text.match(regex);
 
-	_.each(entities, function(entity){
+	_.each(entities, function(person){
 		//console.log('timecode', tc, 'has been detected');
-		var startPos = text.indexOf(entity);
+		var startPos = text.indexOf(person);
 		// start position and match length, subtract <span class="query-string"></span> length
-		var endPos = startPos + entity.length - 34;
-		var alredyExists = checkForExistingAnnotation(toponym.id, startPos);
+		var endPos = startPos + person.length - 34;
+		var alredyExists = checkForExistingAnnotation(person.id, startPos);
 		if(!alredyExists) {
 			// Store data to send back to google spreadheet
-  		if(toponym.found) {
-  			found[toponym.row] = {12: toponym.found + '; ' + SPId}
+  		if(person.found) {
+  			found[person.row] = {9: person.found + '; ' + SPId}
   		} else {
-  			found[toponym.row] = {12: SPId}
+  			found[person.row] = {9: SPId}
   		}
   		// create annotation via transaction interface
-			createEntityAnnotation(doc, startPos, endPos, path, toponym.id);
+			createEntityAnnotation(doc, startPos, endPos, path, person.id);
 		}
 	});
 }
@@ -142,19 +138,20 @@ var createEntityAnnotation = function(doc, startOffset, endOffset, path, target)
 }
 
 module.exports = function(id, internalId, cb) {
-	utils.loadInterview(id, function(err, interview) {
-		if (err) return cb(err);
-		docId = id;
-		SPId = internalId;
-		annotateToponyms(interview, function(err, doc, SPdata) {
-			if (err) return cb(err);
-			utils.saveSPData(tableId, SPdata, function(err){
-				if (err) return cb(err);
-				utils.saveInterview(id, doc, function(err, document) {
-					if (err) return cb(err);
-					cb(null, document);
-				});
-			})
-		})
-	})
+	utils.loadSPPersons(internalId,function(err, interview) {})
+	// utils.loadInterview(id, function(err, interview) {
+	// 	if (err) return cb(err);
+	// 	docId = id;
+	// 	SPId = internalId;
+	// 	annotatePersons(interview, function(err, doc, SPdata) {
+	// 		if (err) return cb(err);
+	// 		utils.saveSPData(tableId, SPdata, function(err){
+	// 			if (err) return cb(err);
+	// 			utils.saveInterview(id, doc, function(err, document) {
+	// 				if (err) return cb(err);
+	// 				cb(null, document);
+	// 			});
+	// 		})
+	// 	})
+	// })
 }

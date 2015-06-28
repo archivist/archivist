@@ -8,6 +8,7 @@ var _ = require('underscore')
 var indexerUrl = "http://ost-index.d4s.io/search/document";
 var SPId;//"16";
 var docId;//"5587f3485c8e9e4a10773fde";
+var tableId = 'oa7lpit';
 var entitiesMap = [];
 var found = {};
 
@@ -147,7 +148,7 @@ module.exports = function(id, internalId, cb) {
 		SPId = internalId;
 		annotatePrisons(interview, function(err, doc, SPdata) {
 			if (err) return cb(err);
-			utils.saveSPPrisons(SPdata, function(err){
+			utils.saveSPData(tableId, SPdata, function(err){
 				if (err) return cb(err);
 				utils.saveInterview(id, doc, function(err, document) {
 					if (err) return cb(err);

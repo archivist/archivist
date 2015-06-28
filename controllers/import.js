@@ -16,6 +16,8 @@ var mongoose = require('mongoose')
 var timecodeAnnotator = require('./import/timecodes');
 var toponymAnnotator = require('./import/toponyms');
 var prisonAnnotator = require('./import/prisons');
+var realitiesAnnotator = require('./import/realities');
+var personsAnnotator = require('./import/persons');
 
 var annotateTimecodes = function(req, res, next) {
   var docId = req.params.id;
@@ -51,6 +53,46 @@ var annotatePrisons = function(req, res, next) {
 
 importer.route('/:id/prisons/:gsid')
   .get(annotatePrisons)
+
+var annotateAbbrs = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  var GSTableId = 'ow0uer7';
+  realitiesAnnotator(docId, gsId, GSTableId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/abbrs/:gsid')
+  .get(annotateAbbrs)
+
+var annotateRealities = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  var GSTableId = 'o4yren4';
+  realitiesAnnotator(docId, gsId, GSTableId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/realities/:gsid')
+  .get(annotateRealities)
+
+var annotatePersons = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  console.log('running annotator...')
+  personsAnnotator(docId, gsId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    //res.status(200).json(doc);
+  });
+  res.status(200).send();
+}
+
+importer.route('/:id/persons/:gsid')
+  .get(annotatePersons)
 
 var annotateInterview = function(req, res, next) {
   var interviewDBId = '55451f3d1871404a0c7dff95';

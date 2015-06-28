@@ -1,18 +1,18 @@
 var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
-	, Location = require('../../models/location.js')
+	, Definition = require('../../models/definition.js')
 	, Substance = require('Substance')
 	, utils = require('./utils.js');
 
 var indexerUrl = "http://ost-index.d4s.io/search/document";
 var SPId;//"16";
 var docId;//"5587f3485c8e9e4a10773fde";
-var tableId = 'oh4v067';
+var tableId; // 'ow0uer7';//o4yren4
 var entitiesMap = [];
 var found = {};
 
-var annotateToponyms = function(doc, cb) {
+var annotateDefinitions = function(doc, cb) {
 	var entities = doc.getIndex('type').get('entity_reference');
 	_.each(entities, function(entity){
 		if(_.isUndefined(entitiesMap[entity.target])) {
@@ -24,13 +24,13 @@ var annotateToponyms = function(doc, cb) {
 		});
 	})
 
-	utils.loadSPToponyms(SPId, function(err, toponyms){
+	utils.loadSPRealities(SPId, tableId, function(err, realities){
 		if (err) return cb(err);
-		async.eachSeries(toponyms, function(topo, callback){
-			Location.get(topo.id, function(err, location) {
+		async.eachSeries(realities, function(reality, callback){
+			Definition.get(reality.id, function(err, definition) {
     		if (err) return cb(err);
-    		topo.synonyms = location.synonyms;
-    		findToponyms(topo, doc, callback);
+    		reality.synonyms = definition.synonyms;
+    		findRealities(reality, doc, callback);
   		});
 		}, function(err){
 			if (err) return cb(err);
@@ -41,9 +41,9 @@ var annotateToponyms = function(doc, cb) {
 }
 
 // Querying indexer for each synonym
-var findToponyms = function(topo, doc, cb){
+var findRealities = function(reality, doc, cb){
 	//console.log('Starting to search for toponym', topo.id, 'synonyms...')
-	var synonyms = topo.synonyms;
+	var synonyms = reality.synonyms;
 	async.each(synonyms, function(synonym, callback){
 		var data = {
 			searchString: synonym,
@@ -59,7 +59,7 @@ var findToponyms = function(topo, doc, cb){
 		    var fragments = res.body.fragments;
 		  	_.each(fragments, function(fragment) {
 		  		// Detect toponym inside search result and annotate it 
-		  		detectToponym(fragment, doc, topo);
+		  		detectReality(fragment, doc, reality);
 		  	});
 		  	callback();
 		  });
@@ -70,7 +70,7 @@ var findToponyms = function(topo, doc, cb){
 	});
 }
 
-var detectToponym = function(fragment, doc, toponym) {
+var detectReality = function(fragment, doc, reality) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 
@@ -84,16 +84,16 @@ var detectToponym = function(fragment, doc, toponym) {
 		var startPos = text.indexOf(entity);
 		// start position and match length, subtract <span class="query-string"></span> length
 		var endPos = startPos + entity.length - 34;
-		var alredyExists = checkForExistingAnnotation(toponym.id, startPos);
+		var alredyExists = checkForExistingAnnotation(reality.id, startPos);
 		if(!alredyExists) {
 			// Store data to send back to google spreadheet
-  		if(toponym.found) {
-  			found[toponym.row] = {12: toponym.found + '; ' + SPId}
+  		if(reality.found) {
+  			found[reality.row] = {7: reality.found + '; ' + SPId}
   		} else {
-  			found[toponym.row] = {12: SPId}
+  			found[reality.row] = {7: SPId}
   		}
   		// create annotation via transaction interface
-			createEntityAnnotation(doc, startPos, endPos, path, toponym.id);
+			createEntityAnnotation(doc, startPos, endPos, path, reality.id);
 		}
 	});
 }
@@ -141,12 +141,13 @@ var createEntityAnnotation = function(doc, startOffset, endOffset, path, target)
   tx.cleanup();
 }
 
-module.exports = function(id, internalId, cb) {
+module.exports = function(id, internalId, GSTableId, cb) {
 	utils.loadInterview(id, function(err, interview) {
 		if (err) return cb(err);
 		docId = id;
 		SPId = internalId;
-		annotateToponyms(interview, function(err, doc, SPdata) {
+		tableId = GSTableId;
+		annotateDefinitions(interview, function(err, doc, SPdata) {
 			if (err) return cb(err);
 			utils.saveSPData(tableId, SPdata, function(err){
 				if (err) return cb(err);
