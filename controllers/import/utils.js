@@ -158,6 +158,7 @@ var getSPRealities = function(table, cb) {
 }
 
 var getSPPersons = function(table, cb) {
+  console.log(table)
   console.log('loading spreadsheet...')
   Spreadsheet.load({
     debug: true,
@@ -167,8 +168,8 @@ var getSPPersons = function(table, cb) {
       refresh_token: process.env.GOOGLE_REFRESH_TOKEN || ''
     },
     spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
-    worksheetId: 'oqthas0'
-    //worksheetName: 'Имена'
+    //xworksheetId: 'oqthas0'
+    worksheetName: 'Имена'
   }, function sheetReady(err, spreadsheet) {
     if(err) return cb(err);
     console.log('starting query worksheet...')
