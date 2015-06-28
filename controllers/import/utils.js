@@ -175,10 +175,9 @@ var getSPPersons = function(cb) {
     //receive all cells
     spreadsheet.receive({},function(err, rows, info) {
       console.log('worksheet received')
-      console.log(rows)
       var items = [];
       _.each(rows, function(row, n){
-        if (n != 1 && n[5]) {
+        if (n != 1 && row[5]) {
           var item = {row: n, values: []};
           _.each(row, function(cell, column) {
             if(column == '1') {
