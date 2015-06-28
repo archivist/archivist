@@ -9,7 +9,7 @@ var mongoose = require('mongoose')
   , async = require('async')
   , Spreadsheet = require('edit-google-spreadsheet')
   , Interview = require('./interview/index.js')
-  , Substance = require('Substance')
+  , Substance = require('substance')
   , importer = express.Router();
 
 

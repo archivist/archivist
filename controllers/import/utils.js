@@ -2,7 +2,7 @@ var mongoose = require('mongoose')
   , Document = require('../../models/document.js')
   , _ = require('underscore')
   , Interview = require('../interview/index.js')
-  , Substance = require('Substance')
+  , Substance = require('substance')
   , Spreadsheet = require('edit-google-spreadsheet');
 
 var updateSPData = function(table, data, cb) {

@@ -2,7 +2,7 @@ var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
 	, Location = require('../../models/location.js')
-	, Substance = require('Substance')
+	, Substance = require('substance')
 	, utils = require('./utils.js');
 
 var indexerUrl = "http://ost-index.d4s.io/search/document";

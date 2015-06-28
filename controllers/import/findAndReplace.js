@@ -3,7 +3,7 @@
 */
 
 var _ = require('underscore')
-	, Substance = require('Substance')
+	, Substance = require('substance')
 	, utils = require('./utils.js');
 
 var findReplaceNodes = function(doc, cb) {
