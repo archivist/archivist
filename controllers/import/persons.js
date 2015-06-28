@@ -138,7 +138,7 @@ var createEntityAnnotation = function(doc, startOffset, endOffset, path, target)
 }
 
 module.exports = function(id, internalId, cb) {
-	utils.loadSPPersons(internalId,function(err, interview) {})
+	utils.loadSPPersons(internalId,function(err, interview) {return 0;})
 	// utils.loadInterview(id, function(err, interview) {
 	// 	if (err) return cb(err);
 	// 	docId = id;

@@ -157,8 +157,7 @@ var getSPRealities = function(table, cb) {
   });
 }
 
-var getSPPersons = function(table, cb) {
-  console.log(table)
+var getSPPersons = function(cb) {
   console.log('loading spreadsheet...')
   Spreadsheet.load({
     debug: true,
@@ -168,14 +167,15 @@ var getSPPersons = function(table, cb) {
       refresh_token: process.env.GOOGLE_REFRESH_TOKEN || ''
     },
     spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
-    //xworksheetId: 'oqthas0'
-    worksheetName: 'Имена'
+    worksheetId: 'oqthas0'
+    //worksheetName: 'Имена'
   }, function sheetReady(err, spreadsheet) {
     if(err) return cb(err);
     console.log('starting query worksheet...')
     //receive all cells
     spreadsheet.receive({},function(err, rows, info) {
       console.log('worksheet received')
+      console.log(rows)
       var items = [];
       _.each(rows, function(row, n){
         if (n != 1 && n[5]) {
@@ -263,8 +263,8 @@ exports.loadSPRealities = function(id, table, cb) {
 }
 
 // Load persons from GS using interview SP id
-exports.loadSPPersons = function(id, table, cb) {
-  getSPPersons(table, function(err, persons){
+exports.loadSPPersons = function(id, cb) {
+  getSPPersons(function(err, persons){
     if(err) return cb(err);
     var filtered = _.filter(persons, function(person){ 
       return (_.contains(person.interviews, id) || _.isEmpty(person.interviews));
