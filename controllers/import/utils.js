@@ -158,7 +158,6 @@ var getSPRealities = function(table, cb) {
 }
 
 var getSPPersons = function(cb) {
-  console.log('loading spreadsheet...')
   Spreadsheet.load({
     debug: true,
     oauth2: {
@@ -171,10 +170,8 @@ var getSPPersons = function(cb) {
     //worksheetName: 'Имена'
   }, function sheetReady(err, spreadsheet) {
     if(err) return cb(err);
-    console.log('starting query worksheet...')
     //receive all cells
     spreadsheet.receive({},function(err, rows, info) {
-      console.log('worksheet received')
       var items = [];
       _.each(rows, function(row, n){
         if (n != 1 && row[5]) {
@@ -195,7 +192,7 @@ var getSPPersons = function(cb) {
               }
             } else if(column == '6') {
               cell = cell.toString();
-              item.timecodes = [];
+              item.timecodes = {};
               if(typeof cell.split === 'function') {
                 var timecodes = cell.split('; ');
                 _.each(timecodes, function(code){
@@ -213,8 +210,8 @@ var getSPPersons = function(cb) {
           items.push(item);
         }
       });
-      console.log(items)
-      //cb(err, items);
+      
+      cb(err, items);
     });
   });
 }

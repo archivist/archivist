@@ -83,12 +83,10 @@ importer.route('/:id/realities/:gsid')
 var annotatePersons = function(req, res, next) {
   var docId = req.params.id;
   var gsId = req.params.gsid;
-  console.log('running annotator...')
   personsAnnotator(docId, gsId, function(err, doc) {
     if(err) return res.status(500).json(err.message);
-    //res.status(200).json(doc);
+    res.status(200).json(doc);
   });
-  res.status(200).send();
 }
 
 importer.route('/:id/persons/:gsid')
