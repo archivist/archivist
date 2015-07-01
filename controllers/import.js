@@ -15,6 +15,7 @@ var mongoose = require('mongoose')
 
 var timecodeAnnotator = require('./import/timecodes');
 var findAndReplace = require('./import/findAndReplace');
+var indentationCleaner = require('./import/clearIndentation');
 var subjectsAnnotator = require('./import/subjects');
 var toponymsAnnotator = require('./import/toponyms');
 var prisonsAnnotator = require('./import/prisons');
@@ -42,6 +43,17 @@ var removeTripleSpaces = function(req, res, next) {
 
 importer.route('/:id/triplespaces')
   .get(removeTripleSpaces)
+
+var removeIndentation = function(req, res, next) {
+  var docId = req.params.id;
+  indentationCleaner(docId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/indentation')
+  .get(removeIndentation)
 
 var annotateTimecodes = function(req, res, next) {
   var docId = req.params.id;
