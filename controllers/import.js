@@ -14,11 +14,34 @@ var mongoose = require('mongoose')
 
 
 var timecodeAnnotator = require('./import/timecodes');
+var findAndReplace = require('./import/findAndReplace');
 var subjectsAnnotator = require('./import/subjects');
 var toponymsAnnotator = require('./import/toponyms');
 var prisonsAnnotator = require('./import/prisons');
 var realitiesAnnotator = require('./import/realities');
 var personsAnnotator = require('./import/persons');
+
+var removeDoubleSpaces = function(req, res, next) {
+  var docId = req.params.id;
+  findAndReplace(docId, '  ', ' ', function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/doublespaces')
+  .get(removeDoubleSpaces)
+
+var removeTripleSpaces = function(req, res, next) {
+  var docId = req.params.id;
+  findAndReplace(docId, '   ', ' ', function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json(doc);
+  });
+}
+
+importer.route('/:id/triplespaces')
+  .get(removeTripleSpaces)
 
 var annotateTimecodes = function(req, res, next) {
   var docId = req.params.id;
