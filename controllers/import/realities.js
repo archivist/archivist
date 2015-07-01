@@ -73,17 +73,20 @@ var findRealities = function(reality, doc, cb){
 var detectReality = function(fragment, doc, reality) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
+	var textNode = doc.get(fragment.id).content;
 
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
-	var entities = text.match(regex);
+	var entities = text.match(regex).map(function(val){
+  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
+	});
 
 	_.each(entities, function(entity){
 		//console.log('timecode', tc, 'has been detected');
-		var startPos = text.indexOf(entity);
+		var startPos = textNode.indexOf(entity);
 		// start position and match length, subtract <span class="query-string"></span> length
-		var endPos = startPos + entity.length - 34;
+		var endPos = startPos + entity.length;
 		var alredyExists = checkForExistingAnnotation(reality.id, startPos);
 		if(!alredyExists) {
 			// Store data to send back to google spreadheet

@@ -26,6 +26,48 @@ var updateSPData = function(table, data, cb) {
     });
 }
 
+var getSPSubjects = function(columnId, interviewId, cb) {
+  Spreadsheet.load({
+    debug: true,
+    oauth2: {
+      client_id: process.env.GOOGLE_CLIENT_ID || '',
+      client_secret: process.env.GOOGLE_CLIENT_SECRET || '',
+      refresh_token: process.env.GOOGLE_REFRESH_TOKEN || ''
+    },
+    spreadsheetId: '1Wf3Zwhj_5cNaTUKNqayHrqiKgxpelfAOS7Nek77lgQE',
+    worksheetId: 'opogbz4'
+  }, function run(err, spreadsheet) {
+    if(err) return cb(err);
+    //receive all cells
+    spreadsheet.receive({},function(err, rows, info) {
+      var map = {};
+      _.each(rows, function(row, n){
+        if (n != 1) {
+          var currentId = '';
+
+          _.each(row, function(cell, column) {
+            if(column == '1') {
+              currentId = cell;
+            }
+            if(column == columnId && cell != '' && cell != ' ' && cell != '\n') {
+              var cleared = cell.replace(/ /g, '');
+              cleared = cleared.replace(/\n/g, '');
+              var cleaner = new RegExp(interviewId + ':{','g');
+              cleared = cleared.replace(cleaner, '{');
+              var path = cleared.split(';');
+              _.each(path, function(val, i){
+                path[i] = val.split('-');
+              })
+              map[currentId] = path;
+            }
+          })
+        }
+      });
+      cb(err, map);
+    });
+  });
+}
+
 var getSPToponyms = function(cb) {
   Spreadsheet.load({
     debug: true,
@@ -222,6 +264,14 @@ exports.saveSPData = function(table, data, cb) {
   updateSPData(table, data, function(err){
     if(err) return cb(err);
     cb(null);
+  });
+}
+
+// Load subjects from GS using interview SP id and column id
+exports.loadSPSubjects = function(id, column, cb) {
+  getSPSubjects(id, column, function(err, subjects){
+    if(err) return cb(err);
+    cb(null, subjects);
   });
 }
 
