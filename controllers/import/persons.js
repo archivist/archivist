@@ -47,7 +47,7 @@ var findPersons = function(person, doc, cb){
 			from: 0,
 			size: 100
 		}
-
+		if (/\s/.test(synonym)) data.type = "phrase";
 		request
   		.get(indexerUrl)
   		.query(data)
@@ -58,7 +58,7 @@ var findPersons = function(person, doc, cb){
 		    var fragments = res.body.fragments;
 		  	async.each(fragments, function(fragment, cb) {
 		  		// Detect person inside search result and annotate it 
-		  		detectPerson(fragment, doc, person, cb);
+		  		detectPerson(fragment, doc, person, synonym, cb);
 		  	}, function(err){
 					if (err) return callback(err);
 					callback();
@@ -71,7 +71,7 @@ var findPersons = function(person, doc, cb){
 	});
 }
 
-var detectPerson = function(fragment, doc, person, cb) {
+var detectPerson = function(fragment, doc, person, synonym, cb) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
@@ -80,9 +80,17 @@ var detectPerson = function(fragment, doc, person, cb) {
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
-	var entities = text.match(regex).map(function(val){
-  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
-	});
+	try {
+		var entities = text.match(regex).map(function(val){
+	  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
+		});
+	} catch (e) {
+		var entities = [];
+		if(text.indexOf(synonym) !== -1) entities.push(synonym);
+		console.log(fragment)
+		console.log(person)
+		return;
+	}
  
 	if(_.isUndefined(person.timecodes)){
 		containsTimecode = true;
