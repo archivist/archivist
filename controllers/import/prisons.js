@@ -78,10 +78,14 @@ var detectPrison = function(fragment, doc, toponym) {
 
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
-
-	var entities = text.match(regex).map(function(val){
-  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
-	});
+	try {
+		var entities = text.match(regex).map(function(val){
+	  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
+		});
+	} catch (e) {
+		console.log(fragment)
+		return;
+	}
 
 	_.each(entities, function(entity){
 		//console.log('timecode', tc, 'has been detected');
