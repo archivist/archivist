@@ -16,6 +16,7 @@ var mongoose = require('mongoose')
 var timecodeAnnotator = require('./import/timecodes');
 var findAndReplace = require('./import/findAndReplace');
 var indentationCleaner = require('./import/clearIndentation');
+var index = require('./import/index');
 var subjectsAnnotator = require('./import/subjects');
 var toponymsAnnotator = require('./import/toponyms');
 var prisonsAnnotator = require('./import/prisons');
@@ -54,6 +55,14 @@ var importAnnotations = function(req, res, next) {
         if(err) return callback(err);
         console.log('Double spaces has been cleaned');
         callback(null, 'double spaces');
+      });
+    },
+    function(callback){
+      console.log('Updating index...');
+      index.update(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Index has been updated');
+        callback(null, 'update index');
       });
     },
     function(callback){
@@ -162,6 +171,18 @@ var removeIndentation = function(req, res, next) {
 
 importer.route('/:id/indentation')
   .get(removeIndentation)
+
+var updateIndex = function(req, res, next) {
+  var docId = req.params.id;
+
+  index.update(docId, function(err) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).send('done');
+  });
+}
+
+importer.route('/:id/updateindex')
+  .get(updateIndex)
 
 var annotateTimecodes = function(req, res, next) {
   var docId = req.params.id;
