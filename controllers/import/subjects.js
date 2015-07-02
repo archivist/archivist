@@ -15,7 +15,7 @@ var annotateSubjects = function(doc, cb) {
   var interviewContent = doc.get('content');
 	_.each(timecodes, function(code, id){
     var content = doc.get(code.path);
-    var timecode = content.substr(code.startOffset, 10);
+    var timecode = content.substr(code.startOffset, code.length);
 
     timecodesMap[timecode] = code;
   })
