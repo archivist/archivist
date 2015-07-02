@@ -88,7 +88,6 @@ var detectReality = function(fragment, doc, reality, synonym) {
 		if(text.indexOf(synonym) !== -1) entities.push(synonym);
 		console.log(fragment)
 		console.log(reality)
-		return;
 	}
 
 	_.each(entities, function(entity){

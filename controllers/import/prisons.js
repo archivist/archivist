@@ -87,7 +87,6 @@ var detectPrison = function(fragment, doc, toponym, synonym) {
 		if(text.indexOf(synonym) !== -1) entities.push(synonym);
 		console.log(fragment)
 		console.log(toponym)
-		return;
 	}
 
 	_.each(entities, function(entity){

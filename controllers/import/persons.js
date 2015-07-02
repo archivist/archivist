@@ -76,7 +76,7 @@ var detectPerson = function(fragment, doc, person, synonym, cb) {
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
 	var containsTimecode = false;
-
+	console.log('person', synonym)
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
@@ -89,7 +89,6 @@ var detectPerson = function(fragment, doc, person, synonym, cb) {
 		if(text.indexOf(synonym) !== -1) entities.push(synonym);
 		console.log(fragment)
 		console.log(person)
-		return;
 	}
  
 	if(_.isUndefined(person.timecodes)){
