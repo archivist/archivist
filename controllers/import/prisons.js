@@ -84,6 +84,7 @@ var detectPrison = function(fragment, doc, toponym) {
 		});
 	} catch (e) {
 		console.log(fragment)
+		console.log(toponym)
 		return;
 	}
 
