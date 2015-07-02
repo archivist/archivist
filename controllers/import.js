@@ -22,6 +22,114 @@ var prisonsAnnotator = require('./import/prisons');
 var realitiesAnnotator = require('./import/realities');
 var personsAnnotator = require('./import/persons');
 
+
+/*
+  Run all importers one after another
+*/
+
+var importAnnotations = function(req, res, next) {
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  var columnId = req.params.gscolumn;
+  async.series([
+    function(callback){
+      console.log('Running indentation cleaner...');
+      indentationCleaner(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Indentation has been cleaned');
+        callback(null, 'indentation');
+      });
+    },
+    function(callback){
+      console.log('Running triple spaces cleaner...');
+      findAndReplace(docId, '   ', ' ', function(err, doc) {
+        if(err) return callback(err);
+        console.log('Triple spaces has been cleaned');
+        callback(null, 'triple spaces');
+      });
+    },
+    function(callback){
+      console.log('Running double spaces cleaner...');
+      findAndReplace(docId, '  ', ' ', function(err, doc) {
+        if(err) return callback(err);
+        console.log('Double spaces has been cleaned');
+        callback(null, 'double spaces');
+      });
+    },
+    function(callback){
+      console.log('Running timecode annotator...');
+      timecodeAnnotator(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Timecodes has been annotated');
+        callback(null, 'timecodes');
+      });
+    },
+    function(callback){
+      console.log('Running subjects annotator...');
+      subjectsAnnotator(docId, gsId, columnId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Subjects has been annotated');
+        callback(null, 'subjects');
+      });
+    },
+    function(callback){
+      console.log('Running toponyms annotator...');
+      toponymsAnnotator(docId, gsId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Toponyms has been annotated');
+        callback(null, 'toponyms');
+      });
+    },
+    function(callback){
+      console.log('Running prisons annotator...');
+      prisonsAnnotator(docId, gsId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Prisons has been annotated');
+        callback(null, 'prisons');
+      });
+    },
+    function(callback){
+      console.log('Running abbreviations annotator...');
+      var GSTableId = 'ow0uer7';
+      realitiesAnnotator(docId, gsId, GSTableId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Abbreviations has been annotated');
+        callback(null, 'abbreviations');
+      });
+    },
+    function(callback){
+      console.log('Running realities annotator...');
+      var GSTableId = 'o4yren4';
+      realitiesAnnotator(docId, gsId, GSTableId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Realities has been annotated');
+        callback(null, 'realities');
+      });
+    },
+    function(callback){
+      console.log('Running persons annotator...');
+      personsAnnotator(docId, gsId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Persons has been annotated');
+        callback(null, 'persons');
+      });
+    }
+  ],
+  // optional callback
+  function(err, results){
+    if(err) return res.status(500).json(err.message);
+    console.log('Done!');
+    res.status(200).json(results);
+  });
+}
+
+importer.route('/:id/all/:gsid/:gscolumn')
+  .get(importAnnotations)
+
+/*
+  Separated methods for each importer
+*/
+
 var removeDoubleSpaces = function(req, res, next) {
   var docId = req.params.id;
   findAndReplace(docId, '  ', ' ', function(err, doc) {
