@@ -30,7 +30,6 @@ var findString = function(doc, path) {
 
 	while(detectString(text, string) == 0) {
 		var startOffset = detectString(text, string);
-		console.log(path, startOffset)
 		var endOffset = startOffset + string.length;
 		changeTextNode(doc, path, startOffset, endOffset, replace);
 		// Update text variable to detect next fragment inside node

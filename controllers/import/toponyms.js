@@ -29,6 +29,7 @@ var annotateToponyms = function(doc, cb) {
 		async.eachSeries(toponyms, function(topo, callback){
 			Location.get(topo.id, function(err, location) {
     		if (err) return cb(err);
+    		if(_.isNull(location)) console.log('location', topo.id);
     		topo.synonyms = location.synonyms;
     		findToponyms(topo, doc, callback);
   		});
