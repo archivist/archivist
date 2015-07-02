@@ -15,7 +15,7 @@ var annotateSubjects = function(doc, cb) {
   var interviewContent = doc.get('content');
 	_.each(timecodes, function(code, id){
     var content = doc.get(code.path);
-    var timecode = content.substr(code.startOffset, code.length);
+    var timecode = content.substr(code.startOffset, code.endOffset - code.startOffset);
 
     timecodesMap[timecode] = code;
   })
@@ -43,19 +43,25 @@ var annotateSubjects = function(doc, cb) {
 var createSubjects = function(doc, interviewContent, timecodesMap, subjects, code){
 	var subjectCodes = code.split(',');
 	if(subjectCodes.length > 1) {
-		var endPath = timecodesMap[subjectCodes[1]].path;
-		var endOffset = timecodesMap[subjectCodes[1]].startOffset;
-		var startPath = timecodesMap[subjectCodes[0]].path;
-    var startOffset = timecodesMap[subjectCodes[0]].startOffset;
+		if(_.isUndefined(timecodesMap[subjectCodes[1]])) {
+			console.log('timecodesMap[subjectCodes[1]] is undefined: #', code, ', code: ', subjectCodes);
+		} else if (_.isUndefined(timecodesMap[subjectCodes[0]])) {
+			console.log('timecodesMap[subjectCodes[0]] is undefined: #', code, ', code: ', subjectCodes);
+		} else {
+			var endPath = timecodesMap[subjectCodes[1]].path;
+			var endOffset = timecodesMap[subjectCodes[1]].startOffset;
+			var startPath = timecodesMap[subjectCodes[0]].path;
+	    var startOffset = timecodesMap[subjectCodes[0]].startOffset;
 
-    // Subject selection end correction
-		if(timecodesMap[subjectCodes[1]].startOffset < 4) {
-			var prev = interviewContent.getComponent(endPath).getPrevious();
-			var endPath = prev.path;
-			var endOffset = doc.get(prev.path).length;
+	    // Subject selection end correction
+			if(timecodesMap[subjectCodes[1]].startOffset < 4) {
+				var prev = interviewContent.getComponent(endPath).getPrevious();
+				var endPath = prev.path;
+				var endOffset = doc.get(prev.path).length;
+			}
+
+			createSubjectAnnotation(doc, startPath, startOffset, endPath, endOffset, subjects);
 		}
-
-		createSubjectAnnotation(doc, startPath, startOffset, endPath, endOffset, subjects);
 	} else {
     console.log('Some problems discovered, subject: #', code, ', code: ', subjectCodes);
   }
