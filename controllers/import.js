@@ -29,7 +29,7 @@ var personsAnnotator = require('./import/persons');
 */
 
 var prepareAnnotations = function(req, res, next) {
-  req.connection.setTimeout(240000);
+  req.socket.setTimeout(240000);
   var docId = req.params.id;
   var gsId = req.params.gsid;
   var columnId = req.params.gscolumn;
