@@ -28,7 +28,7 @@ var personsAnnotator = require('./import/persons');
   Run all importers one after another
 */
 
-var importAnnotations = function(req, res, next) {
+var prepareAnnotations = function(req, res, next) {
   req.connection.setTimeout(240000);
   var docId = req.params.id;
   var gsId = req.params.gsid;
@@ -73,7 +73,25 @@ var importAnnotations = function(req, res, next) {
         console.log('Timecodes has been annotated');
         callback(null, 'timecodes');
       });
-    },
+    }
+  ],
+  // optional callback
+  function(err, results){
+    if(err) return res.status(500).json(err.message);
+    console.log('Done!');
+    res.status(200).json(results);
+  });
+}
+
+importer.route('/:id/prepare/:gsid/:gscolumn')
+  .get(prepareAnnotations)
+
+var importAnnotations = function(req, res, next) {
+  req.connection.setTimeout(240000);
+  var docId = req.params.id;
+  var gsId = req.params.gsid;
+  var columnId = req.params.gscolumn;
+  async.series([    
     function(callback){
       console.log('Running subjects annotator...');
       subjectsAnnotator(docId, gsId, columnId, function(err, doc) {

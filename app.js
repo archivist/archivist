@@ -123,7 +123,7 @@ var sessionStore = new MongoStore({
     ttl: 2 * 3600
   }, function(e){
     app.listen(port, function() {
-    console.log("Application server listening on port %d", port);
+    	console.log("Application server listening on port %d", port);
   });
 })
 

@@ -51,6 +51,7 @@ var findRealities = function(reality, doc, cb){
 			from: 0,
 			size: 100
 		}
+		if (/\s/.test(synonym)) data.type = "phrase";
 		request
   		.get(indexerUrl)
   		.query(data)
