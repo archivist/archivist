@@ -61,7 +61,7 @@ var findToponyms = function(topo, doc, cb){
 		    var fragments = res.body.fragments;
 		  	_.each(fragments, function(fragment) {
 		  		// Detect toponym inside search result and annotate it 
-		  		detectToponym(fragment, doc, topo);
+		  		detectToponym(fragment, doc, topo, synonym);
 		  	});
 		  	callback();
 		  });
@@ -72,7 +72,7 @@ var findToponyms = function(topo, doc, cb){
 	});
 }
 
-var detectToponym = function(fragment, doc, toponym) {
+var detectToponym = function(fragment, doc, toponym, synonym) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
@@ -80,9 +80,17 @@ var detectToponym = function(fragment, doc, toponym) {
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
-	var entities = text.match(regex).map(function(val){
-  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
-	});
+	try {
+		var entities = text.match(regex).map(function(val){
+	  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
+		});
+	} catch (e) {
+		var entities = [];
+		if(text.indexOf(synonym) !== -1) entities.push(synonym);
+		console.log(fragment)
+		console.log(toponym)
+		return;
+	}
 
 	_.each(entities, function(entity){
 		//console.log('timecode', tc, 'has been detected');

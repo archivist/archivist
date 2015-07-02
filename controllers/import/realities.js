@@ -60,7 +60,7 @@ var findRealities = function(reality, doc, cb){
 		    var fragments = res.body.fragments;
 		  	_.each(fragments, function(fragment) {
 		  		// Detect toponym inside search result and annotate it 
-		  		detectReality(fragment, doc, reality);
+		  		detectReality(fragment, doc, reality, synonym);
 		  	});
 		  	callback();
 		  });
@@ -71,7 +71,7 @@ var findRealities = function(reality, doc, cb){
 	});
 }
 
-var detectReality = function(fragment, doc, reality) {
+var detectReality = function(fragment, doc, reality, synonym) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
@@ -79,9 +79,17 @@ var detectReality = function(fragment, doc, reality) {
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
-	var entities = text.match(regex).map(function(val){
-  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
-	});
+	try {
+		var entities = text.match(regex).map(function(val){
+	  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
+		});
+	} catch (e) {
+		var entities = [];
+		if(text.indexOf(synonym) !== -1) entities.push(synonym);
+		console.log(fragment)
+		console.log(reality)
+		return;
+	}
 
 	_.each(entities, function(entity){
 		//console.log('timecode', tc, 'has been detected');
