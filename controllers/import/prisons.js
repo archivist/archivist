@@ -60,7 +60,7 @@ var findPrisons = function(topo, doc, cb){
 		    var fragments = res.body.fragments;
 		  	_.each(fragments, function(fragment) {
 		  		// Detect toponym inside search result and annotate it 
-		  		detectPrison(fragment, doc, topo);
+		  		detectPrison(fragment, doc, topo, synonym);
 		  	});
 		  	callback();
 		  });
@@ -71,7 +71,7 @@ var findPrisons = function(topo, doc, cb){
 	});
 }
 
-var detectPrison = function(fragment, doc, toponym) {
+var detectPrison = function(fragment, doc, toponym, synonym) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
@@ -83,6 +83,8 @@ var detectPrison = function(fragment, doc, toponym) {
 	  	return val.replace(/<\/?span>/g,'').replace(/<span class="query-string">/g,'');
 		});
 	} catch (e) {
+		var entities = [];
+		if(text.indexOf(synonym) !== -1) entities.push(synonym);
 		console.log(fragment)
 		console.log(toponym)
 		return;
