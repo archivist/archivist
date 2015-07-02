@@ -96,8 +96,8 @@ var allowCrossDomain = function(req, res, next) {
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(bodyParser.json({limit: '3mb'}));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '5mb' }));
 app.use(methodOverride());
 app.use(allowCrossDomain);
 app.use(flash());
