@@ -4,6 +4,7 @@
 
 var _ = require('underscore')
 	, Substance = require('substance')
+	, Document = Substance.Document
 	, utils = require('./utils.js');
 
 var findReplaceNodes = function(doc, string, replace, cb) {
@@ -41,6 +42,8 @@ var detectString = function(text, string) {
 }
 
 var changeTextNode = function(doc, path, startOffset, endOffset, replace) {
+	var sel = Document.Selection.create(path, startOffset, replace.length);
+  var range = sel.getRange();
 	var tx = doc.startTransaction();
 	tx.update(path, { 
 		delete: { 
@@ -48,12 +51,14 @@ var changeTextNode = function(doc, path, startOffset, endOffset, replace) {
 			end: endOffset 
 		} 
 	});
+	Document.AnnotationUpdates.deletedText(tx, path, startOffset, endOffset);
 	tx.update(path, { 
 		insert: { 
 			offset: startOffset, 
-			value: replace 
+			value: replace
 		} 
 	});
+	Document.AnnotationUpdates.insertedText(tx, range.start, replace.length);
 	tx.save();
   tx.cleanup();
 }

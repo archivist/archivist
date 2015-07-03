@@ -4,6 +4,7 @@
 
 var _ = require('underscore')
 	, Substance = require('substance')
+	, Document = Substance.Document
 	, utils = require('./utils.js');
 
 var findReplaceNodes = function(doc, cb) {
@@ -26,12 +27,11 @@ var findReplaceNodes = function(doc, cb) {
 var findString = function(doc, path) {
 	var text = doc.get(path);
 	var string = ' ';
-	var replace = '';
 
 	while(detectString(text, string) == 0) {
 		var startOffset = detectString(text, string);
 		var endOffset = startOffset + string.length;
-		changeTextNode(doc, path, startOffset, endOffset, replace);
+		changeTextNode(doc, path, startOffset, endOffset);
 		// Update text variable to detect next fragment inside node
 		text = doc.get(path);
 	}
@@ -42,7 +42,8 @@ var detectString = function(text, string) {
 	return text.indexOf(string);
 }
 
-var changeTextNode = function(doc, path, startOffset, endOffset, replace) {
+var changeTextNode = function(doc, path, startOffset, endOffset) {
+	//var sel = Document.Selection.create(path, startOffset, endOffset);
 	var tx = doc.startTransaction();
 	tx.update(path, { 
 		delete: { 
@@ -50,12 +51,7 @@ var changeTextNode = function(doc, path, startOffset, endOffset, replace) {
 			end: endOffset 
 		} 
 	});
-	tx.update(path, { 
-		insert: { 
-			offset: startOffset, 
-			value: replace 
-		} 
-	});
+	Document.AnnotationUpdates.deletedText(tx, path, startOffset, endOffset);
 	tx.save();
   tx.cleanup();
 }
