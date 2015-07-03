@@ -2,6 +2,7 @@ var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
 	, Location = require('../../models/location.js')
+	, Remark = require('./remarks')
 	, Substance = require('substance')
 	, utils = require('./utils.js');
 
@@ -25,6 +26,7 @@ var annotateToponyms = function(doc, cb) {
 	})
 
 	utils.loadSPToponyms(SPId, function(err, toponyms){
+		console.log(toponyms)
 		if (err) return cb(err);
 		async.eachSeries(toponyms, function(topo, callback){
 			Location.get(topo.id, function(err, location) {
@@ -36,6 +38,7 @@ var annotateToponyms = function(doc, cb) {
 		}, function(err){
 			if (err) return cb(err);
 			console.log('Done! Yay!')
+			Remark.writeOutEntityReport(doc, found, toponyms, 'Список потерянных топонимов:');
 			cb(null, doc, found);
 		});
 	});

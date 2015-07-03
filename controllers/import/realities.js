@@ -35,6 +35,7 @@ var annotateDefinitions = function(doc, cb) {
 		}, function(err){
 			if (err) return cb(err);
 			console.log('Done! Yay!')
+			Remark.writeOutEntityReport(doc, found, realities, 'Список потерянных дефиниций:');
 			cb(null, doc, found);
 		});
 	});
