@@ -40,14 +40,16 @@ var annotatePersons = function(doc, cb) {
 		async.eachSeries(persons, function(person, callback){
 			console.log('indexing row', person.row)
 			if(!_.isNull(person.timecodes)){
-				_.each(person.timecodes, function(timecodes){
+				_.each(person.timecodes, function(timecodes, i){
 					console.log(timecodes)
 					var components = [];
+					if(_.isUndefined(timecodesMap[timecodes[0]])) person.timecodes[i][0] = timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
 					var openCode = timecodesMap[timecodes[0]];
+					if(_.isUndefined(timecodesMap[timecodes[1]])) person.timecodes[i][1] = timecodes[1] = timecodes[1].slice(0, 1) + timecodes[1].slice(2, timecodes[1].length)
 					var closeCode = timecodesMap[timecodes[1]];
 					var openCodeComp = documentContent.getComponent(openCode.path);
 					var closeCodeComp = documentContent.getComponent(closeCode.path);
-
+					console.log(timecodes)
 					var comp = openCodeComp;
 					components.push(comp.rootId);
 
