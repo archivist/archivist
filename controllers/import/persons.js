@@ -1,7 +1,7 @@
 var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
-//	, Person = require('../../models/person.js')
+	, Remark = require('./remarks')
 	, Substance = require('substance')
 	, utils = require('./utils.js');
 
@@ -68,7 +68,7 @@ var annotatePersons = function(doc, cb) {
 			}
 		}, function(err){
 			if (err) return cb(err);
-			Remark.writeOutPersonsReport(doc, report, timecodesMap, 'В этом промежутке затерялись персоналии:');
+			Remark.writeOutPersonsReport(doc, report, timecodesMap, 	'В этом промежутке затерялись персоналии:');
 			console.log('Done! Yay!')
 			cb(null, doc, found);
 		});

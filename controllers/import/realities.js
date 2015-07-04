@@ -2,6 +2,7 @@ var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
 	, Definition = require('../../models/definition.js')
+	, Remark = require('./remarks')
 	, Substance = require('substance')
 	, utils = require('./utils.js');
 

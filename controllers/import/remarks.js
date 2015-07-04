@@ -97,7 +97,7 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 	findOrCreateEntityReport(doc, content);
 }
 
-exports.writeOutPersonsReport(doc, report, timecodesMap, intro) {
+exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 	var noTimecodes = []
 	_.each(report, function(item){
 		if(_.isEmpty(item.timecodes)) {
