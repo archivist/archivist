@@ -100,6 +100,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  	}
 		    var fragments = res.body.fragments;
 		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
+		  	console.log('prefound results in', fragment.id)
 		  	async.each(fragments, function(fragment, cb) {
 		  		console.log('found results in', fragment.id)
 		  		// Detect person inside search result and annotate it
@@ -112,10 +113,12 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			  	}
 		  	}, function(err){
 					if (err) return callback(err);
+					console.log('callback received', fragment.id)
 					callback();
 				});
 		  });
 	}, function(err){
+		console.log('prefinishing searching for person', person.id)
 		if (err) return cb(err);
 		console.log('finish searching for person', person.id)
 		cb();
@@ -160,6 +163,7 @@ var detectPerson = function(fragment, doc, person, synonym, index, cb) {
 			createEntityAnnotation(doc, startPos, endPos, path, person.id);
 		}
 	});
+	console.log('callback results for', fragment.id)
 	cb();
 }
 
