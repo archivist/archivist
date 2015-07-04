@@ -113,7 +113,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			  	}
 		  	}, function(err){
 					if (err) return callback(err);
-					console.log('callback received', fragment.id)
+					console.log('callback received', synonym)
 					callback();
 				});
 		  });
