@@ -103,12 +103,14 @@ exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 		if(_.isEmpty(item.timecodes)) {
 			noTimecodes.push(item);
 		} else {
+			console.log(item.timecodes)
 			var startCode = timecodesMap[item.timecodes[0]];
 			var endCode = timecodesMap[item.timecodes[1]];
 			var content = '';
 			content += '- ';
 			content += item.person.values.join(', ');
 			content += " (" + item.person.id + ");\n";
+			console.log(startCode)
 			findOrCreatePersonReport(doc, content, intro, startCode, endCode);
 		}
 	});
