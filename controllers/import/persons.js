@@ -95,6 +95,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  		return callback(err);
 		  	}
 		    var fragments = res.body.fragments;
+		    console.log('found',fragments.length,'fragments for:', synonym)
 		  	async.each(fragments, function(fragment, cb) {
 		  		// Detect person inside search result and annotate it
 		  		if(global) {
@@ -103,7 +104,6 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			  		if(_.contains(components, fragment.id)) { 
 			  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
 			  		} else {
-			  			console.log('rejected:', synonym)
 			  			cb();
 			  		}
 			  	}
