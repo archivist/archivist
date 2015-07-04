@@ -109,8 +109,7 @@ exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 			content += '- ';
 			content += item.person.values.join(', ');
 			content += " (" + item.person.id + ");\n";
-			console.log('startCode',item.timecodes[0])
-			findOrCreatePersonReport(doc, content, intro, startCode, endCode);
+			findOrCreatePersonReport(doc, content, startCode, endCode);
 		}
 	});
 	var content = intro + '\n';
