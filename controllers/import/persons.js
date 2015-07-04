@@ -60,7 +60,7 @@ var annotatePersons = function(doc, cb) {
 					}
 
 					findPersons(person, doc, components, false, timecodes, cb);
-				}),
+				},
 				function(err){
 					if (err) return callback(err);
 					console.log('Done with person', person.id);
@@ -117,6 +117,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  });
 	}, function(err){
 		if (err) return cb(err);
+		console.log('finish searching for person', person.id)
 		cb();
 		//console.log('Anotating of', topo.id, 'has been finished.')
 	});
