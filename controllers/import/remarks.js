@@ -99,18 +99,25 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 
 exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 	var noTimecodes = []
+	var i = 0;
+	var j = 0;
 	_.each(report, function(item){
-		if(_.isEmpty(item.timecodes)) {
-			noTimecodes.push(item);
-		} else {
-			var startCode = timecodesMap[item.timecodes[0]];
-			var endCode = timecodesMap[item.timecodes[1]];
-			var content = '';
-			content += '- ';
-			content += item.person.values.join(', ');
-			content += " (" + item.person.id + ");\n";
-			findOrCreatePersonReport(doc, content, startCode, endCode);
+		if(!item.found){
+			var i++
+			if(_.isEmpty(item.timecodes)) {
+				noTimecodes.push(item);
+			} else {
+				var startCode = timecodesMap[item.timecodes[0]];
+				var endCode = timecodesMap[item.timecodes[1]];
+				var content = '';
+				content += '- ';
+				content += item.person.values.join(', ');
+				content += " (" + item.person.id + ");\n";
+				findOrCreatePersonReport(doc, content, startCode, endCode);
+			}
 		}
+		var j++;
+		console.log(i,"/",j);
 	});
 	var content = intro + '\n';
 	_.each(noTimecodes, function(item, id){
