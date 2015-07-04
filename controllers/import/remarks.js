@@ -103,7 +103,7 @@ exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 	var j = 0;
 	_.each(report, function(item){
 		if(!item.found){
-			var i++
+			i++;
 			if(_.isEmpty(item.timecodes)) {
 				noTimecodes.push(item);
 			} else {
@@ -116,7 +116,7 @@ exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 				findOrCreatePersonReport(doc, content, startCode, endCode);
 			}
 		}
-		var j++;
+		j++;
 		console.log(i,"/",j);
 	});
 	var content = intro + '\n';
