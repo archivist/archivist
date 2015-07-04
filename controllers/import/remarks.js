@@ -32,7 +32,6 @@ var findOrCreatePersonReport = function(doc, content, startCode, endCode) {
 	if(reportId) {
 		updateRemarkAnnotation(reportId, content);
 	} else {
-		console.log(startCode.path, startCode.startOffset, endCode.path, endCode.endOffset)
 		createRemarkAnnotation(doc, startCode.path, startCode.startOffset, endCode.path, endCode.endOffset, content);
 	}
 }

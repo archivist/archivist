@@ -103,6 +103,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			  		if(_.contains(components, fragment.id)) { 
 			  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
 			  		} else {
+			  			console.log('rejected:', synonym)
 			  			cb();
 			  		}
 			  	}
@@ -211,7 +212,7 @@ module.exports = function(id, internalId, cb) {
 				if (err) return cb(err);
 				utils.saveInterview(id, doc, function(err, document) {
 					if (err) return cb(err);
-					cb(null, document);
+					cb(null, report);
 				});
 			})
 		})
