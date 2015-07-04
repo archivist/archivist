@@ -236,13 +236,22 @@ var getSPPersons = function(cb) {
               cell = cell.toString();
               item.timecodes = {};
               if(typeof cell.split === 'function') {
+                var regex = new RegExp("\{(.+?)\}", "g");
+                var timecodes = cell.split('; ');
+                // _.each(timecodes, function(code){
+                //   var codes = code.split(':{');
+                //   if(codes.length == 2) { 
+                //     if(!item.timecodes[codes[0]]) item.timecodes[codes[0]] = [];
+                //     item.timecodes[codes[0]].push(codes[1].substring(0,8));
+                //   }
+                // })
                 var timecodes = cell.split('; ');
                 _.each(timecodes, function(code){
                   var codes = code.split(':{');
-                  if(codes.length == 2) { 
-                    if(!item.timecodes[codes[0]]) item.timecodes[codes[0]] = [];
-                    item.timecodes[codes[0]].push(codes[1].substring(0,8));
-                  }
+                  if(!item.timecodes[codes[0]]) item.timecodes[codes[0]] = [];
+                  var range = '{' + codes[1];
+
+                  item.timecodes[codes[0]].push(range.match(regex));
                 })
               }
             } else if(column == '9') {
@@ -315,6 +324,9 @@ exports.loadSPPersons = function(id, cb) {
     var filtered = _.filter(persons, function(person){ 
       return (_.contains(person.interviews, id) || _.isEmpty(person.interviews));
     });
+    _.each(filtered, function(person, key){
+      filtered[key].timecodes = person.timecodes[id];
+    })
     cb(null, filtered);
   });
 }

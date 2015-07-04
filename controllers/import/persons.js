@@ -10,7 +10,10 @@ var SPId;//"16";
 var docId;//"5587f3485c8e9e4a10773fde";
 var tableId = 'oqthas0';
 var entitiesMap = [];
+var timecodesMap = {};
+var documentContent;
 var found = {};
+var report = [];
 
 var annotatePersons = function(doc, cb) {
 	var entities = doc.getIndex('type').get('entity_reference');
@@ -24,21 +27,52 @@ var annotatePersons = function(doc, cb) {
 		});
 	})
 
+	var timecodes = doc.getIndex('type').get('timecode');
+	_.each(timecodes, function(tc){
+		code = tc.getText();
+		timecodesMap[code] = tc;
+	})
+
+	documentContent = doc.get('content');
+
 	utils.loadSPPersons(SPId, function(err, persons){
 		if (err) return cb(err);
 		async.eachSeries(persons, function(person, callback){
-    	findPersons(person, doc, callback);
+			console.log('indexing row', person.row)
+			if(!_.isNull(person.timecodes)){
+				_.each(person.timecodes, function(timecodes){
+					var components = [];
+					var openCode = timecodesMap[timecodes[0]];
+					var closeCode = timecodesMap[timecodes[1]];
+					var openCodeComp = documentContent.getComponent(openCode.path);
+					var closeCodeComp = documentContent.getComponent(closeCode.path);
+
+					var comp = openCodeComp;
+					components.push(comp.rootId);
+
+					while(comp.hasNext()) {
+						var comp = comp.getNext();
+						components.push(comp.rootId);
+						if(comp.rootId == closeCodeComp.rootId) break;
+					}
+
+					findPersons(person, doc, components, false, timecodes, callback);
+				});
+			} else {
+				var components = [];
+				findPersons(person, doc, components, true, [], callback);
+			}
 		}, function(err){
 			if (err) return cb(err);
+			console.log(report);
 			console.log('Done! Yay!')
 			cb(null, doc, found);
 		});
 	});
 }
 
-// Querying indexer for each synonym
-var findPersons = function(person, doc, cb){
-	//console.log('Starting to search for person', person.id, 'synonyms...')
+// Querying indexer for each person
+var findPersons = function(person, doc, components, global, timecodes, cb){
 	var synonyms = person.values;
 	async.each(synonyms, function(synonym, callback){
 		var data = {
@@ -56,9 +90,16 @@ var findPersons = function(person, doc, cb){
 		  		return callback(err);
 		  	}
 		    var fragments = res.body.fragments;
+		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
 		  	async.each(fragments, function(fragment, cb) {
-		  		// Detect person inside search result and annotate it 
-		  		detectPerson(fragment, doc, person, synonym, cb);
+		  		// Detect person inside search result and annotate it
+		  		if(global) {
+		  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
+		  		} else {
+			  		if(_.contains(components, fragment.id)) { 
+			  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
+			  		}
+			  	}
 		  	}, function(err){
 					if (err) return callback(err);
 					callback();
@@ -71,12 +112,10 @@ var findPersons = function(person, doc, cb){
 	});
 }
 
-var detectPerson = function(fragment, doc, person, synonym, cb) {
+var detectPerson = function(fragment, doc, person, synonym, index, cb) {
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
-	var containsTimecode = false;
-	console.log('person', synonym)
 	// regex for detecting everything between <span class="query-string"> and </span>
 	var regex = new RegExp('\<span class="query-string">(.+?)\</span>', 'g');
 
@@ -87,71 +126,29 @@ var detectPerson = function(fragment, doc, person, synonym, cb) {
 	} catch (e) {
 		var entities = [];
 		if(text.indexOf(synonym) !== -1) entities.push(synonym);
-		console.log(fragment)
-		console.log(person)
-	}
- 
-	if(_.isUndefined(person.timecodes)){
-		containsTimecode = true;
-	} else {
-		_.each(person.timecodes, function(timecode) {
-			var related = belongsToTimecode(fragment, doc, timecode);
-			if(related) containsTimecode = true;
-		});
 	}
 
-	if(containsTimecode) {
-		_.each(entities, function(entity){
-			//console.log('timecode', tc, 'has been detected');
-			var startPos = textNode.indexOf(entity);
-			// start position and match length, subtract <span class="query-string"></span> length
-			var endPos = startPos + entity.length;
+	_.each(entities, function(entity){
+		if(report[index].found == false) report[index].found = true;
+		//console.log('timecode', tc, 'has been detected');
+		var startPos = textNode.indexOf(entity);
+		// start position and match length, subtract <span class="query-string"></span> length
+		var endPos = startPos + entity.length;
 
-			var alredyExists = checkForExistingAnnotation(person.id, startPos);
+		var alredyExists = checkForExistingAnnotation(person.id, startPos);
 
-			if(!alredyExists) {
-				// Store data to send back to google spreadheet
-				if(person.found) {
-					found[person.row] = {9: person.found + '; ' + SPId}
-				} else {
-					found[person.row] = {9: SPId}
-				}
-				// create annotation via transaction interface
-				createEntityAnnotation(doc, startPos, endPos, path, person.id);
+		if(!alredyExists) {
+			// Store data to send back to google spreadheet
+			if(person.found) {
+				found[person.row] = {9: person.found + '; ' + SPId}
+			} else {
+				found[person.row] = {9: SPId}
 			}
-		});
-	}
-	cb();
-}
-
-// Checks if fragment belongs to timecode
-var belongsToTimecode = function(fragment, doc, timecode) {
-	
-	// regex for detecting everything between {}
-	var regex = new RegExp("\{(.+?)\}", "g");
-	var content = doc.get('content');
-	var comp = content.getComponent([fragment.id, 'content']);
-	var text = fragment.content;
-	var belongs = false;
-
-	var detected = regex.test(text);
-	if(detected) {
-		timecodes = text.match(regex);
-		if(timecodes[0].indexOf(timecode) > -1) belongs = true;
-		return belongs;
-	}
-
-	while (comp.hasPrevious()) {
-	  comp = comp.getPrevious();
-	  text = doc.get(comp.path);
-	  detected = regex.test(text);
-	  if(detected) {
-			timecodes = text.match(regex);
-			if(timecodes[0].indexOf(timecode) > -1) belongs = true;
-			return belongs;
+			// create annotation via transaction interface
+			createEntityAnnotation(doc, startPos, endPos, path, person.id);
 		}
-	}
-	return belongs;
+	});
+	cb();
 }
 
 // Checks if entity already exists

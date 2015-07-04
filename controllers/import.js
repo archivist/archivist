@@ -265,6 +265,7 @@ importer.route('/:id/realities/:gsid')
   .get(annotateRealities)
 
 var annotatePersons = function(req, res, next) {
+  req.socket.setTimeout(800000);
   var docId = req.params.id;
   var gsId = req.params.gsid;
   personsAnnotator(docId, gsId, function(err, doc) {
