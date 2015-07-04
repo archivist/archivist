@@ -20,6 +20,23 @@ var findOrCreateEntityReport = function(doc, content) {
 	}
 }
 
+var findOrCreatePersonReport = function(doc, content, startCode, endCode) {
+	var contentCotainer = doc.get('content');
+	var remarks = doc.getIndex('type').get('remark');
+	var reportId = false;
+
+	_.each(remarks, function(remark) {
+		if(remark.startPath == startCode.path && remark.endPath == startCode.endPath) reportId = remark.id;
+	});
+
+	if(reportId) {
+		updateRemarkAnnotation(reportId, content);
+	} else {
+		content = intro + '\n' + content;
+		createRemarkAnnotation(doc, startCode.path, startCode.startOffset, endCode.path, endCode.endOffset, content);
+	}
+}
+
 /*
 	REMARK ANNOTATION EXAMPLE
 
@@ -76,6 +93,30 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 		content += (id + 1) + '. ';
 		content += entity.values.join(', ');
 		content += " (" + entity.id + ");\n";
+	});
+	findOrCreateEntityReport(doc, content);
+}
+
+exports.writeOutPersonsReport(doc, report, timecodesMap, intro) {
+	var noTimecodes = []
+	_.each(report, function(item){
+		if(_.isEmpty(item.timecodes)) {
+			noTimecodes.push(item);
+		} else {
+			var startCode = timecodesMap[item.timecodes[0]];
+			var endCode = timecodesMap[item.timecodes[1]];
+			var content = '';
+			content += '- ';
+			content += item.person.values.join(', ');
+			content += " (" + item.person.id + ");\n";
+			findOrCreatePersonReport(doc, content, intro, startCode, endCode);
+		}
+	});
+	var content = intro + '\n';
+	_.each(noTimecodes, function(item, id){
+		content += (id + 1) + '. ';
+		content += item.person.values.join(', ');
+		content += " (" + item.person.id + ");\n";
 	});
 	findOrCreateEntityReport(doc, content);
 }

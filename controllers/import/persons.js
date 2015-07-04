@@ -38,10 +38,8 @@ var annotatePersons = function(doc, cb) {
 	utils.loadSPPersons(SPId, function(err, persons){
 		if (err) return cb(err);
 		async.eachSeries(persons, function(person, callback){
-			console.log('indexing row', person.row)
 			if(!_.isNull(person.timecodes)){
 				async.eachSeries(person.timecodes, function(timecodes, cb){
-					console.log(timecodes)
 					var components = [];
 					if(_.isUndefined(timecodesMap[timecodes[0]])) timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
 					var openCode = timecodesMap[timecodes[0]];
@@ -49,7 +47,6 @@ var annotatePersons = function(doc, cb) {
 					var closeCode = timecodesMap[timecodes[1]];
 					var openCodeComp = documentContent.getComponent(openCode.path);
 					var closeCodeComp = documentContent.getComponent(closeCode.path);
-					console.log(timecodes)
 					var comp = openCodeComp;
 					components.push(comp.rootId);
 
@@ -63,7 +60,6 @@ var annotatePersons = function(doc, cb) {
 				},
 				function(err){
 					if (err) return callback(err);
-					console.log('Done with person', person.id);
 					callback();
 				});
 			} else {
@@ -72,7 +68,7 @@ var annotatePersons = function(doc, cb) {
 			}
 		}, function(err){
 			if (err) return cb(err);
-			console.log(report);
+			Remark.writeOutPersonsReport(doc, report, timecodesMap, 'В этом промежутке затерялись персоналии:');
 			console.log('Done! Yay!')
 			cb(null, doc, found);
 		});
@@ -81,8 +77,8 @@ var annotatePersons = function(doc, cb) {
 
 // Querying indexer for each person
 var findPersons = function(person, doc, components, global, timecodes, cb){
-	console.log('searching for person', person.id)
 	var synonyms = person.values;
+	var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
 	async.each(synonyms, function(synonym, callback){
 		var data = {
 			searchString: synonym,
@@ -99,11 +95,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  		return callback(err);
 		  	}
 		    var fragments = res.body.fragments;
-		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
-		  	console.log('prefound results for', synonym)
-		  	console.log()
 		  	async.each(fragments, function(fragment, cb) {
-		  		console.log('found results in', fragment.id)
 		  		// Detect person inside search result and annotate it
 		  		if(global) {
 		  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
@@ -116,21 +108,17 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			  	}
 		  	}, function(err){
 					if (err) return callback(err);
-					console.log('callback received', synonym)
 					callback();
 				});
 		  });
 	}, function(err){
-		console.log('prefinishing searching for person', person.id)
 		if (err) return cb(err);
-		console.log('finish searching for person', person.id)
 		cb();
 		//console.log('Anotating of', topo.id, 'has been finished.')
 	});
 }
 
 var detectPerson = function(fragment, doc, person, synonym, index, cb) {
-	console.log('detecting results for', fragment.id)
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
@@ -166,7 +154,6 @@ var detectPerson = function(fragment, doc, person, synonym, index, cb) {
 			createEntityAnnotation(doc, startPos, endPos, path, person.id);
 		}
 	});
-	console.log('callback results for', fragment.id)
 	cb();
 }
 
