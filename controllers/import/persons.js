@@ -100,7 +100,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  	}
 		    var fragments = res.body.fragments;
 		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
-		  	console.log('prefound results in', fragment.id)
+		  	console.log('prefound results for', synonym)
 		  	async.each(fragments, function(fragment, cb) {
 		  		console.log('found results in', fragment.id)
 		  		// Detect person inside search result and annotate it
