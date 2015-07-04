@@ -40,7 +40,7 @@ var annotatePersons = function(doc, cb) {
 		async.eachSeries(persons, function(person, callback){
 			console.log('indexing row', person.row)
 			if(!_.isNull(person.timecodes)){
-				_.each(person.timecodes, function(timecodes){
+				async.eachSeries(person.timecodes, function(timecodes, cb){
 					console.log(timecodes)
 					var components = [];
 					if(_.isUndefined(timecodesMap[timecodes[0]])) timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
@@ -59,7 +59,12 @@ var annotatePersons = function(doc, cb) {
 						if(comp.rootId == closeCodeComp.rootId) break;
 					}
 
-					findPersons(person, doc, components, false, timecodes, callback);
+					findPersons(person, doc, components, false, timecodes, cb);
+				}),
+				function(err){
+					if (err) return callback(err);
+					console.log('Done with person', person.id);
+					callback();
 				});
 			} else {
 				var components = [];
