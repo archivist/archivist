@@ -40,12 +40,12 @@ var annotatePersons = function(doc, cb) {
 		async.eachSeries(persons, function(person, callback){
 			console.log('indexing row', person.row)
 			if(!_.isNull(person.timecodes)){
-				_.each(person.timecodes, function(timecodes, i){
+				_.each(person.timecodes, function(timecodes){
 					console.log(timecodes)
 					var components = [];
-					if(_.isUndefined(timecodesMap[timecodes[0]])) person.timecodes[i][0] = timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
+					if(_.isUndefined(timecodesMap[timecodes[0]])) timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
 					var openCode = timecodesMap[timecodes[0]];
-					if(_.isUndefined(timecodesMap[timecodes[1]])) person.timecodes[i][1] = timecodes[1] = timecodes[1].slice(0, 1) + timecodes[1].slice(2, timecodes[1].length)
+					if(_.isUndefined(timecodesMap[timecodes[1]])) timecodes[1] = timecodes[1].slice(0, 1) + timecodes[1].slice(2, timecodes[1].length)
 					var closeCode = timecodesMap[timecodes[1]];
 					var openCodeComp = documentContent.getComponent(openCode.path);
 					var closeCodeComp = documentContent.getComponent(closeCode.path);
@@ -76,6 +76,7 @@ var annotatePersons = function(doc, cb) {
 
 // Querying indexer for each person
 var findPersons = function(person, doc, components, global, timecodes, cb){
+	console.log('searching for person', person.id)
 	var synonyms = person.values;
 	async.each(synonyms, function(synonym, callback){
 		var data = {
@@ -95,6 +96,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		    var fragments = res.body.fragments;
 		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
 		  	async.each(fragments, function(fragment, cb) {
+		  		console.log('found results in', fragment.id)
 		  		// Detect person inside search result and annotate it
 		  		if(global) {
 		  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
@@ -116,6 +118,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 }
 
 var detectPerson = function(fragment, doc, person, synonym, index, cb) {
+	console.log('detecting results for', fragment.id)
 	var path = [fragment.id, 'content'];
 	var text = fragment.content;
 	var textNode = doc.get(fragment.id).content;
