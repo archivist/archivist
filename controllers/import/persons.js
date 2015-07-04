@@ -41,6 +41,7 @@ var annotatePersons = function(doc, cb) {
 			console.log('indexing row', person.row)
 			if(!_.isNull(person.timecodes)){
 				_.each(person.timecodes, function(timecodes){
+					console.log(timecodes)
 					var components = [];
 					var openCode = timecodesMap[timecodes[0]];
 					var closeCode = timecodesMap[timecodes[1]];
