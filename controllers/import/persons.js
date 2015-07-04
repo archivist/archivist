@@ -101,6 +101,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		    var fragments = res.body.fragments;
 		    var reportIndex = report.push({person: person, timecodes: timecodes, found: false}) - 1;
 		  	console.log('prefound results for', synonym)
+		  	console.log()
 		  	async.each(fragments, function(fragment, cb) {
 		  		console.log('found results in', fragment.id)
 		  		// Detect person inside search result and annotate it
@@ -109,6 +110,8 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 		  		} else {
 			  		if(_.contains(components, fragment.id)) { 
 			  			detectPerson(fragment, doc, person, synonym, reportIndex, cb);
+			  		} else {
+			  			cb();
 			  		}
 			  	}
 		  	}, function(err){
