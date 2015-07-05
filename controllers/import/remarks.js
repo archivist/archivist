@@ -26,6 +26,7 @@ var findOrCreatePersonReport = function(doc, content, startCode, endCode) {
 	var reportId = false;
 
 	_.each(remarks, function(remark) {
+		console.log(remark.startPath, startCode.path)
 		if(remark.startPath == startCode.path && remark.endPath == startCode.endPath) reportId = remark.id;
 	});
 
