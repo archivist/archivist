@@ -97,7 +97,7 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 				content += (id) + '. ';
 				if(!_.isUndefined(entity.values)) content += entity.values.join(', ');
 				content += " (" + entity.id + ");\n";
-				i++;
+				id++;
 			}
 		}
 	});
