@@ -36,7 +36,7 @@ var annotatePrisons = function(doc, cb) {
 		}, function(err){
 			if (err) return cb(err);
 			console.log('Done! Yay!')
-			Remark.writeOutEntityReport(doc, found, toponyms, 'Список потерянных лагерей:');
+			Remark.writeOutEntityReport(doc, found, toponyms, '\nСписок потерянных лагерей:');
 			cb(null, doc, found);
 		});
 	});

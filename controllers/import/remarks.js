@@ -9,7 +9,7 @@ var findOrCreateEntityReport = function(doc, content) {
 	var reportId = false;
 
 	_.each(remarks, function(remark) {
-		if(remark.startPath[0] === comp.path[0]) reportId = remark.id;
+		if(remark.startPath[0] == comp.path[0]) reportId = remark.id;
 	});
 
 	if(reportId) {
