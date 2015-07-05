@@ -93,6 +93,7 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 	_.each(lostEntities, function(entity, id) {
 		if(!_.isUndefined(entity.interviews)) {
 			if(!_.isEmpty(entity.interviews)) {
+				if(_.isUndefined(entity.values)) console.log(entity);
 				content += (id + 1) + '. ';
 				content += entity.values.join(', ');
 				content += " (" + entity.id + ");\n";
