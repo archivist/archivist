@@ -45,6 +45,7 @@ var annotatePersons = function(doc, cb) {
 					var openCode = timecodesMap[timecodes[0]];
 					if(_.isUndefined(timecodesMap[timecodes[1]])) timecodes[1] = timecodes[1].slice(0, 1) + timecodes[1].slice(2, timecodes[1].length)
 					var closeCode = timecodesMap[timecodes[1]];
+					if(_.isUndefined(openCode.path)) console.log(timecodes)
 					var openCodeComp = documentContent.getComponent(openCode.path);
 					var closeCodeComp = documentContent.getComponent(closeCode.path);
 					var comp = openCodeComp;
