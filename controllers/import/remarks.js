@@ -89,9 +89,13 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 		return _.isUndefined(found[entity.row]); 
 	});
 	_.each(lostEntities, function(entity, id) {
-		content += (id + 1) + '. ';
-		content += entity.values.join(', ');
-		content += " (" + entity.id + ");\n";
+		if(!_.isUndefined(entity.interviews)) {
+			if(!_.isEmpty(entity.interviews)) {
+				content += (id + 1) + '. ';
+				content += entity.values.join(', ');
+				content += " (" + entity.id + ");\n";
+			}
+		}
 	});
 	findOrCreateEntityReport(doc, content);
 }
@@ -116,13 +120,15 @@ exports.writeOutPersonsReport = function(doc, report, timecodesMap, intro) {
 			}
 		}
 		j++;
-		console.log(i,"/",j);
 	});
-	var content = intro + '\n';
-	_.each(noTimecodes, function(item, id){
-		content += (id + 1) + '. ';
-		content += item.person.values.join(', ');
-		content += " (" + item.person.id + ");\n";
-	});
-	findOrCreateEntityReport(doc, content);
+	console.log(i,"persons of", j, "didn't recognized");
+	if(!_.isEmpty(noTimecodes)){
+		var content = 'В этом интервью не нашлись следующие персоналии:\n';
+		_.each(noTimecodes, function(item, id){
+			content += (id + 1) + '. ';
+			content += item.person.values.join(', ');
+			content += " (" + item.person.id + ");\n";
+		});
+		findOrCreateEntityReport(doc, content);
+	}
 }

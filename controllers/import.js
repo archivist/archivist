@@ -91,7 +91,47 @@ var importAnnotations = function(req, res, next) {
   var docId = req.params.id;
   var gsId = req.params.gsid;
   var columnId = req.params.gscolumn;
-  async.series([    
+  async.series([  
+    function(callback){
+      console.log('Running indentation cleaner...');
+      indentationCleaner(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Indentation has been cleaned');
+        callback(null, 'indentation');
+      });
+    },
+    function(callback){
+      console.log('Running triple spaces cleaner...');
+      findAndReplace(docId, '   ', ' ', function(err, doc) {
+        if(err) return callback(err);
+        console.log('Triple spaces has been cleaned');
+        callback(null, 'triple spaces');
+      });
+    },
+    function(callback){
+      console.log('Running double spaces cleaner...');
+      findAndReplace(docId, '  ', ' ', function(err, doc) {
+        if(err) return callback(err);
+        console.log('Double spaces has been cleaned');
+        callback(null, 'double spaces');
+      });
+    },
+    function(callback){
+      console.log('Updating index...');
+      index.update(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Index has been updated');
+        callback(null, 'update index');
+      });
+    },
+    function(callback){
+      console.log('Running timecode annotator...');
+      timecodeAnnotator(docId, function(err, doc) {
+        if(err) return callback(err);
+        console.log('Timecodes has been annotated');
+        callback(null, 'timecodes');
+      });
+    },  
     function(callback){
       console.log('Running subjects annotator...');
       subjectsAnnotator(docId, gsId, columnId, function(err, doc) {
