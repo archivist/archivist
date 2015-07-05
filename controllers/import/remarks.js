@@ -13,6 +13,7 @@ var findOrCreateEntityReport = function(doc, content) {
 	});
 
 	if(reportId) {
+		content = doc.get(reportId).content + content;
 		updateRemarkAnnotation(doc, reportId, content);
 	} else {
 		var text = doc.get(comp.path);
@@ -95,7 +96,11 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 		if(!_.isUndefined(entity.interviews)) {
 			if(!_.isEmpty(entity.interviews)) {
 				content += (id) + '. ';
-				if(!_.isUndefined(entity.values)) content += entity.values.join(', ');
+				if(!_.isUndefined(entity.values)) {
+					content += entity.values.join(', ');
+				} else {
+					content += entity.synonyms.join(', ');
+				}
 				content += " (" + entity.id + ");\n";
 				id++;
 			}
