@@ -9,7 +9,7 @@ var findOrCreateEntityReport = function(doc, content) {
 	var reportId = false;
 
 	_.each(remarks, function(remark) {
-		if(remark.startPath === comp.path) reportId = remark.id;
+		if(remark.startPath[0] === comp.path[0]) reportId = remark.id;
 	});
 
 	if(reportId) {
@@ -90,12 +90,14 @@ exports.writeOutEntityReport = function(doc, found, entities, intro) {
 	var lostEntities = _.filter(entities, function(entity){ 
 		return _.isUndefined(found[entity.row]); 
 	});
-	_.each(lostEntities, function(entity, id) {
+	var id = 1;
+	_.each(lostEntities, function(entity) {
 		if(!_.isUndefined(entity.interviews)) {
 			if(!_.isEmpty(entity.interviews)) {
-				content += (id + 1) + '. ';
+				content += (id) + '. ';
 				if(!_.isUndefined(entity.values)) content += entity.values.join(', ');
 				content += " (" + entity.id + ");\n";
+				i++;
 			}
 		}
 	});
