@@ -13,7 +13,7 @@ var findOrCreateEntityReport = function(doc, content) {
 	});
 
 	if(reportId) {
-		updateRemarkAnnotation(reportId, content);
+		updateRemarkAnnotation(doc, reportId, content);
 	} else {
 		var text = doc.get(comp.path);
 		createRemarkAnnotation(doc, comp.path, 0, comp.path, text.length, content);
@@ -31,7 +31,7 @@ var findOrCreatePersonReport = function(doc, content, startCode, endCode) {
 	});
 
 	if(reportId) {
-		updateRemarkAnnotation(reportId, content);
+		updateRemarkAnnotation(doc, reportId, content);
 	} else {
 		createRemarkAnnotation(doc, startCode.path, startCode.startOffset, endCode.path, endCode.endOffset, content);
 	}
@@ -76,7 +76,7 @@ var createRemarkAnnotation = function(doc, startPath, startOffset, endPath, endO
 }
 
 // Update content of remark annotation via document transaction
-var updateRemarkAnnotation = function(id, content) {
+var updateRemarkAnnotation = function(doc, id, content) {
 	var tx = doc.startTransaction();
 	tx.set([id, "content"], content);
 	tx.save();
