@@ -30,7 +30,7 @@ var annotateDefinitions = function(doc, cb) {
 		async.eachSeries(realities, function(reality, callback){
 			Definition.get(reality.id, function(err, definition) {
     		if (err) return cb(err);
-    		if(_.isUndefined(definition)) console.log(reality)
+    		if(_.isNull(definition)) console.log(reality)
     		reality.synonyms = definition.synonyms;
     		findRealities(reality, doc, callback);
   		});
