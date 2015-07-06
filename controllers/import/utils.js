@@ -313,7 +313,8 @@ exports.loadSPRealities = function(id, table, cb) {
     var filtered = _.filter(realities, function(reality){ 
       return (_.contains(reality.interviews, id) || _.isEmpty(reality.interviews));
     });
-    cb(null, filtered);
+    console.log(filtered)
+    //cb(null, filtered);
   });
 }
 
