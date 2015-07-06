@@ -87,7 +87,7 @@ var findPersons = function(person, doc, components, global, timecodes, cb){
 			from: 0,
 			size: 100
 		}
-		if (/\s/.test(synonym)) data.type = "phrase";
+		if (/\s/.test(synonym) || /\-/.test(synonym)) data.type = "phrase";
 		request
   		.get(indexerUrl)
   		.query(data)
