@@ -22,6 +22,7 @@ var toponymsAnnotator = require('./import/toponyms');
 var prisonsAnnotator = require('./import/prisons');
 var realitiesAnnotator = require('./import/realities');
 var personsAnnotator = require('./import/persons');
+var postProcessing = require('./import/post-process');
 
 
 /*
@@ -87,7 +88,7 @@ importer.route('/:id/prepare/:gsid/:gscolumn')
   .get(prepareAnnotations)
 
 var importAnnotations = function(req, res, next) {
-  req.connection.setTimeout(240000);
+  req.connection.setTimeout(800000);
   var docId = req.params.id;
   var gsId = req.params.gsid;
   var columnId = req.params.gscolumn;
@@ -330,6 +331,17 @@ var annotateSubjects = function(req, res, next) {
 
 importer.route('/:id/subjects/:gsid/:gscolumn')
   .get(annotateSubjects)
+
+var postProcess = function(req, res, next) {
+  var docId = req.params.id;
+  postProcessing(docId, function(err, doc) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).json('ok');
+  });
+}
+
+importer.route('/:id/post')
+  .get(postProcess)
 
 
 module.exports = importer;

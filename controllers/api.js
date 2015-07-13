@@ -11,6 +11,7 @@ var Document = require('../models/document.js')
   , util = require('./util.js')
   , sUtil = require('substance-util')
   , _ = require('underscore')
+  , async = require('async')
   , express = require('express')
   , rest = express.Router();
 
@@ -377,8 +378,59 @@ var entitiesGetter = function(req, res, next) {
   });
 }
 
+var listEntities = function(req, res, next) {
+  if(!_.isUndefined(req.query.query)){
+    if(!_.isUndefined(req.query.query.synonyms)) {
+      var query = JSON.parse(req.query.query.synonyms);
+      req.query.query = {
+        $or: [
+          {synonyms: query},
+          {name: query},
+          {title: query}
+        ]
+      }
+    }
+  }
+  async.series([
+    function(callback){
+      Location.list(req.query, function(err, locations) {
+        callback(err, locations);
+      });
+    },
+    function(callback){
+      Person.list(req.query, function(err, persons) {
+        callback(err, persons);
+      });
+    },
+    function(callback){
+      Definition.list(req.query, function(err, definitions) {
+        callback(err, definitions);
+      });
+    }
+  ],
+  function(err, results){
+    if(err) return res.status(500).json(err.message);
+    
+    var entities = [{total_entries: 0},[]];
+    _.each(results,function(entity){
+      entities[0].total_entries += entity[0].total_entries;
+      entities[1] = _.union(entities[1], entity[1]);
+    })
+    _.each(entities[1], function(entity, id) {
+      entities[1][id] = entity.toJSON();
+      if(!_.isUndefined(entity.title)) entities[1][id].name = entity.title;
+    });
+    if(!_.isUndefined(req.query.sort_by)){
+      entities[1] = _.sortBy(entities[1], req.query.sort_by);
+      if(req.query.order == 'desc') entities[1].reverse()
+    }
+    res.status(200).json(entities);
+  });
+}
+
 rest.route('/entities')
   .post(maintenance.checkCurrentMode, entitiesGetter)
+  .get(oauth.ensureSuperAuth, listEntities)
 
 /* SEARCH API */
 

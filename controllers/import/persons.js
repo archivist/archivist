@@ -38,7 +38,7 @@ var annotatePersons = function(doc, cb) {
 	utils.loadSPPersons(SPId, function(err, persons){
 		if (err) return cb(err);
 		async.eachSeries(persons, function(person, callback){
-			if(!_.isNull(person.timecodes)){
+			if(!_.isNull(person.timecodes) && !_.isUndefined(person.timecodes)){
 				async.eachSeries(person.timecodes, function(timecodes, cb){
 					var components = [];
 					if(_.isUndefined(timecodesMap[timecodes[0]])) timecodes[0] = timecodes[0].slice(0, 1) + timecodes[0].slice(2, timecodes[0].length)
@@ -47,6 +47,7 @@ var annotatePersons = function(doc, cb) {
 					var closeCode = timecodesMap[timecodes[1]];
 					if(_.isUndefined(openCode)) console.log(timecodes)
 					var openCodeComp = documentContent.getComponent(openCode.path);
+					if(_.isUndefined(closeCode)) console.log(timecodes)
 					var closeCodeComp = documentContent.getComponent(closeCode.path);
 					var comp = openCodeComp;
 					components.push(comp.rootId);

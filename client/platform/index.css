@@ -695,6 +695,7 @@ FILTERS
 
 .editor-dialog-footer {
   display: block;
+  height: 20px;
 }
 
 .editor-dialog-footer .cancel {
@@ -989,7 +990,6 @@ MODAL
 
 .editor-dialog-modal {
   max-width: 500px;
-  height: 650px;
 }
 
 .dialog-header {
@@ -1251,4 +1251,20 @@ MODAL
 
 .editor-dialog-modal .field-description textarea {
   resize: none;
+}
+
+
+/* MERGE */
+
+.merge-panel {
+  padding: 10px 10px 25px 10px;
+}
+
+.merge-panel .help {
+  font-style: italic;
+  font-size: 18px;
+}
+
+.merge-state {
+  float: right;
 }

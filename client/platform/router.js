@@ -44,6 +44,12 @@ var menuData = [
     url: '/persons'
   },
   {
+    name: 'Merge',
+    id: 'merge',
+    icon: 'code-fork',
+    url: '/merge'
+  },
+  {
     name: 'Users',
     id: 'users',
     super: true,
@@ -79,6 +85,7 @@ var Router = Backbone.Router.extend({
     'persons': 'personsList',
     'persons/add': 'personsAdd',
     'persons/:id': 'personsEdit',
+    'merge': 'mergeList',
     'users': 'usersList'
 	},
   dashboard: function(callback, id) {
@@ -198,6 +205,30 @@ var Router = Backbone.Router.extend({
 
   personsEdit: function(id) {
     this.edit(id, 'personsList', 'personsEdit', 'person', 'persons');
+  },
+
+  mergeList: function(callback, id) {
+    var mergeGrid = [
+      {
+        name: "",
+        cell: "select-row",
+        headerCell: "select-all"
+      },
+      {
+        name: 'name',
+        label: 'name',
+        editable: false,
+        cell: "string"
+      },
+      {
+        name: 'description',
+        label: 'description',
+        editable: false,
+        cell: "string"
+      }
+    ];
+    
+    this.grid(mergeGrid, 'entities', 'mergeGrid', callback, id);
   },
 
   usersList: function(callback, id) {

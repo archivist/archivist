@@ -11,6 +11,7 @@
     "backbone.modal": "^1.1.2",
     "backbone.paginator": "^2.0.2",
     "backgrid-filter": "git://github.com/wyuenho/backgrid-filter",
+    "backgrid-select-all": "git://github.com/wyuenho/backgrid-select-all.git",
     "jquery": "^2.1.1",
     "jquery.mousewheel": "^3.1.9",
     "leaflet": "^0.7.3",

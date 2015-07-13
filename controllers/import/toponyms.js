@@ -26,7 +26,6 @@ var annotateToponyms = function(doc, cb) {
 	})
 
 	utils.loadSPToponyms(SPId, function(err, toponyms){
-		console.log(toponyms)
 		if (err) return cb(err);
 		async.eachSeries(toponyms, function(topo, callback){
 			Location.get(topo.id, function(err, location) {
@@ -90,8 +89,6 @@ var detectToponym = function(fragment, doc, toponym, synonym) {
 	} catch (e) {
 		var entities = [];
 		if(text.indexOf(synonym) !== -1) entities.push(synonym);
-		console.log(fragment)
-		console.log(toponym)
 	}
 
 	_.each(entities, function(entity){

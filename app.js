@@ -170,6 +170,7 @@ app.route('/editor')
 		  {name: 'Toponyms',id: 'topo',icon: 'globe',url: '/toponyms'},
 	  	{name: 'Definitions',id: 'definition',icon: 'bookmark',url: '/definitions'},
 	  	{name: 'Persons',id: 'person',icon: 'users',url: '/persons'},
+	  	{name: 'Merge',id: 'merge',icon: 'code-fork',url: '/merge'},
 	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
 		];
 		res.render('editor', {user: req.user, menu: menu});
@@ -183,7 +184,7 @@ app.route('/editor/new')
 		})
   });
 
-app.route('/:var(definitions|persons|prisons|subjects|toponyms|users)*?')
+app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
   .get(oauth.ensureAuthenticated, function(req, res, next) {
     res.render('platform', {user: req.user});
   })

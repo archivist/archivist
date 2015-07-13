@@ -325,7 +325,11 @@ exports.loadSPPersons = function(id, cb) {
       return (_.contains(person.interviews, id) || _.isEmpty(person.interviews));
     });
     _.each(filtered, function(person, key){
-      filtered[key].timecodes = person.timecodes[id];
+      if(!_.isUndefined(person.timecodes)){
+        filtered[key].timecodes = person.timecodes[id];
+      } else {
+        return false;
+      }
     })
     cb(null, filtered);
   });
