@@ -122,7 +122,6 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
 
       console.log("docid;", docId, "referenceId", id, "options", opt);
-      var subjectReferences = [];
       var hasChanged = false;
       _.each(doc.nodes, function(node) {
 

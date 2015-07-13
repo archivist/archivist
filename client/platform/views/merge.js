@@ -73,7 +73,7 @@ var MergeGrid = Grid.main.extend({
       this.mergeNames.into = selected[0].get('name');
       if(this.merge.one != this.merge.into) {
         $(this.$el).find('.merge-state').text('Will merge ' + this.mergeNames.one + ' into ' + this.mergeNames.into);
-        showDialog(this.merge);
+        showDialog(this.merge, this.collection, selected[0]);
       }
     }
   },
@@ -94,7 +94,7 @@ var MergeGrid = Grid.main.extend({
 exports.mergeGrid = MergeGrid;
 
 
-var showDialog = function(mergeData) {
+var showDialog = function(mergeData, collection, model) {
   var dialog = new Backbone.Model({
     title: "Merge Entities",
     description: "Merging entities is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
@@ -110,9 +110,9 @@ var showDialog = function(mergeData) {
       .end(function(err, res) {
         if (res.ok) {
           Notify.spinner('hide');
-
-          inst.delete_node(nodeToMerge);
-          $.jstree.currentState.nodeToMerge = null;
+          collection.remove(model);
+          $('span.help').html('Choose the entity to merge from list below and press <i class="fa fa-code-fork"></i> Merge button');
+          $('div.merge-state').text('');
           dialog.submit('Done! Exiting from maintenance mode...', 'ok');
           Notify.info('Merge has been completed!');
         } else {

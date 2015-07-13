@@ -3,7 +3,9 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , backup = require('../controllers/backup.js')
+  , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
+  , merge = require('../controllers/merge.js')
   , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js')
   , _ = require('underscore');
@@ -23,6 +25,7 @@ var personShadowSchema = new Schema({}, {collection: 'persons_backup', strict: f
 
 personSchema.plugin(backup, { shadow: personShadow });
 personSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'persons_db_version' });
+personSchema.plugin(merge);
 personSchema.plugin(timestamps);
 
 personSchema.statics.search = function(opt, cb) {

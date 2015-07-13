@@ -6,6 +6,7 @@ var mongoose = require('mongoose')
   , backup = require('../controllers/backup.js')
   , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
+  , merge = require('../controllers/merge.js')
   , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js')
   , _ = require('underscore');
@@ -33,6 +34,7 @@ var locationShadowSchema = new Schema({}, {collection: 'locations_backup', stric
 
 locationSchema.plugin(backup, { shadow: locationShadow });
 locationSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'locations_db_version' });
+locationSchema.plugin(merge);
 locationSchema.plugin(textSearch);
 locationSchema.plugin(timestamps);
 

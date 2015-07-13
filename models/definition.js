@@ -3,7 +3,9 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , backup = require('../controllers/backup.js')
+  , maintenance = require('../controllers/maintenance.js')
   , rest = require('../controllers/rest.js')
+  , merge = require('../controllers/merge.js')
   , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/util.js')
   , _ = require('underscore');
@@ -24,6 +26,7 @@ var definitionShadowSchema = new Schema({}, {collection: 'definitions_backup', s
 
 definitionSchema.plugin(backup, { shadow: definitionShadow });
 definitionSchema.plugin(rest, { referenceType: 'entity_reference', systemCounter: 'definitions_db_version' });
+definitionSchema.plugin(merge);
 definitionSchema.plugin(timestamps);
 
 definitionSchema.statics.search = function(opt, cb) {
