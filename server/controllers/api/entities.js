@@ -1,12 +1,18 @@
-var Location = require('../models/location.js')
-  , Person = require('../models/person.js')
-  , Definition = require('../models/definition.js')
+var Location = require('../../models/location.js')
+  , Person = require('../../models/person.js')
+  , Definition = require('../../models/definition.js')
+  , maintenance = require('./maintenance.js')
+  , oauth = require('./oauth.js')
   , mongoose = require('mongoose')
   , async = require('async')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , express = require('express')
+  , api = express.Router();
 
 
-exports.get = function(entities, cb) {
+/* GET ENTITIES */
+
+var getEntities = function(entities, cb) {
   var entitiesArray = [],
       isValid = true;
 
@@ -71,8 +77,9 @@ var entitiesQuery = function(entities, cb) {
   });
 }
 
+/* LIST ENTITIES */
 
-exports.list = function(req, res, next) {
+var listEntities = function(req, res, next) {
   if(!_.isUndefined(req.query.query)){
     if(!_.isUndefined(req.query.query.synonyms)) {
       var query = JSON.parse(req.query.query.synonyms);
@@ -122,20 +129,9 @@ exports.list = function(req, res, next) {
   });
 }
 
-var findEntityById = function(id, cb) {
-  Location.findById(id, function (err, location) {
-    if (location) return cb(err, Location);
-    Definition.findById(id, function (err, definition) {
-      if (definition) return cb(err, Definition);
-      Person.findById(id, function (err, person) {
-        if (person) return cb(err, Person);
-        return cb(new Error('Please provide valid entity id!'));
-      });
-    });
-  });
-}
+/* MERGE ENTITIES */
 
-exports.merge = function(req, res, next) {
+var mergeEntities = function(req, res, next) {
   req.socket.setTimeout(800000);
 
   var one = req.query.one;
@@ -152,3 +148,38 @@ exports.merge = function(req, res, next) {
     })
   })
 }
+
+var findEntityById = function(id, cb) {
+  Location.findById(id, function (err, location) {
+    if (location) return cb(err, Location);
+    Definition.findById(id, function (err, definition) {
+      if (definition) return cb(err, Definition);
+      Person.findById(id, function (err, person) {
+        if (person) return cb(err, Person);
+        return cb(new Error('Please provide valid entity id!'));
+      });
+    });
+  });
+}
+
+/* ENTITIES API */
+
+var entitiesGetter = function(req, res, next) {
+  var query = req.body,
+      entityIds = query.entityIds || [];
+
+  getEntities(entityIds, function (err, output) {
+    if (err) return next(err);
+    res.json({results: output});
+  });
+}
+
+api.route('/entities')
+  .post(maintenance.checkCurrentMode, entitiesGetter)
+  .get(oauth.ensureSuperAuth, listEntities)
+
+
+api.route('/entities/merge')
+  .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, mergeEntities)
+
+module.exports = api;

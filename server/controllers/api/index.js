@@ -15,9 +15,6 @@ var Document = require('../models/document.js')
   , express = require('express')
   , rest = express.Router();
 
-var db = exports;
-
-
 /* The Document REST api */
 
 var createDocument = function(req, res, next) {
