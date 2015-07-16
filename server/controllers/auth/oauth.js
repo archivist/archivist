@@ -1,4 +1,4 @@
-var User = require('../models/user.js')
+var User = require('../../models/user.js')
   , express = require('express')
   , passport = require('passport')
   , GoogleStrategy = require('passport-google-oauth').OAuth2Strategy

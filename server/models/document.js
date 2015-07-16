@@ -5,8 +5,8 @@ var mongoose = require('mongoose')
   , System = require('./system.js')
   , async = require('async')
   , _ = require('underscore')
-  , backup = require('../controllers/backup.js')
-  , util = require('../controllers/util.js');
+  , backup = require('../controllers/shared/backup.js')
+  , util = require('../controllers/api/utils.js');
 
 var documentSchema = new Schema({
   	_schema: [String]

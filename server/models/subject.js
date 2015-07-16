@@ -4,11 +4,11 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , async = require('async')
   , _ = require('underscore')
-  , backup = require('../controllers/backup.js')
-  , maintenance = require('../controllers/maintenance.js')
-  , rest = require('../controllers/rest.js')
+  , backup = require('../controllers/shared/backup.js')
+  , maintenance = require('../controllers/shared/maintenance.js')
+  , rest = require('../controllers/shared/rest.js')
   , timestamps = require('mongoose-timestamp')
-  , util = require('../controllers/util.js');
+  , util = require('../controllers/utils.js');
 
 var subjectSchema = new Schema({
   	type: String

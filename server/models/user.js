@@ -3,7 +3,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId
-  , util = require('../controllers/util.js');
+  , util = require('../controllers/api/utils.js');
  
 var userSchema = new Schema({
     id: String,

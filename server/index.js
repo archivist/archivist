@@ -14,10 +14,9 @@ var mongoose = require('mongoose')
 	, path = require('path')
 	, fs = require('fs')
 	, _ = require('underscore')
-	, api = require('./controllers/api.js')
+	, api = require('./controllers/api')
 	, oauth = require('./controllers/oauth.js')
-	, maintenance = require('./controllers/maintenance.js')
-	, importer = require('./controllers/import.js')
+	, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
 
@@ -137,8 +136,6 @@ mongoose.connection.on("error", function(err) {
 });
 
 app.use('/', oauth);
-
-app.use('/api', maintenance);
 app.use('/api', api);
 app.use('/import', importer);
 

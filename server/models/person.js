@@ -2,12 +2,12 @@
  
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
-  , backup = require('../controllers/backup.js')
-  , maintenance = require('../controllers/maintenance.js')
-  , rest = require('../controllers/rest.js')
-  , merge = require('../controllers/merge.js')
+  , backup = require('../controllers/shared/backup.js')
+  , maintenance = require('../controllers/shared/maintenance.js')
+  , rest = require('../controllers/shared/rest.js')
+  , merge = require('../controllers/shared/merge.js')
   , timestamps = require('mongoose-timestamp')
-  , util = require('../controllers/util.js')
+  , util = require('../controllers/api/utils.js')
   , _ = require('underscore');
 
 var personSchema = new Schema({

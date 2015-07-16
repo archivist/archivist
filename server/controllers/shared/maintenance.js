@@ -1,8 +1,8 @@
-var Document = require('../models/document.js')
+var Document = require('../../models/document.js')
   , util = require('./util.js')
   , express = require('express')
   , _ = require('underscore')
-  , maintenance = express.Router();
+  , maintenance = {};
 
 /** 
  * Start a new transaction for batch document operations
