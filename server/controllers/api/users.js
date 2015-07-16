@@ -1,5 +1,5 @@
-var User = require('../models/user.js')
-  , oauth = require('./oauth.js')
+var User = require('../../models/user.js')
+  , oauth = require('../auth/oauth.js')
   , express = require('express')
   , api = express.Router();
 

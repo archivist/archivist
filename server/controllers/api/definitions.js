@@ -1,6 +1,6 @@
-var Definition = require('../models/definition.js')
-  , maintenance = require('./maintenance.js')
-  , oauth = require('./oauth.js')
+var Definition = require('../../models/definition.js')
+  , maintenance = require('../shared/maintenance.js')
+  , oauth = require('../auth/oauth.js')
   , express = require('express')
   , api = express.Router();
 

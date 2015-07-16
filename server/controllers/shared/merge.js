@@ -1,4 +1,4 @@
-var maintenance = require('../controllers/maintenance.js')
+var maintenance = require('./maintenance.js')
 
 module.exports = function(schema, options) {
   options = options || {};

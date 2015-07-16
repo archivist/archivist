@@ -1,6 +1,6 @@
-var Document = require('../models/document.js')
-  , System = require('../models/system.js') 
-  , util = require('./util.js')
+var Document = require('../../models/document.js')
+  , System = require('../../models/system.js') 
+  , util = require('../api/utils.js')
   , sUtil = require('substance-util')
   , _ = require('underscore');
 

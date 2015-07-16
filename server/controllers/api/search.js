@@ -1,6 +1,6 @@
-var Location = require('../models/location.js')
-  , Person = require('../models/person.js')
-  , Definition = require('../models/definition.js')
+var Location = require('../../models/location.js')
+  , Person = require('../../models/person.js')
+  , Definition = require('../../models/definition.js')
   , async = require('async')
   , _ = require('underscore');
 

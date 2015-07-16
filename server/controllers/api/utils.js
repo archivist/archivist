@@ -1,4 +1,4 @@
-var System = require('../models/system.js')
+var System = require('../../models/system.js')
   , _ = require('underscore');
 
 exports.getQuery = function(query) {

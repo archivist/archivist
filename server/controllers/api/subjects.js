@@ -1,6 +1,6 @@
 var Subject = require('../../models/subject.js')
-  , maintenance = require('./maintenance.js')
-  , oauth = require('./oauth.js')
+  , maintenance = require('../shared/maintenance.js')
+  , oauth = require('../auth/oauth.js')
   , express = require('express')
   , api = express.Router();
 

@@ -1,7 +1,7 @@
-var Location = require('../models/location.js')
-  , maintenance = require('./maintenance.js')
-  , oauth = require('./oauth.js')
-  , util = require('../util.js')
+var Location = require('../../models/location.js')
+  , maintenance = require('../shared/maintenance.js')
+  , oauth = require('../auth/oauth.js')
+  , util = require('./utils.js')
   , express = require('express')
   , api = express.Router();
 

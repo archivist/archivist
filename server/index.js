@@ -8,15 +8,14 @@ var mongoose = require('mongoose')
   , flash = require('connect-flash')
   , favicon = require('serve-favicon')
   , passport = require('passport')
-	, rest = require('./controllers/rest.js')
 	, port = process.env.PORT || 5000
 	, app = express()
 	, path = require('path')
 	, fs = require('fs')
 	, _ = require('underscore')
 	, api = require('./controllers/api')
-	, oauth = require('./controllers/oauth.js')
-	, importer = require('./controllers/import')
+	, oauth = require('./controllers/auth/oauth.js')
+	//, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
 
@@ -93,14 +92,14 @@ var allowCrossDomain = function(req, res, next) {
 
 // APP CONFIGURATION
 
-app.set('views', __dirname + './views');
+app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '5mb', parameterLimit: 5000 }));
 app.use(methodOverride());
 app.use(allowCrossDomain);
 app.use(flash());
-app.use(favicon(__dirname + '/public/assets/favicon.png'));
+app.use(favicon(path.join(__dirname, '../assets/favicon.png')));
 app.use(session({
 	resave: true,
   saveUninitialized: true,
@@ -137,7 +136,7 @@ mongoose.connection.on("error", function(err) {
 
 app.use('/', oauth);
 app.use('/api', api);
-app.use('/import', importer);
+//app.use('/import', importer);
 
 app.route('/')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {
@@ -146,17 +145,17 @@ app.route('/')
 
 
 // On the fly browserify-ication of composer
-if (process.env.NODE_ENV === "development") {
-  app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
+// if (process.env.NODE_ENV === "development") {
+//   app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
 
-  app.get('/composer/composer.css', function(req, res) {
-  	var cssFile = fs.readFileSync('./node_modules/archivist-composer/styles/composer.css', 'utf8');
+//   app.get('/composer/composer.css', function(req, res) {
+//   	var cssFile = fs.readFileSync('./node_modules/archivist-composer/styles/composer.css', 'utf8');
 
-  	res.set('Content-Type', 'text/css');
+//   	res.set('Content-Type', 'text/css');
 
-  	res.send(cssFile);
-  });
-}
+//   	res.send(cssFile);
+//   });
+// }
 
 app.route('/editor')
 	.get(oauth.ensureAuthenticated, function(req, res, next) {

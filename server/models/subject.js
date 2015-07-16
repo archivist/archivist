@@ -8,7 +8,7 @@ var mongoose = require('mongoose')
   , maintenance = require('../controllers/shared/maintenance.js')
   , rest = require('../controllers/shared/rest.js')
   , timestamps = require('mongoose-timestamp')
-  , util = require('../controllers/utils.js');
+  , util = require('../controllers/api/utils.js');
 
 var subjectSchema = new Schema({
   	type: String

@@ -1,5 +1,5 @@
 var Document = require('../../models/document.js')
-  , util = require('./util.js')
+  , util = require('../api/utils.js')
   , express = require('express')
   , _ = require('underscore')
   , maintenance = {};
