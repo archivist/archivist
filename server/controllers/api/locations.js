@@ -61,7 +61,7 @@ var listToponymLocations = function(req, res, next) {
 
 
 api.route('/locations')
-  .post(maintenance.checkCurrentMode, createLocation)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, createLocation)
   .get(listLocations)
 
 api.route('/locations/prisons')
@@ -72,7 +72,7 @@ api.route('/locations/toponyms')
 
 api.route('/locations/:id')
   .get(maintenance.checkCurrentMode, readLocation)
-  .put(maintenance.checkCurrentMode, updateLocation)
-  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteLocation)
+  .put(maintenance.checkCurrentMode, auth.checkAuth, updateLocation)
+  .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteLocation)
 
 module.exports = api;

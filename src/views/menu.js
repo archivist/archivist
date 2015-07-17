@@ -19,9 +19,10 @@ var MainMenu = Backbone.View.extend({
   serialize: function() {
     var isSuper = utils.isSuper();
     if(!isSuper) {
-      this.collection = _.filter(this.collection, function(item){
-        return !item.super;
+      var menuItmes = this.collection.filter(function(item){
+        return !item.get('super');
       });
+      this.collection.reset(menuItmes);
     }
     return { items: this.collection };
   }

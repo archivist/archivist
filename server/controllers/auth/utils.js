@@ -1,6 +1,7 @@
 var User = require('../../models/user.js')
   , jwt = require('express-jwt')
   , jwtLib = require('jsonwebtoken') 
+  , _ = require('underscore')
   , utils = {};
 
 // OAUTH 2
@@ -35,31 +36,18 @@ var isRevokedCallback = function(req, payload, done){
   });
 };
 
-utils.ensureAuthenticated = jwt({
+utils.checkAuth = jwt({
   secret: secret,
-  isRevoked: isRevokedCallback,
-  userProperty: 'user_data'
+  isRevoked: isRevokedCallback
 });
 
-utils.check_scopes = function(scopes) {
-  return function(req, res, next) {
-    var token = req.user_data;
-    for (var i =0; i<token.scopes.length; i++){
-      for (var j=0; j<scopes.length; j++){
-        if(scopes[j] === token.scopes[i]) return next();
-      }
-    }
+utils.check_scopes = function(req, res, next) {
+  var scopes = ['access', 'super'];
+  var token = req.user;
 
-    return res.send(401, 'You have no access.')
-  }
-}
+  if (_.isEmpty(_.difference(scopes, token.scopes))) return next();
 
-utils.ensureSuperAuth = function(req, res, next) {
-  if (req.isAuthenticated()) { 
-    User.checkSuper(req, res, next);
-  } else {
-    res.redirect('/login');
-  }
+  return res.send(401, 'You have no access.');
 }
 
 utils.checkExpiration = function(req, cb) {
@@ -69,9 +57,8 @@ utils.checkExpiration = function(req, cb) {
 	var expDate = decoded.payload.exp;
 	var userId = decoded.payload.iss;
 	var now = Math.floor(Date.now() / 1000);
-	var step = 60*48*1000; // 2 days step to renew token
-
-	if(expDate > now - step) {
+	var step = 60*60*48; // 2 days step to renew token
+	if(expDate - step < now) {
 		User.renewToken(userId, token, function(err, tokenData){
 			cb(err, tokenData);
 		});

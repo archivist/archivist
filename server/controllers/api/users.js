@@ -3,6 +3,8 @@ var User = require('../../models/user.js')
   , express = require('express')
   , api = express.Router();
 
+api.use(auth.checkAuth);
+
 /* The User api */
 
 var readUser = function(req, res, next) {
@@ -37,13 +39,13 @@ var getUserStatus = function(req, res, next) {
 };
 
 api.route('/users')
-  .get(auth.ensureSuperAuth, listUsers)
+  .get(auth.check_scopes, listUsers);
 
 api.route('/users/status')
-  .get(auth.ensureAuthenticated, getUserStatus);
+  .get(getUserStatus);
 
 api.route('/users/:id')
-  .get(auth.ensureSuperAuth, readUser)
-  .put(auth.ensureSuperAuth, updateUser)
+  .get(auth.check_scopes, readUser)
+  .put(auth.check_scopes, updateUser);
 
 module.exports = api;

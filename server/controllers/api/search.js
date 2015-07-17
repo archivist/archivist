@@ -1,8 +1,12 @@
 var Location = require('../../models/location.js')
   , Person = require('../../models/person.js')
   , Definition = require('../../models/definition.js')
+  , maintenance = require('../shared/maintenance.js')
+  , auth = require('../auth/utils.js')
   , async = require('async')
-  , _ = require('underscore');
+  , _ = require('underscore')
+  , express = require('express')
+  , api = express.Router();
 
 
 var search = function(query, cb) {
@@ -121,4 +125,14 @@ var plainSearch = function(query, cb) {
   });
 }
 
-module.exports = search;
+var searchQuery = function(req, res, next) {
+  search(req.query, function (err, output) {
+    if (err) return next(err);
+    res.json(output);
+  });
+}
+
+api.route('/search')
+  .get(maintenance.checkCurrentMode, auth.checkAuth, searchQuery)
+
+module.exports = api;

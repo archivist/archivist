@@ -175,11 +175,11 @@ var entitiesGetter = function(req, res, next) {
 }
 
 api.route('/entities')
-  .post(maintenance.checkCurrentMode, entitiesGetter)
-  .get(auth.ensureSuperAuth, listEntities)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, entitiesGetter)
+  .get(auth.checkAuth, auth.check_scopes, listEntities);
 
 
 api.route('/entities/merge')
-  .get(maintenance.checkCurrentMode, auth.ensureSuperAuth, mergeEntities)
+  .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, mergeEntities);
 
 module.exports = api;

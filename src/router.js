@@ -10,36 +10,42 @@ var menuData = [
   {
     name: 'Dashboard',
     id: 'dashboard',
+    super: false,
     icon: 'tasks',
     url: '/'
   },
   {
     name: 'Subjects',
     id: 'subjects',
+    super: false,
     icon: 'tags',
     url: '/subjects'
   },
   {
     name: 'Prisons',
     id: 'prisons',
+    super: false,
     icon: 'th',
     url: '/prisons'
   },
   {
     name: 'Toponyms',
     id: 'topo',
+    super: false,
     icon: 'globe',
     url: '/toponyms'
   },
   {
     name: 'Definitions',
     id: 'definition',
+    super: false,
     icon: 'bookmark',
     url: '/definitions'
   },
   {
     name: 'Persons',
     id: 'person',
+    super: false,
     icon: 'users',
     url: '/persons'
   },
@@ -66,7 +72,6 @@ var Router = Backbone.Router.extend({
     this.layout = ''
     this.notice = {}
     this.initialized = false
-    //this.initializeContainer()
     this.contextMenu = new models.contextItems()
 	},
 	routes: {
@@ -228,7 +233,7 @@ var Router = Backbone.Router.extend({
         cell: "string"
       }
     ];
-    
+
     this.grid(mergeGrid, 'entities', 'mergeGrid', callback, id);
   },
 
@@ -271,7 +276,9 @@ var Router = Backbone.Router.extend({
         
     self[colName] = new models[colName]();
     self[colName].state.pageSize = null;
+
     delete self[colName].queryParams.query;
+    
     self[colName].fetch().done(function(){
       var mapView = new views[viewName]({ collection: self[colName], contextMenu: self.contextMenu });
       self.changeLayout(mapView, callback, id);
@@ -286,7 +293,7 @@ var Router = Backbone.Router.extend({
     var self = this;
     
     if(_.isUndefined(self[colName])) self[colName] = new models[colName]()
-
+      
     self[colName].fetch().done(function(){
       var gridView = new views[viewName]({ collection: self[colName], columns: grid, contextMenu: self.contextMenu });
       self.changeLayout(gridView, callback, id);

@@ -57,15 +57,15 @@ var listDocuments = function(req, res, next) {
 }
 
 api.route('/documents')
-  .post(maintenance.checkCurrentMode, createDocument)
-  .get(auth.ensureAuthenticated, listDocuments)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
+  .get(auth.checkAuth, listDocuments);
 
 api.route('/documents/:id')
   .get(readDocument) // dropped out auth.ensureAuthenticated for reader
-  .put(maintenance.checkCurrentMode, auth.ensureAuthenticated, updateDocument)
-  .delete(maintenance.checkCurrentMode, deleteDocument)
+  .put(maintenance.checkCurrentMode, auth.checkAuth, updateDocument)
+  .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteDocument);
 
 api.route('/documents/:id/validate')
-  .get(validateDocument)
+  .get(auth.checkAuth, validateDocument);
 
 module.exports = api;

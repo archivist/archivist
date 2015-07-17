@@ -109,7 +109,7 @@ app.use(morgan('tiny'));
 
 mongoose.connection.on("fullsetup", function(ref) {
 	app.listen(port, function() {
-    console.log("Application server listening on port %d", port);
+    console.log("Archivist server listening on port %d", port);
   });
   return console.log("Connected to mongo server!");
 });
@@ -143,7 +143,7 @@ app.route('/')
 // }
 
 app.route('/editor')
-	.get(auth.ensureAuthenticated, function(req, res, next) {
+	.get(auth.checkAuth, function(req, res, next) {
 		var menu = [
 			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
 	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
@@ -158,7 +158,7 @@ app.route('/editor')
   });
 
 app.route('/editor/new')
-	.get(auth.ensureAuthenticated, function(req, res, next) {
+	.get(auth.checkAuth, function(req, res, next) {
 		Document.createEmpty(req.user, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/editor#' + doc._id);
@@ -166,8 +166,8 @@ app.route('/editor/new')
   });
 
 app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
-  .get(auth.ensureAuthenticated, function(req, res, next) {
-    res.render('archivist', {user: req.user});
+  .get(function(req, res, next) {
+    res.render('archivist');
   })
 
 app.use(express.static(path.join(__dirname, '../public')));

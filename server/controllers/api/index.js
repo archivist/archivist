@@ -11,16 +11,4 @@ var Documents = require('./documents.js')
 
 api.use('/', Documents, Subjects, Definitions, Locations, Persons, Users, Entities, Search);
 
-
-// module.exports = {
-//   'documents': Documents,
-//   'subjects': Subjects,
-//   'definitions': Definitions,
-//   'locations': Locations,
-//   'persons': Persons,
-//   'users': Users,
-//   'entities': Entities,
-//   'search': Search
-// }
-
 module.exports = api;

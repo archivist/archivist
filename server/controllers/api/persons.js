@@ -43,12 +43,12 @@ var listPersons = function(req, res, next) {
 }
 
 api.route('/persons')
-  .post(maintenance.checkCurrentMode, createPerson)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, createPerson)
   .get(listPersons)
 
 api.route('/persons/:id')
   .get(maintenance.checkCurrentMode, readPerson)
-  .put(maintenance.checkCurrentMode, updatePerson)
-  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deletePerson)
+  .put(maintenance.checkCurrentMode, auth.checkAuth, updatePerson)
+  .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deletePerson)
 
 module.exports = api;

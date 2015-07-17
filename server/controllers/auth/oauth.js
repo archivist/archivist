@@ -47,10 +47,4 @@ oauth.route('/login')
     res.render('login');
   });
 
-oauth.route('/logout')
-  .get(function(req, res){
-    req.logout();
-    res.redirect('/login');
-  });
-
 module.exports = oauth;

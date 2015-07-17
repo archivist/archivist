@@ -75,7 +75,7 @@ var loadMetadata = function(req, res, next) {
 
 
 api.route('/subjects')
-  .post(maintenance.checkCurrentMode, auth.ensureAuthenticated, createSubject)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, createSubject)
   .get(listSubjects)
 
 // Provides all metadata for the client including version strings
@@ -83,14 +83,14 @@ api.route('/metadata')
   .get(maintenance.checkCurrentMode, loadMetadata)
 
 api.route('/subjects/merge')
-  .get(maintenance.checkCurrentMode, auth.ensureSuperAuth, mergeSubjects)
+  .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, mergeSubjects)
 
 api.route('/subjects/move')
-  .get(maintenance.checkCurrentMode, auth.ensureAuthenticated, moveSubjects)
+  .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, moveSubjects)
 
 api.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
-  .put(maintenance.checkCurrentMode, auth.ensureAuthenticated, updateSubject)
-  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteSubject)
+  .put(maintenance.checkCurrentMode, auth.checkAuth, updateSubject)
+  .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteSubject)
 
 module.exports = api;

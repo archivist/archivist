@@ -61,11 +61,14 @@ userSchema.statics.get = function(id, cb) {
  */
 
 userSchema.statics.change = function(id, data, cb) {
+  var self = this;
+
   delete data._id;
   delete data.__v;
-  this.findByIdAndUpdate(id, { $set: data }, {new: true}, function (err, user) {
+  
+  this.findByIdAndUpdate(id, { $set: data }, function (err, user) {
     if (err) return next(err);
-    if (data.access != user.access && data.super != user.super) {
+    if (data.access != user.access || data.super != user.super) {
       self.revokeTokens(user._id, function(err, user) {
         cb(err, user);
       });
@@ -133,22 +136,6 @@ userSchema.statics.findOrCreate = function(profile, done) {
         if (err) return next(err);
         return done(null, false, { message: 'Thank you! We will check your information and give you access. Maybe.' }); 
       });
-    }
-  });
-}
-
-
-/** 
- * Check access for User profile and continue or redirect to main page
- */
-
-userSchema.statics.checkSuper = function(req, res, next) {
-  var self = this;
-  self.findOne({email: req.user.email}, function(err, user) {
-    if(user.access && user.super) {
-      return next();
-    } else {
-      res.redirect('/');
     }
   });
 }

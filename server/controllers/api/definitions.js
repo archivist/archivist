@@ -43,12 +43,12 @@ var listDefinitions = function(req, res, next) {
 }
 
 api.route('/definitions')
-  .post(maintenance.checkCurrentMode, createDefinition)
-  .get(listDefinitions)
+  .post(maintenance.checkCurrentMode, auth.checkAuth, createDefinition)
+  .get(listDefinitions);
 
 api.route('/definitions/:id')
   .get(maintenance.checkCurrentMode, readDefinition)
-  .put(maintenance.checkCurrentMode, updateDefinition)
-  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteDefinition)
+  .put(maintenance.checkCurrentMode, auth.checkAuth, updateDefinition)
+  .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteDefinition);
 
 module.exports = api;
