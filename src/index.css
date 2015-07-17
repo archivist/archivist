@@ -104,6 +104,10 @@ li#person {
   width: 95px;
 }
 
+li#merge {
+  width: 115px;
+}
+
 li#users {
   width: 82px;
 }

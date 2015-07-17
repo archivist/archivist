@@ -2,7 +2,7 @@ var Location = require('../../models/location.js')
   , Person = require('../../models/person.js')
   , Definition = require('../../models/definition.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , mongoose = require('mongoose')
   , async = require('async')
   , _ = require('underscore')
@@ -176,10 +176,10 @@ var entitiesGetter = function(req, res, next) {
 
 api.route('/entities')
   .post(maintenance.checkCurrentMode, entitiesGetter)
-  .get(oauth.ensureSuperAuth, listEntities)
+  .get(auth.ensureSuperAuth, listEntities)
 
 
 api.route('/entities/merge')
-  .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, mergeEntities)
+  .get(maintenance.checkCurrentMode, auth.ensureSuperAuth, mergeEntities)
 
 module.exports = api;

@@ -1,6 +1,6 @@
 var Location = require('../../models/location.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , util = require('./utils.js')
   , express = require('express')
   , api = express.Router();
@@ -73,6 +73,6 @@ api.route('/locations/toponyms')
 api.route('/locations/:id')
   .get(maintenance.checkCurrentMode, readLocation)
   .put(maintenance.checkCurrentMode, updateLocation)
-  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteLocation)
+  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteLocation)
 
 module.exports = api;

@@ -1,6 +1,6 @@
 var Subject = require('../../models/subject.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
 
@@ -75,7 +75,7 @@ var loadMetadata = function(req, res, next) {
 
 
 api.route('/subjects')
-  .post(maintenance.checkCurrentMode, oauth.ensureAuthenticated, createSubject)
+  .post(maintenance.checkCurrentMode, auth.ensureAuthenticated, createSubject)
   .get(listSubjects)
 
 // Provides all metadata for the client including version strings
@@ -83,14 +83,14 @@ api.route('/metadata')
   .get(maintenance.checkCurrentMode, loadMetadata)
 
 api.route('/subjects/merge')
-  .get(maintenance.checkCurrentMode, oauth.ensureSuperAuth, mergeSubjects)
+  .get(maintenance.checkCurrentMode, auth.ensureSuperAuth, mergeSubjects)
 
 api.route('/subjects/move')
-  .get(maintenance.checkCurrentMode, oauth.ensureAuthenticated, moveSubjects)
+  .get(maintenance.checkCurrentMode, auth.ensureAuthenticated, moveSubjects)
 
 api.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
-  .put(maintenance.checkCurrentMode, oauth.ensureAuthenticated, updateSubject)
-  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteSubject)
+  .put(maintenance.checkCurrentMode, auth.ensureAuthenticated, updateSubject)
+  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteSubject)
 
 module.exports = api;

@@ -44,8 +44,9 @@ var menuData = [
     url: '/persons'
   },
   {
-    name: 'Merge',
+    name: 'Merge entities',
     id: 'merge',
+    super: true,
     icon: 'code-fork',
     url: '/merge'
   },
@@ -65,7 +66,7 @@ var Router = Backbone.Router.extend({
     this.layout = ''
     this.notice = {}
     this.initialized = false
-    this.buildMenu()
+    //this.initializeContainer()
     this.contextMenu = new models.contextItems()
 	},
 	routes: {
@@ -86,7 +87,8 @@ var Router = Backbone.Router.extend({
     'persons/add': 'personsAdd',
     'persons/:id': 'personsEdit',
     'merge': 'mergeList',
-    'users': 'usersList'
+    'users': 'usersList',
+    'logout': 'logout'
 	},
   dashboard: function(callback, id) {
     var dashboardGrid = [
@@ -263,6 +265,10 @@ var Router = Backbone.Router.extend({
 
   },
 
+  logout: function() {
+    Backbone.middle.trigger('logout');
+  },
+
   map: function(colName, viewName, callback, id) {
     Notify.spinner('show');
 
@@ -334,15 +340,26 @@ var Router = Backbone.Router.extend({
   },
 
   changeLayout: function(v, callback, id) {
+    var self = this;
     if (!this.initialized) {
-      this.layout = new views.mainLayout({rootView: v, contextMenu: this.contextMenu}).render()
-      this.initialized = true;
-      this.buildContextMenu()
+      self.initializeContainer(function(){
+        self.layout = new views.mainLayout({rootView: v, contextMenu: self.contextMenu}).render()
+        self.initialized = true;
+        self.buildContextMenu()
+        if (callback) self[callback](id);
+      })
     } else {
       this.layout.changeLayout(v);
-      //this.buildContextMenu()
+      if (callback) this[callback](id);
     }
-    if (callback) this[callback](id);
+  },
+
+  initializeContainer: function(cb) {
+    var self = this;
+    var container = new views.container({el: $('#main') }).once("afterRender", function() {
+      self.buildMenu();
+      cb()
+    }).render();
   },
 
   buildMenu: function() {

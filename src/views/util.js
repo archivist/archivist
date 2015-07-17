@@ -47,3 +47,11 @@ var Filter = Backgrid.Extension.ServerSideFilter.extend({
     },
 });
 exports.filter = Filter
+
+var isSuper = function() {
+  var session = Backbone.AppRouter.session;
+  var claims = session.token.split('.')[1];
+  claims = JSON.parse(atob(claims));
+  return _.contains(claims.scopes, "super");
+}
+exports.isSuper = isSuper;

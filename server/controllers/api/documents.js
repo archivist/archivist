@@ -1,6 +1,6 @@
 var Document = require('../../models/document.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
 
@@ -58,11 +58,11 @@ var listDocuments = function(req, res, next) {
 
 api.route('/documents')
   .post(maintenance.checkCurrentMode, createDocument)
-  .get(listDocuments)
+  .get(auth.ensureAuthenticated, listDocuments)
 
 api.route('/documents/:id')
-  .get(readDocument) // dropped out oauth.ensureAuthenticated for reader
-  .put(maintenance.checkCurrentMode, oauth.ensureAuthenticated, updateDocument)
+  .get(readDocument) // dropped out auth.ensureAuthenticated for reader
+  .put(maintenance.checkCurrentMode, auth.ensureAuthenticated, updateDocument)
   .delete(maintenance.checkCurrentMode, deleteDocument)
 
 api.route('/documents/:id/validate')

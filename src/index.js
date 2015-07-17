@@ -6,9 +6,33 @@ var Backbone = require('backbone'),
 Backbone.$ = window.$ = jquery;
 
 var AppStart = function() {
-  Backbone.AppRouter = new router();
-  Backbone.history.start({ pushState: true, root: '/' });
+	var session = localStorage.getItem('session');
+	if (session) {
+	  var token = JSON.parse(session).token;
+	  $.ajaxSetup({
+	  	beforeSend: function(xhr) {
+        xhr.setRequestHeader("Authorization", "Bearer " + token);
+      }
+		});
+	}
+	verifyToken(function(){
+		Backbone.AppRouter = new router();
+  	Backbone.AppRouter.session = JSON.parse(session);
+   	Backbone.history.start({ pushState: true, root: '/' });
+	})
 }
+
+var destroySession = function() {
+	localStorage.removeItem('session');
+	window.location.href = '/login';
+}
+
+var verifyToken = function(cb) {
+	$.getJSON("/api/users/status", function(data) {
+	  cb();
+	})
+	.error(function(err) { destroySession(); })
+};
 
 Backbone.middle = _.extend({
 	goTo: function(url) {
@@ -33,7 +57,8 @@ Backbone.middle.on({
 	"goToPrevious": Backbone.middle.goToPrev,
 	"goToExt": Backbone.middle.goToExt,
 	"changeUrl": Backbone.middle.changeUrl,
-	"domchange:title": Backbone.middle.changeTitle
+	"domchange:title": Backbone.middle.changeTitle,
+	"logout": destroySession
 });
 
 AppStart();

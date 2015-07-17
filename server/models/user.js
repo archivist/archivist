@@ -3,6 +3,7 @@
 var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId
+  , jwt = require('jsonwebtoken')
   , util = require('../controllers/api/utils.js');
  
 var userSchema = new Schema({
@@ -11,14 +12,16 @@ var userSchema = new Schema({
     email: String,
     picture: String,
     access: {type: Boolean, default: false},
-    super: {type: Boolean, default: false}
+    super: {type: Boolean, default: false},
+    issuedTokens: [String]
 });
 
+userSchema.statics.secret = process.env.AUTH_SECRET || 'archivistSecret';
 
 /** 
  * Creates User record from Google profile
  *
- * @param {string} profile - Google OAuth profile
+ * @param {object} profile - Google OAuth profile
  * @param {callback} cb - The callback that handles the results 
  */
 
@@ -52,16 +55,22 @@ userSchema.statics.get = function(id, done) {
  * Updates User record unique JSON
  *
  * @param {string} id - The unique id of target user record
- * @param {string} data - JSON with updated properties
+ * @param {object} data - JSON with updated properties
  * @param {callback} cb - The callback that handles the results 
  */
 
 userSchema.statics.change = function(id, data, cb) {
   delete data._id;
   delete data.__v;
-  this.findByIdAndUpdate(id, { $set: data }, function (err, user) {
+  this.findByIdAndUpdate(id, { $set: data }, {new: true}, function (err, user) {
     if (err) return next(err);
-    cb(err, user);
+    if (data.access != user.access && data.super != user.super) {
+      self.revokeTokens(user._id, function(err, user) {
+        cb(err, user);
+      });
+    } else {
+      cb(err, user);
+    }
   });
 } 
 
@@ -83,7 +92,7 @@ userSchema.statics.delete = function(id, cb) {
 /** 
  * List Users
  *
- * @param {string} opt - The query options from request
+ * @param {object} opt - The query options from request
  * @param {callback} cb - The callback that handles the results 
  */
 
@@ -104,7 +113,7 @@ userSchema.statics.list = function(opt, cb) {
 /** 
  * Find User profile or create new one
  *
- * @param {string} profile - The unique profile of target user record
+ * @param {object} profile - The unique profile of target user record
  * @param {callback} done - Defered done method which handles the results 
  */
 
@@ -114,9 +123,9 @@ userSchema.statics.findOrCreate = function(profile, done) {
     if (err) return next(err);
     if (user) {
       if (user.access) {
-        return done(null, profile);
+        return done(null, user);
       } else {
-        return done(null, false, { message: 'You have no access. Sorry. See you.' });    
+        return done(null, false);    
       } 
     } else {
       self.create(profile, function(err) {
@@ -142,6 +151,112 @@ userSchema.statics.checkSuper = function(req, res, next) {
     }
   });
 }
+
+
+/** 
+ * Issue auth token with user access scopes
+ *
+ * @param {object} profile - User record from database
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.issueToken = function(profile, cb) {
+  var self = this;
+
+  var payload = {
+    scopes: []
+  };
+
+  if(profile.access) payload.scopes.push('access');
+  if(profile.super) payload.scopes.push('super');
+          
+  var token = jwt.sign(payload, self.secret, {
+    issuer: profile._id,
+    expiresInMinutes: 60*24 // expires in 24 hours
+  });
+  self.removeInvalidTokens(profile, function(err, cleandProfile) {
+    if(err) return cb(err);
+    self.findOneAndUpdate(
+      {_id: cleandProfile._id},
+      {$push: {issuedTokens: token}},
+      {safe: true, upsert: true},
+      function(err, user) {
+        return cb(err, {
+          token: token,
+          user: {
+            username: user.name,
+            picture: user.picture
+          }
+        });  
+      }
+    );
+  })
+}
+
  
+/** 
+ * Revoke given auth token
+ *
+ * @param {string} user - User unique id
+ * @param {string} token - Token to revoke
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.revokeToken = function(user, token, cb) {
+  var self = this;
+  self.findOneAndUpdate(
+    {_id: user},
+    {$pull: {issuedTokens: token}},
+    {new: true},
+    cb(err, user)
+  );
+}
+
+
+/** 
+ * Revoke all tokens
+ *
+ * @param {string} user - User unique id
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.revokeTokens = function(user, cb) {
+  var self = this;
+  self.findOneAndUpdate(
+    {_id: user},
+    {issuedTokens: []},
+    {new: true},
+    cb(err, user)
+  );
+}
+
+
+/** 
+ * Removes invalid tokens (outdated etc) from user database record
+ *
+ * @param {object} profile - User record from database
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.removeInvalidTokens = function(profile, cb) {
+  var self = this;
+  var tokens = profile.issuedTokens;
+  var invalid = [];
+
+  _.each(tokens, function(token){
+    jwt.verify(token, self.secret, function(err, decoded) {
+      if (err) {
+        invalid.push(token);
+      }
+    });
+  });
+
+  self.findOneAndUpdate(
+    {_id: user},
+    {$pull: {issuedTokens: invalid}},
+    {new: true},
+    cb(err, user)
+  );
+}
 
 module.exports = mongoose.model('User', userSchema);

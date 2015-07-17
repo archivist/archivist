@@ -1,6 +1,6 @@
 var Definition = require('../../models/definition.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
 
@@ -49,6 +49,6 @@ api.route('/definitions')
 api.route('/definitions/:id')
   .get(maintenance.checkCurrentMode, readDefinition)
   .put(maintenance.checkCurrentMode, updateDefinition)
-  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deleteDefinition)
+  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deleteDefinition)
 
 module.exports = api;

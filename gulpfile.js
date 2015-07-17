@@ -10,7 +10,7 @@ var browserify = require('browserify'),
     streamify = require('gulp-streamify'),
     source = require('vinyl-source-stream'),
     //map = require('map-stream'),
-    sourceFile = './client/platform/index.js',
+    sourceFile = './src/index.js',
     destFolder = './public/platform/',
     destFile = 'index.js',
     composerSourceFile = './boot_archivist_composer.js',
@@ -34,7 +34,7 @@ gulp.task('watch', function() {
 
   function rebundle() {
     console.log('building new version')
-    gulp.src('./client/platform/index.css')
+    gulp.src('./src/index.css')
       .pipe(importCSS())
       .pipe(minifyCSS({cache:true}))
       .pipe(rename("index.css"))
@@ -54,7 +54,7 @@ gulp.task('watch', function() {
 gulp.task('compress', function() {
   var bundler = browserify(sourceFile,{cache: {}, packageCache: {} }),
       bundle = function() {
-        gulp.src('./client/platform/index.css')
+        gulp.src('./src/index.css')
           .pipe(importCSS())
           .pipe(minifyCSS({cache:true}))
           .pipe(rename("index.css"))
@@ -62,7 +62,7 @@ gulp.task('compress', function() {
         bundler
           .bundle()
           .pipe(source(destFile))
-          .pipe(streamify(uglify()))
+          //.pipe(streamify(uglify()))
           .pipe(gulp.dest(destFolder));
       };
   return bundle();

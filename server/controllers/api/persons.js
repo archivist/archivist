@@ -1,6 +1,6 @@
 var Person = require('../../models/person.js')
   , maintenance = require('../shared/maintenance.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
 
@@ -49,6 +49,6 @@ api.route('/persons')
 api.route('/persons/:id')
   .get(maintenance.checkCurrentMode, readPerson)
   .put(maintenance.checkCurrentMode, updatePerson)
-  .delete(maintenance.checkCurrentMode, oauth.ensureSuperAuth, deletePerson)
+  .delete(maintenance.checkCurrentMode, auth.ensureSuperAuth, deletePerson)
 
 module.exports = api;

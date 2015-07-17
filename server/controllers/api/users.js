@@ -1,5 +1,5 @@
 var User = require('../../models/user.js')
-  , oauth = require('../auth/oauth.js')
+  , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
 
@@ -25,11 +25,18 @@ var listUsers = function(req, res, next) {
   });
 }
 
+var getUserStatus = function(req, res, next) {
+  res.status(200).json({validSession: true});
+};
+
 api.route('/users')
-  .get(oauth.ensureSuperAuth, listUsers)
+  .get(auth.ensureSuperAuth, listUsers)
+
+api.route('/users/status')
+  .get(auth.ensureAuthenticated, getUserStatus);
 
 api.route('/users/:id')
-  .get(oauth.ensureSuperAuth, readUser)
-  .put(oauth.ensureSuperAuth, updateUser)
+  .get(auth.ensureSuperAuth, readUser)
+  .put(auth.ensureSuperAuth, updateUser)
 
 module.exports = api;

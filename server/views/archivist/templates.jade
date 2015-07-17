@@ -1,19 +1,29 @@
+script#container(type='text/template')
+	<div id="topbar">
+	<header class="branding">Archivist</header>
+	<nav class="topbar"></nav>
+	<div class="user-section">
+	<div class="username"><a href="/logout"><i class="fa fa-power-off"></i></a></div>
+	<div class="userpic"></div>
+	</div>
+	</div>
+	<div id="data-container">
+	<div class="data-toolbox">
+	<div class="toolbox">
+	<div id="context-panel"></div>
+	<div id="meter"></div>
+	<div class="counter"></div>
+	</div>
+	</div>
+	<div id="stackView" class="stackViewContainer"></div>
+	</div>
 script#mainmenu(type='text/template')
 	<ul>
 	<% items.each(function(item) { %>
-	<% if(item.get('super')){ %>
-	<% if(!{JSON.stringify(user.super)}){ %>
 	<li id="<%= item.get('id') %>" data-url="<%= item.get('url') %>">
 	<i class="fa fa-<%= item.get('icon') %> fa-2x"></i>
 	<span class="title"><%= item.get('name') %></span>
 	</li>
-	<% } %>
-	<% } else { %>
-	<li id="<%= item.get('id') %>" data-url="<%= item.get('url') %>">
-	<i class="fa fa-<%= item.get('icon') %> fa-2x"></i>
-	<span class="title"><%= item.get('name') %></span>
-	</li>
-	<% } %>
 	<% }) %>
 	</ul>
 script#contextmenu(type='text/template')
@@ -85,4 +95,3 @@ script#editorDialog(type='text/template')
 	</div>
 	</div>
 	</div>
-	</script>

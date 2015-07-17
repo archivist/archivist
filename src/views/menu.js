@@ -1,5 +1,6 @@
 var Backbone = require('backbone'),
-    $ = require('jquery');
+    $ = require('jquery')
+    utils = require('./util.js');
 
 var MainMenu = Backbone.View.extend({
   manage: true,
@@ -16,6 +17,12 @@ var MainMenu = Backbone.View.extend({
     Backbone.middle.trigger("goTo", e.currentTarget.dataset.url)
   },
   serialize: function() {
+    var isSuper = utils.isSuper();
+    if(!isSuper) {
+      this.collection = _.filter(this.collection, function(item){
+        return !item.super;
+      });
+    }
     return { items: this.collection };
   }
 });

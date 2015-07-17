@@ -15,6 +15,7 @@ var mongoose = require('mongoose')
 	, _ = require('underscore')
 	, api = require('./controllers/api')
 	, oauth = require('./controllers/auth/oauth.js')
+	, auth = require('./controllers/auth/utils.js')
 	//, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
@@ -100,32 +101,16 @@ app.use(methodOverride());
 app.use(allowCrossDomain);
 app.use(flash());
 app.use(favicon(path.join(__dirname, '../assets/favicon.png')));
-app.use(session({
-	resave: true,
-  saveUninitialized: true,
-  cookie: {maxAge: 2 * 24 * 3600000}, 
-  secret: 'archivistSecretWeapon', 
-  store: sessionStore
-}));
 app.use(passport.initialize());
-app.use(passport.session());
 app.use(morgan('tiny'));
 
 
 // MONGOOSE CONNECTION
 
-var sessionStore = new MongoStore({
-    mongooseConnection: mongoose.connections[0],
-    collection: 'sessions',
-    autoReconnect: true,
-    ttl: 2 * 3600
-  }, function(e){
-    app.listen(port, function() {
-    	console.log("Application server listening on port %d", port);
-  });
-})
-
 mongoose.connection.on("fullsetup", function(ref) {
+	app.listen(port, function() {
+    console.log("Application server listening on port %d", port);
+  });
   return console.log("Connected to mongo server!");
 });
 
@@ -139,8 +124,10 @@ app.use('/api', api);
 //app.use('/import', importer);
 
 app.route('/')
-	.get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('platform', {user: req.user});
+	.get(function(req, res, next) {
+		var user = req.user || {super:false};
+		console.log(req.token_payload)
+    res.render('archivist', {user:user});
   })
 
 
@@ -158,7 +145,7 @@ app.route('/')
 // }
 
 app.route('/editor')
-	.get(oauth.ensureAuthenticated, function(req, res, next) {
+	.get(auth.ensureAuthenticated, function(req, res, next) {
 		var menu = [
 			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
 	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
@@ -169,11 +156,11 @@ app.route('/editor')
 	  	{name: 'Merge',id: 'merge',icon: 'code-fork',url: '/merge'},
 	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
 		];
-		res.render('editor', {user: req.user, menu: menu});
+		res.render('archivist', {user: req.user, menu: menu});
   });
 
 app.route('/editor/new')
-	.get(oauth.ensureAuthenticated, function(req, res, next) {
+	.get(auth.ensureAuthenticated, function(req, res, next) {
 		Document.createEmpty(req.user, function(err, doc) {
 			if (err) return next(err);
 			res.redirect('/editor#' + doc._id);
@@ -181,11 +168,11 @@ app.route('/editor/new')
   });
 
 app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
-  .get(oauth.ensureAuthenticated, function(req, res, next) {
-    res.render('platform', {user: req.user});
+  .get(auth.ensureAuthenticated, function(req, res, next) {
+    res.render('archivist', {user: req.user});
   })
 
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(path.join(__dirname, '../public')));
 
 // ERROR ROUTES
 
