@@ -55,3 +55,9 @@ var isSuper = function() {
   return _.contains(claims.scopes, "super");
 }
 exports.isSuper = isSuper;
+
+var getUserData = function() {
+  var session = Backbone.AppRouter.session;
+  return session.user;
+}
+exports.getUserData = getUserData;

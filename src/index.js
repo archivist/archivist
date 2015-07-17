@@ -6,20 +6,43 @@ var Backbone = require('backbone'),
 Backbone.$ = window.$ = jquery;
 
 var AppStart = function() {
-	var session = localStorage.getItem('session');
+	initializeSession();
+	verifyToken(function(err, data){
+		if(err) {
+			console.log('invalid session');
+			return destroySession();
+		}
+		// renew token
+		if (data.token) {
+			console.log('renewing session...')
+			localStorage.setItem('session', JSON.stringify(data));
+			initializeSession();
+		}
+		var session = getSession();
+		Backbone.AppRouter = new router();
+  	Backbone.AppRouter.session = session;
+   	Backbone.history.start({ pushState: true, root: '/' });
+	})
+}
+
+var initializeSession = function() {
+	var session = getSession();
 	if (session) {
-	  var token = JSON.parse(session).token;
+	  var token = session.token;
 	  $.ajaxSetup({
 	  	beforeSend: function(xhr) {
         xhr.setRequestHeader("Authorization", "Bearer " + token);
       }
 		});
+	} else {
+		window.location.href = '/login';
 	}
-	verifyToken(function(){
-		Backbone.AppRouter = new router();
-  	Backbone.AppRouter.session = JSON.parse(session);
-   	Backbone.history.start({ pushState: true, root: '/' });
-	})
+}
+
+var getSession = function() {
+	var session = localStorage.getItem('session');
+	if(!session) return false;
+	return JSON.parse(session);
 }
 
 var destroySession = function() {
@@ -29,9 +52,9 @@ var destroySession = function() {
 
 var verifyToken = function(cb) {
 	$.getJSON("/api/users/status", function(data) {
-	  cb();
+	  cb(null, data);
 	})
-	.error(function(err) { destroySession(); })
+	.error(function(err) { cb(err); })
 };
 
 Backbone.middle = _.extend({

@@ -3,8 +3,9 @@ script#container(type='text/template')
 	<header class="branding">Archivist</header>
 	<nav class="topbar"></nav>
 	<div class="user-section">
-	<div class="username"><a href="/logout"><i class="fa fa-power-off"></i></a></div>
-	<div class="userpic"></div>
+	<span class="logout"><i class="fa fa-power-off"></i></span>
+	<div class="userpic"><img src='<%= user.picture %>' /></div>
+	<div class="username"><%= user.username %></div>
 	</div>
 	</div>
 	<div id="data-container">

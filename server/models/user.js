@@ -4,6 +4,7 @@ var mongoose = require('mongoose')
   , Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId
   , jwt = require('jsonwebtoken')
+  , _ = require('underscore')
   , util = require('../controllers/api/utils.js');
  
 var userSchema = new Schema({
@@ -41,12 +42,12 @@ userSchema.statics.create = function(profile, cb) {
  * Gets User record by unique id 
  *
  * @param {string} id - The unique id of target user record
- * @param {callback} done - Defered done method which handles the results 
+ * @param {callback} cb - The callback that handles the results
  */
 
-userSchema.statics.get = function(id, done) {
-  this.findOne({id: id}, function(err, user) {
-    done(err, user);
+userSchema.statics.get = function(id, cb) {
+  this.findById(id, function(err, user) {
+    cb(err, user);
   })
 }
 
@@ -172,7 +173,7 @@ userSchema.statics.issueToken = function(profile, cb) {
           
   var token = jwt.sign(payload, self.secret, {
     issuer: profile._id,
-    expiresInMinutes: 60*24 // expires in 24 hours
+    expiresInMinutes: 60*24*7 // expires in 7 days
   });
   self.removeInvalidTokens(profile, function(err, cleandProfile) {
     if(err) return cb(err);
@@ -208,7 +209,9 @@ userSchema.statics.revokeToken = function(user, token, cb) {
     {_id: user},
     {$pull: {issuedTokens: token}},
     {new: true},
-    cb(err, user)
+    function(err, user) {
+      cb(err, user)
+    }
   );
 }
 
@@ -226,7 +229,9 @@ userSchema.statics.revokeTokens = function(user, cb) {
     {_id: user},
     {issuedTokens: []},
     {new: true},
-    cb(err, user)
+    function(err, user) {
+      cb(err, user)
+    }
   );
 }
 
@@ -252,11 +257,53 @@ userSchema.statics.removeInvalidTokens = function(profile, cb) {
   });
 
   self.findOneAndUpdate(
-    {_id: user},
+    {_id: profile._id},
     {$pull: {issuedTokens: invalid}},
     {new: true},
-    cb(err, user)
+    function(err, user) {
+      cb(err, user)
+    }
   );
+}
+
+
+/** 
+ * Checks if given token exists and related to given user
+ *
+ * @param {string} user - User unique id
+ * @param {string} token - Provided token
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.checkTokenExistance = function(user, token, cb) {
+  var self = this;
+  self.findById(user, 'issuedTokens', function(err, profile) {
+    if(err) return cb(err);
+    var check = _.contains(profile.issuedTokens, token);
+    cb(null, check);
+  });
+}
+
+
+/** 
+ * Renew given token for given user
+ *
+ * @param {string} user - User unique id
+ * @param {string} token - Provided token
+ * @param {callback} cb - The callback that handles the results
+ */
+
+userSchema.statics.renewToken = function(user, token, cb) {
+  var self = this;
+  self.get(user, function(err, profile) {
+    if(err) return cb(err);
+    self.issueToken(profile, function(err, tokenData) {
+      if(err) return cb(err);
+      self.revokeToken(user, token, function(err){
+        cb(err, tokenData);
+      });
+    });
+  });
 }
 
 module.exports = mongoose.model('User', userSchema);

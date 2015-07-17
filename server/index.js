@@ -125,9 +125,7 @@ app.use('/api', api);
 
 app.route('/')
 	.get(function(req, res, next) {
-		var user = req.user || {super:false};
-		console.log(req.token_payload)
-    res.render('archivist', {user:user});
+    res.render('archivist');
   })
 
 
@@ -175,6 +173,13 @@ app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
 app.use(express.static(path.join(__dirname, '../public')));
 
 // ERROR ROUTES
+
+app.use(function (err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    return res.redirect('/login');
+  }
+  next();
+});
 
 app.use(function(req, res){
   res.render('error.jade', {title: 'Looks like you are lost...', msg: 'Try to go back to <a href="/">main page</a>.'});

@@ -87,8 +87,7 @@ var Router = Backbone.Router.extend({
     'persons/add': 'personsAdd',
     'persons/:id': 'personsEdit',
     'merge': 'mergeList',
-    'users': 'usersList',
-    'logout': 'logout'
+    'users': 'usersList'
 	},
   dashboard: function(callback, id) {
     var dashboardGrid = [
@@ -263,10 +262,6 @@ var Router = Backbone.Router.extend({
    
     this.grid(usersGrid, 'users', 'usersGrid', callback, id);
 
-  },
-
-  logout: function() {
-    Backbone.middle.trigger('logout');
   },
 
   map: function(colName, viewName, callback, id) {

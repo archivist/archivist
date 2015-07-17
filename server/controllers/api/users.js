@@ -26,7 +26,14 @@ var listUsers = function(req, res, next) {
 }
 
 var getUserStatus = function(req, res, next) {
-  res.status(200).json({validSession: true});
+  auth.checkExpiration(req, function(err, token) {
+    if(err) return res.status(500).send('Token renewing crashed.');
+    if(token) {
+      res.status(200).json(token);
+    } else {
+      res.status(200).json({validSession: true});
+    }
+  })
 };
 
 api.route('/users')
