@@ -3,8 +3,7 @@ var Backbone = require('backbone')
   , moment = require('moment')
   , _ = require('underscore')
   , models = require('./models/index.js')
-  , views = require('./views/index.js')
-  , Notify = require('./local_modules/notify/notify.js');
+  , views = require('./views/index.js');
 
 var menuData = [
   {
@@ -67,12 +66,13 @@ var menuData = [
 
 var Router = Backbone.Router.extend({
 	initialize: function() {
-    this.on("all", this.storeRoute)
-    this.history = []
-    this.layout = ''
-    this.notice = {}
-    this.initialized = false
-    this.contextMenu = new models.contextItems()
+    this.on("all", this.storeRoute);
+    this.history = [];
+    this.layout = '';
+    this.manager = 'Archivist';
+    this.initialized = false;
+    this.contextMenu = new models.contextItems();
+    this.initializeStatus();
 	},
 	routes: {
     '': 'dashboard',
@@ -107,17 +107,15 @@ var Router = Backbone.Router.extend({
   },
 
   subjectsList: function(callback, id) {
-    Notify.spinner('show');
-
     var self = this;
-        
+    
+    this.manager = this.getManagerName('subjects');        
+    
     self.subjects = new models.subjects()
 
     self.subjects.fetch().done(function() {
       var subjectsView = new views.subjectsTreeView({ collection: self.subjects, contextMenu: self.contextMenu });
       self.changeLayout(subjectsView, callback, id);
-      Notify.spinner('hide');
-      Notify.info( 'Data has been loaded' );
     });
   },
 
@@ -270,10 +268,10 @@ var Router = Backbone.Router.extend({
   },
 
   map: function(colName, viewName, callback, id) {
-    Notify.spinner('show');
-
     var self = this;
         
+    this.manager = this.getManagerName(colName);
+
     self[colName] = new models[colName]();
     self[colName].state.pageSize = null;
 
@@ -282,23 +280,19 @@ var Router = Backbone.Router.extend({
     self[colName].fetch().done(function(){
       var mapView = new views[viewName]({ collection: self[colName], contextMenu: self.contextMenu });
       self.changeLayout(mapView, callback, id);
-      Notify.spinner('hide');
-      Notify.info( 'Data has been loaded' );
     });
   },
 
   grid: function(grid, colName, viewName, callback, id) {
-    Notify.spinner('show');
-
     var self = this;
     
+    this.manager = this.getManagerName(colName);
+
     if(_.isUndefined(self[colName])) self[colName] = new models[colName]()
       
     self[colName].fetch().done(function(){
       var gridView = new views[viewName]({ collection: self[colName], columns: grid, contextMenu: self.contextMenu });
       self.changeLayout(gridView, callback, id);
-      Notify.spinner('hide');
-      Notify.info( 'Data has been loaded' );
     });
   },
 
@@ -307,6 +301,7 @@ var Router = Backbone.Router.extend({
     if(!this.initialized) {
       this[parentName](name, id);
     } else {
+      this.manager = this.getManagerName(colName);
       var model = that[colName].get(id);
       if (_.isUndefined(model)) model = new models[modelName]({_id: id});
       model.fetch().done(function() {
@@ -321,6 +316,7 @@ var Router = Backbone.Router.extend({
     if(!this.initialized) {
       this[parentName](name);
     } else {
+      this.manager = this.getManagerName(colName);
       var view = that.layout.parentView.getView();
       view._add();
     }
@@ -347,7 +343,7 @@ var Router = Backbone.Router.extend({
       self.initializeContainer(function(){
         self.layout = new views.mainLayout({rootView: v, contextMenu: self.contextMenu}).render()
         self.initialized = true;
-        self.buildContextMenu()
+        self.buildContextMenu();
         if (callback) self[callback](id);
       })
     } else {
@@ -356,12 +352,31 @@ var Router = Backbone.Router.extend({
     }
   },
 
+  getManagerName: function(col) {
+    if(col.indexOf('locations') == 0) col = col.slice(9);
+    return col.charAt(0).toUpperCase() + col.slice(1) + ' manager';
+  },
+
   initializeContainer: function(cb) {
     var self = this;
     var container = new views.container({el: $('#main') }).once("afterRender", function() {
       self.buildMenu();
-      cb()
+      self.buildStatusBar();
+      cb();
     }).render();
+  },
+
+  initializeStatus: function() {
+    var status = {
+      name: "Dashboard",
+      type: "info",
+      message: "Welcome to Archivist!"
+    }
+    this.status = new models.status(status);
+  },
+
+  buildStatusBar: function() {
+    var statusBar = new views.statusBar({model: this.status, el: $('div.status-bar-wrapper')});
   },
 
   buildMenu: function() {

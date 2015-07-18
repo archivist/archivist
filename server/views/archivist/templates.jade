@@ -18,6 +18,22 @@ script#container(type='text/template')
 	</div>
 	<div id="stackView" class="stackViewContainer"></div>
 	</div>
+	<div class="status-bar-wrapper"></div>
+script#statusbar(type='text/template')
+	<div class="status-bar <%= state %>">
+	<div class="archivist-status">
+	<%= status.get('name') %>
+	</div>
+	<div class="notifications">
+	<div class="icon">
+	<i class="fa <%= status.get('type') %>">
+	</i>
+	</div>
+	<div class="message">
+	<%= status.get('message') %>
+	</div>
+	</div>
+	</div>
 script#mainmenu(type='text/template')
 	<ul>
 	<% items.each(function(item) { %>

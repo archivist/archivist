@@ -77,14 +77,12 @@ module.exports = function(schema, options) {
         query = util.getQuery(opt.query),
         options = util.getOptions(opt);
 
-    console.log('query', query, 'with options', options);
     self.count(query, function(err, counter) {
       if (err) return cb(err);
       self
         .find(query, null, options)
         .populate('edited', 'name')
         .exec(function(err, records) {
-          console.log('found', counter, 'items');
           cb(err, [{total_entries: counter}, records]);
         });
     });
@@ -128,7 +126,6 @@ module.exports = function(schema, options) {
         if (node.type === options.referenceType) {
 
           if (_.isArray(node.target)) {
-           console.log('node.target#before', node.id, node.target);
             // Skip nodes subject refs that don't have targets
             if (!node.target) return;
             var pos = node.target.indexOf(id);
@@ -141,9 +138,7 @@ module.exports = function(schema, options) {
               }
               hasChanged = true;
             }
-            console.log('node.target#after', node.id, node.target)
           } else {
-            console.log(id, node.target)
             if (id === node.target) {
               hasChanged = true;
               if (opt.mode === "delete") {

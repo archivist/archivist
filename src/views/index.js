@@ -1,6 +1,7 @@
 var _ = require("underscore")
 	, layout  = require('./layout.js')
 	, container = require('./container.js')
+  , statusBar = require('./statusbar.js')
   , menu = require('./menu.js')
 	, grid = require('./grid.js')
   , documents = require('./documents.js')
@@ -12,4 +13,4 @@ var _ = require("underscore")
   , users = require('./users.js')
   , util = require('./util.js')
 
-module.exports = _.extend({}, layout, container, menu, grid, documents, definitions, locations, persons, merge, subjects, users, util);
+module.exports = _.extend({}, layout, container, statusBar, menu, grid, documents, definitions, locations, persons, merge, subjects, users, util);

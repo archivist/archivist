@@ -15,12 +15,15 @@ var Collection = Backbone.PageableCollection.extend({
     var self = this;
     self.on('request', function(){
       nprogress.start();
+      Backbone.middle.trigger("load:start");
     });
     self.on('sync', function(){
       nprogress.done();
+      Backbone.middle.trigger("load:finish");
     });
     self.on('error', function(){
       nprogress.done();
+      Backbone.middle.trigger("load:error");
     });
     Backbone.PageableCollection.__super__.initialize.apply(this, arguments)
   },

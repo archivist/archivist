@@ -72,6 +72,30 @@ Backbone.middle = _.extend({
 	},
 	changeTitle: function(title) {
 		document.title = title;
+	},
+	loading: function() {
+		var status = {
+			name: Backbone.AppRouter.manager,
+			type: 'progress',
+			message: 'Loading data...'
+		}
+		Backbone.AppRouter.status.set(status);
+	},
+	loaded: function() {
+		var status = {
+			name: Backbone.AppRouter.manager,
+			type: 'info',
+			message: 'Data has been loaded'
+		}
+		Backbone.AppRouter.status.set(status);
+	},
+	error: function() {
+		var status = {
+			name: Backbone.AppRouter.manager,
+			type: 'error',
+			message: 'Something goes wrong, try again'
+		}
+		Backbone.AppRouter.status.set(status);
 	}
 }, Backbone.Events);
 
@@ -81,6 +105,9 @@ Backbone.middle.on({
 	"goToExt": Backbone.middle.goToExt,
 	"changeUrl": Backbone.middle.changeUrl,
 	"domchange:title": Backbone.middle.changeTitle,
+	"load:start": Backbone.middle.loading,
+	"load:finish": Backbone.middle.loaded,
+	"load:error": Backbone.middle.error,
 	"logout": destroySession
 });
 

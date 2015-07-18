@@ -6,6 +6,7 @@ var _ = require("underscore")
   , entity = require('./entity.js')
   , subject = require('./subject.js')
   , user = require('./user.js')
+  , status = require('./status.js')
   , menu = require('./menu.js')
 
-module.exports = _.extend({}, document, definition, location, person, entity, subject, user, menu);
+module.exports = _.extend({}, document, definition, location, person, entity, subject, user, status, menu);
