@@ -19,6 +19,7 @@
     "leaflet-control-geocoder": "perliedman/leaflet-control-geocoder#66d57304bab6d5dbd6c227de209a9a368a8c7c40",
     "leaflet.markercluster": "0.4.0",
     "moment": "2.8.3",
+    "nprogress": "^0.2.0",
     "select2-bootstrap-theme": "fk/select2-bootstrap-theme#1a81f99b47a16d04554c4ec57d5416db4ce2256c",
     "superagent": "1.2.0",
     "underscore": "1.8.3"

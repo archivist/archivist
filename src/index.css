@@ -4,6 +4,7 @@
 @import url('./local_modules/bootstrap-form/bootstrap3.css');
 @import url('./node_modules/animate.css/animate.css');
 @import url('./local_modules/notify/notification.css');
+@import url('./node_modules/nprogress/nprogress.css');
 @import url('./styles/jstree.css');
 @import url('./styles/subject-tree.css');
 @import url('./styles/Control.Geocoder.css');
