@@ -11,9 +11,9 @@ var googleClient;
 
 if(process.env.NODE_ENV == 'development') {
   googleClient = {
-    clientID: '311588520740-f2dgfnpr2modtbjg8i06ec69e72lk89q.apps.googleusercontent.com',
-    clientSecret: '1uvqMWT3BmbgQuKIBb4lr4IF',
-    callbackURL: "http://localhost:5000/auth/google/callback"
+    clientID: process.env.DEV_GOOGLE_ID,
+    clientSecret: process.env.DEV_GOOGLE_SECRET,
+    callbackURL: process.env.DEV_GOOGLE_CALLBACK
   }
 }
 
