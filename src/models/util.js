@@ -14,11 +14,12 @@ var Collection = Backbone.PageableCollection.extend({
   initialize: function(models, options) {
     var self = this;
     self.on('request', function(){
-      console.log('request')
       nprogress.start();
     });
     self.on('sync', function(){
-      console.log('sync')
+      nprogress.done();
+    });
+    self.on('error', function(){
       nprogress.done();
     });
     Backbone.PageableCollection.__super__.initialize.apply(this, arguments)

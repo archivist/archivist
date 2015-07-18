@@ -5,6 +5,8 @@ var Backbone = require('backbone'),
     Pageable = require('../local_modules/backgrid-paginator/backgrid-paginator.js'),
     modal = require('../node_modules/backbone.modal/backbone.modal.js'),
     models = require('../models/index.js'),
+    utils = require('./util.js')
+    request = require('superagent'),
     $ = require('jquery'),
     _ = require('underscore'),
     Grid = require('./grid.js');
@@ -73,7 +75,7 @@ var MergeGrid = Grid.main.extend({
       this.mergeNames.into = selected[0].get('name');
       if(this.merge.one != this.merge.into) {
         $(this.$el).find('.merge-state').text('Will merge ' + this.mergeNames.one + ' into ' + this.mergeNames.into);
-        showDialog(this.merge, this.collection, selected[0]);
+        showDialog(this.merge, this.collection, this.collection.get(this.merge.one));
       }
     }
   },
@@ -93,7 +95,6 @@ var MergeGrid = Grid.main.extend({
 
 exports.mergeGrid = MergeGrid;
 
-
 var showDialog = function(mergeData, collection, model) {
   var dialog = new Backbone.Model({
     title: "Merge Entities",
@@ -106,6 +107,7 @@ var showDialog = function(mergeData, collection, model) {
   dialog.on('confirm', function(dialog){
     request
       .get('/api/entities/merge')
+      .set('Authorization', 'Bearer ' + utils.getUserToken())
       .query(mergeData)
       .end(function(err, res) {
         if (res.ok) {

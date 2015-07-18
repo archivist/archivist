@@ -3,7 +3,7 @@ var Backbone = require('backbone'),
     _ = require('underscore'),
     $ = require('jquery'),
     modal = require('../node_modules/backbone.modal/backbone.modal.js')
-    jstree = require('../local_modules/jstree/dist/jstree.js'),
+    jstree = require('jstree'),
     request = require('superagent'),
     ObjectId = require('../local_modules/objectid/Objectid.js'),
     Grid = require('./grid.js'),
@@ -158,7 +158,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "icon"        : false,
       "separator_after" : false,
       "_disabled"   : function (data) {
-        if (!window.superaccess) return true;
+        if (!Utils.isSuper()) return true;
         
         var inst = $.jstree.reference(data.reference),
             obj = inst.get_node(data.reference);
@@ -215,7 +215,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "_disabled"     : false,
       "label"       : "Merge",
       "_disabled"   : function (data) {
-        if (!window.superaccess) return true;
+        if (!Utils.isSuper()) return true;
 
         var inst = $.jstree.reference(data.reference),
             obj = inst.get_node(data.reference);
@@ -238,7 +238,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
       "separator_before"  : false,
       "separator_after" : true,
       "_disabled"     : function (data) {
-        if (!window.superaccess) return true;
+        if (!Utils.isSuper()) return true;
         return !$.jstree.currentState.nodeToMerge;
       },
       "label"       : "Merge into",
@@ -271,6 +271,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         dialog.on('confirm', function(dialog){
           request
             .get('/api/subjects/merge')
+            .set('Authorization', 'Bearer ' + Utils.getUserToken())
             .query({ one: nodeToMerge.id, into: targetNode.id })
             .end(function(err, res) {
               if (res.ok) {
@@ -341,6 +342,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     request
       .get('/api/subjects/move')
+      .set('Authorization', 'Bearer ' + Utils.getUserToken())
       .query({ oldparent: oldParent, newparent: newParent, node: movedNode.id, oldpos: oldPos, newpos: newPos })
       .end(function(err, res) {
         if (res.ok) {

@@ -44,7 +44,7 @@ utils.checkAuth = jwt({
 utils.check_scopes = function(req, res, next) {
   var scopes = ['access', 'super'];
   var token = req.user;
-
+  
   if (_.isEmpty(_.difference(scopes, token.scopes))) return next();
 
   return res.send(401, 'You have no access.');

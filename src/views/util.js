@@ -61,3 +61,9 @@ var getUserData = function() {
   return session.user;
 }
 exports.getUserData = getUserData;
+
+var getUserToken = function() {
+  var session = Backbone.AppRouter.session;
+  return session.token;
+}
+exports.getUserToken = getUserToken;

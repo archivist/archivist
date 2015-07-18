@@ -14,6 +14,7 @@
     "backgrid-filter": "wyuenho/backgrid-filter#01b2b217b8a3fbf2f240b882b338284632bae791",
     "backgrid-select-all": "wyuenho/backgrid-select-all#1a000536c933617b0601b0cec77c1aaee76265e9",
     "jquery": "2.1.1",
+    "jstree": "vakata/jstree#b45ff36eb6f4a07c11853f7d198539c9111964ab",
     "jquery.mousewheel": "3.1.9",
     "leaflet": "0.7.3",
     "leaflet-control-geocoder": "perliedman/leaflet-control-geocoder#66d57304bab6d5dbd6c227de209a9a368a8c7c40",
