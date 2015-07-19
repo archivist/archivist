@@ -154,7 +154,7 @@ app.route('/editor')
 	  	{name: 'Merge',id: 'merge',icon: 'code-fork',url: '/merge'},
 	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
 		];
-		res.render('archivist', {user: req.user, menu: menu});
+		res.render('editor', {user: req.user, menu: menu});
   });
 
 app.route('/editor/new')

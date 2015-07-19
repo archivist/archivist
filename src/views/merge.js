@@ -105,22 +105,21 @@ var showDialog = function(mergeData, collection, model) {
   })
 
   dialog.on('confirm', function(dialog){
+    Backbone.middle.trigger("sync:start", 'Merging... This could take awhile, please be patient');
     request
       .get('/api/entities/merge')
       .set('Authorization', 'Bearer ' + utils.getUserToken())
       .query(mergeData)
       .end(function(err, res) {
         if (res.ok) {
-          Notify.spinner('hide');
           collection.remove(model);
           $('span.help').html('Choose the entity to merge from list below and press <i class="fa fa-code-fork"></i> Merge button');
           $('div.merge-state').text('');
           dialog.submit('Done! Exiting from maintenance mode...', 'ok');
-          Notify.info('Merge has been completed!');
+          Backbone.middle.trigger("sync:success", 'Merge has been completed');
         } else {
-          Notify.spinner('hide');
           dialog.submit(err, res.text);
-          var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+          Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
         }
       });
   });

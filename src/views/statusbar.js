@@ -14,6 +14,7 @@ var StatusBar = Backbone.View.extend({
     this.state = self.model.get('type');
     self.model.set("type", ICONS_FOR_TYPE[self.model.get('type')]);
     self.model.on("change", function(){
+      self.state = self.model.get('type');
       self.model.attributes.type = ICONS_FOR_TYPE[self.model.get('type')];
       self.render();
     });

@@ -7,7 +7,6 @@ var Backbone = require('backbone'),
     request = require('superagent'),
     ObjectId = require('../local_modules/objectid/Objectid.js'),
     Grid = require('./grid.js'),
-    Notify = require('../local_modules/notify/notify.js'),
     Utils = require('./util.js');
 
 var SubjectsTreeView = Backbone.Layout.extend({
@@ -134,14 +133,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
             inst.create_node(obj, {id: newNode._id, text: newNode.name}, "last", function (new_node) {
               setTimeout(function () { inst.edit(new_node); },0);
             });
-
-            Notify.spinner('hide');
-            Notify.info('Subject ' + obj.model.get('name') + ' has been created!');
           },
           error: function(model,err) { 
             console.log(err);
-            Notify.spinner('hide');
-            Notify.info('Sorry, the error occured! Please reload the page and try again.');
           }
         });
       }
@@ -182,6 +176,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         })
 
         dialog.on('confirm', function(dialog){
+          Backbone.middle.trigger("sync:start", 'Deleting... This could take awhile, please be patient');
           obj.model.destroy({
             success: function(model,resp) {
               if(inst.is_selected(obj)) {
@@ -190,12 +185,10 @@ var SubjectsTreeView = Backbone.Layout.extend({
                 inst.delete_node(obj);
               }
               dialog.submit('Done! Exiting from maintenance mode...', 'ok');
-              Notify.spinner('hide');
-              Notify.info('Subject ' + obj.model.get('name') + ' has been removed!');
+              Backbone.middle.trigger("sync:success", 'Subject ' + obj.model.get('name') + ' has been removed!');
             },
             error: function(model,err) { 
-              Notify.spinner('hide');
-              Notify.info('Sorry an error occurred!', err.responseText);
+              Backbone.middle.trigger("sync:fail", 'Sorry an error occurred!');
               dialog.submit(err, 'error');
               console.log(err);
             }
@@ -253,8 +246,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         }
 
         if (nodeToMerge === targetNode) {
-          Notify.spinner('hide');
-          var notice = Notify.info('Can not merge with itself!');
+          Backbone.middle.trigger("sync:fail", 'Can not merge with itself!');
           return;
         }
         
@@ -269,22 +261,20 @@ var SubjectsTreeView = Backbone.Layout.extend({
         })
 
         dialog.on('confirm', function(dialog){
+          Backbone.middle.trigger("sync:start", 'Merging... This could take awhile, please be patient');
           request
             .get('/api/subjects/merge')
             .set('Authorization', 'Bearer ' + Utils.getUserToken())
             .query({ one: nodeToMerge.id, into: targetNode.id })
             .end(function(err, res) {
               if (res.ok) {
-                Notify.spinner('hide');
-
                 inst.delete_node(nodeToMerge);
                 $.jstree.currentState.nodeToMerge = null;
                 dialog.submit('Done! Exiting from maintenance mode...', 'ok');
-                Notify.info('Merge has been completed!');
+                Backbone.middle.trigger("sync:success", 'Merge has been completed');
               } else {
-                Notify.spinner('hide');
                 dialog.submit(err, res.text);
-                var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+                Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
               }
             });
         });
@@ -314,13 +304,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
             $('.tree').jstree().edit(newJSTreeNode);
           },0);
         });
-
-        Notify.spinner('hide');
-        Notify.info('Subject ' + model.get('name') + ' has been created!');
       },
       error: function(model, err) { 
-        Notify.spinner('hide');
-        Notify.info('Sorry an error occurred!', err.responseText);
         console.log(err);
       }
     });
@@ -340,17 +325,16 @@ var SubjectsTreeView = Backbone.Layout.extend({
     if (parentChanged) console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
     if (positionChanged) console.log('changing position from ', oldPos, 'to', newPos);
 
+    Backbone.middle.trigger("sync:start", 'Moving node...');
     request
       .get('/api/subjects/move')
       .set('Authorization', 'Bearer ' + Utils.getUserToken())
       .query({ oldparent: oldParent, newparent: newParent, node: movedNode.id, oldpos: oldPos, newpos: newPos })
       .end(function(err, res) {
         if (res.ok) {
-          Notify.spinner('hide');
-          var notice = Notify.info('Subject has been moved to new position.');
+          Backbone.middle.trigger("sync:success", 'Subject has been moved to new position');
         } else {
-          Notify.spinner('hide');
-          var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
+          Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
           alert('Sorry an error occurred: ', err);
           window.location.href = "/subjects";
         }
@@ -369,12 +353,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     subject.save('name', newName, {
       success: function(model, resp) { 
-        Notify.spinner('hide');
-        var notice = Notify.info('Subject ' + subject.get('name') + ' has been changed');
       },
       error: function(model, err) { 
-        Notify.spinner('hide');
-
         console.log(err);
         alert('Sorry an error occurred: ', err);
         window.location.href = "/subjects";
@@ -411,13 +391,9 @@ var subjectModal = Backbone.Modal.extend({
 
     self.model.save('description', description, {
       success: function(model, resp) { 
-        Notify.spinner('hide');
-        var notice = Notify.info('Subject ' + self.model.get('name') + ' has been updated');
         $('.tree').trigger('description:change', self.model);
       },
       error: function(model, err) { 
-        Notify.spinner('hide');
-        var notice = Notify.info('Sorry, the error occured! Please reload the page and try again.');
         console.log(err);
       }
     })

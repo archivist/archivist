@@ -1,19 +1,7 @@
 var Backbone = require('backbone')
-  , Utility = require('./util.js')
-  , Notify = require('../local_modules/notify/notify.js')
+  , Utility = require('./util.js');
 
 var User = Utility.model.extend({
-	 initialize: function () {
-    Backbone.Model.prototype.initialize.apply(this, arguments);
-    var that = this;
-    this.on('request', function(model, req, options) {
-      Notify.spinner('show');
-      req.done(function(){
-        Notify.spinner('hide');
-        Notify.info('Users data has been saved');
-      })
-    })
-  },
   urlRoot: "/api/users"
 })
 exports.user = User

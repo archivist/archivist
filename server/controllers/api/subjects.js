@@ -47,6 +47,7 @@ var listSubjects = function(req, res, next) {
 }
 
 var mergeSubjects = function(req, res, next) {
+  req.socket.setTimeout(800000);
   Subject.merge(req.query.one, req.query.into, function(err) {
     if (err) return next(err);
     res.json(200);

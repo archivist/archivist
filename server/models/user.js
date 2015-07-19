@@ -64,7 +64,6 @@ userSchema.statics.change = function(id, data, cb) {
   var self = this;
 
   delete data._id;
-  delete data.__v;
   
   this.findByIdAndUpdate(id, { $set: data }, function (err, user) {
     if (err) return next(err);

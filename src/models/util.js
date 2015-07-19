@@ -23,7 +23,7 @@ var Collection = Backbone.PageableCollection.extend({
     });
     self.on('error', function(){
       nprogress.done();
-      Backbone.middle.trigger("load:error");
+      Backbone.middle.trigger("sync:fail", 'Something goes wrong, try again');
     });
     Backbone.PageableCollection.__super__.initialize.apply(this, arguments)
   },

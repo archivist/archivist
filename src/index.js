@@ -89,11 +89,27 @@ Backbone.middle = _.extend({
 		}
 		Backbone.AppRouter.status.set(status);
 	},
-	error: function() {
+	error: function(message) {
 		var status = {
 			name: Backbone.AppRouter.manager,
 			type: 'error',
-			message: 'Something goes wrong, try again'
+			message: message
+		}
+		Backbone.AppRouter.status.set(status);
+	},
+	success: function(message) {
+		var status = {
+			name: Backbone.AppRouter.manager,
+			type: 'success',
+			message: message
+		}
+		Backbone.AppRouter.status.set(status);
+	},
+	start: function(message) {
+		var status = {
+			name: Backbone.AppRouter.manager,
+			type: 'progress',
+			message: message
 		}
 		Backbone.AppRouter.status.set(status);
 	}
@@ -107,7 +123,9 @@ Backbone.middle.on({
 	"domchange:title": Backbone.middle.changeTitle,
 	"load:start": Backbone.middle.loading,
 	"load:finish": Backbone.middle.loaded,
-	"load:error": Backbone.middle.error,
+	"sync:fail": Backbone.middle.error,
+	"sync:success": Backbone.middle.success,
+	"sync:start": Backbone.middle.start,
 	"logout": destroySession
 });
 
