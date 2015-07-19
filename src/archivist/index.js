@@ -77,7 +77,7 @@ Backbone.middle = _.extend({
 		var status = {
 			name: Backbone.AppRouter.manager,
 			type: 'progress',
-			message: 'Loading data...'
+			message: 'Transmitting data...'
 		}
 		Backbone.AppRouter.status.set(status);
 	},
@@ -85,7 +85,7 @@ Backbone.middle = _.extend({
 		var status = {
 			name: Backbone.AppRouter.manager,
 			type: 'info',
-			message: 'Data has been loaded'
+			message: 'Data has been transmitted'
 		}
 		Backbone.AppRouter.status.set(status);
 	},

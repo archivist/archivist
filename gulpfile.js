@@ -27,30 +27,6 @@ gulp.task('browserify', function() {
   return bundle();
 });
 
-gulp.task('watch', function() {
-  var bundler = browserify(sourceFile,{debug: true, cache: {}, packageCache: {}});
-  bundler = watchify(bundler);
-  bundler.on('update', rebundle);
-
-  function rebundle() {
-    console.log('building new version')
-    gulp.src('./src/index.css')
-      .pipe(importCSS())
-      .pipe(minifyCSS({cache:true}))
-      .pipe(rename("index.css"))
-      .pipe(gulp.dest(destFolder))
-    bundler.bundle()
-      .on('error', function(err){
-          console.log(err.message);
-          this.end();
-        })
-      .pipe(source(destFile))
-      .pipe(gulp.dest(destFolder));
-  }
-
-  return rebundle();
-});
-
 gulp.task('compress', function() {
   var bundler = browserify(sourceFile,{cache: {}, packageCache: {} }),
       bundle = function() {
@@ -90,21 +66,4 @@ gulp.task('bundle-composer', function() {
   return bundle();
 });
 
-// function duo(opts) {
-//   opts = opts || {};
-
-//   return map(function (file, fn) {
-//     Duo(__dirname)
-//       .entry(file.path)
-//       .run(function (err, src) {
-//         if (err) {
-//           return fn(err);
-//         }
-
-//         file.contents = new Buffer(src);
-//         fn(null, file);
-//       });
-//   });
-// }
-
-gulp.task('default', ['browserify', 'watch', 'bundle-composer']);
+gulp.task('default', ['browserify', 'bundle-composer']);

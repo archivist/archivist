@@ -80,23 +80,12 @@ try {
 	console.log(("Setting up failed to connect"), err.message);
 }
 
-
-// Deal with CORS to make API work with reader
-
-var allowCrossDomain = function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-
-  next();
-}
-
 // APP CONFIGURATION
 
 app.set('views', __dirname + '/views');
 app.set('view engine', 'jade');
-app.use(bodyParser.json({limit: '5mb'}));
-app.use(bodyParser.urlencoded({ extended: true, limit: '5mb', parameterLimit: 5000 }));
+app.use(bodyParser.json({limit: '3mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
 app.use(methodOverride());
 app.use(allowCrossDomain);
 app.use(flash());
