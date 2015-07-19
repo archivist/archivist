@@ -176,7 +176,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         })
 
         dialog.on('confirm', function(dialog){
-          Backbone.middle.trigger("sync:start", 'Deleting... This could take awhile, please be patient');
+          Backbone.middle.trigger("sync:start", 'Deleting... This could take a while, please be patient');
           obj.model.destroy({
             success: function(model,resp) {
               if(inst.is_selected(obj)) {
@@ -261,7 +261,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         })
 
         dialog.on('confirm', function(dialog){
-          Backbone.middle.trigger("sync:start", 'Merging... This could take awhile, please be patient');
+          Backbone.middle.trigger("sync:start", 'Merging... This could take a while, please be patient');
           request
             .get('/api/subjects/merge')
             .set('Authorization', 'Bearer ' + Utils.getUserToken())

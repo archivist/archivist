@@ -105,7 +105,7 @@ var showDialog = function(mergeData, collection, model) {
   })
 
   dialog.on('confirm', function(dialog){
-    Backbone.middle.trigger("sync:start", 'Merging... This could take awhile, please be patient');
+    Backbone.middle.trigger("sync:start", 'Merging... This could take a while, please be patient');
     request
       .get('/api/entities/merge')
       .set('Authorization', 'Bearer ' + utils.getUserToken())
