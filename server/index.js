@@ -5,7 +5,6 @@ var mongoose = require('mongoose')
 	, morgan = require('morgan')
   , session = require('express-session')
   , MongoStore = require('connect-mongostore')(session)
-  , flash = require('connect-flash')
   , favicon = require('serve-favicon')
   , passport = require('passport')
 	, port = process.env.PORT || 5000
@@ -87,9 +86,7 @@ app.set('view engine', 'jade');
 app.use(bodyParser.json({limit: '3mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
 app.use(methodOverride());
-app.use(allowCrossDomain);
-app.use(flash());
-app.use(favicon(path.join(__dirname, '../assets/favicon.png')));
+app.use(favicon(path.join(__dirname, '../public/assets/img/favicon.png')));
 app.use(passport.initialize());
 app.use(morgan('tiny'));
 
@@ -114,7 +111,7 @@ app.use('/api', api);
 
 app.route('/')
 	.get(function(req, res, next) {
-    res.render('archivist');
+    res.render('manager');
   })
 
 
@@ -132,7 +129,7 @@ app.route('/')
 // }
 
 app.route('/editor')
-	.get(auth.checkAuth, function(req, res, next) {
+	.get(function(req, res, next) {
 		var menu = [
 			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
 	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
@@ -143,7 +140,7 @@ app.route('/editor')
 	  	{name: 'Merge',id: 'merge',icon: 'code-fork',url: '/merge'},
 	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
 		];
-		res.render('editor', {user: req.user, menu: menu});
+		res.render('writer', {user: req.user, menu: menu});
   });
 
 app.route('/editor/new')
@@ -156,7 +153,7 @@ app.route('/editor/new')
 
 app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
   .get(function(req, res, next) {
-    res.render('archivist');
+    res.render('manager');
   })
 
 app.use(express.static(path.join(__dirname, '../public')));
