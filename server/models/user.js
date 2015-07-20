@@ -151,7 +151,8 @@ userSchema.statics.issueToken = function(profile, cb) {
   var self = this;
 
   var payload = {
-    scopes: []
+    scopes: [],
+    name: profile.name
   };
 
   if(profile.access) payload.scopes.push('access');

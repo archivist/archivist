@@ -11,4 +11,12 @@ var Documents = require('./documents.js')
 
 api.use('/', Documents, Subjects, Definitions, Locations, Persons, Users, Entities, Search);
 
+api.use(function(err, req, res, next) {
+  if (err.name === 'UnauthorizedError') {
+    return res.send(401, 'invalid token...');
+  }
+  res.status(500).send(err);
+});
+
+
 module.exports = api;

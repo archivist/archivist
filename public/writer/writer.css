@@ -978,7 +978,7 @@ body, html {
   .show-comment-panel-component .comment-editor {
     overflow: hidden;
     background: white;
-    padding: 20px;
+    padding: 5px 20px 20px 20px;
     border-bottom: 1px solid #ddd; }
   .edit-comment-panel-component .comment-editor .body-nodes .paragraph,
   .show-comment-panel-component .comment-editor .body-nodes .paragraph {
@@ -1015,6 +1015,8 @@ body, html {
   .resource-container .comments .comment .comment-body {
     font-size: 14px;
     padding-top: 20px; }
+  .resource-container .comments .comment .created-at {
+    padding-left: 20px; }
 
 /* Edit Subject Reference Panel
 -----------------------------------------------------*/

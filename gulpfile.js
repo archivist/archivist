@@ -63,7 +63,7 @@ gulp.task('writer-bundle', function () {
   return gulp.src('./src/writer/app.js')
     .pipe(through2.obj(function (file, enc, next) {
       browserify(file.path)
-        .transform(babelify)
+        //.transform(babelify)
         .bundle(function (err, res) {
           if (err) { return next(err); }
           file.contents = res;

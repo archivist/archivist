@@ -1,12 +1,16 @@
 var Substance = require("substance");
 var Interview = require('archivist-interview');
 var _ = require("substance/helpers");
+var nprogress = require("nprogress");
 
+// progress bar configuration
+nprogress.configure({minimum: 0.1, showSpinner: false, speed: 1000});
 
 var Backend = function(opts) {
   this.cache = {
     "entities": {}
   };
+  this.initialized = false;
 };
 
 Backend.Prototype = function() {
@@ -17,16 +21,19 @@ Backend.Prototype = function() {
   // Deals with sending the authentication header, encoding etc.
 
   this._request = function(method, url, data, cb) {
+    nprogress.start();
+
     var ajaxOpts = {
       type: method,
       url: url,
       contentType: "application/json; charset=UTF-8",
       dataType: "json",
       success: function(data) {
+        nprogress.done();
         cb(null, data);
       },
       error: function(err) {
-        console.error(err);
+        nprogress.done();
         cb(err.responseText);
       }
     };
@@ -52,21 +59,27 @@ Backend.Prototype = function() {
   // ------------------
 
   this.initialize = function(cb) {
-    // Restore last session
-    var lastSession = localStorage.getItem('session');
-    var lastToken;
-    if (lastSession) {
-      lastToken = lastSession.token;
-    }
+    var self = this;
 
-    this.verifyToken(lastSession, function(err) {
-      this.initialized = true;
+    var session = localStorage.getItem('session');
+    this.session = JSON.parse(session);
+
+    this.verifyToken(function(err, data) {
+      self.initialized = true;
       if (err) {
-        this.destroySession();
+        self.destroySession();
         cb(null);
       } else {
-        this.session = JSON.parse(lastSession);
-        cb(null);
+        // renew token
+        if (data.token) {
+          console.log('renewing session...')
+          localStorage.setItem('session', JSON.stringify(data));
+          var session = localStorage.getItem('session');
+          self.session = JSON.parse(session);
+          cb(null);
+        } else {
+          cb(null);
+        }
       }
     }.bind(this));
   };
@@ -107,13 +120,17 @@ Backend.Prototype = function() {
       console.log('new doc version', doc.version);
       
       // Check if subjectsDB changed
-      var currentSubjectDBVersion = this.getSubjectDBVersion();
+      var currentSubjectDBVersion = self.getSubjectDBVersion();
       var newSubjectDBVersion = data.subjectDBVersion;
 
-      // Update the subjects cache if outdated
-      if (self.cache.subjects && self.cache.subjectDBVersion  !== newSubjectDBVersion) {
-        self.fetchSubjects();
-        cb(null);
+      // Update the subjects model if outdated
+      if (doc.subjects && self.cache.subjectDBVersion  !== newSubjectDBVersion) {
+        self.fetchSubjects(function(err, subjectsData) {
+          if (err) return cb(err);
+          var subjects = new Interview.SubjectsModel(doc, subjectsData);
+          doc.subjects = subjects;
+          cb(null);
+        });
       } else {
         cb(null);
       }
@@ -202,24 +219,35 @@ Backend.Prototype = function() {
     
     this._request('GET', "/api/subjects?page=1&sort_by=position&order=asc", null, function(err, subjectDB) {
       if (err) return cb(err);
-      // Store in cache
-      self.cache.subjectDB = subjectDB;
+      // Store subjectDBVersion in cache
+      self.cache.subjectDBVersion = subjectDB.subjectDBVersion;
       cb(null, subjectDB.subjects);
     }); 
   };
 
-  this.getSubjects = function(cb) {
-    if (this.cache.subjectDB) {
-      return cb(null, this.cache.subjectDB.subjects);
-    } else {
-      this.fetchSubjects(cb);
-    }
-  };
-
   this.getSubjectDBVersion = function() {
-    return this.cache.subjectDB ? this.cache.subjectDB.subjectDBVersion : null;
+    return this.cache.subjectDBVersion ? this.cache.subjectDBVersion : null;
   };
 
+  // Users
+  // -------
+
+  this.verifyToken = function(cb) {
+    this._request("GET", "/api/users/status", null, function(err, result) {
+      cb(err);
+    });
+  };
+
+  this.getUser = function() {
+    var session = JSON.parse(this.session);
+    return session.user;
+  };
+
+  this.destroySession = function() {
+    this.session = null;
+    localStorage.removeItem('session');
+    window.location.href = '/login';
+  };
 };
 
 Substance.initClass(Backend);
