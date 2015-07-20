@@ -21,7 +21,6 @@ Backend.Prototype = function() {
   // Deals with sending the authentication header, encoding etc.
 
   this._request = function(method, url, data, cb) {
-    nprogress.start();
 
     var ajaxOpts = {
       type: method,
@@ -29,11 +28,9 @@ Backend.Prototype = function() {
       contentType: "application/json; charset=UTF-8",
       dataType: "json",
       success: function(data) {
-        nprogress.done();
         cb(null, data);
       },
       error: function(err) {
-        nprogress.done();
         cb(err.responseText);
       }
     };
@@ -89,10 +86,12 @@ Backend.Prototype = function() {
 
   this.getDocument = function(documentId, cb) {
     var self = this;
+    nprogress.start();
     this._request('GET', '/api/documents/' + documentId, null, function(err, rawDoc) {
       if (err) return cb(err);
       var doc = new Interview.fromJson(rawDoc);
       self.fetchSubjects(function(err, subjectsData) {
+        nprogress.done();
         if (err) return cb(err);
         var subjects = new Interview.SubjectsModel(doc, subjectsData);
         doc.subjects = subjects;
@@ -106,13 +105,14 @@ Backend.Prototype = function() {
 
   this.saveDocument = function(doc, cb) {
     var self = this;
-
+    nprogress.start();
     var json = doc.toJSON();
     json.__v = doc.version;
 
     console.log('saving doc, current version is', doc.version);
 
     this._request('PUT', '/api/documents/'+doc.id, json, function(err, data){
+      nprogress.stop();
       if (err) return cb(err);
 
       // Remember new document version
@@ -234,13 +234,18 @@ Backend.Prototype = function() {
 
   this.verifyToken = function(cb) {
     this._request("GET", "/api/users/status", null, function(err, result) {
-      cb(err);
+      cb(err, result);
     });
   };
 
   this.getUser = function() {
-    var session = JSON.parse(this.session);
-    return session.user;
+    return this.session.user;
+  };
+
+  this.isSuperUser = function() {
+    var claims = this.session.token.split('.')[1];
+    claims = JSON.parse(atob(claims));
+    return claims.scopes[1] == "super";
   };
 
   this.destroySession = function() {

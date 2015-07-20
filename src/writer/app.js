@@ -30,6 +30,8 @@ var notifications = new NotificationService();
 // ---------------
 //
 
+var Menu = require("./menu");
+
 // Available contexts
 var ArchivistWriter = require("archivist-writer");
 
@@ -52,10 +54,24 @@ var App = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    backend.initialize(function(err) {
+      if (err) console.error(err);
+      this.forceUpdate();
+    }.bind(this));
+  },
+
   render: function() {
-    return $$(ArchivistWriter, {
-      documentId: this.props.route
-    });
+    if (backend.initialized) {
+      return $$('div', {className: 'container'},
+        $$(Menu),
+        $$(ArchivistWriter, {
+          documentId: this.props.route
+        })
+      );
+    } else {
+      return $$('div', {className: 'container'});
+    }
   }
 });
 

@@ -17,7 +17,7 @@ nav.topbar ul {
 nav.topbar a {
   display: block;
   width: 110px;
-  font-size: 7px;
+  font-size: 14px;
   line-height: 10px;
   text-decoration: none;
   text-align: center;
@@ -58,6 +58,10 @@ a#person {
   width: 95px;
 }
 
+a#merge {
+  width: 115px;
+}
+
 a#users {
   width: 82px;
 }
@@ -77,7 +81,7 @@ nav.topbar .navicon {
   height: 35px;
   display: block;
   float: left;
-  margin-left: 5px;
+  margin-left: 4px;
   line-height: normal;
   vertical-align: baseline;
   background-position: center;
@@ -90,7 +94,7 @@ nav.topbar span.title {
   font-size: 13px;
   display: inline-block;
   text-align: center;
-  padding-left: 5px;
+  padding-left: 4px;
 }
 
 #topbar {
@@ -99,7 +103,7 @@ nav.topbar span.title {
   left: 0;
   width: 100%;
   display: block;
-  z-index: 1;
+  z-index: 50000;
   color: #747B7E;
   font-weight: 200;
   overflow: hidden;
@@ -145,34 +149,32 @@ nav.topbar span.title {
 }
 
 .user-section .userpic,
-.user-section .username  {
+.user-section .username,
+.user-section .logout {
   height: 30px;
   float: right;
 }
 
 .user-section .username {
+  line-height: 30px;
+  font-size: 15px;
+  text-align: center;
+  padding-right: 10px;
+}
+
+.user-section span.logout {
+  color: #A3A3A3;
+  padding: 5px;
+  display: block;
+  opacity: .7;
+  cursor: pointer;
   line-height: 22px;
   font-size: 18px;
   text-align: center;
   width: 40px;
 }
 
-.user-section .username span {
-  max-width: 80px;
-  overflow: hidden;
-  display: block;
-  line-height: 12px;
-  float: left;
-}
-
-.user-section .username a {
-  color: #A3A3A3;
-  padding: 5px;
-  display: block;
-  opacity: .7;
-}
-
-.user-section .username a:hover {
+.user-section .username span.logout:hover {
   color: #909090;
   opacity: 1;
 }

@@ -24649,6 +24649,8 @@ var notifications = new NotificationService();
 // ---------------
 //
 
+var Menu = require("./menu");
+
 // Available contexts
 var ArchivistWriter = require("archivist-writer");
 
@@ -24671,10 +24673,24 @@ var App = React.createClass({
     };
   },
 
+  componentDidMount: function() {
+    backend.initialize(function(err) {
+      if (err) console.error(err);
+      this.forceUpdate();
+    }.bind(this));
+  },
+
   render: function() {
-    return $$(ArchivistWriter, {
-      documentId: this.props.route
-    });
+    if (backend.initialized) {
+      return $$('div', {className: 'container'},
+        $$(Menu),
+        $$(ArchivistWriter, {
+          documentId: this.props.route
+        })
+      );
+    } else {
+      return $$('div', {className: 'container'});
+    }
   }
 });
 
@@ -24688,7 +24704,7 @@ $(function() {
     document.getElementById('container')
   );
 });
-},{"./backend":523,"./i18n/load":525,"./notification_service":526,"archivist-writer":14,"substance/helpers":304}],523:[function(require,module,exports){
+},{"./backend":523,"./i18n/load":525,"./menu":526,"./notification_service":527,"archivist-writer":14,"substance/helpers":304}],523:[function(require,module,exports){
 var Substance = require("substance");
 var Interview = require('archivist-interview');
 var _ = require("substance/helpers");
@@ -24712,7 +24728,6 @@ Backend.Prototype = function() {
   // Deals with sending the authentication header, encoding etc.
 
   this._request = function(method, url, data, cb) {
-    nprogress.start();
 
     var ajaxOpts = {
       type: method,
@@ -24720,11 +24735,9 @@ Backend.Prototype = function() {
       contentType: "application/json; charset=UTF-8",
       dataType: "json",
       success: function(data) {
-        nprogress.done();
         cb(null, data);
       },
       error: function(err) {
-        nprogress.done();
         cb(err.responseText);
       }
     };
@@ -24750,22 +24763,27 @@ Backend.Prototype = function() {
   // ------------------
 
   this.initialize = function(cb) {
-    debugger
-    // Restore last session
-    var lastSession = localStorage.getItem('session');
-    var lastToken;
-    if (lastSession) {
-      lastToken = lastSession.token;
-    }
+    var self = this;
 
-    this.verifyToken(lastSession, function(err) {
-      this.initialized = true;
+    var session = localStorage.getItem('session');
+    this.session = JSON.parse(session);
+
+    this.verifyToken(function(err, data) {
+      self.initialized = true;
       if (err) {
-        this.destroySession();
+        self.destroySession();
         cb(null);
       } else {
-        this.session = JSON.parse(lastSession);
-        cb(null);
+        // renew token
+        if (data.token) {
+          console.log('renewing session...')
+          localStorage.setItem('session', JSON.stringify(data));
+          var session = localStorage.getItem('session');
+          self.session = JSON.parse(session);
+          cb(null);
+        } else {
+          cb(null);
+        }
       }
     }.bind(this));
   };
@@ -24775,10 +24793,12 @@ Backend.Prototype = function() {
 
   this.getDocument = function(documentId, cb) {
     var self = this;
+    nprogress.start();
     this._request('GET', '/api/documents/' + documentId, null, function(err, rawDoc) {
       if (err) return cb(err);
       var doc = new Interview.fromJson(rawDoc);
       self.fetchSubjects(function(err, subjectsData) {
+        nprogress.done();
         if (err) return cb(err);
         var subjects = new Interview.SubjectsModel(doc, subjectsData);
         doc.subjects = subjects;
@@ -24792,13 +24812,14 @@ Backend.Prototype = function() {
 
   this.saveDocument = function(doc, cb) {
     var self = this;
-
+    nprogress.start();
     var json = doc.toJSON();
     json.__v = doc.version;
 
     console.log('saving doc, current version is', doc.version);
 
     this._request('PUT', '/api/documents/'+doc.id, json, function(err, data){
+      nprogress.stop();
       if (err) return cb(err);
 
       // Remember new document version
@@ -24918,15 +24939,20 @@ Backend.Prototype = function() {
   // Users
   // -------
 
-  this.verifyToken = function(token, cb) {
+  this.verifyToken = function(cb) {
     this._request("GET", "/api/users/status", null, function(err, result) {
-      cb(err);
+      cb(err, result);
     });
   };
 
   this.getUser = function() {
-    var session = JSON.parse(this.session);
-    return session.user;
+    return this.session.user;
+  };
+
+  this.isSuperUser = function() {
+    var claims = this.session.token.split('.')[1];
+    claims = JSON.parse(atob(claims));
+    return claims.scopes[1] == "super";
   };
 
   this.destroySession = function() {
@@ -25015,6 +25041,84 @@ global.i18n = i18n;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./en.json":524,"node-polyglot":301}],526:[function(require,module,exports){
+var $$ = React.createElement;
+var _ = require("substance/helpers");
+
+
+var menuItems = [
+  {label: 'Dashboard', name: 'dashboard', icon: 'tasks', url: '/'},
+  {label: 'Subjects', name: 'subjects', icon: 'tags', url: '/subjects'},
+  {label: 'Prisons', name: 'prisons', icon: 'th', url: '/prisons'},
+  {label: 'Toponyms', name: 'topo', icon: 'globe', url: '/toponyms'},
+  {label: 'Definitions', name: 'definition', icon: 'bookmark', url: '/definitions'},
+  {label: 'Persons', name: 'person', icon: 'users', url: '/persons'},
+  {label: 'Merge entities', name: 'merge', super: true, icon: 'code-fork', url: '/merge'},
+  {label: 'Users', name: 'users', super: true, icon: 'user-plus', url: '/users'}
+];
+
+// The Menu
+// ----------------
+
+var Menu = React.createClass({
+  contextTypes: {
+    backend: React.PropTypes.object.isRequired,
+    app: React.PropTypes.object.isRequired,
+  },
+
+  displayName: "Menu",
+
+  handleLogout: function(e) {
+    e.preventDefault();
+    var backend = this.context.backend;
+    var app = this.context.app;
+
+    backend.destroySession();
+  },
+
+  getLoginInfo: function() {
+    var backend = this.context.backend;
+    var user = backend.getUser();
+    return $$('div', {className: "user-section"},
+      $$('span', {
+        className: "logout",
+        onClick: this.handleLogout,
+        dangerouslySetInnerHTML: {__html: '<i class="fa fa-power-off"></i>'}
+      }),
+      $$('div', {className: "userpic"},
+        $$('img', {
+          src: user.picture,
+        })
+      ),
+      $$('div', {className: "username"}, user.username)
+    );
+  },
+
+  render: function() {
+    var self = this;
+    var backend = this.context.backend;
+    var isSuper = backend.isSuperUser();
+    var menuItemEls = [];
+    _.each(menuItems, function(menuItem) {
+      if((menuItem.super && isSuper) || !menuItem.super) {
+        menuItemEls.push($$('a', {
+          id: menuItem.name,
+          href: menuItem.url,
+          dangerouslySetInnerHTML: {__html: '<i class="fa fa-'+menuItem.icon+'"></i> <span class="title">' + menuItem.label + '</span>'}
+        }));
+      }
+    }, this);
+    return $$("div", {id: "topbar"},
+      $$('header', {className: "branding"}, "Archivist"),
+      $$('nav', {className: "topbar"},
+        menuItemEls
+      ),
+      self.getLoginInfo()
+    );
+  }
+});
+
+module.exports = Menu;
+},{"substance/helpers":304}],527:[function(require,module,exports){
 "use strict";
 
 var Substance = require("substance");
