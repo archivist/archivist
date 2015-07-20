@@ -1,7 +1,7 @@
 var Document = require('../../models/document.js')
   , System = require('../../models/system.js') 
   , util = require('../api/utils.js')
-  , sUtil = require('substance-util')
+  , async = require('async')
   , _ = require('underscore');
 
 module.exports = function(schema, options) {
@@ -174,11 +174,8 @@ module.exports = function(schema, options) {
     var self = this;
 
     Document.find({}, 'id', {}, function(err, documents) {
-      sUtil.async.each({
-        items: documents,
-        iterator: function(doc, cb) {
-          self.updateForDoc(doc._id, id, opt, cb);
-        }
+      async.each(documents, function(doc, cb) {
+        self.updateForDoc(doc._id, id, opt, cb);
       }, function(err) {
         console.log('done with everything yay!');
         cb(err);
