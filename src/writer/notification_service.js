@@ -1,6 +1,6 @@
 "use strict";
 
-var Substance = require("substance");
+var Substance = require("archivist-core").Substance;
 
 // Notification service
 // ----------------

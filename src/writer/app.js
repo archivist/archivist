@@ -8,7 +8,8 @@ require('./i18n/load');
 //
 // Main entry point of the Substance Journal web client
 
-var _ = require("substance/helpers");
+var Substance = require("archivist-core").Substance;
+var _ = Substance._;
 var $$ = React.createElement;
 
 // Specify a backend
@@ -33,7 +34,7 @@ var notifications = new NotificationService();
 var Menu = require("./menu");
 
 // Available contexts
-var ArchivistWriter = require("archivist-writer");
+var ArchivistWriter = require("archivist-core/writer");
 
 // Top Level Application
 // ---------------

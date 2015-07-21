@@ -61,8 +61,11 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "guid": docId,
         "creator": user.name,
         "title": "Untitled interview",
-        "abstract": "Test",
+        "short_summary": "Short summary in russian",
+        "short_summary_en": "Short summary in english",
+        "abstract": "Russian abstract",
         "abstract_en": "Enter english abstract here",
+        "abstract_de": "Enter german abstract here",
         "created_at": new Date().toJSON(),
         "updated_at": new Date().toJSON(),
         "published_on": "0000-00-00",
@@ -82,26 +85,28 @@ documentSchema.statics.createEmpty = function(user, cb) {
 
         // Interview subject related
         "interviewee_bio": "Please enter interview subject bio.",
+        "interviewee_bio_en": "string",
+        "interviewee_bio_de": "string",
         "interviewee_category": "Ost-Arbeiter, concentration camp prisoner",
-        "interviewee_prisons": [],
         "interviewee_forced_labor_type": "intracamp work, earthworks (construction of barracks), digging tunnels for military factories",
         "interviewee_waypoints": [],
 
         // Workflow
         "transcripted": false,
         "verified": false,
-        "finished": false
+        "finished": false,
+        "published": false
       },
       "content": {
         "type": "container",
         "id": "content",
         "nodes": [
-          "text_1"
+          "paragraph_1"
         ]
       },
-      "text_1": {
-        "type": "text",
-        "id": "text_1",
+      "paragraph_1": {
+        "type": "paragraph",
+        "id": "paragraph_1",
         "content": 'Please write interview here...'
       }
 

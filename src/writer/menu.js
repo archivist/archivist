@@ -1,6 +1,6 @@
 var $$ = React.createElement;
-var _ = require("substance/helpers");
-
+var Substance = require("archivist-core").Substance;
+var _ = Substance._;
 
 var menuItems = [
   {label: 'Dashboard', name: 'dashboard', icon: 'tasks', url: '/'},
@@ -59,7 +59,7 @@ var Menu = React.createClass({
       if((menuItem.super && isSuper) || !menuItem.super) {
         menuItemEls.push($$('a', {
           id: menuItem.name,
-          href: menuItem.url,
+          href: '/archivist' + menuItem.url,
           dangerouslySetInnerHTML: {__html: '<i class="fa fa-'+menuItem.icon+'"></i> <span class="title">' + menuItem.label + '</span>'}
         }));
       }

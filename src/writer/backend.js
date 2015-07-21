@@ -1,6 +1,6 @@
-var Substance = require("substance");
-var Interview = require('archivist-interview');
-var _ = require("substance/helpers");
+var Substance = require("archivist-core").Substance;
+var Interview = require('archivist-core/interview');
+var _ = Substance._;
 var nprogress = require("nprogress");
 
 // progress bar configuration
