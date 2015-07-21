@@ -10,10 +10,10 @@ var db = exports;
 /* The Document REST api */
 
 var createDocument = function(req, res, next) {
-  Document.add(req.user, function(err) {
+  Document.createEmpty(req.user, function(err, doc) {
     if (err) return next(err);
-    res.json(200);
-  });
+    res.json({id: doc._id});
+  })
 }
 
 
@@ -57,8 +57,10 @@ var listDocuments = function(req, res, next) {
 }
 
 api.route('/documents')
-  .post(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
   .get(auth.checkAuth, listDocuments);
+
+api.route('/documents/new')
+  .get(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
 
 api.route('/documents/:id')
   .get(readDocument) // dropped out auth.ensureAuthenticated for reader

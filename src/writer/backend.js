@@ -88,7 +88,10 @@ Backend.Prototype = function() {
     var self = this;
     nprogress.start();
     this._request('GET', '/api/documents/' + documentId, null, function(err, rawDoc) {
-      if (err) return cb(err);
+      if (err) {
+        nprogress.done();
+        return cb(err);
+      }
       var doc = new Interview.fromJson(rawDoc);
       self.fetchSubjects(function(err, subjectsData) {
         nprogress.done();

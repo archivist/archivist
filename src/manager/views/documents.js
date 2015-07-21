@@ -3,6 +3,7 @@ var Backbone = require('backbone'),
     Paginator = require('backbone.paginator'),
     Pageable = require('../local_modules/backgrid-paginator/backgrid-paginator.js'),
     moment = require('moment'),
+    request = require('superagent'),
     _ = require('underscore'),
     $ = require('jquery'),
     Grid = require('./grid.js'),
@@ -37,7 +38,19 @@ var DocumentsGrid = Grid.main.extend({
     this.titleFilter.remove();
   },
   _add: function() {
-    Backbone.middle.trigger("goToExt", 'editor/new')
+    Backbone.middle.trigger("sync:start", 'Creating new document...');
+    request
+      .get('/api/documents/new')
+      .set('Authorization', 'Bearer ' + Utils.getUserToken())
+      .end(function(err, res) {
+        debugger;
+        if (res.ok && res.body.id) {
+          Backbone.middle.trigger("sync:success", 'Document has been created, redirecting...');
+          Backbone.middle.trigger("goToExt", '/archivist/editor#' + res.body.id);
+        } else {
+          Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
+        }
+      });
   },
   panel: [
     {

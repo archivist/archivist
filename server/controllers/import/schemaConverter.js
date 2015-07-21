@@ -43,6 +43,7 @@ module.exports = function(docId, cb) {
 	    		id: newId
 	    	}
 	    	doc.nodes[newId] = comment;
+	    	delete doc.nodes[node.id];
 	   	}
 
 	   	if(node.path) {

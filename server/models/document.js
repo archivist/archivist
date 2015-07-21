@@ -48,8 +48,8 @@ documentSchema.statics.createEmpty = function(user, cb) {
     "_id": docId,
     "id": docId,
     "schema": [
-      "substance-interview",
-      "0.1.0"
+      "archivist-interview",
+      "0.2.0"
     ],
     "nodes": {
       "document": {
@@ -128,12 +128,13 @@ documentSchema.statics.createEmpty = function(user, cb) {
 
 documentSchema.statics.get = function(id, cb) {
   this.findById(id, function(err, document) {
+    if(err) return cb(err);
     doc = document.toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;
       doc.schema = document._schema;
     }
-    cb(err, doc);
+    cb(null, doc);
   });
 }
 

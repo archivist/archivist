@@ -18,8 +18,6 @@ var mongoose = require('mongoose')
 
 var browserify = require('browserify');
 
-
-
 // MONGOOSE CONNECT
 
 var replica_name = process.env.RS_NAME
@@ -88,7 +86,7 @@ app.route('/archivist/editor')
 		res.render('writer');
   });
 
-app.route('/editor/new')
+app.route('/archivist/editor/new')
 	.get(auth.checkAuth, function(req, res, next) {
 		Document.createEmpty(req.user, function(err, doc) {
 			if (err) return next(err);
