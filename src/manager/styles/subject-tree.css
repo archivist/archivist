@@ -1,10 +1,7 @@
 /* SUBJECTS TREE */
 
 .subjects .tree.jstree {
-  overflow-y: scroll;
-  overflow-x: hidden;
   height: 100%;
-  padding-bottom: 120px;
   font-size: 13px;
 }
 

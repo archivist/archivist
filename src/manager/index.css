@@ -588,6 +588,10 @@ FILTERS
 
 /* Subject List */
 
+.stacks>div.subjects {
+  padding-bottom: 15px;
+}
+
 
 /* Forms */
 
