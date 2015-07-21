@@ -35,7 +35,7 @@ var initializeSession = function() {
       }
 		});
 	} else {
-		this.destroySession();
+		destroySession();
 	}
 }
 
