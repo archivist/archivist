@@ -21,7 +21,7 @@ var AppStart = function() {
 		var session = getSession();
 		Backbone.AppRouter = new router();
   	Backbone.AppRouter.session = session;
-   	Backbone.history.start({ pushState: true, root: '/' });
+   	Backbone.history.start({ pushState: true, root: '/archivist' });
 	})
 }
 
@@ -35,7 +35,7 @@ var initializeSession = function() {
       }
 		});
 	} else {
-		window.location.href = '/login';
+		this.destroySession();
 	}
 }
 
@@ -47,7 +47,7 @@ var getSession = function() {
 
 var destroySession = function() {
 	localStorage.removeItem('session');
-	window.location.href = '/login';
+	window.location.href = '/archivist/login';
 }
 
 var verifyToken = function(cb) {

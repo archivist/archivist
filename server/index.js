@@ -74,39 +74,29 @@ mongoose.connection.on("error", function(err) {
   return console.log(err.message);
 });
 
-app.use('/', oauth);
+app.use('/archivist', oauth);
 app.use('/api', api);
 //app.use('/import', importer);
 
-app.route('/')
+app.route('/archivist')
 	.get(function(req, res, next) {
     res.render('manager');
   })
 
-app.route('/editor')
+app.route('/archivist/editor')
 	.get(function(req, res, next) {
-		var menu = [
-			{name: 'Dashboard',id: 'dashboard',icon: 'tasks',url: '/'},
-	  	{name: 'Subjects',id: 'subjects',icon: 'tags',url: '/subjects'},
-	  	{name: 'Prisons',id: 'prisons',icon: 'th',url: '/prisons'},
-		  {name: 'Toponyms',id: 'topo',icon: 'globe',url: '/toponyms'},
-	  	{name: 'Definitions',id: 'definition',icon: 'bookmark',url: '/definitions'},
-	  	{name: 'Persons',id: 'person',icon: 'users',url: '/persons'},
-	  	{name: 'Merge',id: 'merge',icon: 'code-fork',url: '/merge'},
-	  	{name: 'Users',id: 'users',super: true,icon: 'user-plus',url: '/users'}
-		];
-		res.render('writer', {user: req.user, menu: menu});
+		res.render('writer');
   });
 
 app.route('/editor/new')
 	.get(auth.checkAuth, function(req, res, next) {
 		Document.createEmpty(req.user, function(err, doc) {
 			if (err) return next(err);
-			res.redirect('/editor#' + doc._id);
+			res.redirect('/archivist/editor#' + doc._id);
 		})
   });
 
-app.route('/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
+app.route('/archivist/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')
   .get(function(req, res, next) {
     res.render('manager');
   })
@@ -117,7 +107,7 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 app.use(function (err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
-    return res.redirect('/login');
+    return res.redirect('/archivist/login');
   }
   next();
 });
