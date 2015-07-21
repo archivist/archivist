@@ -2,7 +2,7 @@ var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
 	, Remark = require('./remarks')
-	, Substance = require('substance')
+	, Substance = require('archivist-core').Substance
 	, utils = require('./utils.js');
 
 var indexerUrl = "http://ost-index.d4s.io/search/document";

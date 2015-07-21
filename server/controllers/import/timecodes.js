@@ -1,5 +1,5 @@
 var _ = require('underscore')
-	, Substance = require('substance')
+	, Substance = require('archivist-core').Substance
 	, utils = require('./utils.js');
 
 var timecodesMap = [];

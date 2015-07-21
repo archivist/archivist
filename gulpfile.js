@@ -69,7 +69,7 @@ gulp.task('writer-bundle', function () {
       this.emit('end');
     })
     .pipe(rename('writer.js'))
-    //.pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('./public/writer'));
 });
 

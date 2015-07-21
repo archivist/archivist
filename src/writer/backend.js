@@ -96,7 +96,7 @@ Backend.Prototype = function() {
         var subjects = new Interview.SubjectsModel(doc, subjectsData);
         doc.subjects = subjects;
         doc.version = rawDoc.__v;
-        // We should not forget to remove this
+        // TODO: We should not forget to remove this
         window.doc = doc;
         cb(null, doc);
       })
@@ -112,7 +112,7 @@ Backend.Prototype = function() {
     console.log('saving doc, current version is', doc.version);
 
     this._request('PUT', '/api/documents/'+doc.id, json, function(err, data){
-      nprogress.stop();
+      nprogress.done();
       if (err) return cb(err);
 
       // Remember new document version

@@ -1,8 +1,8 @@
 var mongoose = require('mongoose')
   , Document = require('../../models/document.js')
   , _ = require('underscore')
-  , Interview = require('../interview/index.js')
-  , Substance = require('substance')
+  , Interview = require('archivist-core/interview')
+  , Substance = require('archivist-core').Substance
   , Spreadsheet = require('edit-google-spreadsheet');
 
 var updateSPData = function(table, data, cb) {

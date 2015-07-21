@@ -8,8 +8,8 @@ var mongoose = require('mongoose')
   , _ = require('underscore')
   , async = require('async')
   , Spreadsheet = require('edit-google-spreadsheet')
-  , Interview = require('archivist-interview')
-  , Substance = require('substance')
+  , Interview = require('archivist-core/interview')
+  , Substance = require('archivist-core').Substance
   , importer = express.Router();
 
 
@@ -23,7 +23,23 @@ var prisonsAnnotator = require('./prisons');
 var realitiesAnnotator = require('./realities');
 var personsAnnotator = require('./persons');
 var postProcessing = require('./post-process');
+var schemaConverter = require('./schemaConverter')
 
+
+/*
+  Convert documents schema, remarks into comments, text into paragraphs
+*/
+
+var convertDocuments = function(req, res, next) {
+  var docId = req.params.id;
+  schemaConverter(docId, function(err) {
+    if(err) return res.status(500).json(err.message);
+    res.status(200).send();
+  });
+}
+
+importer.route('/:id/convert')
+  .get(convertDocuments)
 
 /*
   Run all importers one after another

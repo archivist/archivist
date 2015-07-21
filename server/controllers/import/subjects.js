@@ -2,7 +2,7 @@ var _ = require('underscore')
 	, async = require('async')
 	, request = require('superagent')
 	, Location = require('../../models/location.js')
-	, Substance = require('substance')
+	, Substance = require('archivist-core').Substance
 	, utils = require('./utils.js');
 
 var SPId;

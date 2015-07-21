@@ -84,11 +84,11 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "interview_duration": "247",
 
         // Interview subject related
-        "interviewee_bio": "Please enter interview subject bio.",
-        "interviewee_bio_en": "string",
-        "interviewee_bio_de": "string",
-        "interviewee_category": "Ost-Arbeiter, concentration camp prisoner",
-        "interviewee_forced_labor_type": "intracamp work, earthworks (construction of barracks), digging tunnels for military factories",
+        "interviewee_bio": "Please enter respondent bio in russian",
+        "interviewee_bio_en": "Please enter respondent bio in english",
+        "interviewee_bio_de": "Please enter respondent bio in german",
+        "interviewee_category": "",
+        "interviewee_forced_labor_type": "",
         "interviewee_waypoints": [],
 
         // Workflow

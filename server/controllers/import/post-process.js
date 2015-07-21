@@ -1,6 +1,6 @@
 var _ = require('underscore')
 	, async = require('async')
-	, Substance = require('substance')
+	, Substance = require('archivist-core').Substance
 	, Document = Substance.Document
 	, utils = require('./utils.js');
 

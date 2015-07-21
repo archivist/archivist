@@ -1,5 +1,5 @@
 var _ = require('underscore')
-	, Substance = require('substance');
+	, Substance = require('archivist-core').Substance;
 
 
 var findOrCreateEntityReport = function(doc, content) {

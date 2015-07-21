@@ -3,7 +3,7 @@
 */
 
 var _ = require('underscore')
-	, Substance = require('substance')
+	, Substance = require('archivist-core').Substance
 	, Document = Substance.Document
 	, utils = require('./utils.js');
 
