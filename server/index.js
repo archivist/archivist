@@ -3,14 +3,11 @@ var mongoose = require('mongoose')
 	, bodyParser = require('body-parser')
 	, methodOverride = require('method-override')
 	, morgan = require('morgan')
-  , session = require('express-session')
-  , MongoStore = require('connect-mongostore')(session)
   , favicon = require('serve-favicon')
   , passport = require('passport')
 	, port = process.env.PORT || 5000
 	, app = express()
 	, path = require('path')
-	, fs = require('fs')
 	, _ = require('underscore')
 	, api = require('./controllers/api')
 	, oauth = require('./controllers/auth/oauth.js')
@@ -19,37 +16,9 @@ var mongoose = require('mongoose')
 	, Document = require('./models/document.js');
 
 
-var browserify = require('browserify-middleware');
+var browserify = require('browserify');
 
 
-// Substance stuff
-// --------------------
-// if (process.env.NODE_ENV === "development") {
-//   var CJSServer = require('substance-cjs');
-//   var config = require("./.screwdriver/project.json");
-//   var cjsServer = new CJSServer(app, __dirname, 'archivist_composer')
-//     // ATTENTION: the second argument is the script which is resembled by injecting a list
-//     // of script tags instead. It must be exactly the same string which is used in the script src.
-//     .scripts('./boot_archivist_composer.js', './archivist_composer.js')
-//     // the same applies to the css file
-//     .styles(config.styles, './archivist_composer.css')
-//     // page: route and file
-//     .page('/archivist.html', './public/archivist.html');
-
-//   // Serve assets with alias as configured in project.json (~dist like setup)
-//   _.each(config.assets, function(srcPath, distPath) {
-//     var absPath = path.join(__dirname, srcPath);
-//     var route = "/" + distPath;
-//     console.log("Adding route for asset", route, "->", absPath);
-//     if (fs.lstatSync(absPath).isDirectory()) {
-//       app.use( route, express.static(absPath) );
-//     } else {
-//       app.use(route, function(req, res) {
-//         res.sendFile(absPath);
-//       });
-//     }
-//   });
-// }
 
 // MONGOOSE CONNECT
 
@@ -113,20 +82,6 @@ app.route('/')
 	.get(function(req, res, next) {
     res.render('manager');
   })
-
-
-// On the fly browserify-ication of composer
-// if (process.env.NODE_ENV === "development") {
-//   app.get('/composer/composer.js', browserify('./boot_archivist_composer.js', {cache: false}));
-
-//   app.get('/composer/composer.css', function(req, res) {
-//   	var cssFile = fs.readFileSync('./node_modules/archivist-composer/styles/composer.css', 'utf8');
-
-//   	res.set('Content-Type', 'text/css');
-
-//   	res.send(cssFile);
-//   });
-// }
 
 app.route('/editor')
 	.get(function(req, res, next) {

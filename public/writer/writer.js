@@ -24627,14 +24627,14 @@ require('./i18n/load');
 //
 // Main entry point of the Substance Journal web client
 
-var _ = require("substance/helpers");
+var _ = require('substance/helpers');
 var $$ = React.createElement;
 
 // Specify a backend
 // ---------------
 //
 
-var Backend = require("./backend");
+var Backend = require('./backend');
 var backend = new Backend();
 
 // Specify a notification service
@@ -24642,102 +24642,99 @@ var backend = new Backend();
 //
 // This is used for user notifications, displayed in the status bar
 
-var NotificationService = require("./notification_service");
+var NotificationService = require('./notification_service');
 var notifications = new NotificationService();
 
 // React Components
 // ---------------
 //
 
-var Menu = require("./menu");
+var Menu = require('./menu');
 
 // Available contexts
-var ArchivistWriter = require("archivist-writer");
+var ArchivistWriter = require('archivist-writer');
 
 // Top Level Application
 // ---------------
 //
 
 var App = React.createClass({
-  displayName: "App",
+  displayName: 'App',
 
   childContextTypes: {
     backend: React.PropTypes.object,
     notifications: React.PropTypes.object
   },
 
-  getChildContext: function() {
+  getChildContext: function getChildContext() {
     return {
       backend: backend,
-      notifications: notifications,      
+      notifications: notifications
     };
   },
 
-  componentDidMount: function() {
-    backend.initialize(function(err) {
+  componentDidMount: function componentDidMount() {
+    backend.initialize((function (err) {
       if (err) console.error(err);
       this.forceUpdate();
-    }.bind(this));
+    }).bind(this));
   },
 
-  render: function() {
+  render: function render() {
     if (backend.initialized) {
-      return $$('div', {className: 'container'},
-        $$(Menu),
-        $$(ArchivistWriter, {
-          documentId: this.props.route
-        })
-      );
+      return $$('div', { className: 'container' }, $$(Menu), $$(ArchivistWriter, {
+        documentId: this.props.route
+      }));
     } else {
-      return $$('div', {className: 'container'});
+      return $$('div', { className: 'container' });
     }
   }
 });
 
 // Start the app
 
-$(function() {
-  React.render(
-    $$(App, {
-      route: window.location.hash.slice(1)
-    }),
-    document.getElementById('container')
-  );
+$(function () {
+  React.render($$(App, {
+    route: window.location.hash.slice(1)
+  }), document.getElementById('container'));
 });
+
 },{"./backend":523,"./i18n/load":525,"./menu":526,"./notification_service":527,"archivist-writer":14,"substance/helpers":304}],523:[function(require,module,exports){
+"use strict";
+
 var Substance = require("substance");
-var Interview = require('archivist-interview');
+var Interview = require("archivist-interview");
 var _ = require("substance/helpers");
 var nprogress = require("nprogress");
 
 // progress bar configuration
-nprogress.configure({minimum: 0.1, showSpinner: false, speed: 1000});
+nprogress.configure({ minimum: 0.1, showSpinner: false, speed: 1000 });
 
-var Backend = function(opts) {
+var Backend = function Backend(opts) {
   this.cache = {
     "entities": {}
   };
   this.initialized = false;
 };
 
-Backend.Prototype = function() {
+Backend.Prototype = function () {
 
   // A generic request method
   // -------------------
-  // 
+  //
   // Deals with sending the authentication header, encoding etc.
 
-  this._request = function(method, url, data, cb) {
+  this._request = function (method, url, data, cb) {
 
     var ajaxOpts = {
       type: method,
       url: url,
       contentType: "application/json; charset=UTF-8",
       dataType: "json",
-      success: function(data) {
+      success: function success(data) {
         cb(null, data);
       },
-      error: function(err) {
+      error: function error(err) {
         cb(err.responseText);
       }
     };
@@ -24747,10 +24744,10 @@ Backend.Prototype = function() {
     }
 
     // Add Authorization header if there's an active session
-    var session = localStorage.getItem('session');
+    var session = localStorage.getItem("session");
     if (session) {
       var token = JSON.parse(session).token;
-      ajaxOpts.beforeSend = function(xhr) {
+      ajaxOpts.beforeSend = function (xhr) {
         xhr.setRequestHeader("Authorization", "Bearer " + token);
       };
     }
@@ -24758,17 +24755,16 @@ Backend.Prototype = function() {
     $.ajax(ajaxOpts);
   };
 
-
   // Initialize
   // ------------------
 
-  this.initialize = function(cb) {
+  this.initialize = function (cb) {
     var self = this;
 
-    var session = localStorage.getItem('session');
+    var session = localStorage.getItem("session");
     this.session = JSON.parse(session);
 
-    this.verifyToken(function(err, data) {
+    this.verifyToken((function (err, data) {
       self.initialized = true;
       if (err) {
         self.destroySession();
@@ -24776,28 +24772,28 @@ Backend.Prototype = function() {
       } else {
         // renew token
         if (data.token) {
-          console.log('renewing session...')
-          localStorage.setItem('session', JSON.stringify(data));
-          var session = localStorage.getItem('session');
+          console.log("renewing session...");
+          localStorage.setItem("session", JSON.stringify(data));
+          var session = localStorage.getItem("session");
           self.session = JSON.parse(session);
           cb(null);
         } else {
           cb(null);
         }
       }
-    }.bind(this));
+    }).bind(this));
   };
 
   // Document
   // ------------------
 
-  this.getDocument = function(documentId, cb) {
+  this.getDocument = function (documentId, cb) {
     var self = this;
     nprogress.start();
-    this._request('GET', '/api/documents/' + documentId, null, function(err, rawDoc) {
+    this._request("GET", "/api/documents/" + documentId, null, function (err, rawDoc) {
       if (err) return cb(err);
       var doc = new Interview.fromJson(rawDoc);
-      self.fetchSubjects(function(err, subjectsData) {
+      self.fetchSubjects(function (err, subjectsData) {
         nprogress.done();
         if (err) return cb(err);
         var subjects = new Interview.SubjectsModel(doc, subjectsData);
@@ -24806,33 +24802,33 @@ Backend.Prototype = function() {
         // We should not forget to remove this
         window.doc = doc;
         cb(null, doc);
-      })
+      });
     });
   };
 
-  this.saveDocument = function(doc, cb) {
+  this.saveDocument = function (doc, cb) {
     var self = this;
     nprogress.start();
     var json = doc.toJSON();
     json.__v = doc.version;
 
-    console.log('saving doc, current version is', doc.version);
+    console.log("saving doc, current version is", doc.version);
 
-    this._request('PUT', '/api/documents/'+doc.id, json, function(err, data){
+    this._request("PUT", "/api/documents/" + doc.id, json, function (err, data) {
       nprogress.stop();
       if (err) return cb(err);
 
       // Remember new document version
       doc.version = data.documentVersion;
-      console.log('new doc version', doc.version);
-      
+      console.log("new doc version", doc.version);
+
       // Check if subjectsDB changed
       var currentSubjectDBVersion = self.getSubjectDBVersion();
       var newSubjectDBVersion = data.subjectDBVersion;
 
       // Update the subjects model if outdated
-      if (doc.subjects && self.cache.subjectDBVersion  !== newSubjectDBVersion) {
-        self.fetchSubjects(function(err, subjectsData) {
+      if (doc.subjects && self.cache.subjectDBVersion !== newSubjectDBVersion) {
+        self.fetchSubjects(function (err, subjectsData) {
           if (err) return cb(err);
           var subjects = new Interview.SubjectsModel(doc, subjectsData);
           doc.subjects = subjects;
@@ -24844,15 +24840,14 @@ Backend.Prototype = function() {
     });
   };
 
-
   // Entities
   // ------------------
 
-  this.getEntity = function(entityId) {
+  this.getEntity = function (entityId) {
     return this.cache.entities[entityId];
   };
 
-  this.getEntities = function(entityIds, cb) {
+  this.getEntities = function (entityIds, cb) {
     var self = this;
 
     var entitiesToFetch = [];
@@ -24861,110 +24856,110 @@ Backend.Prototype = function() {
     entityIds = _.uniq(entityIds);
 
     // Try to use cached items
-    _.each(entityIds, function(entityId) {
+    _.each(entityIds, (function (entityId) {
       var entity = this.cache.entities[entityId];
       if (entity) {
         entities.push(entity);
       } else {
         entitiesToFetch.push(entityId);
       }
-    }.bind(this));
+    }).bind(this));
 
-    this.fetchEntities(entitiesToFetch, function(err, fetchedEntities) {
+    this.fetchEntities(entitiesToFetch, (function (err, fetchedEntities) {
       // Store in cache
-      _.each(fetchedEntities, function(entity) {
+      _.each(fetchedEntities, function (entity) {
         self.cache.entities[entity.id] = entity;
         entities.push(entity);
       }, self);
       cb(null, entities);
-    }.bind(this));
+    }).bind(this));
   };
 
-  this.fetchEntities = function(entityIds, cb) {
+  this.fetchEntities = function (entityIds, cb) {
     if (entityIds.length === 0) return cb(null, []);
-    console.log('Fetching entities', entityIds);
-    
+    console.log("Fetching entities", entityIds);
+
     var entities = {
       entityIds: entityIds
-    }
+    };
 
-    this._request('POST', '/api/entities', entities, function(err, res) {
+    this._request("POST", "/api/entities", entities, function (err, res) {
       if (err) return cb(err);
       cb(null, res.results);
     });
   };
 
   // Outdated
-  this.getSuggestedEntities = function(cb) {
-    this._request('GET', '/api/search', null, function(err, entities) {
+  this.getSuggestedEntities = function (cb) {
+    this._request("GET", "/api/search", null, function (err, entities) {
       if (err) return cb(err);
       cb(null, entities);
     });
   };
 
-  this.searchEntities = function(searchStr, type, cb) {
+  this.searchEntities = function (searchStr, type, cb) {
     var queryUrl;
 
-    if(type) {
-      queryUrl = "/api/search?query="+encodeURIComponent(searchStr)+"&type="+encodeURIComponent(type);
+    if (type) {
+      queryUrl = "/api/search?query=" + encodeURIComponent(searchStr) + "&type=" + encodeURIComponent(type);
     } else {
-      queryUrl = "/api/search?query="+encodeURIComponent(searchStr);
+      queryUrl = "/api/search?query=" + encodeURIComponent(searchStr);
     }
 
-    this._request('GET', queryUrl, null, function(err, entities) {
+    this._request("GET", queryUrl, null, function (err, entities) {
       if (err) return cb(err);
       cb(null, entities);
     });
   };
-
 
   // Subjects
   // ------------------
 
-  this.fetchSubjects = function(cb) {
+  this.fetchSubjects = function (cb) {
     var self = this;
-    
-    this._request('GET', "/api/subjects?page=1&sort_by=position&order=asc", null, function(err, subjectDB) {
+
+    this._request("GET", "/api/subjects?page=1&sort_by=position&order=asc", null, function (err, subjectDB) {
       if (err) return cb(err);
       // Store subjectDBVersion in cache
       self.cache.subjectDBVersion = subjectDB.subjectDBVersion;
       cb(null, subjectDB.subjects);
-    }); 
+    });
   };
 
-  this.getSubjectDBVersion = function() {
+  this.getSubjectDBVersion = function () {
     return this.cache.subjectDBVersion ? this.cache.subjectDBVersion : null;
   };
 
   // Users
   // -------
 
-  this.verifyToken = function(cb) {
-    this._request("GET", "/api/users/status", null, function(err, result) {
+  this.verifyToken = function (cb) {
+    this._request("GET", "/api/users/status", null, function (err, result) {
       cb(err, result);
     });
   };
 
-  this.getUser = function() {
+  this.getUser = function () {
     return this.session.user;
   };
 
-  this.isSuperUser = function() {
-    var claims = this.session.token.split('.')[1];
+  this.isSuperUser = function () {
+    var claims = this.session.token.split(".")[1];
     claims = JSON.parse(atob(claims));
     return claims.scopes[1] == "super";
   };
 
-  this.destroySession = function() {
+  this.destroySession = function () {
     this.session = null;
-    localStorage.removeItem('session');
-    window.location.href = '/login';
+    localStorage.removeItem("session");
+    window.location.href = "/login";
   };
 };
 
 Substance.initClass(Backend);
 
 module.exports = Backend;
+
 },{"archivist-interview":1,"nprogress":303,"substance":305,"substance/helpers":304}],524:[function(require,module,exports){
 module.exports={
   "menu.text_tool": "Update text",
@@ -25012,18 +25007,20 @@ module.exports={
 
 },{}],525:[function(require,module,exports){
 (function (global){
+'use strict';
+
 var Polyglot = require('node-polyglot');
 var defaultPhrases = require('./en.json');
 // Note: we use the HTML5 LocalStorage to store phrases which are defined in
 // the according locale files in this directory
 // To switch the language use `i18n.switchLocale('de')` and reload the page.
 var storage = window.storage || window.localStorage;
-var locale = storage.getItem('locale') || "en";
+var locale = storage.getItem('locale') || 'en';
 var phrases = JSON.parse(storage.getItem('phrases'));
-if (locale === "en" || !phrases) {
+if (locale === 'en' || !phrases) {
   phrases = defaultPhrases;
 }
-var i18n = new Polyglot({locale: locale, phrases: phrases});
+var i18n = new Polyglot({ locale: locale, phrases: phrases });
 // Switch the loc
 // i18n.switchLocale = function(locale) {
 //   $.ajax("/i18n/"+locale+".json", {
@@ -25041,20 +25038,12 @@ global.i18n = i18n;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 },{"./en.json":524,"node-polyglot":301}],526:[function(require,module,exports){
+'use strict';
+
 var $$ = React.createElement;
-var _ = require("substance/helpers");
+var _ = require('substance/helpers');
 
-
-var menuItems = [
-  {label: 'Dashboard', name: 'dashboard', icon: 'tasks', url: '/'},
-  {label: 'Subjects', name: 'subjects', icon: 'tags', url: '/subjects'},
-  {label: 'Prisons', name: 'prisons', icon: 'th', url: '/prisons'},
-  {label: 'Toponyms', name: 'topo', icon: 'globe', url: '/toponyms'},
-  {label: 'Definitions', name: 'definition', icon: 'bookmark', url: '/definitions'},
-  {label: 'Persons', name: 'person', icon: 'users', url: '/persons'},
-  {label: 'Merge entities', name: 'merge', super: true, icon: 'code-fork', url: '/merge'},
-  {label: 'Users', name: 'users', super: true, icon: 'user-plus', url: '/users'}
-];
+var menuItems = [{ label: 'Dashboard', name: 'dashboard', icon: 'tasks', url: '/' }, { label: 'Subjects', name: 'subjects', icon: 'tags', url: '/subjects' }, { label: 'Prisons', name: 'prisons', icon: 'th', url: '/prisons' }, { label: 'Toponyms', name: 'topo', icon: 'globe', url: '/toponyms' }, { label: 'Definitions', name: 'definition', icon: 'bookmark', url: '/definitions' }, { label: 'Persons', name: 'person', icon: 'users', url: '/persons' }, { label: 'Merge entities', name: 'merge', 'super': true, icon: 'code-fork', url: '/merge' }, { label: 'Users', name: 'users', 'super': true, icon: 'user-plus', url: '/users' }];
 
 // The Menu
 // ----------------
@@ -25062,12 +25051,12 @@ var menuItems = [
 var Menu = React.createClass({
   contextTypes: {
     backend: React.PropTypes.object.isRequired,
-    app: React.PropTypes.object.isRequired,
+    app: React.PropTypes.object.isRequired
   },
 
-  displayName: "Menu",
+  displayName: 'Menu',
 
-  handleLogout: function(e) {
+  handleLogout: function handleLogout(e) {
     e.preventDefault();
     var backend = this.context.backend;
     var app = this.context.app;
@@ -25075,49 +25064,38 @@ var Menu = React.createClass({
     backend.destroySession();
   },
 
-  getLoginInfo: function() {
+  getLoginInfo: function getLoginInfo() {
     var backend = this.context.backend;
     var user = backend.getUser();
-    return $$('div', {className: "user-section"},
-      $$('span', {
-        className: "logout",
-        onClick: this.handleLogout,
-        dangerouslySetInnerHTML: {__html: '<i class="fa fa-power-off"></i>'}
-      }),
-      $$('div', {className: "userpic"},
-        $$('img', {
-          src: user.picture,
-        })
-      ),
-      $$('div', {className: "username"}, user.username)
-    );
+    return $$('div', { className: 'user-section' }, $$('span', {
+      className: 'logout',
+      onClick: this.handleLogout,
+      dangerouslySetInnerHTML: { __html: '<i class="fa fa-power-off"></i>' }
+    }), $$('div', { className: 'userpic' }, $$('img', {
+      src: user.picture
+    })), $$('div', { className: 'username' }, user.username));
   },
 
-  render: function() {
+  render: function render() {
     var self = this;
     var backend = this.context.backend;
     var isSuper = backend.isSuperUser();
     var menuItemEls = [];
-    _.each(menuItems, function(menuItem) {
-      if((menuItem.super && isSuper) || !menuItem.super) {
+    _.each(menuItems, function (menuItem) {
+      if (menuItem['super'] && isSuper || !menuItem['super']) {
         menuItemEls.push($$('a', {
           id: menuItem.name,
           href: menuItem.url,
-          dangerouslySetInnerHTML: {__html: '<i class="fa fa-'+menuItem.icon+'"></i> <span class="title">' + menuItem.label + '</span>'}
+          dangerouslySetInnerHTML: { __html: '<i class="fa fa-' + menuItem.icon + '"></i> <span class="title">' + menuItem.label + '</span>' }
         }));
       }
     }, this);
-    return $$("div", {id: "topbar"},
-      $$('header', {className: "branding"}, "Archivist"),
-      $$('nav', {className: "topbar"},
-        menuItemEls
-      ),
-      self.getLoginInfo()
-    );
+    return $$('div', { id: 'topbar' }, $$('header', { className: 'branding' }, 'Archivist'), $$('nav', { className: 'topbar' }, menuItemEls), self.getLoginInfo());
   }
 });
 
 module.exports = Menu;
+
 },{"substance/helpers":304}],527:[function(require,module,exports){
 "use strict";
 
@@ -25127,28 +25105,28 @@ var Substance = require("substance");
 // ----------------
 //
 
-var NotificationService = function() {
-  NotificationService.super.call(this);
+var NotificationService = function NotificationService() {
+  NotificationService["super"].call(this);
   this.messages = [];
 };
 
-NotificationService.Prototype = function() {
+NotificationService.Prototype = function () {
 
-  this.addMessage = function(msg) {
+  this.addMessage = function (msg) {
     this.messages.push(msg);
-    this.emit('messages:updated', this.messages);
+    this.emit("messages:updated", this.messages);
   };
 
-  this.log = function(msg) {
+  this.log = function (msg) {
     this.addMessage({
-      type: 'info',
+      type: "info",
       message: msg
     });
   };
 
-  this.error = function(msg) {
+  this.error = function (msg) {
     this.addMessage({
-      type: 'error',
+      type: "error",
       message: msg
     });
   };
@@ -25156,13 +25134,14 @@ NotificationService.Prototype = function() {
   this.warn = this.log;
   this.info = this.log;
 
-  this.clearMessages = function() {
+  this.clearMessages = function () {
     this.messages = [];
-    this.emit('messages:updated', this.messages);
+    this.emit("messages:updated", this.messages);
   };
 };
 
 Substance.inherit(NotificationService, Substance.EventEmitter);
 
 module.exports = NotificationService;
+
 },{"substance":305}]},{},[522]);
