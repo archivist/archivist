@@ -12,7 +12,7 @@ var mongoose = require('mongoose')
 	, api = require('./controllers/api')
 	, oauth = require('./controllers/auth/oauth.js')
 	, auth = require('./controllers/auth/utils.js')
-	, importer = require('./controllers/import')
+	//, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
 
@@ -74,7 +74,12 @@ mongoose.connection.on("error", function(err) {
 
 app.use('/archivist', oauth);
 app.use('/api', api);
-app.use('/import', importer);
+//app.use('/import', importer);
+
+app.route('/')
+	.get(function(req, res, next) {
+    res.redirect('/archivist');
+  })
 
 app.route('/archivist')
 	.get(function(req, res, next) {
@@ -84,14 +89,6 @@ app.route('/archivist')
 app.route('/archivist/editor')
 	.get(function(req, res, next) {
 		res.render('writer');
-  });
-
-app.route('/archivist/editor/new')
-	.get(auth.checkAuth, function(req, res, next) {
-		Document.createEmpty(req.user, function(err, doc) {
-			if (err) return next(err);
-			res.redirect('/archivist/editor#' + doc._id);
-		})
   });
 
 app.route('/archivist/:var(definitions|persons|prisons|subjects|merge|toponyms|users)*?')

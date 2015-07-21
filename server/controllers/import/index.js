@@ -31,14 +31,22 @@ var schemaConverter = require('./schemaConverter')
 */
 
 var convertDocuments = function(req, res, next) {
-  var docId = req.params.id;
-  schemaConverter(docId, function(err) {
-    if(err) return res.status(500).json(err.message);
-    res.status(200).send();
+  req.socket.setTimeout(500000);
+  Document.find({}, 'id', function(err, docs) {
+    if(err) return next(err);
+    async.eachSeries(docs, function(doc, cb){
+      schemaConverter(doc._id, function(err) {
+        console.log('Document', doc._id, 'has been converted');
+        cb(err);
+      });
+    }, function(err){
+      if(err) return res.status(500).json(err.message);
+      res.status(200).send('done');
+    });
   });
 }
 
-importer.route('/:id/convert')
+importer.route('/convert')
   .get(convertDocuments)
 
 /*

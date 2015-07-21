@@ -1685,3 +1685,15 @@ body, html {
   -webkit-user-select: text;
   user-select: text;
   /* Because for user-select:none, Safari won't allow input*/ }
+
+/* Loading messaging
+-----------------------------------------------------*/
+.loading-message,
+.error-message {
+  margin: 150px auto;
+  width: 500px;
+  font-size: 20px;
+  color: #888; }
+
+.error-message {
+  color: #bb2626; }

@@ -128,7 +128,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
 
 documentSchema.statics.get = function(id, cb) {
   this.findById(id, function(err, document) {
-    if(err) return cb(err);
+    if(err) return cb('There is no such document, sorry...');
     doc = document.toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;

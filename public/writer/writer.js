@@ -22778,21 +22778,14 @@ var ArchivistWriter = (function (_React$Component) {
 
       backend.getDocument(this.props.documentId || 'example_document', (function (err, doc) {
         if (err) {
-          notifications.addMessage({
-            type: 'error',
-            message: err.message || err.toString()
+          this.setState({
+            errorMessage: err.message || err.toString()
           });
         } else {
-
           // After here we won't allow non-transactional changes
           doc.FORCE_TRANSACTIONS = true;
           this.setState({
             doc: doc
-          });
-
-          notifications.addMessage({
-            type: 'info',
-            message: 'No changes'
           });
         }
       }).bind(this));
@@ -22803,30 +22796,18 @@ var ArchivistWriter = (function (_React$Component) {
       var backend = this.context.backend;
       var notifications = this.context.notifications;
 
-      notifications.addMessage({
-        type: 'info',
-        message: 'Loading...'
-      });
-
       this.setState({
         doc: null
       });
 
       backend.getDocument(this.props.documentId || 'example_document', (function (err, doc) {
         if (err) {
-          notifications.addMessage({
-            type: 'error',
-            message: err.message || err.toString()
+          this.setState({
+            errorMessage: err.message || err.toString()
           });
         } else {
-
           this.setState({
             doc: doc
-          });
-
-          notifications.addMessage({
-            type: 'info',
-            message: 'No changes'
           });
         }
       }).bind(this));
@@ -22847,8 +22828,10 @@ var ArchivistWriter = (function (_React$Component) {
           contentContainer: 'content',
           contextId: 'subjects'
         });
+      } else if (this.state.errorMessage) {
+        return $$('div', { className: 'error-message' }, this.state.errorMessage);
       } else {
-        return $$('div', null, '');
+        return $$('div', { className: 'loading-message' }, 'Loading document... This may take a few seconds.');
       }
     }
   }]);
