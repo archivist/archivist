@@ -68,7 +68,7 @@ maintenance.setMaintenanceMode = function(on, cb) {
 }
 
 /**
- * Create a backup copy of all documents
+ * Create a backup copy of changed documents
  *
  * @param {callback} cb - The callback when backup job is done
  */

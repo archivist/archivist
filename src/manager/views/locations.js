@@ -693,4 +693,4 @@ var PrisonsMap = LocationsMap.extend({
 });
 exports.prisonsMap = PrisonsMap
 
-L.Icon.Default.imagePath = '/assets/leaflet';
+L.Icon.Default.imagePath = '/assets/img/leaflet';

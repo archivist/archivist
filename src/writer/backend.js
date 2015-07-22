@@ -94,11 +94,11 @@ Backend.Prototype = function() {
       }
       var doc = new Interview.fromJson(rawDoc);
       self.fetchSubjects(function(err, subjectsData) {
-        nprogress.done();
         if (err) return cb(err);
         var subjects = new Interview.SubjectsModel(doc, subjectsData);
         doc.subjects = subjects;
         doc.version = rawDoc.__v;
+        nprogress.done();
         // TODO: We should not forget to remove this
         window.doc = doc;
         cb(null, doc);
@@ -108,14 +108,12 @@ Backend.Prototype = function() {
 
   this.saveDocument = function(doc, cb) {
     var self = this;
-    nprogress.start();
     var json = doc.toJSON();
     json.__v = doc.version;
 
     console.log('saving doc, current version is', doc.version);
 
     this._request('PUT', '/api/documents/'+doc.id, json, function(err, data){
-      nprogress.done();
       if (err) return cb(err);
 
       // Remember new document version

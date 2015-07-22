@@ -15,10 +15,10 @@ var documentSchema = new Schema({
 
 documentSchema.set('toJSON', { getters: true, virtuals: true })
 
-var documentShadowSchema = new Schema({}, {collection: 'documents_backup', strict: false}),
+var documentShadowSchema = new Schema({}, {collection: 'documents_backup', strict: false, versionKey: false}),
 		documentShadow = mongoose.model('documentShadow', documentShadowSchema);
 
-documentSchema.plugin(backup, { shadow: documentShadow });
+documentSchema.plugin(backup, { shadow: documentShadow, fullbackup: false });
 
 /** 
  * Creates Document record from JSON
@@ -68,20 +68,20 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "abstract_de": "Enter german abstract here",
         "created_at": new Date().toJSON(),
         "updated_at": new Date().toJSON(),
-        "published_on": "0000-00-00",
+        "published_on": "Enter publishing date in format YYYY-MM-DD",
 
         // Project related
-        "project_name": "Internationales Sklaven-und Zwangsarbeiter Befragungsprojekt",
+        "project_name": "Enter project name",
         "project_location": "",
-        "conductor": "Irina Ostrovskaya",
-        "operator": "Eduard Kechedjiyan",
-        "sound_operator": "Eduard Kechedjiyan",
+        "conductor": "Enter conductor's name",
+        "operator": "Enter operator's name",
+        "sound_operator": "Enter sound operator's name",
         "record_type": "video",
         "media_id": "",
-        "interview_location": "respondent's apartment",
-        "interview_date": "2005-07-16",
-        "persons_present": "Nikolay Bogoslavec, Irina Ostrovskaya, Eduard Kechedjiyan, Alexey Bogoslavec",
-        "interview_duration": "247",
+        "interview_location": "Enter interview location name",
+        "interview_date": "Enter interview date in format YYYY-MM-DD",
+        "persons_present": "Enter person's names separated by comma",
+        "interview_duration": "Enter interview duration in minutes",
 
         // Interview subject related
         "interviewee_bio": "Please enter respondent bio in russian",
@@ -128,7 +128,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
 
 documentSchema.statics.get = function(id, cb) {
   this.findById(id, function(err, document) {
-    if(err) return cb('There is no such document, sorry...');
+    if(err || _.isNull(document)) return cb('There is no such document, sorry...');
     doc = document.toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;

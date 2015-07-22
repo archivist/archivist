@@ -21,6 +21,10 @@ var Collection = Backbone.PageableCollection.extend({
       nprogress.done();
       Backbone.middle.trigger("load:finish");
     });
+    self.on('destroy',function(){
+      nprogress.done();
+      Backbone.middle.trigger("load:finish");
+    });
     self.on('error', function(){
       nprogress.done();
       Backbone.middle.trigger("sync:fail", 'Something goes wrong, try again');

@@ -43,7 +43,6 @@ var DocumentsGrid = Grid.main.extend({
       .get('/api/documents/new')
       .set('Authorization', 'Bearer ' + Utils.getUserToken())
       .end(function(err, res) {
-        debugger;
         if (res.ok && res.body.id) {
           Backbone.middle.trigger("sync:success", 'Document has been created, redirecting...');
           Backbone.middle.trigger("goToExt", '/archivist/editor#' + res.body.id);

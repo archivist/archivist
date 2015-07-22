@@ -273,7 +273,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
                 dialog.submit('Done! Exiting from maintenance mode...', 'ok');
                 Backbone.middle.trigger("sync:success", 'Merge has been completed');
               } else {
-                dialog.submit(err, res.text);
+                dialog.submit(res.text, 'error');
                 Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
               }
             });
@@ -335,8 +335,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
           Backbone.middle.trigger("sync:success", 'Subject has been moved to new position');
         } else {
           Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
-          alert('Sorry an error occurred: ', err);
-          window.location.href = "/subjects";
+          alert('Sorry an error occurred: ', err.message);
+          window.location.href = "/archivist/subjects";
         }
       });
 
