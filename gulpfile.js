@@ -73,12 +73,39 @@ gulp.task('writer-bundle', function () {
     .pipe(gulp.dest('./public/writer'));
 });
 
-gulp.task('writer-compress', function() {
-  gulp.src('./public/writer/writer.js')
-    .pipe(streamify(uglify()))
-    .pipe(gulp.dest('./public/writer'));
-});
-
 gulp.task('writer', ['writer-assets', 'writer-styles', 'writer-bundle']);
 
-gulp.task('default', ['manager', 'writer']);
+
+// Reader tasks
+// -------------
+
+gulp.task('reader-styles', function () {
+  gulp.src('./src/reader/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("reader.css"))
+    .pipe(gulp.dest('./public/reader'));
+});
+
+gulp.task('reader-bundle', function () {
+  return gulp.src('./src/reader/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('reader.js'))
+    //.pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/reader'));
+});
+
+gulp.task('reader', ['reader-styles', 'reader-bundle']);
+
+gulp.task('default', ['manager', 'writer', 'reader']);

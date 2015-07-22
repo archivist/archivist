@@ -81,6 +81,11 @@ app.route('/')
     res.redirect('/archivist');
   })
 
+app.route('/reader')
+	.get(function(req, res, next) {
+    res.render('reader');
+  })
+
 app.route('/archivist')
 	.get(function(req, res, next) {
     res.render('manager');
