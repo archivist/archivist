@@ -108,4 +108,4 @@ gulp.task('reader-bundle', function () {
 
 gulp.task('reader', ['reader-styles', 'reader-bundle']);
 
-gulp.task('default', ['manager', 'writer', 'reader']);
+gulp.task('default', ['manager', 'writer']);
