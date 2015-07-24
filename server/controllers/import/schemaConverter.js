@@ -30,9 +30,10 @@ module.exports = function(docId, cb) {
 	     
 	   	if(node.type === "remark") {
 		    var newId = node.id.replace('remark','comment_');
+		    var content = node.content.replace('\n','</p><p>');
 	    	var comment = {
 	    		type: "comment",
-	    		content: '<p>' + node.content + '</p>',
+	    		content: '<p>' + content + '</p>',
 	    		container: node.container,
 		      creator: "Archivist Bot",
 		      created_at: new Date().toJSON(),
