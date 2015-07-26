@@ -57,13 +57,14 @@ var listDocuments = function(req, res, next) {
 }
 
 api.route('/documents')
-  .get(auth.checkAuth, listDocuments);
+  // dropped out authentication for reader
+  .get(listDocuments);
 
 api.route('/documents/new')
   .get(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
 
 api.route('/documents/:id')
-  .get(readDocument) // dropped out auth.ensureAuthenticated for reader
+  .get(readDocument) // dropped out authentication for reader
   .put(maintenance.checkCurrentMode, auth.checkAuth, updateDocument)
   .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteDocument);
 
