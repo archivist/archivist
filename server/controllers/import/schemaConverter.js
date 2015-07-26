@@ -9,7 +9,11 @@ module.exports = function(docId, cb) {
 	  _.each(doc.nodes, function(node) {
 
 	    if (node.type === "text") {
-	    	var newId = node.id.replace('text','paragraph_');
+	    	if(node.id.indexOf('paragraph') == 0) {
+	    		var newId = node.id.replace('paragraph','paragraph_');
+	    	} else {
+	    		var newId = node.id.replace('text','paragraph_');
+	    	}
 	    	var paragraph = {
 	    		type: "paragraph",
 	    		content: node.content,
@@ -51,6 +55,9 @@ module.exports = function(docId, cb) {
 	   		if(node.path[0].indexOf("text") == 0) {
 	   			var newId = node.path[0].replace('text','paragraph_');
 	   			node.path[0] = newId;
+	   		} else if (node.path[0].indexOf('paragraph') == 0 && node.path[0][9] != '_') {
+	   			var newId = node.path[0].replace('paragraph','paragraph_');
+	   			node.path[0] = newId;
 	   		}
 	   	}
 
@@ -58,12 +65,18 @@ module.exports = function(docId, cb) {
 	   		if(node.startPath[0].indexOf("text") == 0) {
 	   			var newId = node.startPath[0].replace('text','paragraph_');
 	   			node.startPath[0] = newId;
+	   		} else if (node.startPath[0].indexOf('paragraph') == 0 && node.startPath[0][9] != '_') {
+	   			var newId = node.startPath[0].replace('paragraph','paragraph_');
+	   			node.startPath[0] = newId;
 	   		}
 	   	}
 
 	   	if(node.endPath) {
 	   		if(node.endPath[0].indexOf("text") == 0) {
 	   			var newId = node.endPath[0].replace('text','paragraph_');
+	   			node.endPath[0] = newId;
+	   		} else if (node.endPath[0].indexOf('paragraph') == 0 && node.endPath[0][9] != '_') {
+	   			var newId = node.endPath[0].replace('paragraph','paragraph_');
 	   			node.endPath[0] = newId;
 	   		}
 	   	}

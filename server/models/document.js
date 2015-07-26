@@ -13,7 +13,10 @@ var documentSchema = new Schema({
   , nodes: Schema.Types.Mixed
 });
 
-documentSchema.set('toJSON', { getters: true, virtuals: true })
+documentSchema.set('toJSON', { getters: true, virtuals: true });
+
+documentSchema.index({'nodes.document.updated_at': 1}, {background: true});
+documentSchema.index({'nodes.document.title': 1}, {background: true});
 
 var documentShadowSchema = new Schema({}, {collection: 'documents_backup', strict: false, versionKey: false}),
 		documentShadow = mongoose.model('documentShadow', documentShadowSchema);
