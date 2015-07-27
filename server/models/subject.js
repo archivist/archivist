@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
   , async = require('async')
   , _ = require('underscore')
   , backup = require('../controllers/shared/backup.js')
+  , indexer = require('../controllers/shared/indexer.js')
   , maintenance = require('../controllers/shared/maintenance.js')
   , rest = require('../controllers/shared/rest.js')
   , timestamps = require('mongoose-timestamp')
@@ -37,11 +38,20 @@ subjectSchema.plugin(timestamps);
  */
 
 subjectSchema.statics.list = function(opt, cb) {
+  var self = this;
+
   var query = util.getQuery(opt.query),
       options = util.getOptions(opt);
 
-  this.find(query, null, options, function(err, records) {
-    cb(err, records);
+  indexer.getSubjects(function(err, counter){
+    if(err) return cb(err);
+    self.find(query, null, options, function(err, records) {
+      _.each(records, function(subject, id) {
+        records[id] = subject.toJSON();
+        records[id].counter = counter[subject._id] || 0;
+      })
+      cb(err, records);
+    });
   });
 }
 
