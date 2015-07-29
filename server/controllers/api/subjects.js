@@ -87,7 +87,7 @@ api.route('/subjects/merge')
   .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, mergeSubjects)
 
 api.route('/subjects/move')
-  .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, moveSubjects)
+  .get(maintenance.checkCurrentMode, auth.checkAuth, moveSubjects)
 
 api.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)

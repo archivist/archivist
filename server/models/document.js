@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
   , System = require('./system.js')
   , async = require('async')
   , _ = require('underscore')
+  , indexer = require('../controllers/shared/indexer.js')
   , backup = require('../controllers/shared/backup.js')
   , util = require('../controllers/api/utils.js');
 
@@ -177,9 +178,12 @@ documentSchema.statics.change = function(id, data, user, cb) {
       if (err) return cb(err);
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
         if (err) return cb(err);
-        cb(err, {
-          documentVersion: document.__v,
-          subjectDBVersion: subjectDBVersion
+        indexer.reindex(id, function(err){
+          if(err) return cb(err);
+          cb(err, {
+            documentVersion: document.__v,
+            subjectDBVersion: subjectDBVersion
+          });
         });
       });
     });
