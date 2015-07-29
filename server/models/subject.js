@@ -14,6 +14,7 @@ var mongoose = require('mongoose')
 var subjectSchema = new Schema({
   	type: String
   ,	name: String
+  , workname: String
   , description: String
   , parent: String
   , position: Number

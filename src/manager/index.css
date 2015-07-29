@@ -875,7 +875,9 @@ MODAL
   height: 200px;
 }
 
-
+#workname {
+  width: 100%;
+}
 
 
 /* Modal positioning */

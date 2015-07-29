@@ -82,7 +82,29 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     var res = $.jstree.defaults.contextmenu.items(o, cb);
 
-    // Edit node
+    // Edit work name
+    // -----------
+
+    res.editWorkName = {
+      "separator_before"  : true,
+      "separator_after" : false,
+      "_disabled"     : false,
+      "label"       : "Work name",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference),
+            subject = obj.model;
+
+        console.log('editing subject...');
+
+        var editModal = new subjectModalName({model: subject});
+
+        $('#main').append(editModal.render().el);
+
+      }
+    };
+
+    // Edit description
     // -----------
 
     res.edit = {
@@ -392,6 +414,27 @@ var subjectModal = Backbone.Modal.extend({
     self.model.save('description', description, {
       success: function(model, resp) { 
         $('.tree').trigger('description:change', self.model);
+      },
+      error: function(model, err) { 
+        console.log(err);
+      }
+    })
+  }
+});
+
+var subjectModalName = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  keyControl: false,
+  template: _.template($('#subjectModalName').html()),
+  cancelEl: '.cancel',
+  submitEl: '.ok',
+  submit: function() {
+    var self = this,
+        name = document.getElementById("workname").value;
+
+    self.model.save('workname', name, {
+      success: function(model, resp) { 
+        $('.tree').trigger('workname:change', self.model);
       },
       error: function(model, err) { 
         console.log(err);
