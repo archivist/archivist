@@ -3,7 +3,7 @@
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "version": "1.0.0",
   "dependencies": {
-    "archivist-core": "substance/archivist-core#a002f16359b4a976b62398dbc89286c7f379ced0",
+    "archivist-core": "substance/archivist-core#e1dc048aa6d2bb31711b97da4a66fbae989d80ba",
     "async": "^0.9.0",
     "babelify": "^6.1.2",
     "body-parser": "*",
