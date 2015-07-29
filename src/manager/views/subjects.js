@@ -143,6 +143,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
         var newNode = {
           _id: new ObjectId().toString(), // daniel you can try to remove this here
           name: 'New Subject',
+          workname: 'New Subject',
           parent: obj.id
         };
 
@@ -319,7 +320,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
     var id = new ObjectId().toString(),
         new_node = {'id': id, 'text': 'New Subject'};
     
-    this.collection.create({ _id: new_node.id, name: new_node.text, parent: '' }, {
+    this.collection.create({ _id: new_node.id, name: new_node.text, workname: new_node.text, parent: '' }, {
       success: function(model, resp) {
         $('.tree').jstree('create_node', '#', new_node, 'last', function (newJSTreeNode) {
           setTimeout(function() {
