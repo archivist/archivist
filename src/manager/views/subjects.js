@@ -82,11 +82,29 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     var res = $.jstree.defaults.contextmenu.items(o, cb);
 
+    // Get subject id
+    // -----------
+
+    res.getId = {
+      "separator_before"  : true,
+      "separator_after" : false,
+      "_disabled"     : false,
+      "label"       : "Get ID",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference),
+            subject = obj.model;
+
+        window.prompt("Copy to clipboard: Ctrl+C, Enter", subject.id);
+
+      }
+    };
+
     // Edit work name
     // -----------
 
     res.editWorkName = {
-      "separator_before"  : true,
+      "separator_before"  : false,
       "separator_after" : false,
       "_disabled"     : false,
       "label"       : "Work name",
