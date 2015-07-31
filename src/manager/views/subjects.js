@@ -122,6 +122,25 @@ var SubjectsTreeView = Backbone.Layout.extend({
       }
     };
 
+    // Copy name to work name
+    // -----------
+
+    res.syncWorkName = {
+      "separator_before"  : false,
+      "separator_after" : false,
+      "_disabled"     : false,
+      "label"       : "Sync names",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference),
+            subject = obj.model;
+
+        var name = subject.get('name')
+        subject.set('workname', name);
+        subject.save();
+      }
+    };
+
     // Edit description
     // -----------
 
@@ -353,7 +372,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
   },
   _onMoveNode: function(e, data, context) {
     console.log('node moved yay', e, data);
-      
+    
+    var self = this;
+
     var movedNode = data.node,
         newParent = data.parent,
         oldParent = data.old_parent,
@@ -365,21 +386,33 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
     if (parentChanged) console.log('changing parent from node', movedNode.id, 'from', oldParent, 'to', newParent);
     if (positionChanged) console.log('changing position from ', oldPos, 'to', newPos);
+    
+    function sync() {
+      self.syncing = true;
+      Backbone.middle.trigger("sync:start", 'Moving node...');
+      request
+        .get('/api/subjects/move')
+        .set('Authorization', 'Bearer ' + Utils.getUserToken())
+        .query({ oldparent: oldParent, newparent: newParent, node: movedNode.id, oldpos: oldPos, newpos: newPos })
+        .end(function(err, res) {
+          self.syncing = false;
+          if (res.ok) {
+            Backbone.middle.trigger("sync:success", 'Subject has been moved to new position');
+          } else {
+            Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
+            alert('Sorry an error occurred: ', err.message);
+            window.location.href = "/archivist/subjects";
+          }
+        });
+    }
 
-    Backbone.middle.trigger("sync:start", 'Moving node...');
-    request
-      .get('/api/subjects/move')
-      .set('Authorization', 'Bearer ' + Utils.getUserToken())
-      .query({ oldparent: oldParent, newparent: newParent, node: movedNode.id, oldpos: oldPos, newpos: newPos })
-      .end(function(err, res) {
-        if (res.ok) {
-          Backbone.middle.trigger("sync:success", 'Subject has been moved to new position');
-        } else {
-          Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
-          alert('Sorry an error occurred: ', err.message);
-          window.location.href = "/archivist/subjects";
-        }
-      });
+    var save = setInterval(function() {
+      if(!self.syncing) {
+        sync();
+        clearInterval(save);
+      } else {
+      }
+    }, 200);
 
   },
   _onRenameNode: function(e, data, context) {
