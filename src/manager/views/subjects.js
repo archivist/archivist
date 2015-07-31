@@ -71,6 +71,11 @@ var SubjectsTreeView = Backbone.Layout.extend({
         },
         "plugins" : [ "contextmenu", "dnd", "search", "state", "types", "wholerow"]
       });
+
+    // $('a.jstree-anchor').each( function(i, node) {
+    //   var count = $(node).data('counter'); 
+    //   $(node).append('<span class="counter">(' + count + ')</span>');
+    // })
   },
 
 
@@ -425,7 +430,15 @@ var SubjectsTreeView = Backbone.Layout.extend({
     // Use backbone stuff to retrieve the model with that id
     var subject = context.collection.get(updatedNode.id);
 
-    subject.save('name', newName, {
+    var workname = subject.get('workname');
+
+    subject.set('name', newName);
+
+    if(workname == 'New Subject') {
+      subject.set('workname', newName);
+    }
+
+    subject.save({
       success: function(model, resp) { 
       },
       error: function(model, err) { 

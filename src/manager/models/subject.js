@@ -60,6 +60,9 @@ var Subjects = Utility.collection.extend({
           li_attr: {
             class: hasDescription
           },
+          a_attr: {
+            "data-counter": node.get('counter')
+          },
           px: node.get('position')
         };
         res.push(entry);
