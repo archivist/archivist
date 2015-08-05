@@ -11,6 +11,10 @@ var mongoose = require('mongoose')
   , timestamps = require('mongoose-timestamp')
   , util = require('../controllers/api/utils.js');
 
+/* Interview tree model */
+
+var TreeModel = require('archivist-core/interview/tree');
+
 var subjectSchema = new Schema({
   	type: String
   ,	name: String
@@ -53,6 +57,24 @@ subjectSchema.statics.list = function(opt, cb) {
       })
       cb(err, records);
     });
+  });
+}
+
+/** 
+ * Get children subject records
+ *
+ * @param {string} id - The unique id of target record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+subjectSchema.statics.getChildren = function(id, cb) {
+  var self = this;
+
+  self.find({}, '_id parent', function(err, records) {
+    if(err) return cb(err);
+    var tree = new TreeModel(records);
+    var filtered = tree.getAllChildren(id);
+    cb(err, filtered);
   });
 }
 

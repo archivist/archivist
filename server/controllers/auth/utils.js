@@ -67,5 +67,12 @@ utils.checkExpiration = function(req, cb) {
 	}
 }
 
+utils.allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+  next();
+}
 
 module.exports = utils;

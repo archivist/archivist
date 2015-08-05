@@ -4,6 +4,10 @@ var Subject = require('../../models/subject.js')
   , express = require('express')
   , api = express.Router();
 
+/* Set CORS */
+
+api.use(auth.allowCrossDomain);
+
 /* The Subjects REST api */
 
 var createSubject = function(req, res, next) {
@@ -43,6 +47,14 @@ var listSubjects = function(req, res, next) {
         subjects: subjects 
       });
     });
+  });
+}
+
+var getSubjectsChildren = function(req, res, next) {
+  var subject = req.params.id;
+  Subject.getChildren(subject, function(err, children) {
+    if (err) return next(err);
+    res.json(children);
   });
 }
 
@@ -88,6 +100,9 @@ api.route('/subjects/merge')
 
 api.route('/subjects/move')
   .get(maintenance.checkCurrentMode, auth.checkAuth, moveSubjects)
+
+api.route('/subjects/children/:id')
+  .get(maintenance.checkCurrentMode, getSubjectsChildren)
 
 api.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)

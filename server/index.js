@@ -12,7 +12,7 @@ var mongoose = require('mongoose')
 	, api = require('./controllers/api')
 	, oauth = require('./controllers/auth/oauth.js')
 	, auth = require('./controllers/auth/utils.js')
-	//, importer = require('./controllers/import')
+	, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
 
@@ -74,7 +74,7 @@ mongoose.connection.on("error", function(err) {
 
 app.use('/archivist', oauth);
 app.use('/api', api);
-//app.use('/import', importer);
+app.use('/import', importer);
 
 app.route('/')
 	.get(function(req, res, next) {
