@@ -143,6 +143,31 @@ documentSchema.statics.get = function(id, cb) {
 }
 
 /** 
+ * Gets published document record by unique id
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {boolean} published - Whether or not restrict query to published
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.getCleaned = function(id, published, cb) {
+  var query = {
+    _id: id
+  }
+  if(published) query["nodes.document.published"] = true;
+
+  this.find(query, function(err, document) {
+    if(err || _.isEmpty(document)) return cb('There is no such document, sorry...');
+    doc = document[0].toJSON();
+    if (doc.hasOwnProperty('_schema')) {
+      delete doc._schema;
+      doc.schema = document._schema;
+    }
+    cb(null, doc);
+  });
+}
+
+/** 
  * Updates Document record unique JSON
  *
  * @param {string} id - The unique id of target document record

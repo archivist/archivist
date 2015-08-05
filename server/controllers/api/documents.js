@@ -4,9 +4,6 @@ var Document = require('../../models/document.js')
   , express = require('express')
   , api = express.Router();
 
-var db = exports;
-
-
 /* The Document REST api */
 
 var createDocument = function(req, res, next) {
@@ -57,14 +54,13 @@ var listDocuments = function(req, res, next) {
 }
 
 api.route('/documents')
-  // dropped out authentication for reader, TODO: move it to public API
-  .get(listDocuments);
+  .get(/*auth.checkAuth,*/ listDocuments);
 
 api.route('/documents/new')
   .get(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
 
 api.route('/documents/:id')
-  .get(readDocument) // dropped out authentication for reader, TODO: move it to public API
+  .get(/*auth.checkAuth,*/ readDocument)
   .put(maintenance.checkCurrentMode, auth.checkAuth, updateDocument)
   .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteDocument);
 

@@ -182,4 +182,7 @@ api.route('/entities')
 api.route('/entities/merge')
   .get(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, mergeEntities);
 
-module.exports = api;
+module.exports = {
+  api: api,
+  get: getEntities
+}
