@@ -1,6 +1,7 @@
 var Document = require('../../models/document.js')
   , Subjects = require('../../models/subject.js')
   , EntitiesGetter = require('./entities.js').get
+  , EntitiesList = require('./entities.js').list
   , Interview = require('archivist-core/interview')
   , auth = require('../auth/utils.js')
   , _ = require('underscore')
@@ -85,6 +86,55 @@ var getEntities = function(doc, cb) {
     cb(null, output);
   });
 }
+
+var getSubjectsMap = function(cb) {
+  Subjects.list({}, function(err, subjects) {
+    if (err) return cb(err);
+    var results = {}
+    _.map(subjects, function(subject) {
+      results[subject.id] = {
+        name: subject.name,
+        type: 'subject'
+      }
+    });
+    cb(null, results);
+  });
+}
+
+var getEntitiesMap = function(cb) {
+  EntitiesList({}, function(err, entities) {
+    if (err) return cb(err);
+    var results = {}
+    _.map(entities[1], function(entity) {
+      results[entity.id] = {
+        name: entity.name,
+        type: 'entity',
+        entity_type: entity.type
+      }
+    });
+    cb(null, results);
+  });
+}
+
+var getResources = function(req, res, next) {
+  async.parallel([
+    function(callback){
+      getSubjectsMap(callback);
+    },
+    function(callback){
+      getEntitiesMap(callback);
+    }
+  ],
+  function(err, results){
+    if (err) return cb(err)
+    var output = _.extend(results[0], results[1]);
+    res.json(output);
+  });
+} 
+
+
+api.route('/public/resources')
+  .get(getResources);
 
 api.route('/public/documents')
   .get(listDocuments);
