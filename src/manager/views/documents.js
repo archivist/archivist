@@ -45,7 +45,7 @@ var DocumentsGrid = Grid.main.extend({
       .end(function(err, res) {
         if (res.ok && res.body.id) {
           Backbone.middle.trigger("sync:success", 'Document has been created, redirecting...');
-          Backbone.middle.trigger("goToExt", '/archivist/editor#' + res.body.id);
+          Backbone.middle.trigger("goToExt", '/archivist/editor/' + res.body.id);
         } else {
           Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
         }
@@ -94,7 +94,7 @@ var DocumentRow = Backgrid.Row.extend({
   },
   onClick: function (e) {
     e.preventDefault();
-    Backbone.middle.trigger("goToExt", '/archivist/editor#'+this.model.get('id'));
+    Backbone.middle.trigger("goToExt", '/archivist/editor/'+this.model.get('id'));
   },
   onRemove: function(e) {
     e.preventDefault();

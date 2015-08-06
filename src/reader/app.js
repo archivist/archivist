@@ -3,13 +3,6 @@
 // i18n
 require('./i18n/load');
 
-// Substance Journal
-// ---------------
-//
-// Main entry point of the Substance Journal web client
-
-var Substance = require("archivist-core").Substance;
-var _ = Substance._;
 var $$ = React.createElement;
 
 // Specify a backend
@@ -38,8 +31,8 @@ var ArchivistReader = require("archivist-core/reader");
 // ---------------
 //
 
-var App = React.createClass({
-  displayName: "App",
+var ReaderApp = React.createClass({
+  displayName: "ReaderApp",
 
   childContextTypes: {
     backend: React.PropTypes.object,
@@ -53,23 +46,11 @@ var App = React.createClass({
     };
   },
 
-  componentDidMount: function() {
-    backend.initialize(function(err) {
-      if (err) console.error(err);
-      this.forceUpdate();
-    }.bind(this));
-  },
-
   render: function() {
-    if (backend.initialized) {
-      return $$('div', {className: 'container'},
-        $$(ArchivistReader, {
-          documentId: this.props.route
-        })
-      );
-    } else {
-      return $$('div', {className: 'container'});
-    }
+    var urlParts = window.location.href.split('/');
+    return $$(ArchivistReader, {
+      documentId: urlParts[urlParts.length - 1]
+    });
   }
 });
 
@@ -77,9 +58,10 @@ var App = React.createClass({
 
 $(function() {
   React.render(
-    $$(App, {
+    $$(ReaderApp, {
       route: window.location.hash.slice(1)
     }),
     document.getElementById('container')
   );
 });
+

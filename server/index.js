@@ -78,10 +78,11 @@ app.use('/import', importer);
 
 app.route('/')
 	.get(function(req, res, next) {
-    res.redirect('/archivist');
+		res.render('browser');
+    //res.redirect('/archivist');
   })
 
-app.route('/reader')
+app.route('/documents/:id')
 	.get(function(req, res, next) {
     res.render('reader');
   })
@@ -91,7 +92,7 @@ app.route('/archivist')
     res.render('manager');
   })
 
-app.route('/archivist/editor')
+app.route('/archivist/editor/*')
 	.get(function(req, res, next) {
 		res.render('writer');
   });

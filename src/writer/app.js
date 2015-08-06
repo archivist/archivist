@@ -63,11 +63,12 @@ var App = React.createClass({
   },
 
   render: function() {
+    var urlParts = window.location.href.split('/');
     if (backend.initialized) {
       return $$('div', {className: 'container'},
         $$(Menu),
         $$(ArchivistWriter, {
-          documentId: this.props.route
+          documentId: urlParts[urlParts.length - 1]
         })
       );
     } else {

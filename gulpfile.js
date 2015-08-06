@@ -102,10 +102,44 @@ gulp.task('reader-bundle', function () {
       this.emit('end');
     })
     .pipe(rename('reader.js'))
-    //.pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('./public/reader'));
 });
 
 gulp.task('reader', ['reader-styles', 'reader-bundle']);
 
-gulp.task('default', ['manager', 'writer']);
+
+// Browser tasks
+// -------------
+
+gulp.task('browser-styles', function () {
+  gulp.src('./src/browser/app.css')
+    .pipe(importCSS())
+    .pipe(minifyCSS({cache:true}))
+    .pipe(rename("browser.css"))
+    .pipe(gulp.dest('./public/browser'));
+});
+
+gulp.task('browser-bundle', function () {
+  return gulp.src('./src/browser/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('browser.js'))
+    .pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/browser'));
+});
+
+gulp.task('browser', ['browser-styles', 'browser-bundle']);
+
+gulp.task('default', ['manager', 'writer', 'reader', 'browser']);
