@@ -95,16 +95,30 @@ var listEntities = function(req, res, next) {
   async.series([
     function(callback){
       Location.list(req.query, function(err, locations) {
+        _.each(locations[1], function(val, i){
+          locations[1][i] = val.toJSON();
+          if(!_.isUndefined(val.title)) locations[1][i].name = val.title;
+        });
         callback(err, locations);
       });
     },
     function(callback){
       Person.list(req.query, function(err, persons) {
+        _.each(persons[1], function(val, i){
+          persons[1][i] = val.toJSON();
+          persons[1][i].type = 'person';
+          if(!_.isUndefined(val.title)) persons[1][i].name = val.title;
+        });
         callback(err, persons);
       });
     },
     function(callback){
       Definition.list(req.query, function(err, definitions) {
+        _.each(definitions[1], function(val, i){
+          definitions[1][i] = val.toJSON();
+          definitions[1][i].type = 'definition';
+          if(!_.isUndefined(val.title)) definitions[1][i].name = val.title;
+        });
         callback(err, definitions);
       });
     }
@@ -117,10 +131,6 @@ var listEntities = function(req, res, next) {
       entities[0].total_entries += entity[0].total_entries;
       entities[1] = _.union(entities[1], entity[1]);
     })
-    _.each(entities[1], function(entity, id) {
-      entities[1][id] = entity.toJSON();
-      if(!_.isUndefined(entity.title)) entities[1][id].name = entity.title;
-    });
     if(!_.isUndefined(req.query.sort_by)){
       entities[1] = _.sortBy(entities[1], req.query.sort_by);
       if(req.query.order == 'desc') entities[1].reverse()
