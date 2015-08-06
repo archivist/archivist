@@ -7,7 +7,7 @@ var Definition = Utility.model.extend({
     title: { type: 'Text', validators: ['required'], title: 'Title', editorAttrs: {placeholder: "Title", autofocus:'autofocus'} },
     synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: "Enter description", rows: 17 } },
-    type: { title: 'Type', type:'Select2', options:['общий комментарий', 'лагерная реалия', 'сокращение', 'языковой комментарий'], config: {placeholder: "Definition type", theme: "bootstrap"}}
+    definition_type: { title: 'Type', type:'Select2', options:['общий комментарий', 'лагерная реалия', 'сокращение', 'языковой комментарий'], config: {placeholder: "Definition type", theme: "bootstrap"}}
   }
 })
 exports.definition = Definition

@@ -15,6 +15,7 @@ var definitionSchema = new Schema({
   , synonyms: [{ type: String, index: true }]
   , description: String
   , type: String
+  , definition_type: String
   , created: { type: Schema.Types.ObjectId, ref: 'User' }
   , edited: { type: Schema.Types.ObjectId, ref: 'User' }
 });
