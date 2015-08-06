@@ -10,7 +10,7 @@ var Documents = require('./documents.js')
   , express = require('express')
   , api = express.Router();
 
-api.use('/', Documents, Subjects, Public, Definitions, Locations, Persons, Users, Entities, Search);
+api.use('/', Documents, Subjects, Public, Entities, Definitions, Locations, Persons, Users, Search);
 
 api.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {
