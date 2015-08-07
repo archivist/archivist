@@ -240,13 +240,12 @@ subjectSchema.statics.move = function(oldParentId, newParentId, nodeId, op, np, 
 // Remove node from leaf
 subjectSchema.statics.removeNode = function(parentId, pos, test, cb) {
   var self = this;
-
   self.update({
     parent: parentId,
     position: { 
       $gt: pos,
     } 
-  }, { $inc: { position: -1 }}, { multi: true }).exec(function(err) {
+  }, { $inc: { position: -1 }}, { multi: true }).exec(function(err,rawResponse) {
     if (err) return cb(err);
     if (test) {
       self.checkLeaf(parentId, pos, function(err, valid){
@@ -311,13 +310,17 @@ subjectSchema.statics.checkLeaf = function(parentId, pos, cb) {
       positions = [],
       valid = true;
 
-  var promise = self.find({parent: parentId}).select('position').sort('position').exec()
+  // var promise = self.find({parent: parentId}).select('position').sort('position').exec()
 
-  promise.then(function(subjects) {
-    var ids = subjects.map(function (s) {
+  // promise.then(function(subjects) {
+  //   var ids = subjects.map(function (s) {
+  //     positions.push(s.position)
+  //   });
+  // }).then(function () {
+  self.find({parent: parentId}).select('position').sort('position').exec(function(err, subjects) {
+    subjects.map(function (s) {
       positions.push(s.position)
     });
-  }).then(function () {
     positions.splice(pos,1);
     console.log(positions);
     for (var i = 0; i < positions.length; i++) {
@@ -327,7 +330,8 @@ subjectSchema.statics.checkLeaf = function(parentId, pos, cb) {
       }
     };
     cb(null, valid);
-  })
+  });
+  //})
 }
 
 // Repair tree leaf
@@ -341,12 +345,42 @@ subjectSchema.statics.repairLeaf = function(parentId, cb) {
       if (err) return cb(err);
       for (var i = 0; i < subjects.length; i++) {
         subjects[i].set('position', i);
-        subjects[i].save();
+        subjects[i].save(function(err, subject){
+          if(err) {
+            console.log(err.message);
+          } else {
+            console.log(subject._id, 'has been repaired');
+          }
+        });
       }
     })
     var err = new Error("Something goes wrong");
     err.http_code = 500;
     cb(err);
+}
+
+/** 
+ * Get children subject records
+ *
+ * @param {string} id - The unique id of target record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+subjectSchema.statics.repairAllLeafs = function(cb) {
+  var self = this;
+
+  self.find({}, '_id parent', function(err, records) {
+    if(err) return cb(err);
+    var tree = new TreeModel(records);
+    var index = tree.parentIndex;
+    _.each(index, function(item, idx) {
+      if(idx != 'root') {
+        self.repairLeaf(idx, function(err){
+        })
+      }
+    })
+    cb(err, {});
+  });
 }
 
 module.exports = mongoose.model('Subject', subjectSchema);

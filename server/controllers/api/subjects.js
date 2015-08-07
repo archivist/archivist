@@ -68,7 +68,14 @@ var mergeSubjects = function(req, res, next) {
 
 var moveSubjects = function(req, res, next) {
   Subject.move(req.query.oldparent, req.query.newparent, req.query.node, req.query.oldpos, req.query.newpos, req.user, function(err) {
-    if (err) res.status(500).send(err.stack);
+    if (err) return res.status(500).send(err.stack);
+    res.json(200);
+  });
+}
+
+var forceRepairSubjects = function(req, res, next) {
+  Subject.repairAllLeafs(function(err) {
+    if (err) return res.status(500).send(err.stack);
     res.json(200);
   });
 }
@@ -100,6 +107,10 @@ api.route('/subjects/merge')
 
 api.route('/subjects/move')
   .get(maintenance.checkCurrentMode, auth.checkAuth, moveSubjects)
+
+// force all subject leafs repairing
+// api.route('/subjects/repair')
+//   .get(maintenance.checkCurrentMode, forceRepairSubjects)
 
 api.route('/subjects/children/:id')
   .get(maintenance.checkCurrentMode, getSubjectsChildren)
