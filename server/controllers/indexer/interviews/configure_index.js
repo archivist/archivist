@@ -3,7 +3,7 @@
 var elasticsearch = require('elasticsearch');
 var _ = require('underscore');
 var config = require('../config');
-var indexConfiguration = require('../src/index_configuration');
+var indexConfiguration = require('./config');
 
 var configureIndex = function(cb) {
   var client = new elasticsearch.Client(_.clone(config));

@@ -7,7 +7,7 @@ var _ = require('underscore');
 var getJSON = require('./get_json');
 
 var Interview = require('archivist-core/interview');
-var indexInterview = require('./index_interview');
+var indexInterview = require('./op/index_interview');
 
 var idx = 0;
 var count = 0;

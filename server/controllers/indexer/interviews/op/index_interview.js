@@ -1,5 +1,5 @@
 var _ = require('underscore');
-var getIndexingCommands = require('./get_indexing_commands');
+var getIndexingCommands = require('../get_indexing_commands');
 
 function indexInterview(client, interview, cb) {
 

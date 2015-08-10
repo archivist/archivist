@@ -1,7 +1,7 @@
 var elasticsearch = require('elasticsearch');
 var config = require('../config');
 var _ = require('underscore');
-var getExtendedSubjects = require('./get_extended_subjects');
+var utils = require('./utils');
 var searchEntities = require('../entities/search');
 
 function buildQuery(options) {
@@ -232,13 +232,13 @@ function getResult(res, options, suggestedEntities) {
   return result;
 }
 
-var searchArticles = function(options, cb) {
+var searchInterviews = function(options, cb) {
   options.searchString = options.searchString || options.searchStr;
   delete options.searchStr;
   console.log('### QUERY OPTIONS:', JSON.stringify(options, null, 2));
   options.filters = options.filters || {};
 
-  getExtendedSubjects("children", options.filters.subjects, function(err, extendedSubjects) {
+  utils.getExtendedSubjects("children", options.filters.subjects, function(err, extendedSubjects) {
     if (err) return cb(err);
     options.extendedFilters = _.clone(options.filters);
     options.extendedFilters.subjects = extendedSubjects;
@@ -268,4 +268,4 @@ var searchArticles = function(options, cb) {
   });
 };
 
-module.exports = searchArticles;
+module.exports = searchInterviews;

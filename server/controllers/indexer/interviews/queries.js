@@ -3,7 +3,6 @@ var elasticsearch = require('elasticsearch');
 var config = require("../config");
 var queries = {};
 var async = require('async');
-
 var searchInterviews = require("./search");
 
 queries.findDocumentsWithContent = function(query, cb) {

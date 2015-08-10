@@ -1,7 +1,7 @@
 var cheerio = require('cheerio');
 var _ = require('underscore');
 global.$ = cheerio.load('', {decodeEntities: false});
-var getSubjectTree = require('./get_subject_tree');
+var utils = require('./utils');
 
 function _indexMeta(interview, commands, subjectTree) {
   // calculate stats for subjects
@@ -71,7 +71,7 @@ function _indexMeta(interview, commands, subjectTree) {
 }
 
 function indexMeta(interview, commands, cb) {
-  getSubjectTree(function(err, subjectTree) {
+  utils.getSubjectTree(function(err, subjectTree) {
     if (err) return cb(err);
     _indexMeta(interview, commands, subjectTree);
     cb(null);

@@ -4,7 +4,7 @@ var deleteInterview = require('./delete_interview.js');
 var _ = require('underscore');
 var request = require('superagent');
 var elasticsearch = require('elasticsearch');
-var config = require('../config');
+var config = require('../../config');
 
 var getJSON = function(url, cb) {
   request
