@@ -1,14 +1,13 @@
-
 var _ = require('underscore');
 var elasticsearch = require('elasticsearch');
 var config = require("../config");
 var queries = {};
 var async = require('async');
 
-var searchArticles = require("./search_interviews");
+var searchInterviews = require("./search");
 
 queries.findDocumentsWithContent = function(query, cb) {
-  searchArticles(query, function(err, result) {
+  searchInterviews(query, function(err, result) {
     if (err) return cb(err);
     // assuming openFiles is an array of file names
     async.each(result.interviews, function(record, cb) {
@@ -153,7 +152,7 @@ queries.findDocumentFragmentsWithContent = function(documentId, searchString, te
 };
 
 queries.countSubjects = function(cb) {
-  searchArticles({
+  searchInterviews({
     searchString: null,
     filters: null
   }, function(err, result) {

@@ -1,8 +1,7 @@
-var getJSON = require('./get_json');
-var config = require('../config');
-var _ = require('underscore');
+var _ = require('underscore'),
+    Tree = require('archivist-core/interview/tree');
 
-function getExtendedSubjects(mode, ids, cb) {
+exports.getExtendedSubjects(mode, ids, cb) {
   if (!ids || ids.length === 0) {
     return cb(null, []);
   }
@@ -26,4 +25,14 @@ function getExtendedSubjects(mode, ids, cb) {
   step(cb);
 }
 
-module.exports = getExtendedSubjects;
+exports.getSubjectTree(cb) {
+  request
+    .get(config.archive + '/api/subjects')
+    .end(function(err, res){
+      if(err) console.error(err);
+      var subjects = _.object(_.map(res.body.subjects, function(item) {
+        return [item.id, item];
+      }));
+      cb(err, new Tree(subjects));
+    });
+}

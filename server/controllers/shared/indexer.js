@@ -1,29 +1,17 @@
-var request = require('superagent');
+// We should remove this api
 
-var indexerUrl = process.env.INDEXER_URL;
+// var interviews = require('../indexer/interviews/op'),
+// 		interviews.queries = ('../indexer/interviews/queries'),
+// 		entities = require('../indexer/entities/op');
 
-exports.reindex = function(id, cb) {
-	var updateUrl = indexerUrl + "/update/document/" + id;
-	request
-		.get(updateUrl)
-	  .end(function(err, res){
-	  	if (res.ok) {
-       	cb(null);
-	    } else {
-	      cb(new Error(res.text));
-	    }
-	  });
-}
+// exports.interviews.update = function(id, cb) {
+// 	interviews.update(id, cb);
+// }
 
-exports.getSubjects = function(cb) {
-	var url = indexerUrl + "/subjects";
-	request
-		.get(url)
-	  .end(function(err, res){
-	  	if (res.ok) {
-       	cb(null, res.body);
-	    } else {
-	      cb(new Error(res.text));
-	    }
-	  });
-}
+// exports.interviews.update = function(id, cb) {
+// 	interviews.update(id, cb);
+// }
+
+// exports.getSubjects = function(cb) {
+// 	interviews.queries.countSubjects(cb);
+// }

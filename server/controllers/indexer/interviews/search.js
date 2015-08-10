@@ -2,7 +2,7 @@ var elasticsearch = require('elasticsearch');
 var config = require('../config');
 var _ = require('underscore');
 var getExtendedSubjects = require('./get_extended_subjects');
-var searchEntities = require('./search_entities');
+var searchEntities = require('../entities/search');
 
 function buildQuery(options) {
 
