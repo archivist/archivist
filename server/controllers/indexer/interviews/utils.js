@@ -1,12 +1,14 @@
 var _ = require('underscore'),
+    Subject = require('../../../models/subject'),
     Tree = require('archivist-core/interview/tree');
 
-exports.getExtendedSubjects(mode, ids, cb) {
+exports.getExtendedSubjects = function(mode, ids, cb) {
   if (!ids || ids.length === 0) {
     return cb(null, []);
   }
   var idx = 0;
   var result = ids.slice(0);
+  var subjectsTree;
   function step(cb) {
     if (idx >=ids.length) {
       result = _.uniq(result);
@@ -15,24 +17,22 @@ exports.getExtendedSubjects(mode, ids, cb) {
     }
     var subjectId = ids[idx++];
     if (mode === "children") {
-      getJSON(config.archive + '/api/subjects/children/'+subjectId, function(err, ids) {
-        if (err) return cb(err);
-        result = result.concat(ids);
-        step(cb);
-      });
+      children = subjectsTree.getAllChildren(subjectId);
+      result = result.concat(children);
+      step(cb);
     }
   }
-  step(cb);
+  Subject.listStructure(function(err, subjects) {
+    subjectsTree = new Tree(subjects);
+    step(cb)
+  });
 }
 
-exports.getSubjectTree(cb) {
-  request
-    .get(config.archive + '/api/subjects')
-    .end(function(err, res){
-      if(err) console.error(err);
-      var subjects = _.object(_.map(res.body.subjects, function(item) {
-        return [item.id, item];
-      }));
-      cb(err, new Tree(subjects));
-    });
+exports.getSubjectTree = function(cb) {
+  Subject.listStructure(function(err, subjects) {
+    var subjects = _.object(_.map(subjects, function(item) {
+      return [item.id, item];
+    }));
+    cb(err, new Tree(subjects));
+  });
 }

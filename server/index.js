@@ -78,8 +78,8 @@ app.use('/import', importer);
 
 app.route('/')
 	.get(function(req, res, next) {
-		//res.render('browser');
-    res.redirect('/archivist');
+		res.render('browser');
+    //res.redirect('/archivist');
   })
 
 app.route('/documents/:id')

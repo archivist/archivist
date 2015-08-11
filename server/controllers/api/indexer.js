@@ -1,13 +1,6 @@
 var express = require('express')
   , api = express.Router()
-  , interviews = require('../indexer/interviews/queries');
-
-  var _ = require('underscore');
-var express = require('express');
-var app = express();
-var queries = require('./src/queries');
-var index = require('./src/interview_op');
-
+  , interviews = require('../indexer/interviews/index');
 
 // Full search (including fragments)
 
@@ -23,7 +16,6 @@ var search = function(req, res, next) {
       query.searchString = query.searchStr;
     }
   }
-
   interviews.findDocumentsWithContent(query, function(error, result) {
     if (error) {
       res.send('500', error.message);
@@ -58,14 +50,10 @@ var searchDocument = function(req, res, next) {
   });
 }
 
-// Calculate subject frequency
+api.route('/index/search')
+  .get(search)
 
-var subjectFrequency = function(req, res, next) {
-	interviews.countSubjects(function(err, result) {
-    if (err) {
-      res.send('500', err.message);
-    } else {
-      res.status(200).json(result);
-    }
-  });
-}
+api.route('/index/search/document')
+  .get(searchDocument)
+
+module.exports = api;

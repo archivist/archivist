@@ -1,7 +1,8 @@
+var host = process.env.ES_HOST || 'http://localhost:9200';
+
 var config = {
   // Elastic Search host
-  host: 'http://46.101.222.220:9200',
-  // Archivist host
+  host: host,
 };
 
 module.exports = config;

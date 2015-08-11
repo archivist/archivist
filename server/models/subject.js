@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
   , async = require('async')
   , _ = require('underscore')
   , backup = require('../controllers/shared/backup.js')
-  , indexer = require('../controllers/shared/indexer.js')
+  , interviews = require('../controllers/indexer/interviews')
   , maintenance = require('../controllers/shared/maintenance.js')
   , rest = require('../controllers/shared/rest.js')
   , timestamps = require('mongoose-timestamp')
@@ -48,16 +48,26 @@ subjectSchema.statics.list = function(opt, cb) {
   var query = util.getQuery(opt.query),
       options = util.getOptions(opt);
 
-  indexer.getSubjects(function(err, counter){
+  interviews.countSubjects(function(err, counter){
     if(err) return cb(err);
     self.find(query, null, options, function(err, records) {
       _.each(records, function(subject, id) {
         records[id] = subject.toJSON();
-        records[id].counter = counter[subject._id] || 0;
+        records[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
       })
       cb(err, records);
     });
   });
+}
+
+/** 
+ * List records ids and parents
+ *
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+subjectSchema.statics.listStructure = function(cb) {
+  self.find({}, '_id parent name', cb);
 }
 
 /** 
@@ -67,16 +77,17 @@ subjectSchema.statics.list = function(opt, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-subjectSchema.statics.getChildren = function(id, cb) {
-  var self = this;
+// TODO: remove this method
+// subjectSchema.statics.getChildren = function(id, cb) {
+//   var self = this;
 
-  self.find({}, '_id parent', function(err, records) {
-    if(err) return cb(err);
-    var tree = new TreeModel(records);
-    var filtered = tree.getAllChildren(id);
-    cb(err, filtered);
-  });
-}
+//   self.find({}, '_id parent', function(err, records) {
+//     if(err) return cb(err);
+//     var tree = new TreeModel(records);
+//     var filtered = tree.getAllChildren(id);
+//     cb(err, filtered);
+//   });
+// }
 
 /** 
  * Updates record unique JSON

@@ -1,18 +1,18 @@
 #!/usr/bin/env node
 
 var elasticsearch = require('elasticsearch');
-var config = require('../../config');
+var config = require('../config');
 
 var _ = require('underscore');
-var getJSON = require('../get_json');
+var EntitiesList = require('../../api/entities.js').list;
 
 var seedIndex = function(cb) {
   var client = new elasticsearch.Client(_.clone(config));
-
-  getJSON(config.archive + '/api/entities', function(err, json){
+  
+  EntitiesList({}, function(err, records){
     if (err) return cb(err);
     var indexEntries = [];
-    var entities = json[1];
+    var entities = records[1];
     _.each(entities, function(entity){
       var shortData = {
         createdAt: entity.createdAt,

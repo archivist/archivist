@@ -194,7 +194,7 @@ var entitiesGetter = function(req, res, next) {
 
 api.route('/entities')
   .post(maintenance.checkCurrentMode, auth.checkAuth, entitiesGetter)
-  .get(/*auth.checkAuth, auth.check_scopes,*/ listEntities);
+  .get(auth.checkAuth, auth.check_scopes, listEntities);
 
 
 api.route('/entities/merge')

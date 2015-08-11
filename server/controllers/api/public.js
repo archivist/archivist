@@ -13,12 +13,12 @@ var Document = require('../../models/document.js')
 
 api.use(auth.allowCrossDomain);
 
-/* The Public REST api */
+/* The Public API */
 
 var readDocument = function(req, res, next) {
   Document.getCleaned(req.params.id, true, function(err, document) {
     if (err) return next(err);
-    cleanDocument(document, function(err, result) {
+    prepareDocument(document, function(err, result) {
       if (err) return next(err);
       res.json(result);
     });
@@ -39,15 +39,8 @@ var listDocuments = function(req, res, next) {
   });
 }
 
-var cleanDocument = function(doc, cb) {
+var prepareDocument = function(doc, cb) {
   var interview = new Interview.fromJson(doc);
-  interview.FORCE_TRANSACTIONS = false;
-  // Clean documents for public usage
-  _.each(doc.nodes, function(node, id){
-    if(node.type == "comment") {
-      interview.delete(id);
-    }
-  });
   async.parallel([
     function(callback){
       getSubjects(interview, callback);

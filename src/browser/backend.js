@@ -1,7 +1,7 @@
 var Substance = require("archivist-core").Substance;
 var Interview = require('archivist-core/interview');
 
-var API_URL = "http://ost-index.d4s.io";
+var API_URL = "/api/index";
 
 var Backend = function(opts) {
 
@@ -11,7 +11,7 @@ Backend.Prototype = function() {
 
   this.getSubjects = function(cb) {
     $.ajax({
-      url: "http://ost.d4s.io/api/subjects?page=1&sort_by=position&order=asc",
+      url: "/api/subjects?page=1&sort_by=position&order=asc",
       dataType: 'json',
       success: function(subjects) {
         cb(null, subjects);

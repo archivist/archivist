@@ -7,10 +7,11 @@ var Documents = require('./documents.js')
   , Entities = require('./entities.js').api
   , Search = require('./search.js')
   , Public = require('./public.js')
+  , Indexer = require('./indexer.js')
   , express = require('express')
   , api = express.Router();
 
-api.use('/', Documents, Subjects, Public, Entities, Definitions, Locations, Persons, Users, Search);
+api.use('/', Documents, Subjects, Public, Indexer, Entities, Definitions, Locations, Persons, Users, Search);
 
 api.use(function(err, req, res, next) {
   if (err.name === 'UnauthorizedError') {

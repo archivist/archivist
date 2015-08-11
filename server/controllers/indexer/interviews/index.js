@@ -1,8 +1,8 @@
-var _ = require('underscore');
-	queries = require('./queries'),
-	seed = require('./seed'),
-	op = require('./op');
+var _ = require('underscore'),
+		queries = require('./queries'),
+		seed = require('./seed'),
+		op = require('./op');
 
-exports = _.extend(queries, op);
+module.exports = _.extend(queries, op);
 
-exports.seed = seed;
+module.exports.seed = seed;

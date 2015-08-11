@@ -4,26 +4,26 @@ var elasticsearch = require('elasticsearch');
 var config = require('../config');
 
 var _ = require('underscore');
-var getJSON = require('./get_json');
 
+var Document = require('../../../models/document.js');
 var Interview = require('archivist-core/interview');
 var indexInterview = require('./op/index_interview');
 
 var idx = 0;
 var count = 0;
 var MAX_COUNT = -1;
-var documentUrs = [];
+var documentIds = [];
 
 function step(cb) {
-  if (idx >= documentUrs.length || (MAX_COUNT > 0 && count >= MAX_COUNT)) {
+  if (idx >= documentIds.length || (MAX_COUNT > 0 && count >= MAX_COUNT)) {
     cb(null);
     return;
   }
-  var url = documentUrs[idx++];
+  var docId = documentIds[idx++];
 
-  getJSON(url, function(err, json){
+  Document.getCleaned(docId, false, function(err, json){
     if (err) return cb(err);
-    console.log('Indexing interview %s...', url);
+    console.log('Indexing interview %s...', docId);
     var interview = new Interview.fromJson(json);
     var client = new elasticsearch.Client(_.clone(config));
     indexInterview(client, interview, function(err) {
@@ -39,12 +39,11 @@ var seedIndex = function(options, cb) {
   MAX_COUNT = options.MAX_COUNT || -1;
   count = 0;
 
-  getJSON(config.archive + '/api/documents', function(err, json){
+  Document.list({}, function(err, records){
     if (err) return cb(err);
-    var docs = json[1];
+    var docs = records[1];
     _.each(docs, function(doc){
-      var url = config.archive + '/api/documents/' + doc._id;
-      documentUrs.push(url);
+      documentIds.push(doc._id);
     });
 
     step(function(err) {

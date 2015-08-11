@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
   , System = require('./system.js')
   , async = require('async')
   , _ = require('underscore')
+  , Interview = require('archivist-core/interview')
   , indexer = require('../controllers/shared/indexer.js')
   , backup = require('../controllers/shared/backup.js')
   , util = require('../controllers/api/utils.js');
@@ -163,8 +164,29 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
       delete doc._schema;
       doc.schema = document._schema;
     }
-    cb(null, doc);
+    self.clean(doc, function(err, cleaned) {
+      cb(null, cleaned);
+    })
   });
+}
+
+/** 
+ * Gets document and cleans it from private data
+ *
+ * @param {string} doc - Document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.clean = function(doc, cb) {
+  var interview = new Interview.fromJson(doc);
+  interview.FORCE_TRANSACTIONS = false;
+  // Clean documents for public usage
+  _.each(doc.nodes, function(node, id){
+    if(node.type == "comment") {
+      interview.delete(id);
+    }
+  });
+  cb(null, interview.toJSON());
 }
 
 /** 
