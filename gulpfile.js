@@ -113,8 +113,8 @@ gulp.task('reader', ['reader-styles', 'reader-bundle']);
 // -------------
 
 gulp.task('browser-styles', function () {
-  gulp.src('./src/browser/app.css')
-    .pipe(importCSS())
+  gulp.src('./src/browser/app.scss')
+    .pipe(sass().on('error', sass.logError))
     .pipe(rename("browser.css"))
     .pipe(gulp.dest('./public/browser'));
 });

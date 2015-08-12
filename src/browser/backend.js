@@ -13,8 +13,8 @@ Backend.Prototype = function() {
     $.ajax({
       url: "/api/subjects?page=1&sort_by=position&order=asc",
       dataType: 'json',
-      success: function(subjects) {
-        cb(null, subjects);
+      success: function(res) {
+        cb(null, res.subjects);
       },
       error: function(err) {
         console.error(err.responseText);
