@@ -5,7 +5,6 @@ var mongoose = require('mongoose')
   , async = require('async')
   , _ = require('underscore')
   , backup = require('../controllers/shared/backup.js')
-  , interviews = require('../controllers/indexer/interviews')
   , maintenance = require('../controllers/shared/maintenance.js')
   , rest = require('../controllers/shared/rest.js')
   , timestamps = require('mongoose-timestamp')
@@ -48,16 +47,10 @@ subjectSchema.statics.list = function(opt, cb) {
   var query = util.getQuery(opt.query),
       options = util.getOptions(opt);
 
-  interviews.countSubjects(function(err, counter){
-    if(err) return cb(err);
     self.find(query, null, options, function(err, records) {
-      _.each(records, function(subject, id) {
-        records[id] = subject.toJSON();
-        records[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
-      })
+      if(err) return cb(err);
       cb(err, records);
     });
-  });
 }
 
 /** 
@@ -67,7 +60,7 @@ subjectSchema.statics.list = function(opt, cb) {
  */
 
 subjectSchema.statics.listStructure = function(cb) {
-  self.find({}, '_id parent name', cb);
+  this.find({}, '_id parent name', cb);
 }
 
 /** 

@@ -52,7 +52,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
 	var emptyDocJson = {
     "_id": docId,
     "id": docId,
-    "schema": [
+    "_schema": [
       "archivist-interview",
       "0.2.0"
     ],
@@ -152,17 +152,19 @@ documentSchema.statics.get = function(id, cb) {
  */
 
 documentSchema.statics.getCleaned = function(id, published, cb) {
+  var self = this;
+
   var query = {
     _id: id
   }
   if(published) query["nodes.document.published"] = true;
-
+  console.log(query)
   this.find(query, function(err, document) {
     if(err || _.isEmpty(document)) return cb('There is no such document, sorry...');
     doc = document[0].toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;
-      doc.schema = document._schema;
+      doc.schema = document[0]._schema;
     }
     self.clean(doc, function(err, cleaned) {
       cb(null, cleaned);
@@ -178,6 +180,7 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
  */
 
 documentSchema.statics.clean = function(doc, cb) {
+  doc.nodes.document.guid = doc.id;
   var interview = new Interview.fromJson(doc);
   interview.FORCE_TRANSACTIONS = false;
   // Clean documents for public usage

@@ -76,7 +76,7 @@ module.exports = function(schema, options) {
     var self = this,
         query = util.getQuery(opt.query),
         options = util.getOptions(opt);
-
+    
     self.count(query, function(err, counter) {
       if (err) return cb(err);
       self

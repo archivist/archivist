@@ -1,6 +1,7 @@
 var express = require('express')
+  , setupIndexer = require('../indexer/setup')
   , api = express.Router()
-  , interviews = require('../indexer/interviews/index');
+  , interviews = require('../indexer/interviews');
 
 // Full search (including fragments)
 
@@ -50,10 +51,20 @@ var searchDocument = function(req, res, next) {
   });
 }
 
+// Seed search indexes
+
+var seedIndexes = function(req, res, next) {
+  setupIndexer();
+  res.send(200);
+}
+
 api.route('/index/search')
   .get(search)
 
 api.route('/index/search/document')
   .get(searchDocument)
+
+api.route('/index/seed')
+  .get(seedIndexes)
 
 module.exports = api;

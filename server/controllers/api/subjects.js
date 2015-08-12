@@ -1,5 +1,6 @@
 var Subject = require('../../models/subject.js')
   , maintenance = require('../shared/maintenance.js')
+  , interviews = require('../indexer/interviews')
   , auth = require('../auth/utils.js')
   , express = require('express')
   , api = express.Router();
@@ -40,11 +41,18 @@ var deleteSubject = function(req, res, next) {
 
 var listSubjects = function(req, res, next) {
   Subject.getDBVersion(function(err, DBVersion) {
-    Subject.list(req.query, function(err, subjects) {
-      if (err) return next(err);
-      res.json({
-        subjectDBVersion: DBVersion,
-        subjects: subjects 
+    interviews.countSubjects(function(err, counter){
+      if(err) return cb(err);
+      Subject.list(req.query, function(err, subjects) {
+        if (err) return next(err);
+        _.each(subjects, function(subject, id) {
+          subjects[id] = subject.toJSON();
+          subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
+        })
+        res.json({
+          subjectDBVersion: DBVersion,
+          subjects: subjects 
+        });
       });
     });
   });
