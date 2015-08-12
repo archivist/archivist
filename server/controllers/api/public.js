@@ -119,7 +119,7 @@ var getResources = function(req, res, next) {
     }
   ],
   function(err, results){
-    if (err) return cb(err)
+    if (err) return next(err)
     var output = _.extend(results[0], results[1]);
     res.json(output);
   });

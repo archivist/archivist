@@ -115,7 +115,6 @@ gulp.task('reader', ['reader-styles', 'reader-bundle']);
 gulp.task('browser-styles', function () {
   gulp.src('./src/browser/app.css')
     .pipe(importCSS())
-    .pipe(minifyCSS({cache:true}))
     .pipe(rename("browser.css"))
     .pipe(gulp.dest('./public/browser'));
 });

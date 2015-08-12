@@ -43,6 +43,20 @@ Backend.Prototype = function() {
     });
   };
 
+  this.getNameMap = function(cb) {
+    $.ajax({
+      url: "/api/public/resources",
+      dataType: 'json',
+      success: function(result) {
+        cb(null, result);
+      },
+      error: function(err) {
+        console.error(err.responseText);
+        cb(err.responseText);
+      }
+    });
+  };
+
 };
 
 Substance.initClass(Backend);
