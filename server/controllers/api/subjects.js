@@ -2,6 +2,7 @@ var Subject = require('../../models/subject.js')
   , maintenance = require('../shared/maintenance.js')
   , interviews = require('../indexer/interviews')
   , auth = require('../auth/utils.js')
+  , _ = require('underscore')
   , express = require('express')
   , api = express.Router();
 

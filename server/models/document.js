@@ -158,7 +158,6 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
     _id: id
   }
   if(published) query["nodes.document.published"] = true;
-  console.log(query)
   this.find(query, function(err, document) {
     if(err || _.isEmpty(document)) return cb('There is no such document, sorry...');
     doc = document[0].toJSON();
