@@ -1,5 +1,7 @@
+var Document = require('../../../models/document.js');
 var Interview = require('archivist-core/interview');
 var indexInterview = require('./index_interview.js');
+var updateInterview = require('./update_interview.js');
 var deleteInterview = require('./delete_interview.js');
 var _ = require('underscore');
 var elasticsearch = require('elasticsearch');
@@ -40,7 +42,22 @@ var addToIndex = function(id, cb) {
  */
 
 var updateIndex = function(id, meta, cb) {
-  
+  var client = new elasticsearch.Client(_.clone(config));
+
+  Document.getCleaned(id, false, function(err, json){
+    if (err) return cb(err);
+    console.log('Indexing interview %s...', id);
+    var interview = new Interview.fromJson(json);
+    updateInterview(client, interview, meta, function(err) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Done.');
+      }
+      client.close();
+      cb(err);
+    });
+  });
 }
 
 /**
@@ -72,6 +89,7 @@ var deleteFromIndex = function(id, cb) {
 }
 
 module.exports = {
+  create: addToIndex,
   update: updateIndex,
   remove: deleteFromIndex
 }

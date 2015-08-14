@@ -3,7 +3,7 @@ var _ = require('underscore');
 global.$ = cheerio.load('', {decodeEntities: false});
 var utils = require('./utils');
 
-function _indexMeta(interview, commands, subjectTree) {
+function _indexMeta(interview, commands, update, subjectTree) {
   // calculate stats for subjects
   var subjectsCount = {};
   function _updateCounter(id) {
@@ -56,6 +56,13 @@ function _indexMeta(interview, commands, subjectTree) {
     _type: 'interview',
     _id: interview.id,
   }};
+  if(update) {
+    command = { "update" : {
+      _index: 'interviews',
+      _type: 'interview',
+      _id: interview.id,
+    }};
+  }
   var data = {
     "summary": documentNode.short_summary,
     "summary_en": documentNode.short_summary_en,
@@ -70,15 +77,15 @@ function _indexMeta(interview, commands, subjectTree) {
   commands.push(data);
 }
 
-function indexMeta(interview, commands, cb) {
+function indexMeta(interview, commands, update, cb) {
   utils.getSubjectTree(function(err, subjectTree) {
     if (err) return cb(err);
-    _indexMeta(interview, commands, subjectTree);
+    _indexMeta(interview, commands, update, subjectTree);
     cb(null);
   });
 }
 
-function indexFragments(interview, commands, cb) {
+function indexFragments(interview, commands, update, cb) {
   var htmlExporter = new interview.constructor.HtmlExporter({
     skipTypes: {
       'timecode': true
@@ -131,6 +138,14 @@ function indexFragments(interview, commands, cb) {
       _parent: interview.id,
       _id: entryId,
     }};
+    if(update) {
+      command = { "update" : {
+        _index: 'interviews',
+        _type: 'fragment',
+        _parent: interview.id,
+        _id: entryId,
+      }};
+    }
     var data = {
       id: nodeId,
       type: type,
@@ -162,11 +177,19 @@ module.exports = function getIndexingCommands(interview, mode, cb) {
     cb(null, commands);
   }
   if (mode === "meta") {
-    indexMeta(interview, commands, _finally);
-  } else {
-    indexMeta(interview, commands, function(err) {
+    // Update interview's metadata
+    indexMeta(interview, commands, true, _finally);
+  } else if (mode === "update") {
+    // Update interview's metadata and fragments
+    indexMeta(interview, commands, true, function(err) {
       if (err) return cb(err);
-      indexFragments(interview, commands, _finally);
+      indexFragments(interview, commands, true, _finally);
+    });
+  } else {
+    // Index interview's metadata and fragments
+    indexMeta(interview, commands, false, function(err) {
+      if (err) return cb(err);
+      indexFragments(interview, commands, false, _finally);
     });
   }
 };
