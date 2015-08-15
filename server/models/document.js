@@ -5,8 +5,10 @@ var mongoose = require('mongoose')
   , System = require('./system.js')
   , async = require('async')
   , _ = require('underscore')
+  , elasticsearch = require('elasticsearch')
+  , ESconfig = require('../controllers/indexer/config')
   , Interview = require('archivist-core/interview')
-  , indexer = require('../controllers/shared/indexer.js')
+  , indexer = require('../controllers/indexer/interviews')
   , backup = require('../controllers/shared/backup.js')
   , util = require('../controllers/api/utils.js');
 
@@ -227,7 +229,7 @@ documentSchema.statics.change = function(id, data, user, cb) {
       if (err) return cb(err);
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
         if (err) return cb(err);
-        indexer.reindex(id, function(err){
+        self.updateIndex(id, false, function(err){
           if(err) return cb(err);
           cb(err, {
             documentVersion: document.__v,
@@ -371,6 +373,89 @@ documentSchema.statics.validateStructure = function(id, cb) {
 
     return response;
   }
+}
+
+/* Indexer operations */
+
+/**
+ * Add Interview and all related fragments to index
+ *
+ * @param {string} id - Id of interview to add
+ * @param {function} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.addToIndex = function(id, cb) {
+  var client = new elasticsearch.Client(_.clone(ESconfig));
+
+  this.getCleaned(id, false, function(err, json){
+    if (err) return cb(err);
+    console.log('Indexing interview %s...', id);
+    var interview = new Interview.fromJson(json);
+    indexer.create(client, interview, function(err) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Done.');
+      }
+      client.close();
+      cb(err);
+    });
+  });
+}
+
+/**
+ * Update Interview record inside index
+ *
+ * @param {string} id - Id of interview to update
+ * @param {boolean} meta - Meta mode to update only Interview metadata, otherwise fragments will also updated 
+ * @param {function} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.updateIndex = function(id, meta, cb) {
+  var client = new elasticsearch.Client(_.clone(ESconfig));
+
+  this.getCleaned(id, false, function(err, json){
+    if (err) return cb(err);
+    console.log('Indexing interview %s...', id);
+    var interview = new Interview.fromJson(json);
+    indexer.update(client, interview, meta, function(err) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log('Done.');
+      }
+      client.close();
+      cb(err);
+    });
+  });
+}
+
+/**
+ * Removes Interview and all related fragments from index
+ *
+ * @param {string} id - Id of interview to remove
+ * @param {function} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.removeFromIndex = function(id, cb) {
+  var client = new elasticsearch.Client(_.clone(ESconfig));
+
+  indexer.remove.removeFragments(client, id).error(function(err) {
+    console.error("Failed.", arguments);
+    return cb(err);
+  }).then(function() {
+    client.close();
+    client = new elasticsearch.Client(_.clone(config));
+    console.log("All fragments for", id, "has been removed.");
+    deleteInterview.removeInterview(client, id).error(function(err) {
+      console.error("Failed.", arguments);
+      return cb(err);
+    }).then(function() {
+      client.close();
+      console.log("Interview", id, "has been removed from index.");
+      cb(null);
+    });
+  });
 }
  
 module.exports = mongoose.model('Document', documentSchema);
