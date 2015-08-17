@@ -45,7 +45,7 @@ var deleteSubject = function(req, res, next) {
 var listSubjects = function(req, res, next) {
   Subject.getDBVersion(function(err, DBVersion) {
     interviews.countSubjects(function(err, counter){
-      if(err) return cb(err);
+      if(err) return next(err);
       Subject.list(req.query, function(err, subjects) {
         if (err) return next(err);
         _.each(subjects, function(subject, id) {
