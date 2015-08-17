@@ -1,5 +1,4 @@
-var Document = require('../../models/document.js')
-  , System = require('../../models/system.js') 
+var System = require('../../models/system.js') 
   , util = require('../api/utils.js')
   , async = require('async')
   , _ = require('underscore');
@@ -97,6 +96,7 @@ module.exports = function(schema, options) {
 
   schema.statics.delete = function(id, cb) {
     var self = this;
+    var Document = require('../../models/document.js');
     // Unsave op (needs to be wrapped in a transaction)
     this.propagateChange(id, {mode: "delete"}, function(err) {
       if (err) return cb(err);
@@ -117,6 +117,7 @@ module.exports = function(schema, options) {
    */
    
   schema.statics.updateForDoc = function(docId, id, opt, cb) {
+    var Document = require('../../models/document.js');
     Document.getRecord(docId, function(err, doc) {
       if (err) return cb(err);
 
@@ -173,7 +174,8 @@ module.exports = function(schema, options) {
    
   schema.statics.propagateChange = function(id, opt, cb) {
     var self = this;
-
+    var Document = require('../../models/document.js');
+    
     Document.find({}, 'id', {}, function(err, documents) {
       async.each(documents, function(doc, cb) {
         self.updateForDoc(doc._id, id, opt, cb);
