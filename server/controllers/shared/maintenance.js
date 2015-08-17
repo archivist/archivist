@@ -1,5 +1,4 @@
-var Document = require('../../models/document.js')
-  , util = require('../api/utils.js')
+var util = require('../api/utils.js')
   , express = require('express')
   , _ = require('underscore')
   , maintenance = {};
@@ -74,6 +73,7 @@ maintenance.setMaintenanceMode = function(on, cb) {
  */
 
 maintenance.backupDocuments = function(cb) {
+  var Document = require('../../models/document.js');
   Document.backup(cb);
 }
 
@@ -84,6 +84,7 @@ maintenance.backupDocuments = function(cb) {
  */
 
 maintenance.restoreDocuments = function(cb) {
+  var Document = require('../../models/document.js');
   Document.restore(cb);
 }
 
