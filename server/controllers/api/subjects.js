@@ -1,4 +1,5 @@
 var Subject = require('../../models/subject.js')
+  , Document = require('../../models/document.js')
   , maintenance = require('../shared/maintenance.js')
   , interviews = require('../indexer/interviews')
   , auth = require('../auth/utils.js')
@@ -36,6 +37,7 @@ var updateSubject = function(req, res, next) {
 var deleteSubject = function(req, res, next) {
   Subject.delete(req.params.id, function(err) {
     if (err) return next(err);
+    Document.reindex(false);
     res.json(200);
   });
 }
@@ -71,6 +73,7 @@ var mergeSubjects = function(req, res, next) {
   req.socket.setTimeout(800000);
   Subject.merge(req.query.one, req.query.into, function(err) {
     if (err) return next(err);
+    Document.reindex(false);
     res.json(200);
   });
 }
@@ -78,6 +81,7 @@ var mergeSubjects = function(req, res, next) {
 var moveSubjects = function(req, res, next) {
   Subject.move(req.query.oldparent, req.query.newparent, req.query.node, req.query.oldpos, req.query.newpos, req.user, function(err) {
     if (err) return res.status(500).send(err.stack);
+    Document.reindex(true);
     res.json(200);
   });
 }

@@ -161,6 +161,7 @@ var mergeEntities = function(req, res, next) {
   findEntityById(one, function(err, model) {
     if(err) return res.status(500).send(err.message);
     model.merge(one, into, function(err){
+      Document.reindex(false);
       if (err) return next(err);
       res.json(200);
     })

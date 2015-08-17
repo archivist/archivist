@@ -102,6 +102,7 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.findByIdAndRemove(id, function (err) {
         if (err) return cb(err);
+        Document.reindex(false);
         self.incrementDBVersion(cb);
       });
     });

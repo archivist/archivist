@@ -52,7 +52,8 @@ documentSchema.statics.add = function(document, cb) {
 }
 
 documentSchema.statics.createEmpty = function(user, cb) {
-	var docId = mongoose.Types.ObjectId();
+	var self = this;
+  var docId = mongoose.Types.ObjectId();
 
 	var emptyDocJson = {
     "_id": docId,
@@ -125,7 +126,10 @@ documentSchema.statics.createEmpty = function(user, cb) {
 	
 	var emptyDoc = new this(emptyDocJson);
   emptyDoc.save(function(err, emptyDoc) {
-    cb(err, emptyDoc);
+    self.addToIndex(docId, function(err){
+      if (err) return cb(err);
+      cb(err, emptyDoc);
+    })
   });
 }
 
@@ -252,8 +256,12 @@ documentSchema.statics.change = function(id, data, user, cb) {
  */
 
 documentSchema.statics.delete = function(id, cb) {
+  var self = this;
   this.findByIdAndRemove(id, function (err) {
-    cb(err);
+    self.removeFromIndex(id, function(err){
+      if (err) return cb(err);
+      cb(err);
+    });
   });
 }
 
