@@ -337,7 +337,7 @@ exports.loadSPPersons = function(id, cb) {
 
 // Load specific interview by mongo id, returns substance doc
 exports.loadInterview = function(id, cb) {
-  Document.get(id, function(err, doc){
+  Document.getRecord(id, function(err, doc){
     if (err) return cb(err);
     var interview = new Interview(doc);
     interview.version = doc.__v;

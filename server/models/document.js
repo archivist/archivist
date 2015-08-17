@@ -19,6 +19,9 @@ var documentSchema = new Schema({
 
 documentSchema.set('toJSON', { getters: true, virtuals: true });
 
+documentSchema.set('indexing', false);
+documentSchema.set('reindex', false);
+
 documentSchema.index({'nodes.document.updated_at': 1}, {background: true});
 documentSchema.index({'nodes.document.title': 1}, {background: true});
 
@@ -133,7 +136,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
  * @param {callback} cb - The callback that handles the results 
  */
 
-documentSchema.statics.get = function(id, cb) {
+documentSchema.statics.getRecord = function(id, cb) {
   this.findById(id, function(err, document) {
     if(err || _.isNull(document)) return cb('There is no such document, sorry...');
     doc = document.toJSON();
@@ -416,7 +419,7 @@ documentSchema.statics.updateIndex = function(id, meta, cb) {
 
   this.getCleaned(id, false, function(err, json){
     if (err) return cb(err);
-    console.log('Indexing interview %s...', id);
+    console.log('Updating index, interview %s...', id);
     var interview = new Interview.fromJson(json);
     indexer.update(client, interview, meta, function(err) {
       if (err) {
@@ -456,6 +459,60 @@ documentSchema.statics.removeFromIndex = function(id, cb) {
       cb(null);
     });
   });
+}
+
+
+
+documentSchema.statics.reindex = function(meta) {
+  var self = this;
+
+  function _set(property, value) {
+    documentSchema.set(property, value);
+  }
+
+  function _get(property) {
+    return documentSchema.get(property);
+  }
+
+  function _requsetReindex(meta) {
+    console.log('Reindexing requested')
+    _set('reindex', {meta: meta});
+  }
+
+  function _reindex(meta) {
+    console.log('Running reindex, meta flag:', meta);
+    _set('reindex', false);
+    _set('indexing', true);
+    self.list({}, function(err, records) {
+      if (err) throw err;
+      var docs = records[1];
+      async.eachSeries(docs, function(doc, callback) {
+        var reindex = _get('reindex');
+        if(!reindex) {
+          console.log('Reindexing', doc._id);
+          self.updateIndex(doc._id, meta, callback);
+        } else if (reindex.meta || reindex.meta == meta) {
+          console.log('Aborting reindex, meta flag:', reindex.meta);
+          callback(true);
+        }
+      }, function(err) {
+        console.log('Reindexing finished');
+        _set('indexing', false);
+        var reindex = _get('reindex');
+        if(reindex) {
+          _reindex(reindex.meta);
+        }
+      });
+    });
+  }
+
+  var indexing = _get('indexing');
+  console.log('indexing flag:', indexing);
+  if(indexing) {
+    _requsetReindex(meta);
+  } else {
+    _reindex(meta);
+  }
 }
  
 module.exports = mongoose.model('Document', documentSchema);

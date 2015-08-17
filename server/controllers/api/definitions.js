@@ -15,7 +15,7 @@ var createDefinition = function(req, res, next) {
 }
 
 var readDefinition = function(req, res, next) {
-  Definition.get(req.params.id, function(err, definition) {
+  Definition.getRecord(req.params.id, function(err, definition) {
     if (err) return next(err);
     res.json(definition);
   });

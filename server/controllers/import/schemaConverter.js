@@ -3,7 +3,7 @@ var Document = require('../../models/document.js')
 
 module.exports = function(docId, cb) {
 
-	Document.get(docId, function(err, doc) {
+	Document.getRecord(docId, function(err, doc) {
 	  if (err) return cb(err);
 
 	  _.each(doc.nodes, function(node) {

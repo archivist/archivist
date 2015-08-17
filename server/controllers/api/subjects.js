@@ -20,7 +20,7 @@ var createSubject = function(req, res, next) {
 }
 
 var readSubject = function(req, res, next) {
-  Subject.get(req.params.id, function(err, subject) {
+  Subject.getRecord(req.params.id, function(err, subject) {
     if (err) return next(err);
     res.json(subject);
   });

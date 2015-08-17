@@ -59,7 +59,7 @@ module.exports = function(schema, options) {
    * @param {callback} cb - The callback that handles the results 
    */
 
-  schema.statics.get = function(id, cb) {
+  schema.statics.getRecord = function(id, cb) {
     this.findById(id, function(err, record) {
       cb(err, record);
     });
@@ -116,7 +116,7 @@ module.exports = function(schema, options) {
    */
    
   schema.statics.updateForDoc = function(docId, id, opt, cb) {
-    Document.get(docId, function(err, doc) {
+    Document.getRecord(docId, function(err, doc) {
       if (err) return cb(err);
 
       console.log("docid;", docId, "referenceId", id, "options", opt);

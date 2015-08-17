@@ -16,7 +16,7 @@ var createLocation = function(req, res, next) {
 }
 
 var readLocation = function(req, res, next) {
-  Location.get(req.params.id, function(err, location) {
+  Location.getRecord(req.params.id, function(err, location) {
     if (err) return next(err);
     res.json(location);
   });

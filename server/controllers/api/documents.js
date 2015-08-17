@@ -15,7 +15,7 @@ var createDocument = function(req, res, next) {
 
 
 var readDocument = function(req, res, next) {
-  Document.get(req.params.id, function(err, document) {
+  Document.getRecord(req.params.id, function(err, document) {
     if (err) return next(err);
     res.json(document);
   });

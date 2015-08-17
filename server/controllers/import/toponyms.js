@@ -28,7 +28,7 @@ var annotateToponyms = function(doc, cb) {
 	utils.loadSPToponyms(SPId, function(err, toponyms){
 		if (err) return cb(err);
 		async.eachSeries(toponyms, function(topo, callback){
-			Location.get(topo.id, function(err, location) {
+			Location.getRecord(topo.id, function(err, location) {
     		if (err) return cb(err);
     		if(_.isNull(location)) console.log('location', topo.id);
     		topo.synonyms = location.synonyms;

@@ -51,19 +51,14 @@ function _indexMeta(interview, commands, update, subjectTree) {
   });
 
   var documentNode = interview.get('document');
-  var command = { "index" : {
+  var command = {};
+  var commandName = update ? 'update' : 'index';
+  command[commandName] = {
     _index: 'interviews',
     _type: 'interview',
     _id: interview.id,
-  }};
-  if(update) {
-    command = { "update" : {
-      _index: 'interviews',
-      _type: 'interview',
-      _id: interview.id,
-    }};
-  }
-  var data = {
+  };
+  var metadata = {
     "summary": documentNode.short_summary,
     "summary_en": documentNode.short_summary_en,
     "title": documentNode.title,
@@ -73,6 +68,11 @@ function _indexMeta(interview, commands, update, subjectTree) {
     "entities": entities,
     "entities_count": entitiesCount,
   };
+  if (update) {
+    var data = {"doc": metadata};
+  } else {
+    var data = metadata;
+  }
   commands.push(command);
   commands.push(data);
 }
@@ -132,21 +132,15 @@ function indexFragments(interview, commands, update, cb) {
     subjectFacets = _.uniq(subjectFacets);
 
     var entryId = nodeId;
-    var command = { "index" : {
+    var command = {};
+    var commandName = update ? 'update' : 'index';
+    command[commandName] = {
       _index: 'interviews',
       _type: 'fragment',
       _parent: interview.id,
-      _id: entryId,
-    }};
-    if(update) {
-      command = { "update" : {
-        _index: 'interviews',
-        _type: 'fragment',
-        _parent: interview.id,
-        _id: entryId,
-      }};
-    }
-    var data = {
+      _id: entryId
+    };
+    var metadata = {
       id: nodeId,
       type: type,
       content: nodeHtml,
@@ -154,6 +148,11 @@ function indexFragments(interview, commands, update, cb) {
       subjects: subjectFacets,
       entities: entityFacets
     };
+    if (update) {
+      var data = {"doc": metadata};
+    } else {
+      var data = metadata;
+    }
     commands.push(command);
     commands.push(data);
   });

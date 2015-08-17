@@ -28,7 +28,7 @@ var annotatePrisons = function(doc, cb) {
 	utils.loadSPPrisons(SPId, function(err, toponyms){
 		if (err) return cb(err);
 		async.eachSeries(toponyms, function(topo, callback){
-			Location.get(topo.id, function(err, location) {
+			Location.getRecord(topo.id, function(err, location) {
     		if (err) return cb(err);
     		topo.synonyms = location.synonyms;
     		findPrisons(topo, doc, callback);

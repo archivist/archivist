@@ -282,7 +282,7 @@ userSchema.statics.checkTokenExistance = function(user, token, cb) {
 
 userSchema.statics.renewToken = function(user, token, cb) {
   var self = this;
-  self.get(user, function(err, profile) {
+  self.getRecord(user, function(err, profile) {
     if(err) return cb(err);
     self.issueToken(profile, function(err, tokenData) {
       if(err) return cb(err);

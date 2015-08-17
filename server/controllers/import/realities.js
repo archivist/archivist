@@ -28,7 +28,7 @@ var annotateDefinitions = function(doc, cb) {
 	utils.loadSPRealities(SPId, tableId, function(err, realities){
 		if (err) return cb(err);
 		async.eachSeries(realities, function(reality, callback){
-			Definition.get(reality.id, function(err, definition) {
+			Definition.getRecord(reality.id, function(err, definition) {
     		if (err) return cb(err);
     		if(_.isNull(definition)) console.log(reality)
     		reality.synonyms = definition.synonyms;

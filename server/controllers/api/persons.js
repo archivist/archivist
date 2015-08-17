@@ -15,7 +15,7 @@ var createPerson = function(req, res, next) {
 }
 
 var readPerson = function(req, res, next) {
-  Person.get(req.params.id, function(err, person) {
+  Person.getRecord(req.params.id, function(err, person) {
     if (err) return next(err);
     res.json(person);
   });

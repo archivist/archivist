@@ -8,7 +8,7 @@ api.use(auth.checkAuth);
 /* The User api */
 
 var readUser = function(req, res, next) {
-  User.get(req.params.id, function(err, user) {
+  User.getRecord(req.params.id, function(err, user) {
     if (err) return next(err);
     res.json(user);
   });
