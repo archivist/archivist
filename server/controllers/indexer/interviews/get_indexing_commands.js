@@ -149,7 +149,7 @@ function indexFragments(interview, commands, update, cb) {
       entities: entityFacets
     };
     if (update) {
-      var data = {"doc": metadata};
+      var data = {"doc": metadata, "upsert": metadata};
     } else {
       var data = metadata;
     }

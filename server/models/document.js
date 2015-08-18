@@ -181,6 +181,35 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
 }
 
 /** 
+ * Gets metadata of document
+ *
+ * @param {string} id - The unique id of target document record
+ * @param {callback} cb - The callback that handles the results 
+ */
+
+documentSchema.statics.getMetadata = function(id, cb) {
+  var self = this;
+
+  var query = this.find({ _id: id }).select('nodes.document _id _schema');
+  query.exec(function (err, document) {
+    if(err || _.isEmpty(document)) return cb('There is no such document, sorry...');
+    doc = document[0].toJSON();
+    if (doc.hasOwnProperty('_schema')) {
+      delete doc._schema;
+      doc.schema = document[0]._schema;
+    }
+    doc.nodes.content = {
+      nodes: [],
+      type: "container",
+      id: "content"
+    }
+    self.clean(doc, function(err, cleaned) {
+      cb(null, cleaned);
+    })
+  });
+}
+
+/** 
  * Gets document and cleans it from private data
  *
  * @param {string} doc - Document record

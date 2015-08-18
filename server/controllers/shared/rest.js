@@ -1,4 +1,5 @@
-var System = require('../../models/system.js') 
+var System = require('../../models/system.js')
+  , entityIndex = require('../indexer/entities/op')
   , util = require('../api/utils.js')
   , async = require('async')
   , _ = require('underscore');
@@ -23,7 +24,9 @@ module.exports = function(schema, options) {
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
-      cb(err, record);
+      entityIndex.index(record, false, function(err){
+        cb(err, record);
+      });
     })
   }
 
@@ -44,9 +47,12 @@ module.exports = function(schema, options) {
 
     delete data.__v;
     self.findByIdAndUpdate(id, { $set: data }, { upsert: true, new: true }, function (err, record) {
-      if (err) return err;
+      if (err) return cb(err);
       self.incrementDBVersion(function(err) {
-        cb(err, record);
+        if (err) return cb(err)
+        entityIndex.index(record, true, function(err){
+          cb(err, record);
+        });
       });
     });
   }
@@ -102,8 +108,10 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.findByIdAndRemove(id, function (err) {
         if (err) return cb(err);
-        Document.reindex(false);
-        self.incrementDBVersion(cb);
+        entityIndex.remove(id, function(){
+          Document.reindex(false);
+          self.incrementDBVersion(cb);
+        })
       });
     });
   };
