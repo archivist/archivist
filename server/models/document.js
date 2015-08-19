@@ -487,7 +487,7 @@ documentSchema.statics.removeFromIndex = function(id, cb) {
     client.close();
     client = new elasticsearch.Client(_.clone(config));
     console.log("All fragments for", id, "has been removed.");
-    deleteInterview.removeInterview(client, id).error(function(err) {
+    indexer.remove.removeInterview(client, id).error(function(err) {
       console.error("Failed.", arguments);
       return cb(err);
     }).then(function() {

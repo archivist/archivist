@@ -6,6 +6,7 @@ var express = require('express')
 // Full search (including fragments)
 
 var search = function(req, res, next) {
+  console.time("search interviews")
   var query = {
     searchString: "",
     filters: {}
@@ -18,6 +19,7 @@ var search = function(req, res, next) {
     }
   }
   interviews.findDocumentsWithContent(query, function(error, result) {
+    console.timeEnd("search interviews")
     if (error) {
       res.send('500', error.message);
     } else {
@@ -26,7 +28,7 @@ var search = function(req, res, next) {
   });
 }
 
-// Search fragments inside one intrview
+// Search fragments inside one interview
 
 var searchDocument = function(req, res, next) {
 	var query = {
@@ -54,8 +56,13 @@ var searchDocument = function(req, res, next) {
 // Seed search indexes
 
 var seedIndexes = function(req, res, next) {
-  setupIndexer();
-  res.send(200);
+  if(req.hostname == "localhost") {
+    setupIndexer();
+    res.send(200);
+  } else {
+    console(req.hostname)
+    res.send(500);
+  }
 }
 
 api.route('/index/search')

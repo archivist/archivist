@@ -43,6 +43,7 @@ var deleteSubject = function(req, res, next) {
 }
 
 var listSubjects = function(req, res, next) {
+  console.time("list subjects")
   Subject.getDBVersion(function(err, DBVersion) {
     interviews.countSubjects(function(err, counter){
       if(err) return next(err);
@@ -52,6 +53,7 @@ var listSubjects = function(req, res, next) {
           subjects[id] = subject.toJSON();
           subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
         })
+        console.timeEnd("list subjects")
         res.json({
           subjectDBVersion: DBVersion,
           subjects: subjects 

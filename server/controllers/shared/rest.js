@@ -102,14 +102,12 @@ module.exports = function(schema, options) {
 
   schema.statics.delete = function(id, cb) {
     var self = this;
-    var Document = require('../../models/document.js');
     // Unsave op (needs to be wrapped in a transaction)
     this.propagateChange(id, {mode: "delete"}, function(err) {
       if (err) return cb(err);
       self.findByIdAndRemove(id, function (err) {
         if (err) return cb(err);
         entityIndex.remove(id, function(){
-          Document.reindex(false);
           self.incrementDBVersion(cb);
         })
       });

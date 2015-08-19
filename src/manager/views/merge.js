@@ -32,7 +32,9 @@ var MergeGrid = Grid.main.extend({
       if(selected) {
         var selection = this.grid.getSelectedModels();
         _.each(selection, function(selmodel){
-          if(selmodel.id != model.id) selmodel.trigger("backgrid:select", selmodel, false);
+          if(!_.isUndefined(selmodel)){
+            if(selmodel.id != model.id) selmodel.trigger("backgrid:select", selmodel, false);
+          }
         });
       }
     }.bind(this));
@@ -69,15 +71,18 @@ var MergeGrid = Grid.main.extend({
     }
   },
   _mergeInto: function() {
+    var self = this;
     var selected = this.grid.getSelectedModels();
-    if(!_.isUndefined(selected[0]) && this.merge) {
-      this.merge.into = selected[0].id;
-      this.mergeNames.into = selected[0].get('name');
-      if(this.merge.one != this.merge.into) {
-        $(this.$el).find('.merge-state').text('Will merge ' + this.mergeNames.one + ' into ' + this.mergeNames.into);
-        showDialog(this.merge, this.collection, this.collection.get(this.merge.one));
-      }
-    }
+    _.each(selected, function(sel){
+      if(!_.isUndefined(sel) && this.merge) {
+        self.merge.into = sel.id;
+        self.mergeNames.into = sel.get('name');
+        if(self.merge.one != self.merge.into) {
+          $(self.$el).find('.merge-state').text('Will merge ' + self.mergeNames.one + ' into ' + self.mergeNames.into);
+          showDialog(self.merge, self.collection, self.collection.get(self.merge.one));
+        }
+      } 
+    });
   },
   panel: [
     {
