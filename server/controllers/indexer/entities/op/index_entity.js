@@ -12,7 +12,7 @@ var indexEntity = function(entity, update, cb) {
     description: entity.description
   };
 
-  if (update) shortData = {doc: shortData};
+  if (update) shortData = {doc: shortData, upsert: shortData};
   
   if(entity.type == 'toponym' || entity.type == 'prison') {
     shortData.country = entity.country;

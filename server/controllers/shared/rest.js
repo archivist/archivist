@@ -19,8 +19,8 @@ module.exports = function(schema, options) {
   schema.statics.add = function(data, user, cb) {
     var self = this;
 
-    data.edited = user._id;
-    data.created = user._id;
+    data.edited = user.iss;
+    data.created = user.iss;
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
@@ -42,7 +42,7 @@ module.exports = function(schema, options) {
   schema.statics.change = function(id, data, user, cb) {
     var self = this;
 
-    data.edited = user._id;
+    data.edited = user.iss;
     data.updatedAt = new Date;
 
     delete data.__v;
