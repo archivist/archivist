@@ -1,9 +1,6 @@
 var _ = require('underscore');
-var elasticsearch = require('elasticsearch');
-var config = require('../../config');
-var client = new elasticsearch.Client(_.clone(config));
 
-var indexEntity = function(entity, update, cb) {
+var indexEntity = function(client, entity, update, cb) {
   var shortData = {
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,

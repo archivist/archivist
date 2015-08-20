@@ -3,7 +3,7 @@
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "version": "1.0.0",
   "dependencies": {
-    "archivist-core": "substance/archivist-core#09d7b32f2b2c140b70a54f6583a808a41d7d2da3",
+    "archivist-core": "substance/archivist-core#e8a943bc1cfe856b3912a60fac6b994dfefeac5a",
     "async": "^0.9.0",
     "babelify": "^6.1.2",
     "body-parser": "*",
@@ -27,6 +27,7 @@
     "mongoose-text-search": "0.0.2",
     "mongoose-timestamp": "^0.4.0",
     "morgan": "*",
+    "multer": "^1.0.3",
     "node-polyglot": "^0.4.3",
     "nprogress": "^0.2.0",
     "passport": "^0.2.1",

@@ -1,4 +1,6 @@
 var System = require('../../models/system.js')
+  , elasticsearch = require('elasticsearch')
+  , ESconfig = require('../indexer/config')
   , entityIndex = require('../indexer/entities/op')
   , util = require('../api/utils.js')
   , async = require('async')
@@ -17,14 +19,15 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.add = function(data, user, cb) {
-    var self = this;
+    var client = new elasticsearch.Client(_.clone(ESconfig));
 
+    var self = this;
     data.edited = user.iss;
     data.created = user.iss;
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
-      entityIndex.index(record, false, function(err){
+      entityIndex.index(client, record, false, function(err){
         cb(err, record);
       });
     })
@@ -40,6 +43,8 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.change = function(id, data, user, cb) {
+    var client = new elasticsearch.Client(_.clone(ESconfig));
+
     var self = this;
 
     data.edited = user.iss;
@@ -50,7 +55,7 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.incrementDBVersion(function(err) {
         if (err) return cb(err)
-        entityIndex.index(record, true, function(err){
+        entityIndex.index(client, record, true, function(err){
           cb(err, record);
         });
       });
@@ -101,6 +106,8 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.delete = function(id, cb) {
+    var client = new elasticsearch.Client(_.clone(ESconfig));
+
     var self = this;
     // Unsave op (needs to be wrapped in a transaction)
     this.propagateChange(id, {mode: "delete"}, function(err) {

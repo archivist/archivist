@@ -150,7 +150,7 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
       control.geocodeExternal(val);
     });
 
-    L.Icon.Default.imagePath = '/assets/leaflet'
+    L.Icon.Default.imagePath = '/assets/img/leaflet'
 
     function select(geocoder, el) {
         if (selection) {

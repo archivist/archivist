@@ -1,4 +1,6 @@
 var maintenance = require('./maintenance.js')
+  , elasticsearch = require('elasticsearch')
+  , ESconfig = require('../indexer/config');
 
 module.exports = function(schema, options) {
   options = options || {};
@@ -13,6 +15,8 @@ module.exports = function(schema, options) {
  */
 
 schema.statics.merge = function(entityId, newEntityId, cb) {
+  var client = new elasticsearch.Client(_.clone(ESconfig));
+
   var self = this;
   
   console.log("Let's merge " + entityId + " into " + newEntityId + "!");
@@ -21,7 +25,13 @@ schema.statics.merge = function(entityId, newEntityId, cb) {
     self.propagateChange(entityId, {mode: "replace", newReferenceId: newEntityId}, function(err) {
       if (err) return cb(err);
       self.findByIdAndRemove(entityId, function (err, entity) {
-        cb(err);
+        if (err) return cb(err)
+        self.incrementDBVersion(function(err) {
+          if (err) return cb(err)
+          entityIndex.index(client, record, true, function(err){
+            cb(err, record);
+          });
+        });
       });
     });
   }
