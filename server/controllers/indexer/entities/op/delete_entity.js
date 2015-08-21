@@ -1,9 +1,6 @@
 var _ = require('underscore');
-var elasticsearch = require('elasticsearch');
-var config = require('../../config');
-var client = new elasticsearch.Client(_.clone(config));
 
-var removeEntity = function(entityId, cb) {
+var removeEntity = function(client, entityId, cb) {
 	client.delete({
     index: 'entities',
     type: 'entity',

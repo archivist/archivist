@@ -27,7 +27,6 @@
     "mongoose-text-search": "0.0.2",
     "mongoose-timestamp": "^0.4.0",
     "morgan": "*",
-    "multer": "^1.0.3",
     "node-polyglot": "^0.4.3",
     "nprogress": "^0.2.0",
     "passport": "^0.2.1",
