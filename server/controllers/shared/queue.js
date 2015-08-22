@@ -154,4 +154,14 @@ queue.cleanEntities = function() {
 	this.cleanTasksByType('entity');
 }
 
+queue.clean = function() {
+	this.tasks = [];
+}
+
+queue.requestFullReindex = function() {
+	this.clean();
+	this.add({type: 'entity', op: 'reindex'});
+	this.add({type: 'document', op: 'reindex', meta: false});
+}
+
 module.exports = queue;
