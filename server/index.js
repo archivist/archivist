@@ -62,7 +62,7 @@ app.use(morgan('tiny'));
 
 // MONGOOSE CONNECTION
 
-mongoose.connection.on("fullsetup", function(ref) {
+mongoose.connection.on("open", function(ref) {
 	app.listen(port, function() {
     console.log("Archivist server listening on port %d", port);
   });
