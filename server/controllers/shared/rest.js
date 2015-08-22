@@ -1,7 +1,5 @@
 var System = require('../../models/system.js')
-  , elasticsearch = require('elasticsearch')
-  , ESconfig = require('../indexer/config')
-  , entityIndex = require('../indexer/entities/op')
+  , indexQueue = require('./queue.js')
   , util = require('../api/utils.js')
   , async = require('async')
   , _ = require('underscore');
@@ -27,9 +25,8 @@ module.exports = function(schema, options) {
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
-      entityIndex.index(client, record, false, function(err){
-        cb(err, record);
-      });
+      indexQueue.add({type: 'entity', op: 'add', record: record});
+      cb(err, record);
     })
   }
 
@@ -55,9 +52,8 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.incrementDBVersion(function(err) {
         if (err) return cb(err)
-        entityIndex.index(client, record, true, function(err){
-          cb(err, record);
-        });
+        indexQueue.add({type: 'entity', op: 'update', record: record});
+        cb(err, record);
       });
     });
   }
@@ -114,9 +110,8 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.findByIdAndRemove(id, function (err) {
         if (err) return cb(err);
-        entityIndex.remove(id, function(){
-          self.incrementDBVersion(cb);
-        })
+        indexQueue.add({type: 'entity', op: 'remove', id: id});
+        self.incrementDBVersion(cb);
       });
     });
   };

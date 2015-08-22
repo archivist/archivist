@@ -1,9 +1,5 @@
 var async = require('async');
 var index = process.env.INDEX || false;
-var EntityIndex = require('../indexer/entities/op');
-var EntitiesList = require('../api/entities.js').list;
-var elasticsearch = require('elasticsearch');
-var ESconfig = require('../indexer/config');
 
 // task object: {type: 'document', op: 'index', id: '', record: {}, meta: false}
 
@@ -72,6 +68,7 @@ var entityHandler = function(client, data, callback) {
 }
 
 var requestEntityReindex = function(callback) {
+	var EntitiesList = require('../api/entities.js').list;
 	queue.cleanEntities();
 	EntitiesList({}, function(err, records){
     if (err) return callback(err);
@@ -112,19 +109,23 @@ var queue = async.queue(taskHandler);
  */
 
 queue.add = function(task) {
-	if(!index) return;
+	if(!index) {
+		console.log("Skipping indexing request, elasticsearch isn't configured");
+		return;
+	}
 	var self = this;
 	function _push(data) {
 		self.push(data, function(err){
 			if(err) return _push(data);
 			console.log('finished task');
 		});
+		console.log('Indexing request added to queue')
 	}
 	_push(task);
 }
 
 queue.drain = function() {
-  console.log('all tasks have been processed');
+  console.log('All indexing tasks have been processed');
 }
 
 queue.cleanTasksByType = function(type) {

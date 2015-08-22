@@ -9,6 +9,7 @@ var mongoose = require('mongoose')
   , ESconfig = require('../controllers/indexer/config')
   , Interview = require('archivist-core/interview')
   , indexer = require('../controllers/indexer/interviews')
+  , indexQueue = require('../controllers/shared/queue.js')
   , backup = require('../controllers/shared/backup.js')
   , util = require('../controllers/api/utils.js');
 
@@ -19,8 +20,9 @@ var documentSchema = new Schema({
 
 documentSchema.set('toJSON', { getters: true, virtuals: true });
 
-documentSchema.set('indexing', false);
-documentSchema.set('reindex', false);
+// TODO: remove this variables as we have queue
+// documentSchema.set('indexing', false);
+// documentSchema.set('reindex', false);
 
 documentSchema.index({'nodes.document.updated_at': 1}, {background: true});
 documentSchema.index({'nodes.document.title': 1}, {background: true});
@@ -126,10 +128,9 @@ documentSchema.statics.createEmpty = function(user, cb) {
 	
 	var emptyDoc = new this(emptyDocJson);
   emptyDoc.save(function(err, emptyDoc) {
-    self.addToIndex(docId, function(err){
-      if (err) return cb(err);
-      cb(err, emptyDoc);
-    })
+    if (err) return cb(err);
+    indexQueue.add({type: 'document', op: 'add', id: docId});
+    cb(err, emptyDoc);
   });
 }
 
@@ -265,12 +266,10 @@ documentSchema.statics.change = function(id, data, user, cb) {
       if (err) return cb(err);
       self.getSubjectDBVersion(function(err, subjectDBVersion) {
         if (err) return cb(err);
-        self.updateIndex(id, false, function(err){
-          if(err) return cb(err);
-          cb(err, {
-            documentVersion: document.__v,
-            subjectDBVersion: subjectDBVersion
-          });
+        indexQueue.add({type: 'document', op: 'update', id: id});
+        cb(err, {
+          documentVersion: document.__v,
+          subjectDBVersion: subjectDBVersion
         });
       });
     });
@@ -287,10 +286,9 @@ documentSchema.statics.change = function(id, data, user, cb) {
 documentSchema.statics.delete = function(id, cb) {
   var self = this;
   this.findByIdAndRemove(id, function (err) {
-    self.removeFromIndex(id, function(err){
-      if (err) return cb(err);
-      cb(err);
-    });
+    if (err) return cb(err);
+    indexQueue.add({type: 'document', op: 'remove', id: id});
+    cb(err);
   });
 }
 
@@ -420,13 +418,12 @@ documentSchema.statics.validateStructure = function(id, cb) {
 /**
  * Add Interview and all related fragments to index
  *
+ * @param {object} client - Elasticsearch client instance
  * @param {string} id - Id of interview to add
  * @param {function} cb - The callback that handles the results 
  */
 
-documentSchema.statics.addToIndex = function(id, cb) {
-  var client = new elasticsearch.Client(_.clone(ESconfig));
-
+documentSchema.statics.addToIndex = function(client, id, cb) {
   this.getCleaned(id, false, function(err, json){
     if (err) return cb(err);
     console.log('Indexing interview %s...', id);
@@ -446,14 +443,13 @@ documentSchema.statics.addToIndex = function(id, cb) {
 /**
  * Update Interview record inside index
  *
+ * @param {object} client - Elasticsearch client instance
  * @param {string} id - Id of interview to update
  * @param {boolean} meta - Meta mode to update only Interview metadata, otherwise fragments will also updated 
  * @param {function} cb - The callback that handles the results 
  */
 
-documentSchema.statics.updateIndex = function(id, meta, cb) {
-  var client = new elasticsearch.Client(_.clone(ESconfig));
-
+documentSchema.statics.updateIndex = function(client, id, meta, cb) {
   this.getCleaned(id, false, function(err, json){
     if (err) return cb(err);
     console.log('Updating index, interview %s...', id);
@@ -472,20 +468,19 @@ documentSchema.statics.updateIndex = function(id, meta, cb) {
 
 /**
  * Removes Interview and all related fragments from index
- *
+ * 
+ * @param {object} client - Elasticsearch client instance
  * @param {string} id - Id of interview to remove
  * @param {function} cb - The callback that handles the results 
  */
 
-documentSchema.statics.removeFromIndex = function(id, cb) {
-  var client = new elasticsearch.Client(_.clone(ESconfig));
-
+documentSchema.statics.removeFromIndex = function(client, id, cb) {
   indexer.remove.removeFragments(client, id).error(function(err) {
     console.error("Failed.", arguments);
     return cb(err);
   }).then(function() {
     client.close();
-    client = new elasticsearch.Client(_.clone(config));
+    client = new elasticsearch.Client(_.clone(ESconfig));
     console.log("All fragments for", id, "has been removed.");
     indexer.remove.removeInterview(client, id).error(function(err) {
       console.error("Failed.", arguments);
@@ -498,58 +493,58 @@ documentSchema.statics.removeFromIndex = function(id, cb) {
   });
 }
 
+// TODO: remove this thing, reindex handled by queue
 
+// documentSchema.statics.reindex = function(meta) {
+//   var self = this;
 
-documentSchema.statics.reindex = function(meta) {
-  var self = this;
+//   function _set(property, value) {
+//     documentSchema.set(property, value);
+//   }
 
-  function _set(property, value) {
-    documentSchema.set(property, value);
-  }
+//   function _get(property) {
+//     return documentSchema.get(property);
+//   }
 
-  function _get(property) {
-    return documentSchema.get(property);
-  }
+//   function _requsetReindex(meta) {
+//     console.log('Reindexing requested')
+//     _set('reindex', {meta: meta});
+//   }
 
-  function _requsetReindex(meta) {
-    console.log('Reindexing requested')
-    _set('reindex', {meta: meta});
-  }
+//   function _reindex(meta) {
+//     console.log('Running reindex, meta flag:', meta);
+//     _set('reindex', false);
+//     _set('indexing', true);
+//     self.list({}, function(err, records) {
+//       if (err) throw err;
+//       var docs = records[1];
+//       async.eachSeries(docs, function(doc, callback) {
+//         var reindex = _get('reindex');
+//         if(!reindex) {
+//           console.log('Reindexing', doc._id);
+//           self.updateIndex(doc._id, meta, callback);
+//         } else if (reindex.meta || reindex.meta == meta) {
+//           console.log('Aborting reindex, meta flag:', reindex.meta);
+//           callback(true);
+//         }
+//       }, function(err) {
+//         console.log('Reindexing finished');
+//         _set('indexing', false);
+//         var reindex = _get('reindex');
+//         if(reindex) {
+//           _reindex(reindex.meta);
+//         }
+//       });
+//     });
+//   }
 
-  function _reindex(meta) {
-    console.log('Running reindex, meta flag:', meta);
-    _set('reindex', false);
-    _set('indexing', true);
-    self.list({}, function(err, records) {
-      if (err) throw err;
-      var docs = records[1];
-      async.eachSeries(docs, function(doc, callback) {
-        var reindex = _get('reindex');
-        if(!reindex) {
-          console.log('Reindexing', doc._id);
-          self.updateIndex(doc._id, meta, callback);
-        } else if (reindex.meta || reindex.meta == meta) {
-          console.log('Aborting reindex, meta flag:', reindex.meta);
-          callback(true);
-        }
-      }, function(err) {
-        console.log('Reindexing finished');
-        _set('indexing', false);
-        var reindex = _get('reindex');
-        if(reindex) {
-          _reindex(reindex.meta);
-        }
-      });
-    });
-  }
-
-  var indexing = _get('indexing');
-  console.log('indexing flag:', indexing);
-  if(indexing) {
-    _requsetReindex(meta);
-  } else {
-    _reindex(meta);
-  }
-}
+//   var indexing = _get('indexing');
+//   console.log('indexing flag:', indexing);
+//   if(indexing) {
+//     _requsetReindex(meta);
+//   } else {
+//     _reindex(meta);
+//   }
+// }
  
 module.exports = mongoose.model('Document', documentSchema);
