@@ -62,7 +62,7 @@ var entityHandler = function(client, data, callback) {
 			EntityIndex.index(client, data.record, true, callback);
 			break;
 		case 'remove':
-			EntityIndex.index(client, data.id, callback);
+			EntityIndex.remove(client, data.id, callback);
 			break;
 		case 'reindex':
 			requestEntityReindex(callback);
