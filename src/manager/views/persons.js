@@ -129,8 +129,13 @@ var editorDialog = Backbone.Modal.extend({
     this.form = new Backbone.Form({
       model: this.model
     }).render();
-    this.$el.find('.delete').on('click', function() {
-      that.delete();
+    this.$el.find('.delete').on('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      var confirm = window.confirm("Are you sure you want to do this?\nThis action can't be undone. Think twice!");
+      if(confirm) {
+        that.delete();
+      }
     });
     this.$el.find('.form').prepend(this.form.el);
     this.gridUrl = this.collection.url.split('/')[this.collection.url.split('/').length - 1];
