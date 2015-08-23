@@ -253,7 +253,8 @@ var SubjectsTreeView = Backbone.Layout.extend({
               Backbone.middle.trigger("sync:success", 'Subject ' + obj.model.get('name') + ' has been removed!');
             },
             error: function(model,err) { 
-              Backbone.middle.trigger("sync:fail", 'Sorry an error occurred!');
+              var errMessage = err.responseText ? err.responseText : 'Sorry an error occurred!';
+              Backbone.middle.trigger("sync:fail", errMessage);
               dialog.submit(err, 'error');
               console.log(err);
             }
@@ -338,8 +339,9 @@ var SubjectsTreeView = Backbone.Layout.extend({
                 dialog.submit('Done! Exiting from maintenance mode...', 'ok');
                 Backbone.middle.trigger("sync:success", 'Merge has been completed');
               } else {
+                var errMessage = err.responseText ? err.responseText + ' Please reload the page and try again': 'Sorry, the error occured! Please reload the page and try again';
                 dialog.submit(res.text, 'error');
-                Backbone.middle.trigger("sync:fail", 'Sorry, the error occured! Please reload the page and try again');
+                Backbone.middle.trigger("sync:fail", errMessage);
               }
             });
         });

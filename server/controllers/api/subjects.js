@@ -73,6 +73,9 @@ var getSubjectsChildren = function(req, res, next) {
 
 var mergeSubjects = function(req, res, next) {
   req.socket.setTimeout(800000);
+  req.socket.addListener('timeout', function() {
+    socket.destroy();
+  });
   Subject.merge(req.query.one, req.query.into, function(err) {
     if (err) return next(err);
     indexQueue.add({type: 'document', op: 'reindex', meta: false});

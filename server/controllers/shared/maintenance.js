@@ -1,4 +1,5 @@
 var util = require('../api/utils.js')
+  , indexQueue = require('./queue.js')
   , express = require('express')
   , _ = require('underscore')
   , maintenance = {};
@@ -10,6 +11,7 @@ var util = require('../api/utils.js')
  */
 
 maintenance.beginTransaction = function(cb) {
+  indexQueue.pause();
   console.log('beginning transaction ...');
   // turn on maintenance mode
   maintenance.setMaintenanceMode(true, function(err) {
@@ -30,6 +32,7 @@ maintenance.cancelTransaction = function(cb) {
   console.log('canceling transaction... rolling back document updates');
   maintenance.restoreDocuments(function(err) {
     if (err) return err;
+    indexQueue.resume();
     maintenance.setMaintenanceMode(false, cb);
   });
 }
@@ -42,6 +45,7 @@ maintenance.cancelTransaction = function(cb) {
 
 maintenance.commitTransaction = function(cb) {
   console.log('commiting transaction...');
+  indexQueue.resume();
   maintenance.setMaintenanceMode(false, cb);
 }
 
