@@ -11,16 +11,26 @@ var configureIndex = function(cb) {
     index: ["entities"],
     ignore: [404]
   }).then(function() {
+    client.close();
     console.info('Configuring index...');
-    return client.indices.create(indexConfiguration);
-  }).error(function(error, resp) {
-    console.error(error);
+    createIndex(cb);
+  }, function(err) {
+    console.error("Failed.", arguments);
     client.close();
-    cb(error);
-  }).done(function() {
-    client.close();
-    cb(null);
+    cb(err);
   });
 };
+
+var createIndex = function(cb) {
+  var client = new elasticsearch.Client(_.clone(config));
+  client.indices.create(indexConfiguration).then(function() {
+    client.close();
+    cb(null);
+  }, function(err) {
+    console.error("Failed.", arguments);
+    client.close();
+    cb(err);
+  });
+}
 
 module.exports = configureIndex;

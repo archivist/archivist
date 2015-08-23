@@ -1,7 +1,7 @@
 var _ = require('underscore');
 
 var indexEntity = function(client, entity, update, cb) {
-  console.log(entity, update)
+
   var shortData = {
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,

@@ -5,6 +5,7 @@ var express = require('express')
   , interviews = require('../indexer/interviews');
 
 var host = process.env.ARCHIVIST_HOST || 'localhost';
+var index = process.env.INDEX || false;
 
 // Full search (including fragments)
 
@@ -59,7 +60,7 @@ var searchDocument = function(req, res, next) {
 // Seed search indexes
 
 var seedIndexes = function(req, res, next) {
-  if(req.hostname == host) { 
+  if(req.hostname == host && index) { 
     setupIndexer(function(err){
       if(err) return next(err);
       indexQueue.requestFullReindex();
@@ -71,7 +72,7 @@ var seedIndexes = function(req, res, next) {
 }
 
 var requestReindex = function(req, res, next) {
-  if(req.hostname == host) { 
+  if(req.hostname == host && index) { 
     indexQueue.requestFullReindex();
     res.send(200);
   } else {
