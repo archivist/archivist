@@ -1,10 +1,12 @@
 var async = require('async');
 var configureEntitiesIndex = require('./entities/configure_index');
-var seedEntitiesIndex = require('./entities/seed');
+//var seedEntitiesIndex = require('./entities/seed');
 var configureInterviewsIndex = require('./interviews/configure_index');
-var seedInterviewsIndex = require('./interviews/seed');
+//var seedInterviewsIndex = require('./interviews/seed');
 
-var seed = function() {
+// TODO: clear seeds (already commented)
+
+var seed = function(cb) {
 	async.series([
 	  function(callback){
 	    configureEntitiesIndex(function(err) {
@@ -13,15 +15,16 @@ var seed = function() {
 			    throw err;
 			  } else {
 			    console.log('Entity index has been configured.');
-			    seedEntitiesIndex(function(err) {
-					  if (err) {
-					    console.error(err);
-					    throw err;
-					  } else {
-					    console.log('Done with entity indexing.');
-					    callback(null);
-					  }
-					});
+			  	//   seedEntitiesIndex(function(err) {
+					//   if (err) {
+					//     console.error(err);
+					//     throw err;
+					//   } else {
+					//     console.log('Done with entity indexing.');
+					//     callback(null);
+					//   }
+					// });
+	    		callback(null);
 			  }
 			});
 	  },
@@ -32,22 +35,23 @@ var seed = function() {
 			    throw err;
 			  } else {
 			    console.log('Interviews index has been configured.');
-			    seedInterviewsIndex({MAX_COUNT: -1}, function(err) {
-					  if (err) {
-					    console.error(err);
-					    throw err;
-					  } else {
-					    console.log('Done with entity indexing.');
-					    callback(null);
-					  }
-					});
+			  //   seedInterviewsIndex({MAX_COUNT: -1}, function(err) {
+					//   if (err) {
+					//     console.error(err);
+					//     throw err;
+					//   } else {
+					//     console.log('Done with entity indexing.');
+					//     callback(null);
+					//   }
+					// });
+	  			callback(null);
 			  }
 			});
 	  }
 	],
 	function(err, results){
 		console.log('Finished!');
-		return;
+		cb(err);
 	});
 }
 

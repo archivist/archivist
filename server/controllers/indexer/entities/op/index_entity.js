@@ -23,10 +23,17 @@ var indexEntity = function(client, entity, update, cb) {
       shortData.prison_type = entity.prison_type;
     }
   } else if (entity.type == 'person') {
-    if (!entity.global) return;
+    if (!entity.global) {
+      // We don't want to index persons which are not global
+      return cb(null);
+    }
   } else if (entity.type == 'definition') {
     shortData.synonyms = entity.synonyms;
     definition_type = entity.definition_type;
+    // TODO: we should think about better options to exclude definitions types from index 
+    if(definition_type != 'лагерная реалия') {
+      return cb(null);
+    }
   } else {
     return;
   }

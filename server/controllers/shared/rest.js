@@ -17,8 +17,6 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.add = function(data, user, cb) {
-    var client = new elasticsearch.Client(_.clone(ESconfig));
-
     var self = this;
     data.edited = user.iss;
     data.created = user.iss;
@@ -40,8 +38,6 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.change = function(id, data, user, cb) {
-    var client = new elasticsearch.Client(_.clone(ESconfig));
-
     var self = this;
 
     data.edited = user.iss;
@@ -102,8 +98,6 @@ module.exports = function(schema, options) {
    */
 
   schema.statics.delete = function(id, cb) {
-    var client = new elasticsearch.Client(_.clone(ESconfig));
-
     var self = this;
     // Unsave op (needs to be wrapped in a transaction)
     this.propagateChange(id, {mode: "delete"}, function(err) {

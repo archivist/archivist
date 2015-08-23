@@ -1,4 +1,5 @@
 var express = require('express')
+  , setupIndexer = require('../indexer/setup')
   , indexQueue = require('../shared/queue.js')
   , api = express.Router()
   , interviews = require('../indexer/interviews');
@@ -58,7 +59,19 @@ var searchDocument = function(req, res, next) {
 // Seed search indexes
 
 var seedIndexes = function(req, res, next) {
-  if(req.hostname == host) {
+  if(req.hostname == host) { 
+    setupIndexer(function(err){
+      if(err) return next(err);
+      indexQueue.requestFullReindex();
+      res.send(200);
+    })
+  } else {
+    res.send(500);
+  }
+}
+
+var requestReindex = function(req, res, next) {
+  if(req.hostname == host) { 
     indexQueue.requestFullReindex();
     res.send(200);
   } else {
@@ -74,5 +87,8 @@ api.route('/index/search/document')
 
 api.route('/index/seed')
   .get(seedIndexes)
+
+api.route('/index/reindex')
+  .get(requestReindex)
 
 module.exports = api;

@@ -1,4 +1,8 @@
 var async = require('async');
+var _ = require('underscore');
+var elasticsearch = require('elasticsearch');
+var ESconfig = require('../indexer/config');
+var EntityIndex = require('../indexer/entities/op');
 var index = process.env.INDEX || false;
 
 // task object: {type: 'document', op: 'index', id: '', record: {}, meta: false}
@@ -41,6 +45,7 @@ var requestDocumentReindex = function(meta, callback) {
       	meta: meta
       }
       queue.add(task);
+      cb();
     }, function(err) {
       callback(err);
     });
@@ -81,6 +86,7 @@ var requestEntityReindex = function(callback) {
       	record: entity
       }
       queue.add(task);
+      cb();
     }, function(err) {
       callback(err);
     });
@@ -89,12 +95,12 @@ var requestEntityReindex = function(callback) {
 
 var taskHandler = function(task, callback) {
 	var client = new elasticsearch.Client(_.clone(ESconfig));
-	switch(task.data.type) {
+	switch(task.type) {
 		case 'document':
-			documentHandler(client, task.data, callback);
+			documentHandler(client, task, callback);
 			break;
 		case 'entity':
-			entityHandler(client, task.data, callback);
+			entityHandler(client, task, callback);
 			break;
 		default:
 			break;
@@ -118,8 +124,9 @@ queue.add = function(task) {
 		self.push(data, function(err){
 			if(err) return _push(data);
 			console.log('finished task');
+			console.log('tasks left:', queue.length());
 		});
-		console.log('Indexing request added to queue')
+		console.log('Indexing request', data.op ,'added to queue')
 	}
 	_push(task);
 }
