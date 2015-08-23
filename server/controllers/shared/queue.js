@@ -122,7 +122,19 @@ queue.add = function(task) {
 	var self = this;
 	function _push(data) {
 		self.push(data, function(err){
-			if(err) return _push(data);
+			if(err) {
+				if(data.counter) {
+					data.counter += 1;
+				} else {
+					data.counter = 1;
+				}
+				if(data.counter > 10) {
+					console.log('Canceling task processing after 10 attemptions');
+					return;
+				}
+				console.log('Delaying task processing due an error');
+				return _push(data);
+			}
 			console.log('finished task');
 			console.log('tasks left:', queue.length());
 		});
@@ -151,7 +163,7 @@ queue.cleanDocumentsTasks = function() {
 queue.cleanMetaDocumentsTasks = function() {
 	this.pause();
 	var filtered = this.tasks.filter(function(task){
-		return task.data.meta !== true;
+		return task.data.meta !== true && task.data.op !== "remove";
 	});
 	this.tasks = filtered;
 	this.resume();
