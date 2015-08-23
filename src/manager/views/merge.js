@@ -103,7 +103,7 @@ exports.mergeGrid = MergeGrid;
 var showDialog = function(mergeData, collection, model) {
   var dialog = new Backbone.Model({
     title: "Merge Entities",
-    description: "Merging entities is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+    description: "Merging entities is critical operation, that also affects existing interviews. The operation can take up to few minutes to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
     action: "Confirm merging",
     submitState: "Merging...",
     initState: "Changing entities in documents..."

@@ -33,7 +33,7 @@ var indexEntity = function(client, entity, update, cb) {
     shortData.synonyms = entity.synonyms;
     definition_type = entity.definition_type;
     // TODO: we should think about better options to exclude definitions types from index 
-    if(definition_type != 'лагерная реалия') {
+    if(definition_type != 'лагерная реалия' && definition_type != 'общий комментарий') {
       client.close();
       return cb(null);
     }

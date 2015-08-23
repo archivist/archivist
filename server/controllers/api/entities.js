@@ -152,7 +152,6 @@ var listEntities = function(req, res, next) {
 var mergeEntities = function(req, res, next) {
   req.socket.setTimeout(800000);
   req.socket.addListener('timeout', function() {
-    console.log('destroy socket');
     socket.destroy();
   });
 

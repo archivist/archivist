@@ -234,7 +234,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
         var dialog = new Backbone.Model({
           title: "Delete Subject",
-          description: "Deleting a subject is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+          description: "Deleting a subject is critical operation, that also affects existing interviews. The operation can take up to few minutes to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
           action: "Confirm deletion",
           submitState: "Deleting...",
           initState: "Removing subject from documents..."
@@ -320,7 +320,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
         var dialog = new Backbone.Model({
           title: "Merge Subjects",
-          description: "Merging subjects is critical operation, that also affects existing interviews. The operation can take up to a minute to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
+          description: "Merging subjects is critical operation, that also affects existing interviews. The operation can take up to few minutes to complete. During that time the system will be turned into <b>maintenance mode</b>, where editors can not save documents.",
           action: "Confirm merging",
           submitState: "Merging...",
           initState: "Changing subjects in documents..."
