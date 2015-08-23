@@ -80,6 +80,15 @@ var requestReindex = function(req, res, next) {
   }
 }
 
+var requestStatus = function(req, res, next) {
+  if(req.hostname == host && index) { 
+    indexQueue.printStatus();
+    res.send(200);
+  } else {
+    res.send(500);
+  }
+}
+
 api.route('/index/search')
   .get(search)
 
@@ -91,5 +100,8 @@ api.route('/index/seed')
 
 api.route('/index/reindex')
   .get(requestReindex)
+
+api.route('/index/status')
+  .get(requestStatus)
 
 module.exports = api;

@@ -192,4 +192,15 @@ queue.requestFullReindex = function() {
 	this.add({type: 'document', op: 'reindex', meta: false});
 }
 
+queue.printStatus = function() {
+	var length = queue.length();
+	console.log('tasks left:', length);
+	if(length > 0) {
+		console.log('current task:', queue.tasks[0]);
+	}
+	if(length > 1) {
+		console.log('next task:', queue.tasks[1]);
+	}
+}
+
 module.exports = queue;
