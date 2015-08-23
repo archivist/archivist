@@ -141,7 +141,7 @@ queue.add = function(task) {
 		console.log('Indexing request', data.op ,'added to queue')
 	}
 	if(task.op == 'reindex') {
-		this.unshift(data, function(err){
+		this.unshift(task, function(err){
 			if(err) {
 				console.log('reindex processing has been failed');
 			}
