@@ -140,7 +140,16 @@ queue.add = function(task) {
 		});
 		console.log('Indexing request', data.op ,'added to queue')
 	}
-	_push(task);
+	if(task.op == 'reindex') {
+		this.unshift(data, function(err){
+			if(err) {
+				console.log('reindex processing has been failed');
+			}
+			console.log('Reindex processing has been finished');
+		});
+	} else {
+		_push(task);
+	}
 }
 
 queue.drain = function() {
