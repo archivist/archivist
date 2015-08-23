@@ -26,7 +26,7 @@ schema.statics.merge = function(entityId, newEntityId, cb) {
         self.incrementDBVersion(function(err) {
           if (err) return cb(err)
           indexQueue.add({type: 'entity', op: 'remove', id: entityId});
-          cb(err, record);
+          cb(err);
         });
       });
     });
