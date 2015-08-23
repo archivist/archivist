@@ -1,4 +1,5 @@
 var System = require('../../models/system.js')
+  , maintenance = require('./maintenance.js')
   , indexQueue = require('./queue.js')
   , util = require('../api/utils.js')
   , async = require('async')
@@ -23,6 +24,10 @@ module.exports = function(schema, options) {
 
     new self(data).save(function(err, record) {
       if (err) return cb(err);
+      if(self.modelName == 'Person' || self.modelName == 'Definition') {
+        record = record.toJSON();
+        record.type = self.modelName.toLowerCase();
+      }
       indexQueue.add({type: 'entity', op: 'add', record: record});
       cb(err, record);
     })
@@ -48,6 +53,10 @@ module.exports = function(schema, options) {
       if (err) return cb(err);
       self.incrementDBVersion(function(err) {
         if (err) return cb(err)
+        if(self.modelName == 'Person' || self.modelName == 'Definition') {
+          record = record.toJSON();
+          record.type = self.modelName.toLowerCase();
+        }
         indexQueue.add({type: 'entity', op: 'update', record: record});
         cb(err, record);
       });
@@ -100,12 +109,29 @@ module.exports = function(schema, options) {
   schema.statics.delete = function(id, cb) {
     var self = this;
     // Unsave op (needs to be wrapped in a transaction)
-    this.propagateChange(id, {mode: "delete"}, function(err) {
-      if (err) return cb(err);
-      self.findByIdAndRemove(id, function (err) {
+    function updateDocsAndRemoveEntity(cb) {
+      self.propagateChange(id, {mode: "delete"}, function(err) {
         if (err) return cb(err);
-        indexQueue.add({type: 'entity', op: 'remove', id: id});
-        self.incrementDBVersion(cb);
+        self.findByIdAndRemove(id, function (err) {
+          if (err) return cb(err);
+          indexQueue.add({type: 'entity', op: 'remove', id: id});
+          self.incrementDBVersion(cb);
+        });
+      });
+    }
+
+    maintenance.beginTransaction(function(err) {
+      if (err) return cb(err);
+
+      updateDocsAndRemoveEntity(function(err) {
+        if (err) {
+          maintenance.cancelTransaction(function(terr) {
+            if (terr) return cb(terr);
+            cb(err);
+          });          
+        } else {
+          maintenance.commitTransaction(cb);
+        }
       });
     });
   };
@@ -179,7 +205,8 @@ module.exports = function(schema, options) {
     var Document = require('../../models/document.js');
     
     Document.find({}, 'id', {}, function(err, documents) {
-      async.each(documents, function(doc, cb) {
+      // Change only 5 documents in parallel
+      async.eachLimit(documents, 5, function(doc, cb) {
         self.updateForDoc(doc._id, id, opt, cb);
       }, function(err) {
         console.log('done with everything yay!');

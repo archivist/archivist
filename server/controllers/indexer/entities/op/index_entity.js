@@ -1,6 +1,7 @@
 var _ = require('underscore');
 
 var indexEntity = function(client, entity, update, cb) {
+  console.log(entity, update)
   var shortData = {
     createdAt: entity.createdAt,
     updatedAt: entity.updatedAt,
@@ -25,6 +26,7 @@ var indexEntity = function(client, entity, update, cb) {
   } else if (entity.type == 'person') {
     if (!entity.global) {
       // We don't want to index persons which are not global
+      client.close();
       return cb(null);
     }
   } else if (entity.type == 'definition') {
@@ -32,6 +34,7 @@ var indexEntity = function(client, entity, update, cb) {
     definition_type = entity.definition_type;
     // TODO: we should think about better options to exclude definitions types from index 
     if(definition_type != 'лагерная реалия') {
+      client.close();
       return cb(null);
     }
   } else {

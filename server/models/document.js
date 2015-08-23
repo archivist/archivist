@@ -143,7 +143,8 @@ documentSchema.statics.createEmpty = function(user, cb) {
 
 documentSchema.statics.getRecord = function(id, cb) {
   this.findById(id, function(err, document) {
-    if(err || _.isNull(document)) return cb('There is no such document, sorry...');
+    if(err) return cb(err);
+    if(_.isNull(document)) return cb('There is no such document, sorry...');
     doc = document.toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;
@@ -169,7 +170,8 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
   }
   if(published) query["nodes.document.published"] = true;
   this.find(query, function(err, document) {
-    if(err || _.isEmpty(document)) return cb('There is no such document, sorry...');
+    if(err) return cb(err);
+    if( _.isEmpty(document)) return cb('There is no such document, sorry...');
     doc = document[0].toJSON();
     if (doc.hasOwnProperty('_schema')) {
       delete doc._schema;
