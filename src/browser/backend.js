@@ -14,7 +14,7 @@ Backend.Prototype = function() {
       url: "/api/public/subjects",
       dataType: 'json',
       success: function(res) {
-        cb(null, res.subjects);
+        cb(null, res);
       },
       error: function(err) {
         console.error(err.responseText);
