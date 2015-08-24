@@ -16,6 +16,7 @@ var mongoose = require('mongoose')
 var documentSchema = new Schema({
   	_schema: [String]
   , nodes: Schema.Types.Mixed
+  , resources: [String]
 });
 
 documentSchema.set('toJSON', { getters: true, virtuals: true });
@@ -142,7 +143,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
  */
 
 documentSchema.statics.getRecord = function(id, cb) {
-  this.findById(id, function(err, document) {
+  this.findById(id, "_schema nodes __v", function(err, document) {
     if(err) return cb(err);
     if(_.isNull(document)) return cb('There is no such document, sorry...');
     doc = document.toJSON();
@@ -169,7 +170,7 @@ documentSchema.statics.getCleaned = function(id, published, cb) {
     _id: id
   }
   if(published) query["nodes.document.published"] = true;
-  this.find(query, function(err, document) {
+  this.find(query, "_schema nodes", function(err, document) {
     if(err) return cb(err);
     if( _.isEmpty(document)) return cb('There is no such document, sorry...');
     doc = document[0].toJSON();
@@ -259,6 +260,9 @@ documentSchema.statics.change = function(id, data, user, cb) {
     }
 
     delete data.__v; // clear __v property, so $inc can do its job
+
+    var resources = self.getResources(data);
+    data.resources = resources;
 
     // update document edition date and last author
 
@@ -414,6 +418,54 @@ documentSchema.statics.validateStructure = function(id, cb) {
     return response;
   }
 }
+
+/**
+ * Gets array of unique references for document 
+ *
+ * @param {object} data - JSON representation of document
+ */
+
+documentSchema.statics.getResources = function(data) {
+  var doc = new Interview.fromJson(data);
+  var entityRefs = doc.getIndex('type').get('entity_reference');
+  var entities = _.pluck(entityRefs, 'target');
+  entities = _.uniq(entities);
+  var subjectRefs = doc.getIndex('type').get('subject_reference');
+  var subjects = _.pluck(subjectRefs, 'target');
+  subjects = _.uniq(_.flatten(subjects));
+  var result = _.union(entities, subjects);
+  return result;
+}
+
+/**
+ * Generates resources for all documents
+ */
+
+documentSchema.statics.generateResources = function() {
+  var self = this;
+  function _generateDocResources(id, cb) {
+    console.log('Generating resources for doc', id);
+    self.getRecord(id, function(err, doc) {
+      if (err) return cb(err);
+      doc.resources = self.getResources(doc);
+      delete doc.__v;
+      if (doc.hasOwnProperty('schema')) {
+        doc._schema = doc.schema;
+        delete doc.schema;
+      }
+      self.findByIdAndUpdate(id, { $set: doc, $inc: { __v: 1 } }, {new: true}, cb);
+    });
+  }
+  self.find({}, 'id', {}, function(err, documents) {
+    // Change only 5 documents in parallel
+    async.eachLimit(documents, 5, function(doc, cb) {
+      _generateDocResources(doc._id, cb);
+    }, function(err) {
+      console.log('Resources have been generated for all docs!');
+    });
+  });
+}
+
 
 /* Indexer operations */
 

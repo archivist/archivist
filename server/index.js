@@ -15,7 +15,7 @@ var mongoose = require('mongoose')
 	, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
-var index = process.env.INDEX || false;
+var index = process.env.INDEX || "false";
 
 // MONGOOSE CONNECT
 
@@ -79,7 +79,7 @@ app.use('/import', importer);
 
 app.route('/')
 	.get(function(req, res, next) {
-		if(index) {
+		if(index == "true") {
 			res.render('browser');
 		} else {
 			res.redirect('/archivist');

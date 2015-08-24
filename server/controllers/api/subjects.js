@@ -7,6 +7,8 @@ var Subject = require('../../models/subject.js')
   , express = require('express')
   , api = express.Router();
 
+var index = process.env.INDEX || "false";
+
 /* Set CORS */
 
 api.use(auth.allowCrossDomain);
@@ -43,21 +45,28 @@ var deleteSubject = function(req, res, next) {
 }
 
 var listSubjects = function(req, res, next) {
-  Subject.getDBVersion(function(err, DBVersion) {
-    interviews.countSubjects(function(err, counter){
-      if(err) return next(err);
-      Subject.list(req.query, function(err, subjects) {
-        if (err) return next(err);
-        _.each(subjects, function(subject, id) {
-          subjects[id] = subject.toJSON();
-          subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
-        })
-        res.json({
-          subjectDBVersion: DBVersion,
-          subjects: subjects 
-        });
+  function _sendRes(counter, version) {
+    Subject.list(req.query, function(err, subjects) {
+      if (err) return next(err);
+      _.each(subjects, function(subject, id) {
+        subjects[id] = subject.toJSON();
+        subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
+      });
+      res.json({
+        subjectDBVersion: version,
+        subjects: subjects 
       });
     });
+  } 
+  Subject.getDBVersion(function(err, DBVersion) {
+    if(index == "true") {
+      interviews.countSubjects(function(err, counter){
+        if(err) return next(err);
+        _sendRes(counter, DBVersion);
+      });
+    } else {
+      _sendRes({}, DBVersion);
+    }
   });
 }
 

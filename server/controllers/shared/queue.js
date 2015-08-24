@@ -3,7 +3,7 @@ var _ = require('underscore');
 var elasticsearch = require('elasticsearch');
 var ESconfig = require('../indexer/config');
 var EntityIndex = require('../indexer/entities/op');
-var index = process.env.INDEX || false;
+var index = process.env.INDEX || "false";
 
 // task object: {type: 'document', op: 'index', id: '', record: {}, meta: false}
 
@@ -115,7 +115,7 @@ var queue = async.queue(taskHandler);
  */
 
 queue.add = function(task) {
-	if(!index) {
+	if(index == 'false') {
 		console.log("Skipping indexing request, elasticsearch isn't configured");
 		return;
 	}

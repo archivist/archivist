@@ -54,13 +54,13 @@ var listDocuments = function(req, res, next) {
 }
 
 api.route('/documents')
-  .get(/*auth.checkAuth,*/ listDocuments);
+  .get(auth.checkAuth, listDocuments);
 
 api.route('/documents/new')
   .get(maintenance.checkCurrentMode, auth.checkAuth, createDocument)
 
 api.route('/documents/:id')
-  .get(/*auth.checkAuth,*/ readDocument)
+  .get(auth.checkAuth, readDocument)
   .put(maintenance.checkCurrentMode, auth.checkAuth, updateDocument)
   .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteDocument);
 

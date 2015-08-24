@@ -1,11 +1,12 @@
 var express = require('express')
+  , Document = require('../../models/document.js')
   , setupIndexer = require('../indexer/setup')
   , indexQueue = require('../shared/queue.js')
   , api = express.Router()
   , interviews = require('../indexer/interviews');
 
 var host = process.env.ARCHIVIST_HOST || 'localhost';
-var index = process.env.INDEX || false;
+var index = process.env.INDEX || "false";
 
 // Full search (including fragments)
 
@@ -60,7 +61,7 @@ var searchDocument = function(req, res, next) {
 // Seed search indexes
 
 var seedIndexes = function(req, res, next) {
-  if(req.hostname == host && index) { 
+  if(req.hostname == host && index == 'true') { 
     setupIndexer(function(err){
       if(err) return next(err);
       indexQueue.requestFullReindex();
@@ -72,7 +73,7 @@ var seedIndexes = function(req, res, next) {
 }
 
 var requestReindex = function(req, res, next) {
-  if(req.hostname == host && index) { 
+  if(req.hostname == host && index == 'true') { 
     indexQueue.requestFullReindex();
     res.send(200);
   } else {
@@ -81,8 +82,17 @@ var requestReindex = function(req, res, next) {
 }
 
 var requestStatus = function(req, res, next) {
-  if(req.hostname == host && index) { 
+  if(req.hostname == host && index == 'true') { 
     indexQueue.printStatus();
+    res.send(200);
+  } else {
+    res.send(500);
+  }
+}
+
+var generateResources = function(req, res, next) {
+  if(req.hostname == host) { 
+    Document.generateResources();
     res.send(200);
   } else {
     res.send(500);
@@ -103,5 +113,8 @@ api.route('/index/reindex')
 
 api.route('/index/status')
   .get(requestStatus)
+
+api.route('/index/resources')
+  .get(generateResources)
 
 module.exports = api;

@@ -101,6 +101,7 @@ Backend.Prototype = function() {
         doc.connect(this, {'document:rendered': function(){nprogress.done();}});
         // TODO: We should not forget to remove this
         window.doc = doc;
+        document.title = doc.getDocumentMeta().title;
         cb(null, doc);
       })
     });
