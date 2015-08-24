@@ -457,8 +457,7 @@ documentSchema.statics.generateResources = function() {
     });
   }
   self.find({}, 'id', {}, function(err, documents) {
-    // Change only 5 documents in parallel
-    async.eachLimit(documents, 5, function(doc, cb) {
+    async.eachSeries(documents, function(doc, cb) {
       _generateDocResources(doc._id, cb);
     }, function(err) {
       console.log('Resources have been generated for all docs!');

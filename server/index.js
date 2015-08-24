@@ -73,6 +73,16 @@ mongoose.connection.on("error", function(err) {
   return console.log(err.message);
 });
 
+var gracefulExit = function() { 
+  mongoose.connection.close(function () {
+    console.log('Mongoose default connection with DB :' + db_server + ' is disconnected through app termination');
+    process.exit(0);
+  });
+}
+
+// If the Node process ends, close the Mongoose connection
+process.on('SIGINT', gracefulExit).on('SIGTERM', gracefulExit);
+
 app.use('/archivist', oauth);
 app.use('/api', api);
 app.use('/import', importer);
