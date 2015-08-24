@@ -204,7 +204,7 @@ module.exports = function(schema, options) {
     var self = this;
     var Document = require('../../models/document.js');
     
-    Document.find({}, 'id', {}, function(err, documents) {
+    Document.find({resources: id}, 'id', {}, function(err, documents) {
       // Change only 5 documents in parallel
       async.eachLimit(documents, 5, function(doc, cb) {
         self.updateForDoc(doc._id, id, opt, cb);
