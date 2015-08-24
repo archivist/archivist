@@ -11,7 +11,7 @@ Backend.Prototype = function() {
 
   this.getSubjects = function(cb) {
     $.ajax({
-      url: "/api/subjects?page=1&sort_by=position&order=asc",
+      url: "/api/public/subjects",
       dataType: 'json',
       success: function(res) {
         cb(null, res.subjects);

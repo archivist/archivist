@@ -15,8 +15,7 @@ var mongoose = require('mongoose')
 	, importer = require('./controllers/import')
 	, Document = require('./models/document.js');
 
-
-var browserify = require('browserify');
+var index = process.env.INDEX || false;
 
 // MONGOOSE CONNECT
 
@@ -80,8 +79,11 @@ app.use('/import', importer);
 
 app.route('/')
 	.get(function(req, res, next) {
-		res.render('browser');
-    //res.redirect('/archivist');
+		if(index) {
+			res.render('browser');
+		} else {
+			res.redirect('/archivist');
+		}
   })
 
 app.route('/documents/:id')
