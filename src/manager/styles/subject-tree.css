@@ -107,3 +107,11 @@
 .subjects li.not-empty > .jstree-wholerow:hover {
   background-color: #e8eff7;
 }
+
+.subject-references-list {
+  list-style-type: none;
+}
+
+.subject-references-list li {
+  padding: 10px;
+}

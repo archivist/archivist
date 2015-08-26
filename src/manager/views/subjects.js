@@ -7,6 +7,7 @@ var Backbone = require('backbone'),
     request = require('superagent'),
     ObjectId = require('../local_modules/objectid/Objectid.js'),
     Grid = require('./grid.js'),
+    Models = require('../models'),
     Utils = require('./util.js');
 
 var SubjectsTreeView = Backbone.Layout.extend({
@@ -104,6 +105,33 @@ var SubjectsTreeView = Backbone.Layout.extend({
 
       }
     };
+
+    res.getReferences = {
+      "separator_before"  : false,
+      "separator_after" : false,
+      "_disabled"   : function (data) {        
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference);
+            subject = obj.model;
+
+        return subject.get('docCounter') == 0;
+      },
+      "label"       : "References",
+      "action"      : function (data) {
+        var inst = $.jstree.reference(data.reference),
+            obj = inst.get_node(data.reference),
+            subject = obj.model;
+
+        var references = new Models.documents();
+        references.url = '/api/subjects/' + subject.id + '/references';
+        references.state.pageSize = null;
+        references.fetch().done(function() {
+          var refModal = new subjectModalReferences({model: subject, collection: references});
+          $('#main').append(refModal.render().el);
+        })
+
+      }
+    }
 
     // Edit work name
     // -----------
@@ -207,7 +235,7 @@ var SubjectsTreeView = Backbone.Layout.extend({
     };
 
     // No cut and paste for the moment
-    delete res.ccp.submenu.copy;
+    delete res.ccp;
 
     // Remove a node
     // -------------------
@@ -507,6 +535,16 @@ var subjectModalName = Backbone.Modal.extend({
         console.log(err);
       }
     })
+  }
+});
+
+var subjectModalReferences = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  keyControl: false,
+  template: _.template($('#subjectModalReferences').html()),
+  cancelEl: '.cancel',
+  submitEl: '.ok',
+  submit: function() {
   }
 });
 

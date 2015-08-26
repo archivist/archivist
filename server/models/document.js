@@ -465,6 +465,25 @@ documentSchema.statics.generateResources = function() {
   });
 }
 
+/**
+ * Generate map of resources to documents
+ */
+
+documentSchema.statics.generateResourcesMap = function(cb) {
+  var self = this;
+  self.find({}, 'resources', {}, function(err, documents) {
+    if(err) return cb(err);
+    var map = {};
+    _.each(documents, function(doc){
+      var resources = doc.resources;
+      _.each(resources, function(id){
+        if(!map[id]) map[id] = [];
+        map[id].push(doc._id);
+      });
+    });
+    cb(null, map);
+  });
+}
 
 /* Indexer operations */
 

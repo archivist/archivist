@@ -52,10 +52,10 @@ var Subjects = Utility.collection.extend({
         if (_.isEmpty(node.get('description'))) hasDescription = 'empty';
         var entry = {
           id: node.id,
-          text: node.get('name') + ' (' + node.get('counter') + ')',
+          text: node.get('name') + ' (' + node.get('counter') + '/' + node.get('docCounter') + ')',
           children: getChildren(node.id), // get children for subj
           data: {
-            counter: node.get('counter')
+            counter: node.get('counter'),
           },
           li_attr: {
             class: hasDescription

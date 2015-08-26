@@ -1,6 +1,8 @@
 var Subject = require('../../models/subject.js')
+  , Document = require('../../models/document.js')
   , maintenance = require('../shared/maintenance.js')
   , indexQueue = require('../shared/queue.js')
+  , APICache = require('../shared/cache.js')
   , interviews = require('../indexer/interviews')
   , auth = require('../auth/utils.js')
   , _ = require('underscore')
@@ -48,13 +50,17 @@ var listSubjects = function(req, res, next) {
   function _sendRes(counter, version) {
     Subject.list(req.query, function(err, subjects) {
       if (err) return next(err);
-      _.each(subjects, function(subject, id) {
-        subjects[id] = subject.toJSON();
-        subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
-      });
-      res.json({
-        subjectDBVersion: version,
-        subjects: subjects 
+      resourcesMapCache.get(function(err, resources) {
+        if(err) return next(err);
+        _.each(subjects, function(subject, id) {
+          subjects[id] = subject.toJSON();
+          subjects[id].counter = counter[subject._id] ? counter[subject._id].occurrences : 0;
+          subjects[id].docCounter = resources[subject._id] ? resources[subject._id].length : 0;
+        });
+        res.json({
+          subjectDBVersion: version,
+          subjects: subjects 
+        });
       });
     });
   } 
@@ -118,6 +124,27 @@ var loadMetadata = function(req, res, next) {
   });
 }
 
+var getResourcesMap = function(cb) {
+  Document.generateResourcesMap(function(err, map) {
+    if (err) return cb(err);
+    cb(null, map);
+  });
+}
+
+// Cache results for 5 minutes
+var resourcesMapCache = new APICache(getResourcesMap, 5);
+
+var getSubejctReferences = function(req, res, next) {
+  var subject = req.params.id;
+  resourcesMapCache.get(function(err, resources) {
+    if(err) return next(err);
+    var docs = resources[subject];
+    Document.find({'_id': { $in: docs}}, 'nodes.document.title', function(err, docs){
+      if(err) return next(err);
+      res.json([{total_entries: docs.length}, docs]);
+    });
+  });
+}
 
 api.route('/subjects')
   .post(maintenance.checkCurrentMode, auth.checkAuth, createSubject)
@@ -144,5 +171,8 @@ api.route('/subjects/:id')
   .get(maintenance.checkCurrentMode, readSubject)
   .put(maintenance.checkCurrentMode, auth.checkAuth, updateSubject)
   .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deleteSubject)
+
+api.route('/subjects/:id/references')
+  .get(getSubejctReferences)
 
 module.exports = api;
