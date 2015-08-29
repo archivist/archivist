@@ -91,6 +91,10 @@ module.exports = {
          "title": { "type": "string", "index" : "analyzed", "analyzer": "analyzer_ru" },
          // The rest are facets which are used for strict match queries or filtering only
          "published_on": { "type": "string", "index" : "not_analyzed"},
+         "interview_date": { "type": "string", "index" : "not_analyzed"},
+         "project_name": { "type": "string", "index" : "not_analyzed"},
+         "interview_duration": { "type": "string", "index" : "not_analyzed"},
+         "record_type": { "type": "string", "index" : "not_analyzed"},
          "subjects": { "type": "string", "index": "not_analyzed" },
          "subjects_count": {
             "type": "nested",

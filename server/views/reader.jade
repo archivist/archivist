@@ -10,7 +10,10 @@ html
     // Libs
     script(src='/assets/javascripts/react.js')
     script(src='/assets/javascripts/jquery-2.1.3.min.js')
+    script(src='//f.vimeocdn.com/js/froogaloop2.min.js')
     // App
+    script(type='text/javascript')
+      | window.mediaServer = "#{media}"
     script(src='/reader/reader.js')
   body
     #container

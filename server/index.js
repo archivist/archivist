@@ -16,6 +16,7 @@ var mongoose = require('mongoose')
 	, Document = require('./models/document.js');
 
 var index = process.env.INDEX || "false";
+var media_server = process.env.MEDIA_HOST;
 
 // MONGOOSE CONNECT
 
@@ -98,7 +99,7 @@ app.route('/')
 
 app.route('/documents/:id')
 	.get(function(req, res, next) {
-    res.render('reader');
+    res.render('reader', { media: media_server });
   })
 
 app.route('/archivist')

@@ -9,8 +9,16 @@
   "metadata.persons_present": "Persons Present",
   "metadata.interview_duration": "Interview Duration",
   "metadata.published_on": "Published On",
+  "metadata.interviewee_bio": "Biography",
+  "metadata.show_more": "more...",
+  "metadata.show_less": "...less",
   "panels.source": "Source",
   "panels.subjects": "Topics",
   "panels.entities": "Index",
-  "panels.info": "Info"
+  "panels.info": "Info",
+  "entity.type.toponym": "Locations",
+  "entity.type.prison": "Prisons",
+  "entity.type.person": "Persons",
+  "entity.type.definition": "Definitions",
+  "entity.unknown_name": "Unknown name"
 }
