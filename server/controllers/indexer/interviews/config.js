@@ -95,6 +95,7 @@ module.exports = {
          "project_name": { "type": "string", "index" : "not_analyzed"},
          "interview_duration": { "type": "string", "index" : "not_analyzed"},
          "record_type": { "type": "string", "index" : "not_analyzed"},
+         "interviewee_photo": { "type": "string", "index" : "not_analyzed"},
          "subjects": { "type": "string", "index": "not_analyzed" },
          "subjects_count": {
             "type": "nested",
