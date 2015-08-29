@@ -101,6 +101,7 @@ documentSchema.statics.createEmpty = function(user, cb) {
         "interviewee_bio": "Please enter respondent bio in russian",
         "interviewee_bio_en": "Please enter respondent bio in english",
         "interviewee_bio_de": "Please enter respondent bio in german",
+        "interviewee_photo": "",
         "interviewee_category": "",
         "interviewee_forced_labor_type": "",
         "interviewee_waypoints": [],
