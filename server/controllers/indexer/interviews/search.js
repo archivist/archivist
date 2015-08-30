@@ -51,11 +51,18 @@ function buildQuery(options) {
     // either
     if (!searchString) {
       return {
-        "match_all" : {}
+        "bool": {
+          "must" : {
+            "term" : { "published" : true }
+          }
+        }
       };
     } else {
       return {
         "bool": {
+          "must" : {
+            "term" : { "published" : true }
+          },
           "should": [
             {
               "has_child": {
@@ -218,13 +225,15 @@ function getResult(res, options, suggestedEntities) {
   result.suggestedEntities = {};
   _.each(suggestedEntities.hits.hits, function(record) {
     var id = record._id;
-    var entity = {
-      name: record._source.name,
-      entity_type: record._source.entity_type,
-      count: facets.entities[id].count,
-      // description: record._source.description
-    };
-    result.suggestedEntities[id] = entity;
+    if(facets.entities[id]){
+      var entity = {
+        name: record._source.name,
+        entity_type: record._source.entity_type,
+        count: facets.entities[id].count,
+        // description: record._source.description
+      };
+      result.suggestedEntities[id] = entity;
+    }
   });
   // don't need to transfer global stats for entities
   delete facets.entities;
