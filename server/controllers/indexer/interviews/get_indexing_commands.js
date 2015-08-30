@@ -68,10 +68,11 @@ function _indexMeta(interview, commands, update, subjectTree) {
     "interview_duration": documentNode.interview_duration,
     "record_type": documentNode.record_type,
     "interviewee_photo": documentNode.interviewee_photo,
+    "published": documentNode.published,
     "subjects": subjects,
     "subjects_count": subjectsCount,
     "entities": entities,
-    "entities_count": entitiesCount,
+    "entities_count": entitiesCount
   };
   if (update) {
     var data = {"doc": metadata, "upsert": metadata};
@@ -91,6 +92,7 @@ function indexMeta(interview, commands, update, cb) {
 }
 
 function indexFragments(interview, commands, update, cb) {
+  var documentNode = interview.get('document');
   var htmlExporter = new interview.constructor.HtmlExporter({
     skipTypes: {
       'timecode': true
@@ -149,6 +151,7 @@ function indexFragments(interview, commands, update, cb) {
       id: nodeId,
       type: type,
       content: nodeHtml,
+      published: documentNode.published,
       position: pos,
       subjects: subjectFacets,
       entities: entityFacets

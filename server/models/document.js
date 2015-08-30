@@ -370,7 +370,7 @@ documentSchema.statics.validateStructure = function(id, cb) {
 
       // Check if current annotation is multiparagraph one
       if(!_.isUndefined(leaf.startPath)) {
-        if(!_.contains(nodes, leaf.startPath[0])) {
+        if(!_.contains(nodes, leaf.startPath[0]) && leaf.startPath[0] != 'document') {
           response += 'Start path of ' + id + ' is belongs to ' + leaf.startPath[0] + ' which is outside of the content container\n';
         }
 
@@ -378,7 +378,7 @@ documentSchema.statics.validateStructure = function(id, cb) {
           response += 'Start path of ' + id + ' is belongs to ' + leaf.startPath[0] + ' which does not exists\n';
         }
 
-        if(!_.contains(nodes, leaf.endPath[0])) {
+        if(!_.contains(nodes, leaf.endPath[0]) && leaf.endPath[0] != 'document') {
           response += 'End path of ' + id + ' is belongs to ' + leaf.endPath[0] + ' which is outside of the content container\n';
         }
 
@@ -396,7 +396,7 @@ documentSchema.statics.validateStructure = function(id, cb) {
       } else if (!_.isUndefined(leaf.path)) {
         // Check if current annotation is singlepararph one
 
-        if(!_.contains(nodes, leaf.path[0])) {
+        if(!_.contains(nodes, leaf.path[0]) && leaf.path[0] != 'document') {
           response += 'Path of ' + id + ' is belongs to ' + leaf.path[0] + ' which is outside of the content container\n';
         }
 
@@ -408,7 +408,7 @@ documentSchema.statics.validateStructure = function(id, cb) {
           response += 'Start offset of ' + id + ' is after of the end offset\n';
         }
 
-        if(leaf.path[1] != 'content') {
+        if(leaf.path[1] != 'content' && leaf.path[0] != 'document') {
           response += 'Path of ' + id + ' is not belongs to the content container\n';
         }
       }

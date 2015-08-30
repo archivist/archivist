@@ -96,6 +96,7 @@ module.exports = {
          "interview_duration": { "type": "string", "index" : "not_analyzed"},
          "record_type": { "type": "string", "index" : "not_analyzed"},
          "interviewee_photo": { "type": "string", "index" : "not_analyzed"},
+         "published": { "type": "boolean", "index": "not_analyzed" },
          "subjects": { "type": "string", "index": "not_analyzed" },
          "subjects_count": {
             "type": "nested",
@@ -122,6 +123,7 @@ module.exports = {
           "id": { "type": "string", "index" : "not_analyzed" },
           "type": { "type": "string", "index" : "not_analyzed" },
           "content": { "type": "string", "index" : "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian",  "term_vector": "with_positions_offsets" },
+          "published": { "type": "boolean", "index": "not_analyzed" },
           "position": { "type": "integer", "index": "not_analyzed" },
           "entities": { "type": "string", "index": "not_analyzed" },
           "subjects": {"type" : "string", "index": "not_analyzed"}
