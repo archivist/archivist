@@ -16,9 +16,8 @@ api.use(auth.allowCrossDomain);
 
 /* The Public API */
 
-// TODO: filter only published documents 
 var readDocument = function(req, res, next) {
-  Document.getCleaned(req.params.id, false, function(err, document) {
+  Document.getCleaned(req.params.id, true, function(err, document) {
     if (err) return next(err);
     prepareDocument(document, function(err, result) {
       if (err) return next(err);
@@ -27,15 +26,14 @@ var readDocument = function(req, res, next) {
   });
 }
 
-// TODO: filter only published documents
 var listDocuments = function(req, res, next) {
-  // if(!req.query.query) {
-  //   req.query.query = {
-  //     "nodes.document.published": true
-  //   }
-  // } else {
-  //   req.query.query["nodes.document.published"] = true;
-  // }
+  if(!req.query.query) {
+    req.query.query = {
+      "nodes.document.published": true
+    }
+  } else {
+    req.query.query["nodes.document.published"] = true;
+  }
   Document.list(req.query, function(err, documents) {
     if (err) return next(err);
     res.json(documents);
