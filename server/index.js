@@ -91,7 +91,7 @@ app.use('/import', importer);
 app.route('/')
 	.get(function(req, res, next) {
 		if(index == "true") {
-			res.render('browser');
+			res.render('browser', { media: media_server });
 		} else {
 			res.redirect('/archivist');
 		}
