@@ -49,20 +49,25 @@ function buildQuery(options) {
 
   function _query(searchString, options) {
     // either
+    var query = {};
     if (!searchString) {
-      return {
-        "bool": {
-          "must" : {
-            "term" : { "published" : true }
+      if(options.published) {
+        query = {
+          "bool": {
+            "must" : {
+              "term" : { "published" : true }
+            }
           }
-        }
-      };
+        };
+      } else {
+        query = {
+          "match_all" : {}
+        };
+      }
+      return query;
     } else {
-      return {
+      query = {
         "bool": {
-          "must" : {
-            "term" : { "published" : true }
-          },
           "should": [
             {
               "has_child": {
@@ -89,6 +94,12 @@ function buildQuery(options) {
           ]
         }
       };
+      if (options.published) {
+        query.bool.must = {
+          "term" : { "published" : true }
+        };
+      }
+      return query;
     }
   }
 

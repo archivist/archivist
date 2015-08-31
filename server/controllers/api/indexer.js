@@ -14,11 +14,13 @@ var search = function(req, res, next) {
   console.time("search interviews")
   var query = {
     searchString: "",
+    published: true,
     filters: {}
   };
 
   if(req.query.searchQuery) {
     query = JSON.parse(req.query.searchQuery);
+    query.published = true;
     if (query.searchStr) {
       query.searchString = query.searchStr;
     }
@@ -39,11 +41,13 @@ var searchDocument = function(req, res, next) {
 	var query = {
     documentId: req.query.documentId,
     searchString: "",
+    published: true,
     filters: {}
   };
 
   if(req.query) {
     query = JSON.parse(req.query);
+    query.published = true;
     if (query.searchStr) {
       query.searchString = query.searchStr;
     }

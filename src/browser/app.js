@@ -1,3 +1,5 @@
+require('./i18n/load');
+
 var ArchivistBrowser = require("archivist-core/browser");
 var Backend = require("./backend");
 var backend = new Backend();
