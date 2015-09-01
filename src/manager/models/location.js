@@ -8,7 +8,7 @@ var Prison = Utility.model.extend({
     nearest_locality: { type: 'Geocoded', editorAttrs: {placeholder: 'Nearest locality'} },
     prison_type: {type:'Select2', options:['рабочий лагерь', 'пересыльный лагерь', 'штрафлагерь', 'проверочно-фильтрационный лагерь НКВД', 'тюрьма', 'лагерь военнопленных', 'концлагерь', 'ГУЛаг', 'ферма', 'учебный лагерь', 'лагерь для перемещенных лиц', 'распределительный лагерь', 'лагерь внешней команды концлагеря', 'частный дом', 'неизвестно'], config: {tags: true, placeholder: "Type", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '5'} },
+    description: { type: 'Htmleditor', title: 'Description' },
     point: { type:'Geocoder' },
     type: { type: 'Hidden' }
   },
@@ -37,7 +37,7 @@ var Toponym = Utility.model.extend({
     current_name: { type: 'Geocoded', editorAttrs: {placeholder: 'Current name' }},
     synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
     country: { type: 'Text', editorAttrs: {placeholder: 'Country'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: 'Description', rows: '7'} },
+    description: { type: 'Htmleditor', title: 'Description' },
     point: { type:'Geocoder' },
     type: { type: 'Hidden' }
   },

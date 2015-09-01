@@ -33,6 +33,12 @@ var DocumentsGrid = Grid.main.extend({
       name: "nodes.document.title",
     });
     $('.toolbox').prepend(this.titleFilter.render().el);
+    this.stateFilter = new Utils.selectFilter({
+      collection: this.options.collection,
+      placeholder: "State",
+      name: "nodes.document.published"
+    });
+    $('.toolbox').prepend(this.stateFilter.render().el);
   },
   beforeClose: function() {
     this.titleFilter.remove();

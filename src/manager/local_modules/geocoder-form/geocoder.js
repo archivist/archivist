@@ -145,6 +145,10 @@ Backbone.Form.editors.Geocoder = Backbone.Form.editors.Hidden.extend ({
         btn,
         selection,
         info;
+    
+    var height = $('.location').height() - $('.field-description').height() - 50;
+    $("#map-form").height(height);
+    map.invalidateSize();
 
     this.model.on('geocode', function(val){
       control.geocodeExternal(val);

@@ -5,8 +5,8 @@ var Person = Utility.model.extend({
   urlRoot: "/api/persons",
   schema: {
     name: { type: 'Text', validators: ['required'], title: 'Name', editorAttrs: {placeholder: "Name", autofocus:'autofocus'} },
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: "Type description", rows: 17} },
-    global: { title: 'Global', type:'Checkbox', editorAttrs: {placeholder: "Type" }, help: 'Check if person is global' }
+    global: { title: 'Global', type:'Checkbox', editorAttrs: {placeholder: "Type" }, help: 'Check if person is global' },
+    description: { type: 'Htmleditor', title: 'Description' }
   }
 })
 exports.person = Person

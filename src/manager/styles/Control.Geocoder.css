@@ -28,6 +28,8 @@
 	font-size: 16px;
 	width: 0;
 	transition: width 0.125s ease-in;
+	line-height: 20px;
+	min-height: 25px;
 }
 
 .leaflet-touch .leaflet-control-geocoder-form input {
@@ -37,7 +39,7 @@
 .leaflet-control-geocoder-icon {
 	width: 26px;
 	height: 26px;
-	background-image: url(/assets/leaflet/geocoder.png);
+	background-image: url(/assets/img/leaflet/geocoder.png);
 	background-repeat: no-repeat;
 	background-position: center;
 	float: right;
@@ -50,7 +52,7 @@
 }
 
 .leaflet-control-geocoder-throbber .leaflet-control-geocoder-icon {
-	background-image: url(/assets/leaflet/throbber.gif);
+	background-image: url(/assets/img/leaflet/throbber.gif);
 }
 
 .leaflet-control-geocoder-expanded input, .leaflet-control-geocoder-error {

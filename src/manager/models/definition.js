@@ -6,8 +6,8 @@ var Definition = Utility.model.extend({
   schema: {
     title: { type: 'Text', validators: ['required'], title: 'Title', editorAttrs: {placeholder: "Title", autofocus:'autofocus'} },
     synonyms: {type:'Select2', options:[], config: {tags: true, placeholder: "Synonyms", tokenSeparators: [','], theme: "bootstrap"}, multiple: true},
-    description: { type: 'TextArea', title: 'Description', editorAttrs: {placeholder: "Enter description", rows: 17 } },
-    definition_type: { title: 'Type', type:'Select2', options:['общий комментарий', 'лагерная реалия', 'сокращение', 'языковой комментарий'], config: {placeholder: "Definition type", theme: "bootstrap"}}
+    definition_type: { title: 'Type', type:'Select2', options:['общий комментарий', 'лагерная реалия', 'сокращение', 'языковой комментарий'], config: {placeholder: "Definition type", theme: "bootstrap"}},
+    description: { type: 'Htmleditor', title: 'Description' }
   }
 })
 exports.definition = Definition

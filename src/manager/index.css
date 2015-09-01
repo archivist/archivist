@@ -15,9 +15,55 @@
 @import url('./styles/reset.css');
 @import url('./styles/substance.css');
 
+* {
+  margin: 0;
+  outline: none;
+}
+
+html {
+  height:100%;
+  -webkit-font-smoothing: antialiased;
+}
+
 body {
   background: #F8F8F8;
   font-family: 'Source Sans Pro',Helvetica,Arial,Verdana,sans-serifsans-serif;
+  padding: 0;
+  margin: 0;
+
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/*
+General Layout 
+--------------------------------------- */
+
+#container {
+  position: relative;
+  margin: 0 auto;
+}
+
+body #container {
+  height: 100%;
+  min-width: 800px;
+}
+
+
+body, textarea, p, input {
+  font-family: 'Open Sans', Helvetica, Arial, Verdana, sans-serif;
+  color: #505050;
+}
+
+a {
+  color: #1B6685;
+  font-weight: normal;
+  text-decoration: none;
+}
+
+a:hover {
+  color: rgba(11, 157, 217, 1);
 }
 
 /* Clearfix solution */
@@ -105,7 +151,7 @@ li#person {
 }
 
 li#merge {
-  width: 115px;
+  width: 120px;
 }
 
 li#users {
@@ -621,15 +667,23 @@ FILTERS
   height: 150px;
 }
 
+.field-description .form-control {
+  height: 100%;
+  padding: 0px;
+  border: none;
+}
+
 .form.location {
-  width: 330px;
-  float: left;
   padding: 20px 40px 0 35px;
   overflow: hidden;
 }
 
-.form.location form {
-  height: 495px;
+.form.location .field {
+  width: 350px;
+}
+
+.form.location .field-description .field {
+  width: 100%;
 }
 
 .form.location textarea {
@@ -661,9 +715,8 @@ FILTERS
 
 #geocode-selector {
   position: relative;
-  height: 0;
   top: -30px;
-  left: 736px;
+  left: 335px;
   display: block;
   width: 200px;
 }
@@ -672,8 +725,14 @@ FILTERS
   margin: 0px;
 }
 
+#map-form-wrapper {
+  position: absolute;
+  margin-left: 400px;
+  width: 500px;
+}
+
 #map-form {
-  height: 550px;
+  height: 275px;
 }
 
 #map-form::before {
@@ -683,6 +742,16 @@ FILTERS
   left: 0;
   position: absolute;
   width: 5px;
+  z-index: 1000;
+}
+
+#map-form::after {
+  box-shadow: 1px -4px 5px -2px rgba(0,0,0,.5) inset;
+  content: "";
+  height: 11px;
+  bottom: 0;
+  position: absolute;
+  width: 100%;
   z-index: 1000;
 }
 
@@ -703,7 +772,7 @@ FILTERS
 
 .editor-dialog-footer {
   display: block;
-  height: 20px;
+  height: 40px;
 }
 
 .editor-dialog-footer .cancel {
@@ -922,7 +991,6 @@ MODAL
   z-index: 999;
   margin: auto;
   width: auto;
-  max-width: 560px; 
   border: 0;
   outline: 0;
   border-radius: 4px;
@@ -939,7 +1007,7 @@ MODAL
 }
 
 .editor-dialog-modal {
-  max-width: 500px;
+  max-width: 700px;
 }
 
 .dialog-header {
