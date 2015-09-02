@@ -247,12 +247,13 @@ function getResult(res, options, suggestedEntities) {
     }
   });
   // don't need to transfer global stats for entities
-  delete facets.entities;
+  if(options.entity) delete facets.entities;
 
   return result;
 }
 
 var searchInterviews = function(options, cb) {
+  options.entities = options.entities || false;
   options.searchString = options.searchString || options.searchStr;
   delete options.searchStr;
   console.log('### QUERY OPTIONS:', JSON.stringify(options, null, 2));

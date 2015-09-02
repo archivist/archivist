@@ -160,4 +160,16 @@ queries.countSubjects = function(cb) {
   });
 };
 
+queries.countEntities = function(cb) {
+  searchInterviews({
+    searchString: null,
+    filters: null,
+    published: true,
+    entities: true
+  }, function(err, result) {
+    if (err) return cb(err);
+    cb(null, result.facets.entities);
+  });
+};
+
 module.exports = queries;

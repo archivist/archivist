@@ -2,9 +2,11 @@ var Document = require('../../models/document.js')
   , Subjects = require('../../models/subject.js')
   , EntitiesGetter = require('./entities.js').get
   , EntitiesList = require('./entities.js').list
+  , Location = require('../../models/location.js')
   , Interview = require('archivist-core/interview')
   , auth = require('../auth/utils.js')
   , APICache = require('../shared/cache.js')
+  , interviews = require('../indexer/interviews')
   , _ = require('underscore')
   , async = require('async')
   , express = require('express')
@@ -98,6 +100,39 @@ var getEntities = function(doc, cb) {
   });
 }
 
+var getLocations = function(req, res, next) {
+  interviews.countEntities(function(err, counters){
+    var entities = _.keys(counters);
+    var query = {
+      _id: {
+        '$in': entities
+      }
+    }
+    Location.find(query, 'type name nearest_locality current_name country point _id', function (err, items) {
+      if (err) return next(err);
+      var geojson = {
+        type: "FeatureCollection",
+        features: []
+      };
+      _.each(items, function(item, key) {
+        var feature = {
+          "type": "Feature",
+          "geometry": {
+            "type": "Point",
+            "coordinates": item.point
+          },
+          "properties": item.toJSON()
+        }
+        feature.properties.documents = counters[item._id].count;
+        feature.properties.fragments = counters[item._id].occurrences;
+        delete feature.properties.point;
+        geojson.features.push(feature);
+      })
+      res.json(geojson);
+    });
+  });
+}
+
 var getSubjectsMap = function(cb) {
   Subjects.list({}, function(err, subjects) {
     if (err) return cb(err);
@@ -152,6 +187,9 @@ var getResources = function(req, res, next) {
     res.json(resourceMap);
   });
 }
+
+api.route('/public/locations')
+  .get(getLocations)
 
 api.route('/public/resources')
   .get(getResources);
