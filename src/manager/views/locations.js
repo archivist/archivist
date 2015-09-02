@@ -42,6 +42,7 @@ var ToponymsGrid = Grid.main.extend({
   },
   beforeClose: function() {
     this.nameFilter.remove();
+    this.nameFilter.unbind();
   },
   _add: function() {
     var dialogModel = new models.toponym();
@@ -95,9 +96,19 @@ var PrisonsGrid = Grid.main.extend({
       name: "synonyms",
     });
     $('.toolbox').prepend(this.nameFilter.render().el);
+    this.typeFilter = new Utils.selectFilter({
+      className: "prison-type backgrid-filter form-select",
+      collection: this.options.collection,
+      placeholder: "Select type",
+      name: "prison_type"
+    });
+    $('.toolbox').append(this.typeFilter.render().el);
   },
   beforeClose: function() {
     this.nameFilter.remove();
+    this.nameFilter.unbind();
+    this.typeFilter.remove();
+    this.typeFilter.unbind();
   },
   _add: function() {
     var dialogModel = new models.prison();
@@ -551,6 +562,7 @@ var LocationsMap = Backbone.Layout.extend({
   close: function() {
     $('#' + this.icon).removeClass('active');
     this.nameFilter.remove();
+    this.nameFilter.unbind();
     this.remove();
     this.unbind();
   },

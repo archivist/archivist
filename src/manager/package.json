@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "Select2": "select2/select2#34224604880875a47e5f6e4b5cc3bfe2e01f7b4b",
+    "Select2": "select2/select2#ea074af14ca601fe2c58d349ec46d8bd72dd27c4",
     "animate.css": "3.1.1",
     "backbone": "1.1.2",
     "backbone-forms": "powmedia/backbone-forms#24f4e18fcd8b84857d007191135d442db1401156",

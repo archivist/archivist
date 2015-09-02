@@ -35,9 +35,18 @@ var PersonsGrid = Grid.main.extend({
       name: "name",
     });
     $('.toolbox').prepend(this.nameFilter.render().el);
+    this.globalFilter = new Utils.filterLogic({
+      collection: this.options.collection,
+      placeholder: "Global",
+      name: "global",
+    });
+    $('.toolbox').append(this.globalFilter.render().el);
   },
   beforeClose: function() {
     this.nameFilter.remove();
+    this.nameFilter.unbind();
+    this.globalFilter.remove();
+    this.globalFilter.unbind();
   },
   _add: function() {
     var dialogModel = new models.person();

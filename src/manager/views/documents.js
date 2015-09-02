@@ -33,15 +33,24 @@ var DocumentsGrid = Grid.main.extend({
       name: "nodes.document.title",
     });
     $('.toolbox').prepend(this.titleFilter.render().el);
-    this.stateFilter = new Utils.selectFilter({
+    this.stateFilter = new Utils.selectBooleanFilter({
       collection: this.options.collection,
-      placeholder: "State",
-      name: "nodes.document.published"
+      placeholder: "Select state",
+      values: [
+        { id: "", text: 'Select state' },
+        { id: "nodes.document.published", text: 'Published' },
+        { id: "nodes.document.finished", text: 'Finished' },
+        { id: "nodes.document.verified", text: 'Verified' },
+        { id: "nodes.document.transcripted", text: 'Transcripted' }
+      ]
     });
-    $('.toolbox').prepend(this.stateFilter.render().el);
+    $('.toolbox').append(this.stateFilter.render().el);
   },
   beforeClose: function() {
     this.titleFilter.remove();
+    this.titleFilter.unbind();
+    this.stateFilter.remove();
+    this.titleFilter.unbind();
   },
   _add: function() {
     Backbone.middle.trigger("sync:start", 'Creating new document...');

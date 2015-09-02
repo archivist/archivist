@@ -25,12 +25,29 @@ var MainGrid = Backbone.Layout.extend({
     this.$el.addClass(this.options.class);
     this.filters();
     this.contextMenu.reset(this.panel);
+    this.listenTo(this.options.collection,'reset',this.updateCounter);
+    this.updateCounter();
   },
   filters: function() {},
   createContextPanel: function() {
   },
+  updateCounter: function() {
+    var status = Backbone.AppRouter.status;
+    var statusName = status.get('name');
+    var counter = this.options.collection.state.totalRecords;
+    counter = counter > 1 ? counter + " items" : counter + " item";
+    if(statusName.indexOf("items") != -1){
+      statusName = statusName.replace(/\(.*?\)/g, counter);
+    } else {
+      statusName = statusName + " (" + counter + ")";
+    }
+    setTimeout(function() {
+      Backbone.AppRouter.status.set({'name': statusName, type: 'info'});
+    }, 0)
+  },
   close: function() {
     $('#' + this.icon).removeClass('active');
+    this.counter.empty();
     this.beforeClose();
     this.grid.remove();
     this.remove();

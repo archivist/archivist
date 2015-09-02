@@ -21,6 +21,7 @@ var Filter = Backgrid.Extension.ServerSideFilter.extend({
           if(_.isUndefined(collection.queryParams.query)) {
           collection.queryParams.query = {};
         }
+          collection.queryParams.query = {};
           collection.queryParams.query[this.name] = function () {
             var value = self.searchBox().val();
             if(!_.isEmpty(value)){
@@ -51,23 +52,132 @@ exports.filter = Filter
 var SelectFilter = Backgrid.Extension.ServerSideFilter.extend({
   className: "backgrid-filter form-select",
   initialize: function (options) {
-      var self = this;
+    var self = this;
+    Backgrid.Extension.ServerSideFilter.__super__.initialize.apply(this, arguments);
+    this.name = options.name || this.name;
+    this.placeholder = options.placeholder || this.placeholder;
+    this.template = options.template || this.template;
+
+    // Persist the query on pagination
+    var collection = this.collection, self = this;
+    var model = new collection.model();
+    var values = model.schema[this.name].options;
+    var selectOpts = [{id: "", text: this.placeholder}];
+    _.each(values, function(item) {
+      selectOpts.push({id: item, text: item});
+    });
+    this.settings = {
+      allowClear: true,
+      width: 250,
+      placeholder: this.placeholder,
+      data: selectOpts,
+      theme: "bootstrap"
+    }
+    if (Backbone.PageableCollection &&
+        collection instanceof Backbone.PageableCollection &&
+        collection.mode == "server") {
+      if(_.isUndefined(collection.queryParams.query)) {
+        collection.queryParams.query = {};
+      }
+      collection.queryParams.query[this.name] = function () {
+        var value = self.$el.find('select').val();
+        
+        if(!_.isEmpty(value)){
+          return value;
+        } else {
+          return null;
+        }
+      };
+    }
+  },
+  template: _.template('<select name="<%- name %>"></select>'),
+  search: function (e) {
+    if(e) e.preventDefault();
+    var value = e.target.value;
+    var data = { query: {} };
+    if(_.isEmpty(value)) data.query = value;
+    var collection = this.collection;
+
+    // go back to the first page on search
+    if (Backbone.PageableCollection &&
+      collection instanceof Backbone.PageableCollection) {
+      collection.getFirstPage({data: data, reset: true, fetch: true});
+    } else {
+      collection.fetch({data: data, reset: true});
+    }
+  },
+  render: function () {
+    var self = this;
+    this.$el.empty().append(this.template({
+      name: this.name
+    })).find('select').select2(this.settings).on('change',function(e){self.search(e)});
+    return this;
+  }
+});
+exports.selectFilter = SelectFilter;
+
+var SelectBooleanFilter = Backgrid.Extension.ServerSideFilter.extend({
+  className: "backgrid-filter boolean-select",
+  initialize: function (options) {
+    var self = this;
+    Backgrid.Extension.ServerSideFilter.__super__.initialize.apply(this, arguments);
+    this.values = options.values || this.values;
+    this.placeholder = options.placeholder || this.placeholder;
+    this.template = options.template || this.template;
+
+    // Persist the query on pagination
+    var collection = this.collection, self = this;
+    this.settings = {
+      allowClear: true,
+      width: 150,
+      placeholder: this.placeholder,
+      data: this.values,
+      theme: "bootstrap"
+    }
+  },
+  template: _.template('<select name="<%- name %>"></select>'),
+  search: function (e) {
+    if(e) e.preventDefault();
+    var field = e.target.value;
+    var collection = this.collection;
+    if(_.isEmpty(field)){
+      _.each(this.values, function(item){
+        delete collection.queryParams.query[item.id];
+      });
+    } else {
+      collection.queryParams.query[field] = true;
+      _.each(this.values, function(item){
+        if(item.id != field) delete collection.queryParams.query[item.id];
+      });
+    }
+    // go back to the first page on search
+    if (Backbone.PageableCollection &&
+      collection instanceof Backbone.PageableCollection) {
+      collection.getFirstPage({reset: true, fetch: true});
+    } else {
+      collection.fetch({data: data, reset: true});
+    }
+  },
+  render: function () {
+    var self = this;
+    this.$el.empty().append(this.template({
+      name: this.name
+    })).find('select').select2(this.settings).on('change',function(e){self.search(e)});
+    return this;
+  }
+});
+exports.selectBooleanFilter = SelectBooleanFilter;
+
+var FilterLogic = Backgrid.Extension.ServerSideFilter.extend({
+  className: "backgrid-filter form-logic",
+  initialize: function (options) {
       Backgrid.Extension.ServerSideFilter.__super__.initialize.apply(this, arguments);
       this.name = options.name || this.name;
       this.placeholder = options.placeholder || this.placeholder;
       this.template = options.template || this.template;
-      this.type = options.type || this.type;
-      var colUrl = this.collection.url.split( '/' ),
-        colName = colUrl[colUrl.length - 1];
 
       // Persist the query on pagination
       var collection = this.collection, self = this;
-      this.settings = {
-        allowClear: true,
-        width: 220,
-        placeholder: this.placeholder,
-        data: [{ id: "true", text: 'Published' }, { id: 1, text: 'bug' }, { id: 2, text: 'duplicate' }, { id: 3, text: 'invalid' }, { id: 4, text: 'wontfix' }]
-      }
       if (Backbone.PageableCollection &&
           collection instanceof Backbone.PageableCollection &&
           collection.mode == "server") {
@@ -75,29 +185,22 @@ var SelectFilter = Backgrid.Extension.ServerSideFilter.extend({
           collection.queryParams.query = {};
         }
           collection.queryParams.query[this.name] = function () {
-            var data = self.$el.find('select').select2('data');
-            debugger
-           
-            if(_.isArray(data)) {
-              var values = _.pluck(data,'id');
-            } else {
-              var values = '';
-            }
-            
-            if(!_.isEmpty(values)){
-              return JSON.stringify({ $in: values });
+            var value = self.value;
+            if(value){
+              return value;
             } else {
               return null;
             }
           };
         }
-  },
-  template: _.template('<select data-placeholder="<%- placeholder %>" name="<%- name %>"></select>'),
-    search: function (e) {
-      if (e) e.preventDefault();
-      var values = e.val;
+    },
+  search: function (e) {
+    if (e) e.preventDefault();
+    $(e.target).toggleClass('active');
+    var self = this;
     var data = { query: {} };
-    data.query = JSON.stringify({ $in: values });
+    data.query = $(e.target).hasClass('active');
+    self.value = data.query;
     var collection = this.collection;
 
     // go back to the first page on search
@@ -107,16 +210,20 @@ var SelectFilter = Backgrid.Extension.ServerSideFilter.extend({
     }
     else collection.fetch({data: data, reset: true});
     },
-  render: function () {
-    var self = this;
+    template: _.template('<button type="button" class="btn btn-default" name="<%- name %>" data-toggle="button"><% if (placeholder) { %><%- placeholder %><% } %></button>', null, {variable: null}),
+    render: function () {
+      var self = this;
       this.$el.empty().append(this.template({
-          name: this.name,
-          placeholder: this.placeholder
-      })).find('select').select2(this.settings).on('change',function(e){self.search(e)});
+        name: this.name,
+        placeholder: this.placeholder,
+        value: this.value,
+        type: this.type
+      })).find('button').on('click',function(e){self.search(e)});
+      this.delegateEvents();
       return this;
-  }
+    }
 });
-exports.selectFilter = SelectFilter;
+exports.filterLogic = FilterLogic;
 
 var isSuper = function() {
   var session = Backbone.AppRouter.session;

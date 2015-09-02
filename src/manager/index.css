@@ -334,7 +334,7 @@ nav.topbar span.title {
   color: #D50A46;
 }
 
-.dashboard th.sortable a {
+th.sortable a {
   float: right;
   font-size: 15px;
   font-style: italic;
@@ -534,6 +534,15 @@ nav.topbar span.title {
   display: block;
 }
 
+.toolbox .counter {
+  position: absolute;
+  right: 30px;
+  top: 70px;
+  background-color: rgba(240, 240, 240, 0.5);
+  padding: 8px;
+  line-height: 14px;
+}
+
 .context-filters {
   float: left;
 }
@@ -608,10 +617,40 @@ FILTERS
   font-size: 23px;
 }
 
+.backgrid-filter.form-logic {
+  height: 30px;
+  margin: 13px 0 10px;
+  float: right;
+}
+
+.backgrid-filter.form-select {
+  height: 30px;
+  margin: 13px 0 10px;
+  float: right;
+}
+
+.backgrid-filter.boolean-select {
+  height: 30px;
+  margin: 13px 0 10px;
+  float: right;
+}
+
+.backgrid-filter.boolean-select .select2-selection,
+.backgrid-filter.form-select .select2-selection {
+  height: 29px;
+  line-height: 17px;
+}
+
+.backgrid-filter.boolean-select .select2-selection__clear,
+.backgrid-filter.form-select .select2-selection__clear {
+  line-height: 14px;
+  float: left;
+}
+
 .backgrid thead {
   position: absolute;
   top: 14px;
-  right: 240px;
+  left: 350px;
 }
 
 .backgrid thead th {
@@ -625,6 +664,10 @@ FILTERS
   cursor: pointer;
   color: #888;
   font-weight: 200;
+}
+
+.backgrid th.select-all-header-cell.renderable {
+  display: none;
 }
 
 #context-panel {

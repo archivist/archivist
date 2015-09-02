@@ -123,7 +123,7 @@ var Router = Backbone.Router.extend({
     var toponymsGrid = [
       {
         name: 'name',
-        label: 'name',
+        label: 'sort by name',
         editable: false,
         cell: views.locationCell
       }
@@ -148,7 +148,7 @@ var Router = Backbone.Router.extend({
     var prisonsGrid = [
       {
         name: 'name',
-        label: 'name',
+        label: 'sort by name',
         editable: false,
         cell: views.locationCell
       }
@@ -173,7 +173,7 @@ var Router = Backbone.Router.extend({
     var definitionsGrid = [
       {
         name: 'title',
-        label: 'title',
+        label: 'sort by title',
         editable: false,
         cell: views.definitionCell
       }
@@ -194,7 +194,7 @@ var Router = Backbone.Router.extend({
     var personsGrid = [
       {
         name: 'name',
-        label: 'name',
+        label: 'sort by name',
         editable: false,
         cell: views.personCell
       }
@@ -289,7 +289,7 @@ var Router = Backbone.Router.extend({
     this.manager = this.getManagerName(colName);
 
     if(_.isUndefined(self[colName])) self[colName] = new models[colName]()
-      
+    self[colName].queryParams.query = {};
     self[colName].fetch().done(function(){
       var gridView = new views[viewName]({ collection: self[colName], columns: grid, contextMenu: self.contextMenu });
       self.changeLayout(gridView, callback, id);

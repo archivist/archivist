@@ -37,9 +37,19 @@ var DefinitionsGrid = Grid.main.extend({
       name: "synonyms",
     });
     $('.toolbox').prepend(this.titleFilter.render().el);
+    this.typeFilter = new Utils.selectFilter({
+      className: "definition-type backgrid-filter form-select",
+      collection: this.options.collection,
+      placeholder: "Select type",
+      name: "definition_type"
+    });
+    $('.toolbox').append(this.typeFilter.render().el);
   },
   beforeClose: function() {
     this.titleFilter.remove();
+    this.titleFilter.unbind();
+    this.typeFilter.remove();
+    this.typeFilter.unbind();
   },
   _add: function() {
     var dialogModel = new models.definition();
