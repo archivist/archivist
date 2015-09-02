@@ -1,0 +1,8 @@
+{
+  "browser.search_button": "Search",
+  "browser.search_placeholder": "Enter search terms",
+  "browser.clear_filters": "Clear Filters",
+  "browser.loading": "Loading documents...",
+  "browser.found": "documents found",
+  "browser.minutes": "min"
+}

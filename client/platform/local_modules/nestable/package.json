@@ -1,9 +1,0 @@
-{
-  "name": "nestable",
-  "version": "1.0.0",
-  "description": "Drag & drop hierarchical list with mouse and touch compatibility (jQuery plugin)",
-  "main": "jquery.nestable.js",
-  "dependencies": {
-    "jquery": "^2.1.1"
-  }
-}

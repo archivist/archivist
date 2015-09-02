@@ -1,0 +1,547 @@
+/* Special button reset */
+/* Reset `button` and button-style `input` default styles */
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+button {
+  background: none;
+  border: 0;
+  color: inherit;
+  /* cursor: default; */
+  cursor: pointer;
+  font: inherit;
+  line-height: normal;
+  overflow: visible;
+  padding: 0;
+  display: block;
+  text-align: left;
+  -webkit-appearance: button;
+  /* for input */
+  -webkit-user-select: none;
+  /* for button */
+  -moz-user-select: none;
+  -ms-user-select: none; }
+
+input::-moz-focus-inner,
+button::-moz-focus-inner {
+  border: 0;
+  padding: 0; }
+
+.fill-dark {
+  background: #404040; }
+
+.fill-gray {
+  background: #404040; }
+
+.fill-light {
+  background: #f8f8f8; }
+
+.fill-white {
+  background: #fff; }
+
+/* Inline Elements: Defaults
+------------------------------------------------------- */
+input,
+textarea {
+  color: rgba(0, 0, 0, 0.75);
+  font: 17px 'Lato', Arial;
+  min-height: 30px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  margin: 0; }
+
+h1 {
+  font-size: 30px;
+  line-height: 40px; }
+
+h2 {
+  font-size: 30px;
+  line-height: 30px;
+  padding-top: 20px;
+  padding-bottom: 10px; }
+
+h3 {
+  font-size: 22px;
+  line-height: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px; }
+
+h4, h5, h6 {
+  font-size: 15px;
+  line-height: 20px;
+  padding-bottom: 10px; }
+
+p {
+  margin-bottom: 20px; }
+
+p:last-child {
+  margin-bottom: 0; }
+
+.strong,
+strong {
+  font-weight: 600; }
+
+.emphasis, em {
+  font-style: italic; }
+
+/* Links */
+a {
+  color: #2079DC;
+  text-decoration: none; }
+
+a.active, a:hover {
+  color: #63b6e5; }
+
+.dark a, a.dark {
+  color: rgba(255, 255, 255, 0.5); }
+
+a.dark.active, .dark a.active, a.dark:hover, .dark a:hover {
+  color: white; }
+
+a.quiet {
+  color: rgba(0, 0, 0, 0.5); }
+
+a.quiet.active, a.quiet:hover {
+  color: rgba(0, 0, 0, 0.75); }
+
+.dark a.quiet, a.quiet.dark {
+  color: white; }
+
+.dark a.quiet:hover, a.quiet.dark.active, a.quiet.dark:hover {
+  color: rgba(255, 255, 255, 0.5); }
+
+/* Buttons */
+/* Buttons (generic)
+-------------------------------------------------- */
+.button {
+  font-weight: 600;
+  height: 30px;
+  min-width: 30px;
+  padding: 0px 10px;
+  text-align: center; }
+  .button.plain {
+    background: none;
+    color: #1B6685; }
+    .button.plain:hover {
+      color: #0b9dd9; }
+  .button.loud {
+    background: #4A90E2;
+    color: rgba(255, 255, 255, 0.8); }
+    .button.loud:hover {
+      background: #397AC6;
+      color: #fff; }
+
+/* Helpers
+-------------------------------------------------- */
+.limiter {
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto; }
+
+.truncate {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden; }
+
+.hidden {
+  display: none !important; }
+
+/* Typography */
+.small {
+  font-size: 14px; }
+
+.large {
+  font-size: 20px; }
+
+.xlarge {
+  font-size: 23px; }
+
+.dark {
+  color: #fff; }
+
+.center {
+  text-align: center; }
+
+/* Borders */
+.border {
+  border: 1px solid #ddd; }
+
+.border-left {
+  border-left: 1px solid #ddd; }
+
+.border-right {
+  border-right: 1px solid #ddd; }
+
+.border-top {
+  border-top: 1px solid #ddd; }
+
+.border-bottom {
+  border-bottom: 1px solid #ddd; }
+
+/* Deemphasis */
+.quiet {
+  color: rgba(0, 0, 0, 0.5); }
+
+.dark .quiet {
+  color: rgba(255, 255, 255, 0.5); }
+
+/* Floating */
+.float-left {
+  float: left !important; }
+
+.float-right {
+  float: right !important; }
+
+/* Clearfix - see http://www.positioniseverything.net/easyclearing.html */
+.clearfix {
+  display: block; }
+
+.clearfix:after {
+  content: '';
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden; }
+
+.debug * {
+  outline: 1px solid pink; }
+
+/* Disabled style */
+.disabled {
+  opacity: 0.2;
+  cursor: default; }
+
+.shadow {
+  box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.15); }
+
+/* Menubar
+-------------------------------------------------- */
+.menubar {
+  height: 40px; }
+  .menubar .menu-group {
+    float: left;
+    margin-left: 5px; }
+  .menubar .pill {
+    font-weight: 600;
+    padding: 0px 10px;
+    float: left;
+    margin: 5px;
+    height: 30px;
+    min-width: 30px;
+    text-align: center;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    border-radius: 2px; }
+    .menubar .pill:hover {
+      background: rgba(0, 0, 0, 0.05); }
+    .menubar .pill.active {
+      background: rgba(0, 0, 0, 0.2); }
+  .menubar.dark .pill.active, .menubar.dark .pill:hover {
+    background: rgba(255, 255, 255, 0.1); }
+
+/* Toolbar
+-------------------------------------------------- */
+.toolbar {
+  height: 40px;
+  /* Toolbar Tool
+  ---------------------------- */
+  /* Toolbar Dropdown
+  ---------------------------- */
+  /* Toolbar Select
+  ---------------------------- */ }
+  .toolbar .tool-group {
+    float: left;
+    margin-right: 10px; }
+  .toolbar .tool {
+    line-height: normal;
+    margin: 5px;
+    float: left;
+    position: relative; }
+  .toolbar .tool.active {
+    background: rgba(0, 0, 0, 0.1); }
+  .toolbar .tool:hover {
+    background: rgba(0, 0, 0, 0.1); }
+  .toolbar .tool.disabled:hover {
+    background: none; }
+  .toolbar input {
+    margin: 5px;
+    margin-left: 20px;
+    min-width: 600px;
+    border: none; }
+  .toolbar .button {
+    height: 30px;
+    min-width: 30px;
+    text-align: center;
+    color: inherit; }
+  .toolbar .dropdown, .toolbar .select {
+    overflow: visible;
+    position: relative;
+    float: left; }
+    .toolbar .dropdown .toggle, .toolbar .select .toggle {
+      height: 30px;
+      padding: 0px 10px;
+      line-height: 30px;
+      margin: 5px;
+      display: block; }
+    .toolbar .dropdown:not(.disabled) .toggle:after, .toolbar .select:not(.disabled) .toggle:after {
+      content: " \f0d7";
+      padding-left: 10px;
+      float: right;
+      font-family: FontAwesome; }
+    .toolbar .dropdown .options, .toolbar .select .options {
+      display: none;
+      position: absolute;
+      top: 40px;
+      z-index: 5000;
+      min-width: 150px; }
+      .toolbar .dropdown .options .option, .toolbar .select .options .option {
+        display: block;
+        padding: 5px 10px;
+        width: 100%; }
+      .toolbar .dropdown .options .option:hover, .toolbar .select .options .option:hover {
+        background: rgba(0, 0, 0, 0.05); }
+    .toolbar .dropdown.open .options, .toolbar .open.select .options {
+      display: block; }
+  .toolbar .select .toggle {
+    background: white;
+    border: 1px solid #ddd; }
+
+/* Modal
+-------------------------------------------------- */
+.modal {
+  z-index: 500000;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: rgba(0, 0, 0, 0.6); }
+  .modal .body {
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 30px;
+    right: 30px;
+    top: 30px;
+    bottom: 30px;
+    background: white;
+    box-shadow: 0 0 25px 0 rgba(0, 0, 0, 0.8); }
+    .modal .body .header {
+      position: absolute;
+      left: 0px;
+      top: 0px;
+      right: 0px;
+      height: 40px;
+      border-bottom: 1px solid #ddd; }
+      .modal .body .header .title {
+        line-height: 40px;
+        font-weight: 600;
+        padding-left: 20px; }
+    .modal .body .content {
+      position: absolute;
+      overflow: auto;
+      top: 40px;
+      left: 0px;
+      right: 0px;
+      bottom: 0px; }
+  .modal.medium .body {
+    max-width: 800px; }
+
+.content-node.paragraph {
+  padding-bottom: 20px; }
+
+.content-node.heading {
+  padding-bottom: 20px;
+  font-weight: 600; }
+
+.content-node.heading.level-1 {
+  font-size: 24px;
+  line-height: 28px; }
+
+.content-node.heading.level-2 {
+  font-size: 20px; }
+
+.content-node.heading.level-3 {
+  font-size: 16px; }
+
+/**
+ * Substance List styles
+ * -------
+ * 
+ * Used for ordered lists
+ *
+ * Supports nesting only up to level-4
+ */
+.li.level-2 {
+  margin-left: 20px; }
+
+.li.level-3 {
+  margin-left: 40px; }
+
+.li.level-4 {
+  margin-left: 60px; }
+
+/* Spacing */
+.li.list-start {
+  padding-top: 20px; }
+
+.li.list-end {
+  padding-bottom: 20px; }
+
+/**
+ * Unordered lists
+ * -------
+ */
+.ul.li::before {
+  content: "▪ "; }
+
+/**
+ * Ordered lists
+ * -------
+ * 
+ * Use CSS counters and support nesting up to level 4
+ */
+/* When a new list occurs counters are reset */
+.list-start {
+  counter-reset: level1 level2 level3 level4 !important; }
+
+/* Resets for individual levels */
+.ol.li.level-1 {
+  counter-reset: level2 level3 level4; }
+
+.ol.li.level-2 {
+  counter-reset: level3 level4; }
+
+.ol.li.level-3 {
+  counter-reset: level4; }
+
+/* Counter displays for levels 1-3 */
+.ol.li.level-1::before {
+  counter-increment: level1;
+  content: counter(level1) ". "; }
+
+.ol.li.level-2::before {
+  counter-increment: level2;
+  content: counter(level1) "." counter(level2) ". "; }
+
+.ol.li.level-3::before {
+  counter-increment: level3;
+  content: counter(level1) "." counter(level2) "." counter(level3) ". "; }
+
+.ol.li.level-4::before {
+  counter-increment: level4;
+  content: counter(level1) "." counter(level2) "." counter(level3) "." counter(level4) ". "; }
+
+.annotation.link {
+  color: #2079DC;
+  border-bottom: 1px solid #CEDFF3; }
+
+.toolbar .tool.link .prompt {
+  padding: 15px;
+  padding-bottom: 0px;
+  position: absolute;
+  left: -150px;
+  top: 40px;
+  z-index: 50000;
+  width: 300px; }
+  .toolbar .tool.link .prompt .prompt-title {
+    font-size: 16px;
+    font-weight: bold; }
+  .toolbar .tool.link .prompt a.delete-link {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 13px;
+    color: red; }
+  .toolbar .tool.link .prompt input {
+    margin: 15px 0;
+    width: 100%;
+    font-size: 14px;
+    display: block;
+    border: 1px solid #ddd;
+    min-width: auto;
+    padding: 0 10px; }
+
+.content-node.codeblock {
+  font-family: Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+  font-size: 16px;
+  padding-bottom: 20px; }
+
+.content-node.blockquote {
+  border-left: 2px solid #ccc;
+  font-family: Georgia;
+  padding-left: 30px;
+  font-size: 20px;
+  font-style: italic;
+  margin-bottom: 20px; }
+
+.text-tool-component.select .toggle {
+  width: 140px; }
+
+/* Special styles */
+.text-tool-component .option.heading1 {
+  font-size: 24px;
+  font-weight: 600; }
+
+.text-tool-component .option.heading2 {
+  font-size: 20px;
+  font-weight: 600; }
+
+.text-tool-component .option.heading3 {
+  font-size: 16px;
+  font-weight: 600; }
+
+.toolbar .tool.expand::before, .toolbar .tool.truncate::before {
+  content: " \f07e";
+  font-family: FontAwesome;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 7px; }
+
+.toolbar .tool.edit::before {
+  content: " \f013";
+  font-family: FontAwesome;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  font-size: 7px; }
+
+/* The invisible incredible Clipboard element
+-----------------------------------------------------*/
+.clipboard {
+  position: fixed;
+  opacity: 0.0;
+  bottom: -1000px; }
+
+.editor-component {
+  top: 10px;
+  bottom: 40px;
+  left: 10px;
+  right: 10px;
+  border: 1px solid #ddd;
+  background: white;
+  color: #222; }
+
+.toolbar {
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee; }
+
+.editor-component .container-node {
+  padding: 20px;
+  top: 40px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: auto; }
+
+.text-tool-component {
+  display: none;
+}

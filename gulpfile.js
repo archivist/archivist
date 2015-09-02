@@ -1,110 +1,144 @@
 var browserify = require('browserify'),
-    watchify = require('watchify'),
-    //Duo = require('duo'),
     gulp = require('gulp'),
-    //gutil = require('gulp-util'),
+    sass = require('gulp-sass'),
+    babelify = require('babelify'),
+    through2 = require('through2'),
     rename = require('gulp-rename'),
     uglify = require('gulp-uglify'),
     importCSS = require('gulp-import-css'),
     minifyCSS = require('gulp-minify-css'),
     streamify = require('gulp-streamify'),
-    source = require('vinyl-source-stream'),
-    //map = require('map-stream'),
-    sourceFile = './client/platform/index.js',
-    destFolder = './public/platform/',
-    destFile = 'index.js',
-    composerSourceFile = './boot_archivist_composer.js',
-    composerDestFolder = './public/composer/';
+    source = require('vinyl-source-stream');
 
-gulp.task('browserify', function() {
-  var bundler = browserify(sourceFile,{ debug: true, cache: {}, packageCache: {} }),
-      bundle = function() {
-        return bundler
-          .bundle()
-          .pipe(source(destFile))
-          .pipe(gulp.dest(destFolder));
-      };
-  return bundle();
+
+// Manager tasks
+// -------------
+
+gulp.task('manager-assets', function () {
+  gulp.src('./src/manager/assets/**/*')
+    .pipe(gulp.dest('./public/assets'));
 });
 
-gulp.task('watch', function() {
-  var bundler = browserify(sourceFile,{debug: true, cache: {}, packageCache: {}});
-  bundler = watchify(bundler);
-  bundler.on('update', rebundle);
-
-  function rebundle() {
-    console.log('building new version')
-    gulp.src('./client/platform/index.css')
-      .pipe(importCSS())
-      .pipe(minifyCSS({cache:true}))
-      .pipe(rename("index.css"))
-      .pipe(gulp.dest(destFolder))
-    bundler.bundle()
-      .on('error', function(err){
-          console.log(err.message);
-          this.end();
-        })
-      .pipe(source(destFile))
-      .pipe(gulp.dest(destFolder));
-  }
-
-  return rebundle();
-});
-
-gulp.task('compress', function() {
-  var bundler = browserify(sourceFile,{cache: {}, packageCache: {} }),
+gulp.task('manager-bundle', function() {
+  var bundler = browserify('./src/manager/index.js', {cache: {}, packageCache: {} }),
       bundle = function() {
-        gulp.src('./client/platform/index.css')
+        gulp.src('./src/manager/index.css')
           .pipe(importCSS())
           .pipe(minifyCSS({cache:true}))
-          .pipe(rename("index.css"))
-          .pipe(gulp.dest(destFolder))
+          .pipe(rename("manager.css"))
+          .pipe(gulp.dest('./public/manager'))
         bundler
           .bundle()
-          .pipe(source(destFile))
+          .pipe(source('manager.js'))
           .pipe(streamify(uglify()))
-          .pipe(gulp.dest(destFolder));
+          .pipe(gulp.dest('./public/manager'));
       };
   return bundle();
 });
 
-gulp.task('bundle-composer', function() {
-  var bundler = browserify(composerSourceFile, {cache: {}, packageCache: {} }),
-      bundle = function() {
-        gulp.src('./node_modules/archivist-composer/styles/composer.css')
-          .pipe(minifyCSS({cache:true}))
-          .pipe(rename("composer.css"))
-          .pipe(gulp.dest(composerDestFolder));
+gulp.task('manager', ['manager-assets', 'manager-bundle']);
 
-        gulp.src("./node_modules/archivist-composer/lib/**/*")
-          .pipe(gulp.dest(composerDestFolder+"/lib"));
+// Writer tasks
+// -------------
 
-        bundler
-          .bundle()
-          .pipe(source(destFile))
-          .pipe(streamify(uglify()))
-          .pipe(rename("composer.js"))
-          .pipe(gulp.dest(composerDestFolder));
-      };
-
-  return bundle();
+gulp.task('writer-assets', function () {
+  gulp.src('./src/writer/assets/**/*')
+    .pipe(gulp.dest('./public/assets'));
 });
 
-// function duo(opts) {
-//   opts = opts || {};
+gulp.task('writer-styles', function () {
+  gulp.src('./src/writer/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("writer.css"))
+    .pipe(gulp.dest('./public/writer'));
+});
 
-//   return map(function (file, fn) {
-//     Duo(__dirname)
-//       .entry(file.path)
-//       .run(function (err, src) {
-//         if (err) {
-//           return fn(err);
-//         }
+gulp.task('writer-bundle', function () {
+  return gulp.src('./src/writer/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('writer.js'))
+    .pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/writer'));
+});
 
-//         file.contents = new Buffer(src);
-//         fn(null, file);
-//       });
-//   });
-// }
+gulp.task('writer', ['writer-assets', 'writer-styles', 'writer-bundle']);
 
-gulp.task('default', ['browserify', 'watch', 'bundle-composer']);
+
+// Reader tasks
+// -------------
+
+gulp.task('reader-styles', function () {
+  gulp.src('./src/reader/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("reader.css"))
+    .pipe(gulp.dest('./public/reader'));
+});
+
+gulp.task('reader-bundle', function () {
+  return gulp.src('./src/reader/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('reader.js'))
+    .pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/reader'));
+});
+
+gulp.task('reader', ['reader-styles', 'reader-bundle']);
+
+
+// Browser tasks
+// -------------
+
+gulp.task('browser-styles', function () {
+  gulp.src('./src/browser/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("browser.css"))
+    .pipe(gulp.dest('./public/browser'));
+});
+
+gulp.task('browser-bundle', function () {
+  return gulp.src('./src/browser/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('browser.js'))
+    .pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/browser'));
+});
+
+gulp.task('browser', ['browser-styles', 'browser-bundle']);
+
+gulp.task('default', ['manager', 'writer', 'reader', 'browser']);
