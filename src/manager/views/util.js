@@ -45,7 +45,7 @@ var Filter = Backgrid.Extension.ServerSideFilter.extend({
           collection.getFirstPage({data: data, reset: true, fetch: true});
     }
     else collection.fetch({data: data, reset: true});
-    },
+    }
 });
 exports.filter = Filter
 
@@ -73,30 +73,18 @@ var SelectFilter = Backgrid.Extension.ServerSideFilter.extend({
       data: selectOpts,
       theme: "bootstrap"
     }
-    if (Backbone.PageableCollection &&
-        collection instanceof Backbone.PageableCollection &&
-        collection.mode == "server") {
-      if(_.isUndefined(collection.queryParams.query)) {
-        collection.queryParams.query = {};
-      }
-      collection.queryParams.query[this.name] = function () {
-        var value = self.$el.find('select').val();
-        
-        if(!_.isEmpty(value)){
-          return value;
-        } else {
-          return null;
-        }
-      };
-    }
   },
   template: _.template('<select name="<%- name %>"></select>'),
   search: function (e) {
     if(e) e.preventDefault();
     var value = e.target.value;
     var data = { query: {} };
-    if(_.isEmpty(value)) data.query = value;
     var collection = this.collection;
+    if(_.isEmpty(value)){
+      delete collection.queryParams.query[this.name];
+    } else {
+      collection.queryParams.query[this.name] = value;
+    }
 
     // go back to the first page on search
     if (Backbone.PageableCollection &&
