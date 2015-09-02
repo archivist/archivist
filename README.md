@@ -100,3 +100,5 @@ Try everything out. If something is obviously broken you can fix it and try agai
 ```
 $ git push origin release
 ```
+
+Repository logo based on [work](https://thenounproject.com/term/documents/54889/) done by [James Cook](https://thenounproject.com/mojocakes/) from the [Noun Project](https://thenounproject.com) which licensed under [CC BY 3.0 US](http://creativecommons.org/licenses/by/3.0/us/).
