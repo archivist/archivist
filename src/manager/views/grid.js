@@ -47,7 +47,6 @@ var MainGrid = Backbone.Layout.extend({
   },
   close: function() {
     $('#' + this.icon).removeClass('active');
-    this.counter.empty();
     this.beforeClose();
     this.grid.remove();
     this.remove();
