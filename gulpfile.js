@@ -141,4 +141,42 @@ gulp.task('browser-bundle', function () {
 
 gulp.task('browser', ['browser-styles', 'browser-bundle']);
 
+
+// Map tasks
+// -------------
+
+gulp.task('maps-assets', function () {
+  gulp.src('./src/maps/assets/**/*')
+    .pipe(gulp.dest('./public/assets'));
+});
+
+gulp.task('maps-styles', function () {
+  gulp.src('./src/maps/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("maps.css"))
+    .pipe(gulp.dest('./public/maps'));
+});
+
+gulp.task('maps-bundle', function () {
+  return gulp.src('./src/maps/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('maps.js'))
+    //.pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/maps'));
+});
+
+gulp.task('maps', ['maps-assets', 'maps-styles', 'maps-bundle']);
+
 gulp.task('default', ['manager', 'writer', 'reader', 'browser']);

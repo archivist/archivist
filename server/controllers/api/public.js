@@ -126,7 +126,7 @@ var getLocations = function(req, res, next) {
         feature.properties.documents = counters[item._id].count;
         feature.properties.fragments = counters[item._id].occurrences;
         delete feature.properties.point;
-        geojson.features.push(feature);
+        if(!_.isNull(item.point)) geojson.features.push(feature);
       })
       res.json(geojson);
     });

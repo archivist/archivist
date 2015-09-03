@@ -1,0 +1,27 @@
+// Substance styles
+@import 'node_modules/substance/ui/styles/index';
+
+html, body, #map {
+  height: 100%;
+  width: 100%;
+}
+
+#map_container {
+  position: fixed;
+  top: 10px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+}
+
+#info {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+  padding: 6px 8px;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  width: 210px;
+	z-index: 999;
+}

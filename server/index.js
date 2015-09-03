@@ -107,6 +107,11 @@ app.route('/archivist')
     res.render('manager');
   })
 
+app.route('/maps')
+	.get(function(req, res, next) {
+    res.render('maps', { media: media_server });
+  })
+
 app.route('/archivist/editor/*')
 	.get(function(req, res, next) {
 		res.render('writer');

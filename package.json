@@ -21,7 +21,10 @@
     "gulp-streamify": "0.0.5",
     "gulp-uglify": "^1.0.1",
     "jade": "*",
+    "jquery": "*",
     "jsonwebtoken": "^5.0.4",
+    "leaflet": "^0.7.5",
+    "leaflet.markercluster": "^0.4.0",
     "method-override": "*",
     "mongoose": "*",
     "mongoose-text-search": "0.0.2",
@@ -32,17 +35,17 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
     "serve-favicon": "^2.2.0",
+    "substance": "1.0.0-beta",
     "superagent": "^1.2.0",
     "through2": "^2.0.0",
     "underscore": "1.7.0",
     "vinyl-source-stream": "*"
   },
-  "url": "http://github.com/substance/archivist",
+  "url": "http://github.com/archivist/archivist",
   "scripts": {
     "start": "foreman start",
     "devmode": "NODE_ENV=development foreman start & gulp watch",
     "preinstall": "cd src/manager && npm install",
-    "postinstall": "gulp",
-    "seed": "node server/controllers/indexer/setup.js"
+    "postinstall": "gulp"
   }
 }
