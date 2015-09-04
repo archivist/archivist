@@ -1,6 +1,5 @@
 'use strict';
 
-var OO = require('substance/basics/oo');
 var Component = require('substance/ui/component');
 var $$ = Component.$$;
 

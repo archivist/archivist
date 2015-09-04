@@ -1,24 +1,6 @@
 {
-  "metadata.project_name": "Project Name",
-  "metadata.project_location": "Project Location",
-  "metadata.conductor": "Interview Conductor",
-  "metadata.operator": "Video Operator",
-  "metadata.sound_operator": "Sound Operator",
-  "metadata.interview_location": "Interview Location",
-  "metadata.interview_date": "Interview Date",
-  "metadata.persons_present": "Persons Present",
-  "metadata.interview_duration": "Interview Duration",
-  "metadata.published_on": "Published On",
-  "metadata.interviewee_bio": "Biography",
-  "metadata.show_more": "more...",
-  "metadata.show_less": "...less",
-  "panels.source": "Source",
-  "panels.subjects": "Topics",
-  "panels.entities": "Index",
-  "panels.info": "Info",
-  "entity.type.toponym": "Locations",
-  "entity.type.prison": "Prisons",
-  "entity.type.person": "Persons",
-  "entity.type.definition": "Definitions",
-  "entity.unknown_name": "Unknown name"
+  "interview.minutes": "min",
+  "entity.unknown_name": "Unknown name",
+  "map.toponyms": "Mentioned toponyms",
+  "map.prisons": "Mentioned prisons"
 }

@@ -212,14 +212,15 @@ var getEntityWithRefs = function(id, cb) {
     "nodes.document.interview_date": 1,
     "nodes.document.short_summary": 1,
     "nodes.document.short_summary_en": 1,
-    "nodes.document.project_name": 1
+    "nodes.document.project_name": 1,
+    "nodes.document.interview_duration": 1
   }
   async.parallel([
     function(callback){
       EntitiesGetter([id], callback);
     },
     function(callback){
-      Document.find({resources: id}, metadataSet, {}, callback);
+      Document.find({resources: id, "nodes.document.published": true}, metadataSet, {}, callback);
     }
   ],
   function(err, results){

@@ -3,7 +3,7 @@ var Component = require('substance/ui/component');
 var $$ = Component.$$;
 
 var Sidebar = require('./sidebar');
-var Filters = require('./filters');
+//var Filters = require('./filters');
 
 require('mapbox.js');
 require("leaflet.markercluster");
@@ -12,22 +12,16 @@ require("./maki");
 var MapBrowser = Component.extend({
   didInitialize: function() {
     this.backend = this.props.backend || false;
-    this.sidebar = Component.mount($$(Sidebar), $('#sidebar'));
   },
 
   render: function() {
     var el = $$('div').attr({id: 'map'}).addClass('map-component');
+    el.append($$(Sidebar).key('sidebar'));
     return el;
   },
 
   didMount: function() {
     this.initilizeMap();
-  },
-
-  willUnmount: function() {
-  },
-
-  willUpdateState: function(newState) {
   },
 
   initilizeMap: function() {
@@ -36,10 +30,9 @@ var MapBrowser = Component.extend({
     L.mapbox.accessToken = window.mapboxToken;
 
     this.map = L.mapbox.map('map', 'mapbox.light', {
-        maxZoom: '10',
-        minZoom: '4'
-      })
-      .setView([48.6, 18.8], 5);
+      maxZoom: '10',
+      minZoom: '4'
+    }).setView([48.6, 18.8], 5);
 
     this.overlays = L.layerGroup().addTo(this.map);
 
@@ -47,7 +40,7 @@ var MapBrowser = Component.extend({
       self.layers = L.mapbox.featureLayer()
         .setGeoJSON(data);
 
-      self.addFilters();
+      //self.addFilters();
       self.showLayer();
     });
   },
@@ -124,10 +117,11 @@ var MapBrowser = Component.extend({
     }
     var popupContent = "<h3>" + name + "</h3>";
     if(locale == "ru") {
-      popupContent += "<p class='stats'>упомянуто " + props.fragments + " " + this.declOfNum(props.fragments, ['раз', 'раза', 'раз']) + " в " + props.documents + " " + this.declOfNum(props.documents, ['документе', 'документах', 'документах']) + "</p>";
+      props.stats = props.fragments + " " + this.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + this.declOfNum(props.documents, ['документе', 'документах', 'документах']);
     } else {
-      popupContent += "<p class='stats'>mentioned " + props.fragments + " times in " + props.documents + " documents</p>";
+      props.stats = "mentioned " + props.fragments + " times in " + props.documents + " documents";
     }
+    popupContent += "<p class='stats'>" + props.stats + "</p>";
 
     layer.bindPopup(popupContent);
   },
@@ -135,9 +129,15 @@ var MapBrowser = Component.extend({
   showLocationInfo: function(layer) {
     var self = this;
     var id = layer.feature.properties.id;
-    this.backend.getLocation(id, function(err, data){
-      self.sidebar.update(data);
-    });
+    if(self.refs.sidebar.props.locationId != id) {
+      this.backend.getLocation(id, function(err, data){
+        data.stats = layer.feature.properties.stats;
+        self.refs.sidebar.setProps({
+          location: data,
+          locationId: id
+        })
+      });
+    }
   },
 
   declOfNum: function(number, titles) {  

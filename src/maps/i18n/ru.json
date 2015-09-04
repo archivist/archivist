@@ -1,24 +1,6 @@
 {
-  "metadata.project_name": "Название проекта",
-  "metadata.project_location": "Локация проекта",
-  "metadata.conductor": "Интервьюер",
-  "metadata.operator": "Оператор",
-  "metadata.sound_operator": "Звукооператор",
-  "metadata.interview_location": "Место интервью",
-  "metadata.interview_date": "Дата",
-  "metadata.persons_present": "Присутствующие",
-  "metadata.interview_duration": "Длительность (мин)",
-  "metadata.published_on": "Опубликовано",
-  "metadata.interviewee_bio": "Биография",
-  "metadata.show_more": "полная версия",
-  "metadata.show_less": "скрыть",
-  "panels.source": "Источник",
-  "panels.subjects": "Путеводитель",
-  "panels.entities": "Указатель",
-  "panels.info": "О респонденте",
-  "entity.type.toponym": "География",
-  "entity.type.prison": "Места заключения",
-  "entity.type.person": "Персоналии",
-  "entity.type.definition": "Реалии",
-  "entity.unknown_name": "Название неизвестно"
+  "interview.minutes": "мин",
+  "entity.unknown_name": "Название неизвестно",
+  "map.toponyms": "Упомянутые топонимы",
+  "map.prisons": "Места работы и заключения"
 }
