@@ -23,6 +23,7 @@
     "jade": "*",
     "jquery": "*",
     "jsonwebtoken": "^5.0.4",
+    "leaflet": "^0.7.5",
     "leaflet.markercluster": "^0.4.0",
     "mapbox.js": "^2.2.2",
     "method-override": "*",

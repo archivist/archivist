@@ -52,6 +52,19 @@ Backend.Prototype = function() {
       cb(null, result);
     });
   };
+
+  this.getLocation = function(id, cb) {
+    var self = this;
+    nprogress.start();
+    this._request('GET', '/api/public/resources/' + id, null, function(err, result) {
+      if (err) {
+        nprogress.done();
+        return cb(err);
+      }
+      nprogress.done();
+      cb(null, result);
+    });
+  };
 };
 
 Substance.initClass(Backend);

@@ -50,17 +50,6 @@ var MapBrowser = Component.extend({
       self.addFilters();
       self.showLayer();
     });
-
-    // this.map.on('zoomend',function(){
-    //   if(self.map._animateToZoom == self.map.getMaxZoom()){
-    //     self.overlays.eachLayer(function(layer){
-    //       setTimeout(function(){
-    //         layer._group._inZoomAnimation = 0;
-    //         layer.spiderfy();
-    //       }, 0)
-    //     })
-    //   }
-    // })
   },
 
   addFilters: function() {
@@ -101,7 +90,7 @@ var MapBrowser = Component.extend({
       }, 300);
     });
     this.layers.on('click', function(e) {
-      self.sidebar.update(e.layer);
+      self.showLocationInfo(e.layer);
     });
   },
 
@@ -141,6 +130,14 @@ var MapBrowser = Component.extend({
     }
 
     layer.bindPopup(popupContent);
+  },
+
+  showLocationInfo: function(layer) {
+    var self = this;
+    var id = layer.feature.properties.id;
+    this.backend.getLocation(id, function(err, data){
+      self.sidebar.update(data);
+    });
   },
 
   declOfNum: function(number, titles) {  
