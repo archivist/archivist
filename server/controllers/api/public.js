@@ -18,6 +18,8 @@ api.use(auth.allowCrossDomain);
 
 /* The Public API */
 
+/* Documents API */
+
 var readDocument = function(req, res, next) {
   Document.getCleaned(req.params.id, true, function(err, document) {
     if (err) return next(err);
@@ -39,23 +41,6 @@ var listDocuments = function(req, res, next) {
   Document.list(req.query, function(err, documents) {
     if (err) return next(err);
     res.json(documents);
-  });
-}
-
-var getSubjectsList = function(cb) {
-  Subjects.list({}, function(err, subjects) {
-    if(err) return cb(err);
-    cb(null, subjects);
-  });
-}
-
-// Cache results for 5 minutes
-var listSubjectsCache = new APICache(getSubjectsList, 5);
-
-var listSubjects = function(req, res, next) {
-  listSubjectsCache.get(function(err, subjects) {
-    if(err) return next(err);
-    res.json(subjects);
   });
 }
 
@@ -81,6 +66,25 @@ var prepareDocument = function(doc, cb) {
 
 }
 
+/* Subjects API */
+
+var getSubjectsList = function(cb) {
+  Subjects.list({}, function(err, subjects) {
+    if(err) return cb(err);
+    cb(null, subjects);
+  });
+}
+
+// Cache results for 5 minutes
+var listSubjectsCache = new APICache(getSubjectsList, 5);
+
+var listSubjects = function(req, res, next) {
+  listSubjectsCache.get(function(err, subjects) {
+    if(err) return next(err);
+    res.json(subjects);
+  });
+}
+
 var getSubjects = function(doc, cb) {
   Subjects.list({}, function(err, subjects) {
     if (err) return cb(err);
@@ -89,6 +93,22 @@ var getSubjects = function(doc, cb) {
     cb(null, filtered);
   });
 }
+
+var getSubjectsMap = function(cb) {
+  Subjects.list({}, function(err, subjects) {
+    if (err) return cb(err);
+    var results = {}
+    _.map(subjects, function(subject) {
+      results[subject.id] = {
+        name: subject.name,
+        type: 'subject'
+      }
+    });
+    cb(null, results);
+  });
+}
+
+/* Entities API */
 
 var getEntities = function(doc, cb) {
   var entityRefs = doc.getIndex('type').get('entity_reference');
@@ -100,7 +120,7 @@ var getEntities = function(doc, cb) {
   });
 }
 
-var getLocations = function(req, res, next) {
+var getPublishedLocations = function(cb) {
   interviews.countEntities(function(err, counters){
     var entities = _.keys(counters);
     var query = {
@@ -109,7 +129,7 @@ var getLocations = function(req, res, next) {
       }
     }
     Location.find(query, 'type name nearest_locality current_name prison_type country point _id', function (err, items) {
-      if (err) return next(err);
+      if (err) return cb(err);
       var geojson = {
         type: "FeatureCollection",
         features: []
@@ -128,22 +148,17 @@ var getLocations = function(req, res, next) {
         delete feature.properties.point;
         if(!_.isNull(item.point)) geojson.features.push(feature);
       })
-      res.json(geojson);
+      cb(null, geojson);
     });
   });
 }
 
-var getSubjectsMap = function(cb) {
-  Subjects.list({}, function(err, subjects) {
-    if (err) return cb(err);
-    var results = {}
-    _.map(subjects, function(subject) {
-      results[subject.id] = {
-        name: subject.name,
-        type: 'subject'
-      }
-    });
-    cb(null, results);
+var getLocationsCache = new APICache(getPublishedLocations, 5);
+
+var getLocations = function(req, res, next) {
+  getLocationsCache.get(function(err, locations) {
+    if(err) return next(err);
+    res.json(locations);
   });
 }
 
@@ -188,11 +203,49 @@ var getResources = function(req, res, next) {
   });
 }
 
+var getEntityWithRefs = function(id, cb) {
+  var metadataSet = {
+    "id": 1, 
+    "nodes.document.title": 1,
+    "nodes.document.published_on": 1,
+    "nodes.document.record_type": 1,
+    "nodes.document.interview_date": 1,
+    "nodes.document.short_summary": 1,
+    "nodes.document.short_summary_en": 1,
+    "nodes.document.project_name": 1
+  }
+  async.parallel([
+    function(callback){
+      EntitiesGetter([id], callback);
+    },
+    function(callback){
+      Document.find({resources: id}, metadataSet, {}, callback);
+    }
+  ],
+  function(err, results){
+    if (err) return cb(err)
+    var entity = results[0][0];
+    entity = entity.toJSON();
+    entity.docs = results[1];
+    cb(null, entity);
+  });
+}
+
+var getEntityOverview = function(req, res, next) {
+  getEntityWithRefs(req.params.id, function(err, data) {
+    if (err) return next(err);
+    res.json(data);
+  });
+}
+
 api.route('/public/locations')
   .get(getLocations)
 
 api.route('/public/resources')
   .get(getResources);
+
+api.route('/public/resources/:id')
+  .get(getEntityOverview);
 
 api.route('/public/documents')
   .get(listDocuments);

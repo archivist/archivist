@@ -28,7 +28,6 @@ var MapBrowser = Component.extend({
   },
 
   willUpdateState: function(newState) {
-    debugger
   },
 
   initilizeMap: function() {
