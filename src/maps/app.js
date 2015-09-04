@@ -3,6 +3,8 @@
 // i18n
 require('./i18n/load');
 
+window.mapboxToken = "pk.eyJ1IjoiaW50ZWdyYWwiLCJhIjoiMkhlMkFRNCJ9.1KcR7bx-EPXbWIR0vqEnDg";
+
 var $ = window.$ = require('jquery');
 var MapBrowser = require('./map_browser');
 var Component = require('substance/ui/component');

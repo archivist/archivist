@@ -108,7 +108,7 @@ var getLocations = function(req, res, next) {
         '$in': entities
       }
     }
-    Location.find(query, 'type name nearest_locality current_name country point _id', function (err, items) {
+    Location.find(query, 'type name nearest_locality current_name prison_type country point _id', function (err, items) {
       if (err) return next(err);
       var geojson = {
         type: "FeatureCollection",
