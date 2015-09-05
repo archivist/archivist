@@ -173,10 +173,10 @@ gulp.task('maps-bundle', function () {
       this.emit('end');
     })
     .pipe(rename('maps.js'))
-    //.pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('./public/maps'));
 });
 
 gulp.task('maps', ['maps-assets', 'maps-styles', 'maps-bundle']);
 
-gulp.task('default', ['manager', 'writer', 'reader', 'browser']);
+gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'maps']);

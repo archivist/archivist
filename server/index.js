@@ -17,6 +17,7 @@ var mongoose = require('mongoose')
 
 var index = process.env.INDEX || "false";
 var media_server = process.env.MEDIA_HOST;
+var mapbox_token = process.env.MAPBOX_TOKEN;
 
 // MONGOOSE CONNECT
 
@@ -109,7 +110,7 @@ app.route('/archivist')
 
 app.route('/maps')
 	.get(function(req, res, next) {
-    res.render('maps', { media: media_server });
+    res.render('maps', { media: media_server, mapbox_token: mapbox_token });
   })
 
 app.route('/archivist/editor/*')
