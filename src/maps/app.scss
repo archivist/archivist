@@ -78,12 +78,12 @@ html, body, #map {
   button {
     padding: 10px 10px;
     cursor: pointer;
-    opacity: 0.7;
+    opacity: 0.4;
     width: 100%;
     float: left;
     padding-left: 56px;
     border-bottom: 1px solid #ddd;
-    border-right: 5px solid #ddd;
+    border-right: 5px solid #555;
     i {
       padding-right: 10px;
     }
@@ -92,20 +92,6 @@ html, body, #map {
       border-right: 5px solid #A5D06C;
     }
   }
-}
-
-ul.map-filters {
-  list-style-type: none;
-  margin: 0px;
-  padding: 0px;
-}
-
-ul.map-filters li {
-}
-
-ul.map-filters li.active {
-  opacity: 1;
-  border-left: 3px solid #A5D06C;
 }
 
 .leaflet-marker-icon.icon {
@@ -172,47 +158,43 @@ ul.map-filters li.active {
   line-height: 24px;
   min-height: 100px;
   padding-top: 30px;
-}
-
-.entity .resource-header {
-  position: relative;
-  padding-bottom: 10px;
-  color: rgb(80, 80, 80);
-}
-
-.entity .resource-header .entity-type {
-  font-weight: normal;
-  font-size: 12px;
-  padding-right: 140px;
-}
-
-.entity .resource-header .location {
-  position: absolute;
-  right: 0px;
-  overflow: auto;
-  float: right;
-  font-size: 12px;
-  text-align: center;
-  top: 0px;
-  max-width: 140px;
-}
-
-.entity.location .resource-header .name {
-  padding-right: 140px;
-}
-
-.entity .stats {
-  padding: 10px 0px;
-  font-size: 14px;
-
-  i {
-    padding-right: 10px;
+  .resource-header {
+    position: relative;
+    padding-bottom: 10px;
+    color: rgb(80, 80, 80);
+    .entity-type {
+      font-weight: normal;
+      font-size: 12px;
+      padding-right: 140px;
+      line-height: 18px;
+      padding-top: 3px;
+    }
+    .location {
+      position: absolute;
+      right: 0px;
+      overflow: auto;
+      float: right;
+      font-size: 12px;
+      text-align: center;
+      top: 0px;
+      max-width: 140px;
+    }
+    .name {
+      padding-right: 140px;
+    }
   }
-}
+  .stats {
+    padding: 10px 0px;
+    font-size: 14px;
 
-.entity .description {
-  font-size: 13px;
-  padding-bottom: 10px;
+    i {
+      padding-right: 10px;
+    }
+  }
+  .description {
+    font-size: 13px;
+    padding-bottom: 10px;
+  }
 }
 
 .entity.location .description {
@@ -232,14 +214,13 @@ ul.map-filters li.active {
   &:hover {
     color: inherit;
   }
-}
-
-.document.preview .meta-info {
-  overflow: auto;
-  color: #888;
-  font-style: italic;
-  font-size: 13px;
-  padding-bottom: 3px;
+  .meta-info {
+    overflow: auto;
+    color: #888;
+    font-style: italic;
+    font-size: 13px;
+    padding-bottom: 3px;
+  }
 }
 
 .document.preview .meta-info > div {

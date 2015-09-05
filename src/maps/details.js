@@ -19,7 +19,7 @@ var Details = Component.extend({
       } else if (location.type == 'prison') {
         el.append(this.renderPrison(location));
       }
-      el.append(this.renderReferences(location.docs));
+      el.append(this.renderReferences(location));
     } else {
       el.append($$('div').addClass('helper click').append([
         $$('i').addClass('fa fa-hand-o-up'),
@@ -81,16 +81,17 @@ var Details = Component.extend({
     ]);
   },
 
-  renderReferences: function(docs) {
+  renderReferences: function(location) {
     var storage = window.storage || window.localStorage;
     var locale = storage.getItem('locale') || "ru";
-
+    var docs = _.sortBy(location.docs, function(doc) { return doc.published_on; });
+    var docs = docs.reverse();
     var references = $$("div").addClass('references');
     _.each(docs, function(doc){
       var metadata = doc.nodes.document;
       var date = util.formatDate(metadata.interview_date);
       var iconClass = metadata.record_type === 'video' ? 'fa-video-camera' : 'fa-volume-up';
-      var preview = $$("a").addClass('document preview').attr({href: "/documents/" + doc.id, "target": "_blank"}).append([
+      var preview = $$("a").addClass('document preview').attr({href: "/documents/" + doc.id + "#contextId=entities;entityId=" + location.id + ";filterByType=" + location.type + ";noResourceScroll=true", "target": "_blank"}).append([
         $$("div").attr({class: "meta-info"}).append([
           $$("div").attr({class: "length"}).append(metadata.interview_duration + " " + i18n.t("interview.minutes")),
           $$("div").attr({class: "date"}).append(date),

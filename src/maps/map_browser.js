@@ -7,13 +7,12 @@ var _ = require('substance/basics/helpers');
 var OO = require('substance/basics/oo');
 var Component = require('substance/ui/component');
 var $$ = Component.$$;
+var util = require('./util');
 
 var Sidebar = require('./sidebar');
-//var Filters = require('./filters');
 
 require('mapbox.js');
 require("leaflet.markercluster");
-require("./maki");
 
 var MapBrowser = Component.extend({
   didInitialize: function() {
@@ -142,14 +141,14 @@ var MapBrowser = Component.extend({
     var props = layer.feature.properties;
     var type = props.type;
     if(type == 'toponym') {
-      props.title = props.current_name ? props.current_name : props.name;
+      props.title = props.name;
     } else if (type == 'prison') {
       props.title = props.name === 'Неизвестно' ? props.nearest_locality : props.name;
       if(props.name === 'Неизвестно' && props.prison_type) props.title += " (" + props.prison_type.join(', ') + ")";
     }
     var popupContent = "<h3>" + props.title + "</h3>";
     if(locale == "ru") {
-      props.stats = props.fragments + " " + this.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + this.declOfNum(props.documents, ['документе', 'документах', 'документах']);
+      props.stats = props.fragments + " " + util.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + util.declOfNum(props.documents, ['документе', 'документах', 'документах']);
     } else {
       props.stats = "mentioned " + props.fragments + " times in " + props.documents + " documents";
     }
@@ -175,6 +174,7 @@ var MapBrowser = Component.extend({
         list.push(item);
       }
     });
+    list = _.sortBy(list, function(item){return item.title});
     self.refs.sidebar.refs.details.setProps({
       list: list
     });
@@ -209,11 +209,6 @@ var MapBrowser = Component.extend({
     cM.x += 175;
     var point = this.map.unproject(cM, 10)
     this.map.setView(point, 10, {animate: true});
-  },
-
-  declOfNum: function(number, titles) {  
-    var cases = [2, 0, 1, 1, 1, 2];  
-    return titles[ (number%100>4 && number%100<20)? 2 : cases[(number%10<5)?number%10:5] ];  
   }
 });
 
