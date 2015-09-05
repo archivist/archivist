@@ -21,10 +21,14 @@ var backend = new Backend();
 // ---------------
 //
 
+var hash = window.location.hash || "";
+var hash = hash.replace('#', '');
+
 $(function() {
 
   var mapBrowser = $$(MapBrowser, {
-    backend: backend
+    backend: backend,
+    locationId: hash
   });
 
   Component.mount(mapBrowser, $('#map_container'));

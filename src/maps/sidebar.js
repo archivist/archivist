@@ -1,21 +1,25 @@
 'use strict';
 
-var AVAILABLE_FILTERS = {
-  "toponyms": {filterId: "toponym", name: i18n.t("map.toponyms"), icon: "globe"},
-  "prisons": {filterId: "prison", name: i18n.t("map.prisons"), icon: "table"}
-};
-
+var _ = require('substance/basics/helpers');
 var Component = require('substance/ui/component');
 var $$ = Component.$$;
 var Details = require('./details')
-var Filters = require('./filters')
+var Filter = require('./filter')
 
 var Sidebar = Component.extend({
 	render: function() {
+    var filterEls = [];
+
+    _.each(this.props.filters, function(filter) {
+      filterEls.push($$(Filter, filter));
+    });
+
     var el = $$('div').addClass('map-sidebar').append([
-    	$$(Details).key('details')
+    	$$(Details).key('details'),
+      $$('div').addClass('filters').append(filterEls)
     ]);
     el.on('wheel', this.onWheel);
+    el.on('dblclick', this.onDblClick);
     return el;
   },
 
@@ -23,14 +27,18 @@ var Sidebar = Component.extend({
   	if(this.props.location) {
   		var location = this.props.location;
 	  	this.refs.details.setProps({
-	      location: location
-	    })
+        location: location
+	    });
   	}
   },
 
   onWheel: function(e) {
   	e.stopPropagation();
-  }
+  },
+
+  onDblClick: function(e) {
+    e.stopPropagation();
+  },
 
 });
 

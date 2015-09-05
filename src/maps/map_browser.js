@@ -1,3 +1,9 @@
+var AVAILABLE_FILTERS = {
+  "toponyms": {filterId: "toponym", name: i18n.t("map.toponyms"), icon: "globe", state: true},
+  "prisons": {filterId: "prison", name: i18n.t("map.prisons"), icon: "table", state: true}
+};
+
+var _ = require('substance/basics/helpers');
 var OO = require('substance/basics/oo');
 var Component = require('substance/ui/component');
 var $$ = Component.$$;
@@ -16,11 +22,21 @@ var MapBrowser = Component.extend({
 
   render: function() {
     var el = $$('div').attr({id: 'map'}).addClass('map-component');
-    el.append($$(Sidebar).key('sidebar'));
+    el.append($$(Sidebar, {filters: AVAILABLE_FILTERS}).key('sidebar'));
     return el;
   },
 
   didMount: function() {
+    this.actions({
+      "applyFilter": this.applyFilter,
+      "showLocationInfo": this.showLocationInfo,
+      "showList": this.showList
+    });
+    var filters = {};
+    _.each(AVAILABLE_FILTERS, function(filter){
+      filters[filter.filterId] = filter.state;
+    });
+    this._setState({filters: filters});
     this.initilizeMap();
   },
 
@@ -31,33 +47,51 @@ var MapBrowser = Component.extend({
 
     this.map = L.mapbox.map('map', 'mapbox.light', {
       maxZoom: '10',
-      minZoom: '4'
+      minZoom: '4',
+      attributionControl: false
     }).setView([48.6, 18.8], 5);
 
+    this.addAttribution();
     this.overlays = L.layerGroup().addTo(this.map);
 
     this.backend.getLocations(function(err, data){
       self.layers = L.mapbox.featureLayer()
         .setGeoJSON(data);
 
-      //self.addFilters();
-      self.showLayer();
+      if(self.props.locationId) {
+        self.showLayer(false);
+        self.showLocationInfo(null, self.props.locationId, true);
+      } else {
+        self.showLayer();
+      }
     });
   },
 
-  addFilters: function() {
-    this.filters = Component.mount($$(Filters, {
-      showLayer: this.showLayer,
-      overlays: this.overlays,
-      layers: this.layers,
-      renderIcon: this.renderIcon,
-      prepareFeature: this.prepareFeature
-    }), $('#filters'));
+  addAttribution: function() {
+    var attribution = L.control.attribution({position: 'bottomleft'});
+    attribution.setPrefix('');
+    attribution.addAttribution("© <a href='https://www.mapbox.com/map-feedback/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap contributors</a>");
+    attribution.addTo(this.map);
+    var logo = $('.mapbox-logo')
+    logo.remove();
+    $('.leaflet-bottom.leaflet-left').prepend(logo);
   },
 
-  showLayer: function(name) {
+  applyFilter: function(filterId) {
+    var filters = this.getState().filters;
+    if(filters[filterId] == true) {
+      filters[filterId] = false;
+    } else {
+      filters[filterId] = true;
+    }
+    this.setState({filters: filters});
+    this.showLayer();
+  },
+
+  showLayer: function(list) {
     var self = this;
     var maxZoom = 11;
+    var filters = this.getState().filters;
     this.overlays.clearLayers();
     var clusterGroup = new L.MarkerClusterGroup({disableClusteringAtZoom: maxZoom}).addTo(this.overlays);
     clusterGroup.on('clusterclick', function(e){
@@ -66,10 +100,7 @@ var MapBrowser = Component.extend({
     this.layers.eachLayer(function(layer) {
       var type = layer.feature.properties.type;
       layer.setIcon(self.renderIcon(type));
-      if (name && type === name) {
-        clusterGroup.addLayer(layer);
-      } else if (name === null) {
-      } else if (!name) {
+      if (filters[type] == true) {
         clusterGroup.addLayer(layer);
       }
       self.prepareFeature(layer);
@@ -85,6 +116,7 @@ var MapBrowser = Component.extend({
     this.layers.on('click', function(e) {
       self.showLocationInfo(e.layer);
     });
+    if(list !== false) this.showList();
   },
 
   renderIcon: function(name) {
@@ -110,12 +142,12 @@ var MapBrowser = Component.extend({
     var props = layer.feature.properties;
     var type = props.type;
     if(type == 'toponym') {
-      name = props.current_name ? props.current_name : props.name;
+      props.title = props.current_name ? props.current_name : props.name;
     } else if (type == 'prison') {
-      name = props.name === 'Неизвестно' ? props.nearest_locality : props.name;
-      if(props.name === 'Неизвестно' && props.prison_type) name += " (" + props.prison_type.join(', ') + ")";
+      props.title = props.name === 'Неизвестно' ? props.nearest_locality : props.name;
+      if(props.name === 'Неизвестно' && props.prison_type) props.title += " (" + props.prison_type.join(', ') + ")";
     }
-    var popupContent = "<h3>" + name + "</h3>";
+    var popupContent = "<h3>" + props.title + "</h3>";
     if(locale == "ru") {
       props.stats = props.fragments + " " + this.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + this.declOfNum(props.documents, ['документе', 'документах', 'документах']);
     } else {
@@ -126,18 +158,57 @@ var MapBrowser = Component.extend({
     layer.bindPopup(popupContent);
   },
 
-  showLocationInfo: function(layer) {
+  showList: function() {
     var self = this;
-    var id = layer.feature.properties.id;
-    if(self.refs.sidebar.props.locationId != id) {
+    var filters = this.getState().filters;
+    var list = [];
+    window.location.hash = "";
+    this.map.setView([48.6, 18.8], 5);
+    this.layers.eachLayer(function(layer){
+      var props = layer.feature.properties;
+      if (filters[props.type] == true) {
+        var item = {
+          title: props.title,
+          stats: props.stats,
+          id: props._id
+        }
+        list.push(item);
+      }
+    });
+    self.refs.sidebar.refs.details.setProps({
+      list: list
+    });
+  },
+
+  showLocationInfo: function(layer, id, init) {
+    var self = this;
+    var id = id || layer.feature.properties.id;
+    if(!init) window.location.hash = '#' + id;
+    if(!layer) {
+      this.layers.eachLayer(function(l){
+        if(l.feature.properties.id == id) {
+          layer = l;
+        }
+      })
+    }
+    this.focusOn(layer);
+    if(self.refs.sidebar.refs.details.props.locationId != id) {
       this.backend.getLocation(id, function(err, data){
         data.stats = layer.feature.properties.stats;
-        self.refs.sidebar.setProps({
+        self.refs.sidebar.refs.details.setProps({
+          filters: self.getProps().filters,
           location: data,
           locationId: id
         })
       });
     }
+  },
+
+  focusOn: function(marker) {
+    var cM = this.map.project(marker.getLatLng(), 10);
+    cM.x += 175;
+    var point = this.map.unproject(cM, 10)
+    this.map.setView(point, 10, {animate: true});
   },
 
   declOfNum: function(number, titles) {  

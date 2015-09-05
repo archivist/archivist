@@ -2,5 +2,7 @@
   "interview.minutes": "мин",
   "entity.unknown_name": "Название неизвестно",
   "map.toponyms": "Упомянутые топонимы",
-  "map.prisons": "Места работы и заключения"
+  "map.prisons": "Места работы и заключения",
+	"map.click_helper": "Нажмите на локацию для получения информации",
+	"map.list_helper": "Вернуться к списку локаций"
 }

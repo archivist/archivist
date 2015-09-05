@@ -10,6 +10,10 @@ var Details = Component.extend({
     var el = $$('div').addClass('details');
     if(this.props.location) {
       var location = this.props.location;
+      el.append($$('div').addClass('helper click back').append([
+        $$('i').addClass('fa fa-hand-o-left'),
+        " " + i18n.t("map.list_helper")
+      ]).on('click', this.showList));
       if(location.type == 'toponym') {
         el.append(this.renderToponym(location));
       } else if (location.type == 'prison') {
@@ -17,9 +21,17 @@ var Details = Component.extend({
       }
       el.append(this.renderReferences(location.docs));
     } else {
-      //renderDefaultContent
+      el.append($$('div').addClass('helper click').append([
+        $$('i').addClass('fa fa-hand-o-up'),
+        " " + i18n.t("map.click_helper")
+      ]));
+      el.append(this.renderList());
     }
     return el;
+  },
+
+  showList: function() {
+    this.send("showList");
   },
 
   didReceiveProps: function(props) {
@@ -89,6 +101,25 @@ var Details = Component.extend({
       references.append(preview);
     });
     return references;
+  },
+
+  renderList: function() {
+    var self = this;
+    var list = this.props.list;
+    var items = $$("div").addClass('list');
+    _.each(list, function(feature){
+      var item = $$("div").addClass('item').attr({"data-id": feature.id}).append([
+        $$("div").attr({class: "title"}).append(feature.title),
+        $$("div").attr({class: "stats"}).append(feature.stats)
+      ]).on('click', self.onItemClick);
+      items.append(item);
+    });
+    return items;
+  },
+
+  onItemClick: function(e) {
+    var id = e.currentTarget.dataset.id;
+    this.send("showLocationInfo", null, id);
   }
 });
 
