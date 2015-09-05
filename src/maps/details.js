@@ -91,7 +91,7 @@ var Details = Component.extend({
       var metadata = doc.nodes.document;
       var date = util.formatDate(metadata.interview_date);
       var iconClass = metadata.record_type === 'video' ? 'fa-video-camera' : 'fa-volume-up';
-      var preview = $$("a").addClass('document preview').attr({href: "/documents/" + doc.id + "#contextId=entities;entityId=" + location.id + ";filterByType=" + location.type + ";noResourceScroll=true", "target": "_blank"}).append([
+      var preview = $$("a").addClass('document preview').attr({href: "/documents/" + doc.id + "#contextId=entities;entityId=" + location.id + ";filterByType=" + location.type, "target": "_blank"}).append([
         $$("div").attr({class: "meta-info"}).append([
           $$("div").attr({class: "length"}).append(metadata.interview_duration + " " + i18n.t("interview.minutes")),
           $$("div").attr({class: "date"}).append(date),
