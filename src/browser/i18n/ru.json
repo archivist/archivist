@@ -4,5 +4,6 @@
   "browser.clear_filters": "Сбросить фильтры",
   "browser.loading": "Загрузка документов...",
   "browser.found": "интервью",
-  "browser.minutes": "мин"
+  "browser.minutes": "мин",
+  "browser.entity_suggestion": "Найдены словарные статьи:"
 }

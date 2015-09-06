@@ -4,5 +4,6 @@
   "browser.clear_filters": "Clear Filters",
   "browser.loading": "Loading documents...",
   "browser.found": "documents found",
-  "browser.minutes": "min"
+  "browser.minutes": "min",
+  "browser.entity_suggestion": "We also found these articles:"
 }
