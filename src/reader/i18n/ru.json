@@ -20,5 +20,7 @@
   "entity.type.prison": "Места заключения",
   "entity.type.person": "Персоналии",
   "entity.type.definition": "Реалии",
-  "entity.unknown_name": "Название неизвестно"
+  "entity.unknown_name": "Название неизвестно",
+  "reader.show_resources": "Найти в других документах",
+  "reader.show_on_map": "Показать на карте"
 }

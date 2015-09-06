@@ -75,14 +75,14 @@ module.exports = {
           "createdAt": {"type": "date", "index": "not_analyzed"},
           "updatedAt": {"type": "date", "index": "not_analyzed"},
           "country": {"type": "string", "index": "not_analyzed"},
-          "nearest_locality": {"type": "string", "index": "not_analyzed"},
+          "nearest_locality": {"type": "string", "index": "not_analyzed", "search_analyzer": 'snowball', "language": "Russian"},
           "point": {"type" : "geo_point"},
-          "name": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru" },
+          "name": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
           "current_name": {"type": "string", "index": "not_analyzed"},
           "description": { "type": "string", "index" : "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
           "type": {"type": "string", "index": "not_analyzed"},
           "prison_type": {"type": "string", "index" :"not_analyzed"},
-          "synonyms": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru" },
+          "synonyms": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
           "entity_type": {"type": "string", "index": "not_analyzed"},
           "definition_type": {"type": "string", "index": "not_analyzed"}
         }

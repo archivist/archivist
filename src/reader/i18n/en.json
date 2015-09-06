@@ -20,5 +20,7 @@
   "entity.type.prison": "Prisons",
   "entity.type.person": "Persons",
   "entity.type.definition": "Definitions",
-  "entity.unknown_name": "Unknown name"
+  "entity.unknown_name": "Unknown name",
+  "reader.show_resources": "Find references",
+  "reader.show_on_map": "Show on map",
 }
