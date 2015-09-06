@@ -43,7 +43,7 @@ queries.getDocumentPreview = function(query, cb) {
   var searchString = query.searchString;
 
   // Pagination
-  var size = query.size || 2;
+  var size = query.size || 10;
   var from = query.from || 0;
   var type = query.type || "boolean";
 

@@ -8,10 +8,10 @@ var util = require('./util');
 var Details = Component.extend({
 	render: function() {
     var el = $$('div').addClass('details');
-    el.append($$('div').addClass('helper click back').append([
+    el.append($$('a').attr({href:"/" + window.location.hash}).addClass('helper click back').append([
       $$('i').addClass('fa fa-hand-o-left'),
       " " + i18n.t("resources.go_back")
-    ]).on('click', this.goBack));
+    ]));
     if(this.props.resource) {
       var resource = this.props.resource;
       switch(resource.type) {
