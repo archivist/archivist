@@ -205,7 +205,7 @@ gulp.task('resources-bundle', function () {
       this.emit('end');
     })
     .pipe(rename('resources.js'))
-    //.pipe(streamify(uglify()))
+    .pipe(streamify(uglify()))
     .pipe(gulp.dest('./public/resources-browser'));
 });
 

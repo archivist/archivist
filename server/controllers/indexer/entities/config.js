@@ -77,12 +77,12 @@ module.exports = {
           "country": {"type": "string", "index": "not_analyzed"},
           "nearest_locality": {"type": "string", "index": "not_analyzed", "search_analyzer": 'snowball', "language": "Russian"},
           "point": {"type" : "geo_point"},
-          "name": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
+          "name": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru" },
           "current_name": {"type": "string", "index": "not_analyzed"},
           "description": { "type": "string", "index" : "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
           "type": {"type": "string", "index": "not_analyzed"},
           "prison_type": {"type": "string", "index" :"not_analyzed"},
-          "synonyms": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru", "search_analyzer": 'snowball', "language": "Russian" },
+          "synonyms": { "type": "string", "index": "analyzed", "analyzer": "analyzer_ru" },
           "entity_type": {"type": "string", "index": "not_analyzed"},
           "definition_type": {"type": "string", "index": "not_analyzed"}
         }

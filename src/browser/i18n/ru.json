@@ -5,5 +5,6 @@
   "browser.loading": "Загрузка документов...",
   "browser.found": "интервью",
   "browser.minutes": "мин",
-  "browser.entity_suggestion": "Найдены словарные статьи:"
+  "browser.entity_suggestion": "Найдены словарные статьи:",
+  "browser.no_results": "По вашему запросу ничего не найдено"
 }

@@ -98,6 +98,7 @@ function buildQuery(options) {
         query.bool.must = {
           "term" : { "published" : true }
         };
+        query.bool.minimum_should_match = 1;
       }
       return query;
     }

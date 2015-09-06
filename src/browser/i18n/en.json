@@ -5,5 +5,6 @@
   "browser.loading": "Loading documents...",
   "browser.found": "documents found",
   "browser.minutes": "min",
-  "browser.entity_suggestion": "We also found these articles:"
+  "browser.entity_suggestion": "We also found these articles:",
+ 	"browser.no_results": "Your search did not match any documents"
 }

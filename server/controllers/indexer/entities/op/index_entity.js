@@ -10,8 +10,6 @@ var indexEntity = function(client, entity, update, cb) {
     description: entity.description
   };
 
-  if (update) shortData = {doc: shortData, upsert: shortData};
-  
   if(entity.type == 'toponym' || entity.type == 'prison') {
     shortData.country = entity.country;
     shortData.point = entity.point;
@@ -41,6 +39,8 @@ var indexEntity = function(client, entity, update, cb) {
     return;
   }
 
+  if (update) shortData = {doc: shortData, upsert: shortData};
+  
   var entry = {
     index: 'entities',
     type: 'entity',
