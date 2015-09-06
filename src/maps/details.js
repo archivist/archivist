@@ -44,7 +44,6 @@ var Details = Component.extend({
     var name = entity.name.toLowerCase().indexOf("неизвестно") >= 0 ? i18n.t('entity.unknown_name') : entity.name;
     var location = entity.country;
     if (entity.nearest_locality) location = location + ', ' + entity.nearest_locality;
-    if (this.props.active) className.push("active");
     
     return $$("div").attr({"data-id": entity.id, class: className.join(" ")}).append([
       $$("div").attr({class: "resource-header"}).append([
@@ -62,10 +61,7 @@ var Details = Component.extend({
 
   renderToponym: function(entity) {
     var className = ["entity location"];
-    if (this.props.active) className.push("active");
-
     var location = entity.country;
-
     if(entity.name !== entity.current_name && entity.current_name) location = location + ", " + entity.current_name;
 
     return $$("div").attr({"data-id": entity.id, class: className.join(" ")}).append([
@@ -82,8 +78,6 @@ var Details = Component.extend({
   },
 
   renderReferences: function(location) {
-    var storage = window.storage || window.localStorage;
-    var locale = storage.getItem('locale') || "ru";
     var docs = _.sortBy(location.docs, function(doc) { return doc.published_on; });
     var docs = docs.reverse();
     var references = $$("div").addClass('references');

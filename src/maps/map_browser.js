@@ -4,7 +4,6 @@ var AVAILABLE_FILTERS = {
 };
 
 var _ = require('substance/basics/helpers');
-var OO = require('substance/basics/oo');
 var Component = require('substance/ui/component');
 var $$ = Component.$$;
 var util = require('./util');

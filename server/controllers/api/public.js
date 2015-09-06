@@ -110,6 +110,8 @@ var getSubjectsMap = function(cb) {
 
 /* Entities API */
 
+// Locations
+
 var getEntities = function(doc, cb) {
   var entityRefs = doc.getIndex('type').get('entity_reference');
   var entities = _.pluck(entityRefs, 'target');
@@ -162,6 +164,46 @@ var getLocations = function(req, res, next) {
   });
 }
 
+var getLocationWithRefs = function(id, cb) {
+  var metadataSet = {
+    "id": 1, 
+    "nodes.document.title": 1,
+    "nodes.document.published_on": 1,
+    "nodes.document.record_type": 1,
+    "nodes.document.interview_date": 1,
+    "nodes.document.short_summary": 1,
+    "nodes.document.short_summary_en": 1,
+    "nodes.document.project_name": 1,
+    "nodes.document.interview_duration": 1
+  }
+  async.parallel([
+    function(callback){
+      Location.findById(id, function(err, record) {
+        callback(err, record);
+      });
+    },
+    function(callback){
+      Document.find({resources: id, "nodes.document.published": true}, metadataSet, {}, callback);
+    }
+  ],
+  function(err, results){
+    if (err) return cb(err)
+    var entity = results[0];
+    entity = entity.toJSON();
+    entity.docs = results[1];
+    cb(null, entity);
+  });
+}
+
+var getLocationOverview = function(req, res, next) {
+  getLocationWithRefs(req.params.id, function(err, data) {
+    if (err) return next(err);
+    res.json(data);
+  });
+}
+
+// Entities
+
 var getEntitiesMap = function(cb) {
   EntitiesList({}, function(err, entities) {
     if (err) return cb(err);
@@ -204,30 +246,21 @@ var getResources = function(req, res, next) {
 }
 
 var getEntityWithRefs = function(id, cb) {
-  var metadataSet = {
-    "id": 1, 
-    "nodes.document.title": 1,
-    "nodes.document.published_on": 1,
-    "nodes.document.record_type": 1,
-    "nodes.document.interview_date": 1,
-    "nodes.document.short_summary": 1,
-    "nodes.document.short_summary_en": 1,
-    "nodes.document.project_name": 1,
-    "nodes.document.interview_duration": 1
-  }
   async.parallel([
     function(callback){
       EntitiesGetter([id], callback);
     },
     function(callback){
-      Document.find({resources: id, "nodes.document.published": true}, metadataSet, {}, callback);
+      interviews.findDocumentsWithEntity(id, callback);
     }
   ],
   function(err, results){
     if (err) return cb(err)
     var entity = results[0][0];
-    entity = entity.toJSON();
-    entity.docs = results[1];
+    if (typeof entity.toJSON == 'function') {
+      entity = entity.toJSON();
+    }
+    entity.search = results[1];
     cb(null, entity);
   });
 }
@@ -239,8 +272,12 @@ var getEntityOverview = function(req, res, next) {
   });
 }
 
+
 api.route('/public/locations')
   .get(getLocations)
+
+api.route('/public/locations/:id')
+  .get(getLocationOverview);
 
 api.route('/public/resources')
   .get(getResources);

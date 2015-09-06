@@ -247,7 +247,7 @@ function getResult(res, options, suggestedEntities) {
     }
   });
   // don't need to transfer global stats for entities
-  if(options.entity) delete facets.entities;
+  if(options.entity !== true) delete facets.entities;
 
   return result;
 }

@@ -172,4 +172,46 @@ queries.countEntities = function(cb) {
   });
 };
 
+queries.findDocumentsWithEntity = function(id, cb) {
+  var query = {
+    searchString: null,
+    filters: {
+      "entities": [id]
+    },
+    published: true
+  }
+  searchInterviews(query, function(err, result) {
+    if (err) return cb(err);
+    // assuming openFiles is an array of file names
+    async.each(result.interviews, function(record, cb) {
+      queries.getDocumentPreview({
+        documentId: record.id,
+        searchString: query.searchString,
+        filters: query.filters
+      }, function(err, docPreview) {
+        if (err) return cb(err);
+        record.fragments = docPreview.fragments;
+        cb(null);
+      });
+      // cb(null);
+    }, function() {
+      var occurences = 0;
+      _.each(result.interviews, function(doc, key){
+        var stats = doc.facets.entities[id];
+        occurences += stats;
+        result.interviews[key].stats = stats;
+        delete doc.facets;
+      });
+      var results = {
+        documents: result.interviews,
+        stats: {
+          documents: result.count,
+          fragments: occurences
+        }
+      }
+      cb(null, results);
+    });
+  });
+};
+
 module.exports = queries;

@@ -179,4 +179,36 @@ gulp.task('maps-bundle', function () {
 
 gulp.task('maps', ['maps-assets', 'maps-styles', 'maps-bundle']);
 
-gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'maps']);
+// Resources browser tasks
+// -------------
+
+gulp.task('resources-styles', function () {
+  gulp.src('./src/resources/app.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("resources.css"))
+    .pipe(gulp.dest('./public/resources-browser'));
+});
+
+gulp.task('resources-bundle', function () {
+  return gulp.src('./src/resources/app.js')
+    .pipe(through2.obj(function (file, enc, next) {
+      browserify(file.path)
+        .transform(babelify)
+        .bundle(function (err, res) {
+          if (err) { return next(err); }
+          file.contents = res;
+          next(null, file);
+        });
+    }))
+    .on('error', function (error) {
+      console.log(error.stack);
+      this.emit('end');
+    })
+    .pipe(rename('resources.js'))
+    //.pipe(streamify(uglify()))
+    .pipe(gulp.dest('./public/resources-browser'));
+});
+
+gulp.task('resources', ['resources-styles', 'resources-bundle']);
+
+gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'resources', 'maps']);

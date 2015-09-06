@@ -37,23 +37,10 @@ Backend.Prototype = function() {
     $.ajax(ajaxOpts);
   };
 
-  this.getLocations = function(cb) {
+  this.getEntity = function(id, cb) {
     var self = this;
     nprogress.start();
-    this._request('GET', '/api/public/locations', null, function(err, result) {
-      if (err) {
-        nprogress.done();
-        return cb(err);
-      }
-      nprogress.done();
-      cb(null, result);
-    });
-  };
-
-  this.getLocation = function(id, cb) {
-    var self = this;
-    nprogress.start();
-    this._request('GET', '/api/public/locations/' + id, null, function(err, result) {
+    this._request('GET', '/api/public/resources/' + id, null, function(err, result) {
       if (err) {
         nprogress.done();
         return cb(err);

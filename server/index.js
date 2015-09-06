@@ -98,6 +98,15 @@ app.route('/')
 		}
   })
 
+app.route('/resources/:id')
+	.get(function(req, res, next) {
+		if(index == "true") {
+			res.render('resources', { media: media_server, resourceId: req.params.id });
+		} else {
+			res.redirect('/archivist');
+		}
+  })
+
 app.route('/documents/:id')
 	.get(function(req, res, next) {
     res.render('reader', { media: media_server });
@@ -110,7 +119,11 @@ app.route('/archivist')
 
 app.route('/maps')
 	.get(function(req, res, next) {
-    res.render('maps', { media: media_server, mapbox_token: mapbox_token });
+		if(index == "true") {
+    	res.render('maps', { media: media_server, mapbox_token: mapbox_token });
+		} else {
+			res.redirect('/archivist');
+		}
   })
 
 app.route('/archivist/editor/*')
