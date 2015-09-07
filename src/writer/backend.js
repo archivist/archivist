@@ -99,8 +99,6 @@ Backend.Prototype = function() {
         doc.subjects = subjects;
         doc.version = rawDoc.__v;
         doc.connect(this, {'document:rendered': function(){nprogress.done();}});
-        // TODO: We should not forget to remove this
-        window.doc = doc;
         document.title = doc.getDocumentMeta().title;
         cb(null, doc);
       })

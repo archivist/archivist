@@ -188,6 +188,9 @@ var getLocationWithRefs = function(id, cb) {
   ],
   function(err, results){
     if (err) return cb(err)
+    if(_.isUndefined(results[0]) || _.isNull(results[0])) {
+      return cb('There is no such document, sorry');
+    }
     var entity = results[0];
     entity = entity.toJSON();
     entity.docs = results[1];
@@ -256,6 +259,9 @@ var getEntityWithRefs = function(id, cb) {
   ],
   function(err, results){
     if (err) return cb(err)
+    if(_.isUndefined(results[0][0])) {
+      return cb('There is no such document, sorry');
+    }
     var entity = results[0][0];
     if (typeof entity.toJSON == 'function') {
       entity = entity.toJSON();

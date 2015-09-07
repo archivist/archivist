@@ -167,6 +167,9 @@ documentSchema.statics.getRecord = function(id, cb) {
 documentSchema.statics.getCleaned = function(id, published, cb) {
   var self = this;
 
+  var isValid = mongoose.Types.ObjectId.isValid(id);
+  if(!isValid) return cb('There is no such document, sorry...');
+
   var query = {
     _id: id
   }

@@ -43,6 +43,7 @@ Backend.Prototype = function() {
     this._request('GET', '/api/public/resources/' + id, null, function(err, result) {
       if (err) {
         nprogress.done();
+        window.location = "/";
         return cb(err);
       }
       nprogress.done();

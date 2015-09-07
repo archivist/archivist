@@ -51,11 +51,13 @@ Backend.Prototype = function() {
     this._request('GET', '/api/public/documents/' + documentId, null, function(err, result) {
       if (err) {
         nprogress.done();
+        window.location = "/";
         return cb(err);
       }
       var doc = Interview.fromJson(result.document);
       doc.subjects = new Interview.SubjectsModel(doc, result.subjects);
       doc.entities = new Interview.EntitiesModel(result.entities);
+      document.title = doc.getDocumentMeta().title;
       doc.connect(this, {'document:rendered': function(){nprogress.done();}});
       cb(null, doc);
     });

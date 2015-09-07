@@ -48,17 +48,14 @@ var Details = Component.extend({
 
   },
 
-  generateDescription: function() {
-    var self = this;
-    setTimeout(function(){
-      self.refs.description.$el.html(self.props.resource.description);
-    }, 0);
+  _setTitle: function(title) {
+    document.title = title;
   },
 
   _renderPrison: function(resource) {
     var className = ["resource prison"];
     var prisonType = (resource.prison_type instanceof Array ? resource.prison_type.join(', ') : '');
-    var name = resource.name.toLowerCase().indexOf("неизвестно") >= 0 ? i18n.t('resource.unknown_name') : resource.name;
+    var name = resource.name.toLowerCase().indexOf("неизвестно") >= 0 ? i18n.t('entity.unknown_name') : resource.name;
     var location = resource.country;
     if (resource.nearest_locality) location = location + ', ' + resource.nearest_locality;
     var descriptionWrapper = $$("div").attr({class: "description"}).key('description');
@@ -68,9 +65,9 @@ var Details = Component.extend({
         $$("div").attr({class: "location"}).append(location)
       ]),
       $$("div").attr({class: "name"}).append(name),
-      descriptionWrapper
+      $$("div").attr({class: "description"}).html(resource.description)
     ]);
-    this.generateDescription();
+    this._setTitle(resource.name);
     return el;
   },
 
@@ -84,9 +81,9 @@ var Details = Component.extend({
         $$("div").attr({class: "name"}).append(resource.name),
         $$("div").attr({class: "location"}).append(location)
       ]), 
-      descriptionWrapper
+      $$("div").attr({class: "description"}).html(resource.description)
     ]);
-    this.generateDescription();
+    this._setTitle(resource.name);
     return el;
   },
 
@@ -97,7 +94,8 @@ var Details = Component.extend({
       $$("div").attr({class: "name"}).append(resource.name),
       descriptionWrapper
     ]);
-    this.generateDescription();
+    $$("div").attr({class: "description"}).html(resource.description)
+    this._setTitle(resource.name);
     return el;
   },
 
@@ -106,9 +104,9 @@ var Details = Component.extend({
     var descriptionWrapper = $$("div").attr({class: "description"}).key('description');
     var el = $$("div").attr({"data-id": resource.id, class: className.join(" ")}).append([
       $$("div").attr({class: "name"}).append(resource.title),
-      descriptionWrapper
+      $$("div").attr({class: "description"}).html(resource.description)
     ]);
-    this.generateDescription();
+    this._setTitle(resource.title);
     return el;
   },
 

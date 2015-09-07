@@ -161,6 +161,7 @@ var MapBrowser = Component.extend({
     var filters = this.getState().filters;
     var list = [];
     window.history.pushState("", "Archivist Maps", "/maps");
+    document.title = "Archivist Maps";
     this.map.setView([48.6, 18.8], 5);
     this.layers.eachLayer(function(layer){
       var props = layer.feature.properties;
@@ -182,9 +183,6 @@ var MapBrowser = Component.extend({
   showLocationInfo: function(layer, id, init) {
     var self = this;
     var id = id || layer.feature.properties.id;
-    if(!init) {
-      window.history.pushState("", "Archivist Maps", "/maps/" + id);
-    }
     if(!layer) {
       this.layers.eachLayer(function(l){
         if(l.feature.properties.id == id) {
@@ -192,9 +190,14 @@ var MapBrowser = Component.extend({
         }
       })
     }
-    this.focusOn(layer);
+    self.focusOn(layer);
     if(self.refs.sidebar.refs.details.props.locationId != id) {
       this.backend.getLocation(id, function(err, data){
+        var title = layer.feature.properties.title;
+        if(!init) {
+          window.history.pushState("", title, "/maps/" + id);
+        }
+        document.title = title;
         data.stats = layer.feature.properties.stats;
         self.refs.sidebar.refs.details.setProps({
           filters: self.getProps().filters,

@@ -56,6 +56,7 @@ Backend.Prototype = function() {
     this._request('GET', '/api/public/locations/' + id, null, function(err, result) {
       if (err) {
         nprogress.done();
+        window.location = "/maps";
         return cb(err);
       }
       nprogress.done();
