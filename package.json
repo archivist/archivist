@@ -36,7 +36,7 @@
     "passport": "^0.2.1",
     "passport-google-oauth": "*",
     "serve-favicon": "^2.2.0",
-    "substance": "1.0.0-beta",
+    "substance": "substance/substance#9540852cd35a689c97f2ec6f2b40701b89ed21fd",
     "superagent": "^1.2.0",
     "through2": "^2.0.0",
     "underscore": "1.7.0",

@@ -55,7 +55,7 @@ var Details = Component.extend({
         $$("i").addClass("fa fa-book"),
         entity.stats
       ]),
-      $$("div").attr({class: "description"}).append(entity.description)
+      $$("div").attr({class: "description"}).html(entity.description)
     ]);
   },
 
@@ -73,7 +73,7 @@ var Details = Component.extend({
         $$("i").addClass("fa fa-book"),
         entity.stats
       ]),
-      $$("div").attr({class: "description"}).append(entity.description)
+      $$("div").attr({class: "description"}).html(entity.description)
     ]);
   },
 

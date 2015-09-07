@@ -232,7 +232,9 @@ html, body, #map {
   position: fixed;
   top: 0;
   right: 0;
-  background: rgba(255,255,255,.7);
+  background-color: #eee;
+  background-image: -webkit-linear-gradient(#fcfcfc, #eee);
+  background-image: linear-gradient(#fcfcfc, #eee);
   text-align: center;
   font-size: 13px;
   height: 30px;
@@ -243,6 +245,13 @@ html, body, #map {
   -moz-box-shadow: 0 1px 4px rgba(0,0,0,.2);
   -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  &:hover {
+    text-decoration: none;
+    background-color: #ddd;
+    background-image: -webkit-linear-gradient(#eee, #ddd);
+    background-image: linear-gradient(#eee, #ddd);
+    border-color: #ccc;
+  }
 }
 
 .helper.click.back {
