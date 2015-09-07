@@ -146,19 +146,19 @@ gulp.task('browser', ['browser-styles', 'browser-bundle']);
 // -------------
 
 gulp.task('maps-assets', function () {
-  gulp.src('./src/maps/assets/**/*')
+  gulp.src('./src/map/assets/**/*')
     .pipe(gulp.dest('./public/assets'));
 });
 
 gulp.task('maps-styles', function () {
-  gulp.src('./src/maps/app.scss')
+  gulp.src('./src/map/app.scss')
     .pipe(sass().on('error', sass.logError))
-    .pipe(rename("maps.css"))
-    .pipe(gulp.dest('./public/maps'));
+    .pipe(rename("map.css"))
+    .pipe(gulp.dest('./public/map'));
 });
 
 gulp.task('maps-bundle', function () {
-  return gulp.src('./src/maps/app.js')
+  return gulp.src('./src/map/app.js')
     .pipe(through2.obj(function (file, enc, next) {
       browserify(file.path)
         .transform(babelify)
@@ -172,9 +172,9 @@ gulp.task('maps-bundle', function () {
       console.log(error.stack);
       this.emit('end');
     })
-    .pipe(rename('maps.js'))
+    .pipe(rename('map.js'))
     .pipe(streamify(uglify()))
-    .pipe(gulp.dest('./public/maps'));
+    .pipe(gulp.dest('./public/map'));
 });
 
 gulp.task('maps', ['maps-assets', 'maps-styles', 'maps-bundle']);

@@ -160,7 +160,7 @@ var MapBrowser = Component.extend({
     var self = this;
     var filters = this.getState().filters;
     var list = [];
-    window.location.hash = "";
+    window.history.pushState("", "Archivist Maps", "/maps");
     this.map.setView([48.6, 18.8], 5);
     this.layers.eachLayer(function(layer){
       var props = layer.feature.properties;
@@ -182,7 +182,9 @@ var MapBrowser = Component.extend({
   showLocationInfo: function(layer, id, init) {
     var self = this;
     var id = id || layer.feature.properties.id;
-    if(!init) window.location.hash = '#' + id;
+    if(!init) {
+      window.history.pushState("", "Archivist Maps", "/maps/" + id);
+    }
     if(!layer) {
       this.layers.eachLayer(function(l){
         if(l.feature.properties.id == id) {

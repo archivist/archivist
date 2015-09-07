@@ -58,7 +58,6 @@ var searchEntities = function(options, cb) {
 
   client.search(query).then(function(body) {
     client.close();
-    console.log(body)
     cb(null, body);
   }, function (error) {
     console.trace(error.message);

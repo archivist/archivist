@@ -248,7 +248,7 @@ function getResult(res, options, suggestedEntities) {
     }
   });
   // don't need to transfer global stats for entities
-  if(options.entity !== true) delete facets.entities;
+  if(options.entities !== true) delete facets.entities;
 
   return result;
 }
@@ -273,7 +273,7 @@ var searchInterviews = function(options, cb) {
       var client = new elasticsearch.Client(_.clone(config));
       var query = buildQuery(options);
       // console.log("################################");
-      console.log(JSON.stringify(query, null, 2));
+      // console.log(JSON.stringify(query, null, 2));
       // console.log("################################");
       client.search(query, function(err, res) {
         client.close();
