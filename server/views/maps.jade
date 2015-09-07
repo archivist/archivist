@@ -15,6 +15,7 @@ html
     script(type='text/javascript')
       | window.mediaServer = "#{media}"
       | window.mapboxToken = "#{mapbox_token}"
+      | window.locationId = "#{locationId}"
     script(src='/maps/maps.js')
   body
     #map_container

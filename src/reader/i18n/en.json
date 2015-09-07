@@ -23,4 +23,5 @@
   "entity.unknown_name": "Unknown name",
   "reader.show_resources": "Find references",
   "reader.show_on_map": "Show on map",
+  "reader.loading_message": "Loading document... This may take a few seconds."
 }

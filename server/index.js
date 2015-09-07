@@ -120,7 +120,16 @@ app.route('/archivist')
 app.route('/maps')
 	.get(function(req, res, next) {
 		if(index == "true") {
-    	res.render('maps', { media: media_server, mapbox_token: mapbox_token });
+    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, locationId: "" });
+		} else {
+			res.redirect('/archivist');
+		}
+  })
+
+app.route('/maps/:id')
+	.get(function(req, res, next) {
+		if(index == "true") {
+    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, locationId: req.params.id });
 		} else {
 			res.redirect('/archivist');
 		}
