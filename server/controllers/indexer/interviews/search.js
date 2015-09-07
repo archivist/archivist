@@ -1,6 +1,7 @@
 var elasticsearch = require('elasticsearch');
 var config = require('../config');
 var _ = require('underscore');
+var APICache = require('../../shared/cache')
 var utils = require('./utils');
 var searchEntities = require('../entities/search');
 
@@ -235,21 +236,36 @@ function getResult(res, options, suggestedEntities) {
   result.count = hits.hits.length;
 
   result.suggestedEntities = {};
+
   _.each(suggestedEntities.hits.hits, function(record) {
     var id = record._id;
-    if(facets.entities[id]){
-      var entity = {
-        name: record._source.name,
-        entity_type: record._source.entity_type,
-        count: facets.entities[id].count,
-        // description: record._source.description
-      };
-      result.suggestedEntities[id] = entity;
+    if(options.entities !== true) {
+      publishedEntities.get(function(err, entities) {
+        if(entities[id]){
+          var entity = {
+            name: record._source.name,
+            entity_type: record._source.entity_type,
+            count: entities[id].count,
+            // description: record._source.description
+          };
+          result.suggestedEntities[id] = entity;
+        }
+      });
+    } else {
+      if(facets.entities[id]){
+        var entity = {
+          name: record._source.name,
+          entity_type: record._source.entity_type,
+          count: facets.entities[id].count,
+          // description: record._source.description
+        };
+        result.suggestedEntities[id] = entity;
+      }
     }
   });
   // don't need to transfer global stats for entities
   if(options.entities !== true) delete facets.entities;
-
+  
   return result;
 }
 
@@ -267,7 +283,7 @@ var searchInterviews = function(options, cb) {
 
     searchEntities({
       searchString: options.searchString,
-      threshold: 1.0
+      threshold: 0.5
     }, function(err, suggestedEntities) {
       // console.log('###### ENTITIES', JSON.stringify(suggestedEntities, null, 2));
       var client = new elasticsearch.Client(_.clone(config));
@@ -289,5 +305,19 @@ var searchInterviews = function(options, cb) {
     });
   });
 };
+
+var getPublishedEntities = function(cb) {
+  searchInterviews({
+    searchString: null,
+    filters: null,
+    published: true,
+    entities: true
+  }, function(err, result) {
+    if (err) return cb(err);
+    cb(null, result.facets.entities);
+  });
+}
+
+var publishedEntities = new APICache(getPublishedEntities, 5);
 
 module.exports = searchInterviews;

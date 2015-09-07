@@ -137,9 +137,11 @@ var Details = Component.extend({
         stats = "Mentioned " + doc.stats + " times";
       }
       var date = util.formatDate(doc.interview_date);
+      var photo = window.mediaServer + "/photos/";
+      photo += doc.interviewee_photo ? doc.interviewee_photo : "default.png";
       var iconClass = doc.record_type === 'video' ? 'fa-video-camera' : 'fa-volume-up';
       var preview = $$("div").addClass('document').append([
-        $$("div").addClass('photo').attr({"background-image": "url(" + window.mediaServer + "/photos/" + doc.interviewee_photo + ")"}),
+        $$("div").addClass('photo').attr({style: "background-image: url(" + photo + ")"}),
         $$("div").attr({class: "meta-info"}).append([
           $$("div").attr({class: "date"}).append(doc.project_name),
           $$("div").attr({class: "length"}).append(doc.interview_duration + " " + i18n.t("interview.minutes")),
