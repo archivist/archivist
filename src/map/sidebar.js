@@ -29,7 +29,9 @@ var Sidebar = Component.extend({
 	  	this.refs.details.setProps({
         location: location
 	    });
-  	}
+  	} else {
+      this.rerender();
+    }
   },
 
   onWheel: function(e) {

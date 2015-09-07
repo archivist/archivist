@@ -7,7 +7,7 @@ var Filter = Component.extend({
 
   onClick: function(e) {
     this.send("applyFilter", this.props.filterId);
-    $(e.target).toggleClass('active');
+    $(e.currentTarget).toggleClass('active');
   },
 
   onDblClick: function(e) {
@@ -15,12 +15,15 @@ var Filter = Component.extend({
   },
 
   render: function() {
+    var active = this.props.state === true ? true : false;
+    var showIcon = active ? 'fa-eye-slash' : 'fa-eye';
     var el = $$('button').addClass('filter').append([
       $$('i').addClass('fa fa-' + this.props.icon),
-      this.props.name
+      this.props.name + " (" + this.props.counter + ")",
+      $$('i').addClass('show fa ' + showIcon)
     ]).on('click', this.onClick).on('dblclick', this.onDblClick);
 
-    if(this.props.state === true) el.addClass('active');
+    if(active) el.addClass('active');
 
     return el;
   }

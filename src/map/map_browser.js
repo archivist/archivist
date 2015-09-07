@@ -1,6 +1,6 @@
 var AVAILABLE_FILTERS = {
-  "toponyms": {filterId: "toponym", name: i18n.t("map.toponyms"), icon: "globe", state: true},
-  "prisons": {filterId: "prison", name: i18n.t("map.prisons"), icon: "table", state: true}
+  "toponym": {filterId: "toponym", name: i18n.t("map.toponyms"), icon: "globe", counter: 0, state: true},
+  "prison": {filterId: "prison", name: i18n.t("map.prisons"), icon: "table", counter: 0, state: true}
 };
 
 var _ = require('substance/basics/helpers');
@@ -56,12 +56,23 @@ var MapBrowser = Component.extend({
       self.layers = L.mapbox.featureLayer()
         .setGeoJSON(data);
 
+      self.calculateFilters(data);
       if(self.props.locationId) {
         self.showLayer(false);
         self.showLocationInfo(null, self.props.locationId, true);
       } else {
         self.showLayer();
       }
+    });
+  },
+
+  calculateFilters: function(data) {
+    _.each(data.features, function(feature){
+      var type = feature.properties.type;
+      AVAILABLE_FILTERS[type].counter += 1;
+    });
+    this.refs.sidebar.setProps({
+      filters: AVAILABLE_FILTERS
     });
   },
 

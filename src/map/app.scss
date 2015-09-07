@@ -81,7 +81,7 @@ html, body, #map {
     opacity: 0.4;
     width: 100%;
     float: left;
-    padding-left: 56px;
+    padding-left: 35px;
     border-bottom: 1px solid #ddd;
     border-right: 5px solid #555;
     i {
@@ -91,6 +91,12 @@ html, body, #map {
       opacity: 1;
       border-right: 5px solid #A5D06C;
     }
+  }
+
+  .show {
+    float: right;
+    font-size: 16px;
+    padding: 0px;
   }
 }
 
