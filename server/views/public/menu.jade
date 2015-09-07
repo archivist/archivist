@@ -1,0 +1,24 @@
+.fixed-header.floated.visible
+  .fixed-header__inner
+    h1.fixed-header__logo
+      a(href='#')
+        | Устная история военнопленных и остарбайтеров
+    ul.fixed-header__menu
+      li
+        a.menu-icons.menu-icons_01(href='#') Журнал
+      li
+        a.menu-icons.menu-icons_02(href='#') Ликбез
+      li
+        a.menu-icons.menu-icons_03(href='#') Архив
+      li
+        a.menu-icons.menu-icons_04(href='#') Карты
+      li.have-submenu(onClick="javascript:$('.fixed-header__submenu').toggleClass('active')")
+        span.hamburger
+          span.icon
+    ul.fixed-header__submenu
+      li
+        a(href='#') О проекте
+      li
+        a(href='#') Библиография
+      li
+        a(href='#') Волонтёрам

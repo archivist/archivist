@@ -3,6 +3,7 @@ html(xmlns:mml='http://www.w3.org/1998/Math/MathML')
   head
     title Archivist Browser
     link(rel='stylesheet', href='/assets/styles/font-awesome/css/font-awesome.css')
+    link(rel='stylesheet', href='/assets/styles/main-menu.css')
     link(href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic', rel='stylesheet', type='text/css')
     meta(charset='UTF-8')
     meta(name='viewport', content='width=device-width, initial-scale=1.0, maximum-scale=10.0, user-scalable=yes')
@@ -18,3 +19,4 @@ html(xmlns:mml='http://www.w3.org/1998/Math/MathML')
       | window.mediaServer = "#{media}"
     script(src='/browser/browser.js')
   body
+    include public/menu

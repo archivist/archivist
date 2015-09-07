@@ -6,6 +6,7 @@ html
     link(rel='stylesheet', href='/assets/styles/nprogress/nprogress.css')
     link(href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic', rel='stylesheet', type='text/css')
     meta(charset='UTF-8')
+    link(rel='stylesheet', href='/assets/styles/main-menu.css')
     link(href='/resources-browser/resources.css', rel='stylesheet', type='text/css')
     // Libs
     // App
@@ -14,4 +15,5 @@ html
       | window.resourceId = "#{resourceId}"
     script(src='/resources-browser/resources.js')
   body
+    include public/menu
     #resource_container

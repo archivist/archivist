@@ -1,0 +1,539 @@
+//colors
+$color_firefly_approx: #0f2a31;
+$color_mirage_approx: #172127;
+$color_tana_approx: #d9d6bb;
+$white: #fff;
+$color_corn_approx: #d7c000;
+$color_wedgewood_approx: #48809f;
+
+//fonts
+$font_0: Open Sans;
+$font_1: Helvetica;
+$font_2: Arial;
+$font_3: sans-serif;
+
+//urls
+$url_0: url(../img/sprite@2x.png);
+$url_1: url(../img/sprite.png);
+
+//@extend-elements
+//original selectors
+//.fixed-header__logo a, .fixed-header__logo a:visited
+%extend_1 {
+  display: block;
+  position: relative;
+  padding-left: 264px;
+  font-family: $font_0, $font_1, $font_2, $font_3;
+  font-size: 15px;
+  letter-spacing: 0;
+  line-height: 1.7;
+  font-weight: 400;
+  text-transform: none;
+  color: $color_tana_approx;
+}
+
+//original selectors
+//.fixed-header__logo a::before, .fixed-header__logo a:visited::before
+%extend_2 {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 215px;
+  height: 65px;
+  background: $url_0 no-repeat 0 -480px transparent;
+}
+
+//original selectors
+//.fixed-header__logo a::after, .fixed-header__logo a:visited::after
+%extend_3 {
+  content: '';
+  position: absolute;
+  left: 244px;
+  top: 7px;
+  bottom: 8px;
+  border-left: 1px $color_tana_approx solid;
+}
+
+//original selectors
+//.fixed-header__menu li a, .fixed-header__menu li a:visited
+%extend_4 {
+  display: block;
+  position: relative;
+  height: 100%;
+  padding-top: 57px;
+  color: $white;
+  text-transform: uppercase;
+  font-family: $font_0, $font_1, $font_2, $font_3;
+  font-size: 13px;
+  //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+  transition: .2s all;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons::after, .fixed-header__menu li a:visited.menu-icons::after
+%extend_5 {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  right: -5px;
+  border-top: 0 $color_corn_approx solid;
+  //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+  transition: .2s all;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons::before, .fixed-header__menu li a:visited.menu-icons::before
+%extend_6 {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  background: $url_1 no-repeat 0 0 transparent;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons_01::before, .fixed-header__menu li a:visited.menu-icons_01::before
+%extend_7 {
+  width: 32px;
+  height: 41px;
+  margin-left: -16px;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons_02::before, .fixed-header__menu li a:visited.menu-icons_02::before
+%extend_8 {
+  width: 48px;
+  height: 41px;
+  background-position: -42px 0;
+  margin-left: -24px;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons_03::before, .fixed-header__menu li a:visited.menu-icons_03::before
+%extend_9 {
+  width: 43px;
+  height: 41px;
+  background-position: -100px 0;
+  margin-left: -22px;
+}
+
+//original selectors
+//.fixed-header__menu li a.menu-icons_04::before, .fixed-header__menu li a:visited.menu-icons_04::before
+%extend_10 {
+  width: 38px;
+  height: 41px;
+  background-position: -153px 0;
+  margin-left: -19px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__logo a, .fixed-header.floated .fixed-header__logo a:visited
+%extend_11 {
+  padding: 0;
+  color: transparent;
+  height: 44px;
+  text-indent: -9999px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__logo a::before, .fixed-header.floated .fixed-header__logo a:visited::before
+%extend_12 {
+  width: 144px;
+  height: 44px;
+  top: 0;
+  background: $url_0 no-repeat 0 -320px transparent;
+  background-size: 400px 400px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__menu li a.menu-icons_01::before, .fixed-header.floated .fixed-header__menu li a:visited.menu-icons_01::before
+%extend_13 {
+  width: 25px;
+  height: 31px;
+  margin-top: -19px;
+  background-position: -119px -118px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__menu li a.menu-icons_02::before, .fixed-header.floated .fixed-header__menu li a:visited.menu-icons_02::before
+%extend_14 {
+  width: 36px;
+  height: 32px;
+  margin-top: -19px;
+  left: 20px;
+  background-position: -120px -157px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__menu li a.menu-icons_03::before, .fixed-header.floated .fixed-header__menu li a:visited.menu-icons_03::before
+%extend_15 {
+  width: 32px;
+  height: 28px;
+  margin-top: -16px;
+  left: 18px;
+  background-position: -119px -197px;
+}
+
+//original selectors
+//.fixed-header.floated .fixed-header__menu li a.menu-icons_04::before, .fixed-header.floated .fixed-header__menu li a:visited.menu-icons_04::before
+%extend_16 {
+  width: 30px;
+  height: 29px;
+  margin-top: -18px;
+  left: 17px;
+  background-position: -119px -233px;
+}
+
+
+.fixed-header {
+  position: absolute;
+  top: 0;
+  min-width: 1220px;
+  width: 100%;
+  height: 120px;
+  background-color: $color_firefly_approx;
+  z-index: 200;
+  border-bottom: 3px $color_mirage_approx solid;
+  &.floated {
+    position: fixed;
+    opacity: 0;
+    visibility: hidden;
+    top: -75px;
+    height: 75px;
+    //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+    transition: .35s all;
+    .fixed-header__logo {
+      width: 144px;
+      height: 44px;
+      top: 15px;
+      a {
+        @extend %extend_11;
+        &:visited {
+          @extend %extend_11;
+        }
+        &:visited::before {
+          @extend %extend_12;
+        }
+        &:visited::after {
+          display: none;
+        }
+      }
+      a::before {
+        @extend %extend_12;
+      }
+      a::after {
+        display: none;
+      }
+    }
+    .fixed-header__menu {
+      top: 10px;
+      margin: 0px;
+      li {
+        .hamburger {
+          top: 0;
+          height: 64px;
+        }
+        &.have-submenu {
+          cursor: pointer;
+        }
+        a {
+          padding-top: 22px;
+          padding-left: 40px;
+          &:visited {
+            padding-top: 22px;
+            padding-left: 40px;
+            &.menu-icons::before {
+              left: 15px;
+              top: 50%;
+            }
+            &.menu-icons_01::before {
+              @extend %extend_13;
+            }
+            &.menu-icons_02::before {
+              @extend %extend_14;
+            }
+            &.menu-icons_03::before {
+              @extend %extend_15;
+            }
+            &.menu-icons_04::before {
+              @extend %extend_16;
+            }
+          }
+          &.menu-icons::before {
+            left: 15px;
+            top: 50%;
+          }
+          &.menu-icons_01::before {
+            @extend %extend_13;
+          }
+          &.menu-icons_02::before {
+            @extend %extend_14;
+          }
+          &.menu-icons_03::before {
+            @extend %extend_15;
+          }
+          &.menu-icons_04::before {
+            @extend %extend_16;
+          }
+        }
+        + li::before {
+          height: 45px;
+        }
+        &.active a {
+          &.menu-icons_01::before {
+            background-position: -167px -118px;
+          }
+          &.menu-icons_02::before {
+            background-position: -168px -157px;
+          }
+          &.menu-icons_03::before {
+            background-position: -167px -197px;
+          }
+          &.menu-icons_04::before {
+            background-position: -167px -233px;
+          }
+        }
+      }
+    }
+    &.visible {
+      opacity: 1;
+      visibility: visible;
+      top: 0;
+    }
+  }
+}
+.fixed-header__logo {
+  position: absolute;
+  top: 20px;
+  left: 50px;
+  width: 387px;
+  a {
+    @extend %extend_1;
+    &:visited {
+      @extend %extend_1;
+    }
+    &:visited::before {
+      @extend %extend_2;
+    }
+    &:visited::after {
+      @extend %extend_3;
+    }
+  }
+  a::before {
+    @extend %extend_2;
+  }
+  a::after {
+    @extend %extend_3;
+  }
+}
+.fixed-header__menu {
+  position: absolute;
+  bottom: -3px;
+  top: 20px;
+  //Instead of the line below you could use @include box-sizing($bs)
+  box-sizing: border-box;
+  right: 10px;
+  li {
+    display: inline-block;
+    vertical-align: top;
+    position: relative;
+    height: 100%;
+    padding: 0 32px;
+    margin-right: 0;
+    .hamburger {
+      position: relative;
+      display: block;
+      border: none;
+      background-color: transparent;
+      outline: none;
+      top: 6px;
+      width: 60px;
+      height: 94px;
+      .icon {
+        content: '';
+        border: none;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        width: 36px;
+        height: 36px;
+        margin-left: -16px;
+        cursor: pointer;
+        outline: none;
+      }
+      .icon::before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 19px;
+        height: 16px;
+        margin-left: -10px;
+        margin-top: -8px;
+        background: $url_1 no-repeat -208px -11px transparent;
+      }
+      &.active {
+        background-color: $color_mirage_approx;
+        .icon::before {
+          background-position: -241px -11px;
+          height: 17px;
+        }
+      }
+    }
+    a {
+      @extend %extend_4;
+      &:visited {
+        @extend %extend_4;
+        &.menu-icons::after {
+          @extend %extend_5;
+        }
+        &.menu-icons::before {
+          @extend %extend_6;
+        }
+        &.menu-icons_01::before {
+          @extend %extend_7;
+        }
+        &.menu-icons_02::before {
+          @extend %extend_8;
+        }
+        &.menu-icons_03::before {
+          @extend %extend_9;
+        }
+        &.menu-icons_04::before {
+          @extend %extend_10;
+        }
+        &:hover {
+          color: $color_corn_approx;
+        }
+        &.menu-icons:hover::after {
+          border-top: 3px $color_corn_approx solid;
+        }
+      }
+      &.menu-icons::after {
+        @extend %extend_5;
+      }
+      &.menu-icons::before {
+        @extend %extend_6;
+      }
+      &.menu-icons_01::before {
+        @extend %extend_7;
+      }
+      &.menu-icons_02::before {
+        @extend %extend_8;
+      }
+      &.menu-icons_03::before {
+        @extend %extend_9;
+      }
+      &.menu-icons_04::before {
+        @extend %extend_10;
+      }
+      &:hover {
+        color: $color_corn_approx;
+      }
+      &.menu-icons:hover::after {
+        border-top: 3px $color_corn_approx solid;
+      }
+    }
+    + li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 6px;
+      height: 65px;
+      border-right: 1px $color_mirage_approx solid;
+    }
+    &.active a {
+      &.menu-icons::after {
+        border-top: 3px $color_wedgewood_approx solid;
+      }
+      &.menu-icons_01::before {
+        background-position: 0 -56px;
+      }
+      &.menu-icons_02::before {
+        background-position: -42px -56px;
+      }
+      &.menu-icons_03::before {
+        background-position: -100px -56px;
+      }
+      &.menu-icons_04::before {
+        background-position: -153px -56px;
+      }
+    }
+  }
+}
+@media(-webkit-min-device-pixel-ratio: 1.3),(-webkit-min-device-pixel-ratio: 1.25),(min-resolution: 120dpi) {
+  .fixed-header__menu li {
+    a {
+      &.menu-icons::before {
+        background: $url_0 no-repeat 0 0 transparent;
+        background-size: 300px 300px;
+      }
+      &:visited.menu-icons::before {
+        background: $url_0 no-repeat 0 0 transparent;
+        background-size: 300px 300px;
+      }
+    }
+    .hamburger .icon::before {
+      background: $url_0 no-repeat -208px -11px transparent;
+      background-size: 300px 300px;
+    }
+    &.have-submenu {
+      cursor: pointer;
+    }
+  }
+}
+.fixed-header__submenu {
+  display: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  padding-right: 50px;
+  height: 70px;
+  text-align: right;
+  margin: 0px;
+  background-color: $color_mirage_approx;
+  &.active {
+    display: block;
+  }
+  li {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 15px;
+    line-height: 70px;
+    font-family: $font_0, $font_1, $font_2, $font_3;
+    color: $white;
+    a {
+      color: inherit;
+      //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+      transition: .2s all;
+      &:visited {
+        color: inherit;
+        //Instead of the line below you could use @include transition($transition-1, $transition-2, $transition-3, $transition-4, $transition-5, $transition-6, $transition-7, $transition-8, $transition-9, $transition-10)
+        transition: .2s all;
+        &:hover {
+          color: $color_corn_approx;
+        }
+      }
+      &:hover {
+        color: $color_corn_approx;
+      }
+    }
+    + li {
+      margin-left: 45px;
+    }
+  }
+}
+
+#container,
+#resource_container,
+#map_container {
+  padding-top: 75px;
+}
+
+.reader-component,
+#map_container .helper.click {
+  top: 75px !important;
+}

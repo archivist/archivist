@@ -211,4 +211,21 @@ gulp.task('resources-bundle', function () {
 
 gulp.task('resources', ['resources-styles', 'resources-bundle']);
 
-gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'resources', 'maps']);
+// Resources browser tasks
+// -------------
+
+gulp.task('memo-styles', function () {
+  gulp.src('./src/memorial/menu.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(rename("main-menu.css"))
+    .pipe(gulp.dest('./public/assets/styles'));
+});
+
+gulp.task('memo-assets', function () {
+  gulp.src('./src/memorial/img/**/*')
+    .pipe(gulp.dest('./public/assets/img'));
+});
+
+gulp.task('memo', ['memo-styles', 'memo-assets']);
+
+gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'resources', 'maps', 'memo']);
