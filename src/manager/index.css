@@ -354,6 +354,7 @@ th.sortable a {
   line-height: 30px;
   padding: 2px 0;
   margin: 0 210px 0 10px;
+  margin-right: 50px;
 }
 
 .location-cell .delete-document {
@@ -378,6 +379,11 @@ th.sortable a {
   position: absolute;
   right: 20px;
   top: 38px;
+}
+.show-references {
+  position: absolute;
+  right: 20px;
+  font-size: 23px;
 }
 
 /* MAPS */
@@ -1281,6 +1287,7 @@ MODAL
   font-size: 20px;
   line-height: 26px;
   padding-bottom: 5px;
+  margin-right: 50px;
 }
 
 .definition-cell .description {
@@ -1289,6 +1296,7 @@ MODAL
   padding-bottom: 10px;
   line-height: 20px;
   font-size: 14px;
+  margin-right: 50px;
 }
 
 .definition-cell .synonyms {

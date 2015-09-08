@@ -89,13 +89,16 @@ var PersonCell = Backgrid.Cell.extend({
           description = formattedValue.get('description'),
           global = (_.isUndefined(formattedValue.get('global')) || formattedValue.get('global') == false) ? 'not global' : 'global',
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
+          counter = formattedValue.get('docCounter'),
           edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name;
 
       var markup = '<div class="meta-info"> \
                     <div class="definition-type">' + global + '</div> \
+                    <div class="counter">references: ' + counter + '</div> \
                     <div class="edited">' + edited + '</div> \
                     <div class="updated">updated at ' + updatedAt + '</div> \
                     </div> \
+                    <div class="show-references"><i class="fa fa-book"></i></div> \
                     <div class="title">' + name + '</div> \
                     <div class="description">' + description + '</div>';
 
@@ -110,7 +113,8 @@ exports.personCell = PersonCell
 var PersonRow = Backgrid.Row.extend({
   events: {
     "click": "onClick",
-    "click .delete-document": "onRemove"
+    "click .delete-document": "onRemove",
+    "click .show-references": "onReference"
   },
   onClick: function (e) {
     e.preventDefault();
@@ -123,6 +127,18 @@ var PersonRow = Backgrid.Row.extend({
     if(confirm) {
       this.model.destroy();
     }
+  },
+  onReference: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var self = this;
+    var references = new models.documents();
+    references.url = '/api/persons/' + this.model.get('id') + '/references';
+    references.state.pageSize = null;
+    references.fetch().done(function() {
+      var refModal = new entityModalReferences({model: self.model, collection: references});
+      $('#main').append(refModal.render().el);
+    })
   }
 });
 
@@ -215,5 +231,15 @@ var editorDialog = Backbone.Modal.extend({
   cancel: function() {
     Backbone.middle.trigger("changeUrl", '/' + this.gridUrl);
     //this.model.stopListening();
+  }
+});
+
+var entityModalReferences = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  keyControl: false,
+  template: _.template($('#entityModalReferences').html()),
+  cancelEl: '.cancel',
+  submitEl: '.ok',
+  submit: function() {
   }
 });

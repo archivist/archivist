@@ -87,6 +87,22 @@ script#subjectModalReferences(type='text/template')
 	<a href="#" class="btn ok">Close</a>
 	</div>
 	</script>
+script#entityModalReferences(type='text/template')
+	<div class="modal-body">
+	<ul class="subject-references-list">
+	<% items.forEach(function(item, i) { %>
+	<li id="<%= items[i].id %>">
+	<a href="/archivist/editor/<%= items[i].id %>#contextId=entities;entityId=<%= _id %>" target="_blank">
+	<%= items[i].nodes.document.title %>
+	</a>
+	</li>
+	<% }) %>
+	</ul>
+	</div>
+	<div class="modal-footer">
+	<a href="#" class="btn ok">Close</a>
+	</div>
+	</script>
 script#subjectDialog(type='text/template')
 	<div class="dialog-header">
 	<%= title %>

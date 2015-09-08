@@ -2,9 +2,9 @@ var Subject = require('../../models/subject.js')
   , Document = require('../../models/document.js')
   , maintenance = require('../shared/maintenance.js')
   , indexQueue = require('../shared/queue.js')
-  , APICache = require('../shared/cache.js')
   , interviews = require('../indexer/interviews')
   , auth = require('../auth/utils.js')
+  , resourcesMapCache = require('./entities').cache
   , _ = require('underscore')
   , express = require('express')
   , api = express.Router();
@@ -123,16 +123,6 @@ var loadMetadata = function(req, res, next) {
     });
   });
 }
-
-var getResourcesMap = function(cb) {
-  Document.generateResourcesMap(function(err, map) {
-    if (err) return cb(err);
-    cb(null, map);
-  });
-}
-
-// Cache results for 5 minutes
-var resourcesMapCache = new APICache(getResourcesMap, 5);
 
 var getSubejctReferences = function(req, res, next) {
   var subject = req.params.id;
