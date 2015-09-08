@@ -153,6 +153,7 @@ var LocationCell = Backgrid.Cell.extend({
           nearestLocality = formattedValue.get('nearest_locality'),
           country = formattedValue.get('country'),
           description = formattedValue.get('description'),
+          counter = formattedValue.get('docCounter'),
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
           edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name;
 
@@ -162,9 +163,11 @@ var LocationCell = Backgrid.Cell.extend({
       var markup = '<div class="meta-info">';
       if (!_.isEmpty(type)) markup += '<div class="definition-type">' + type + '</div>';
          markup += '<div class="country">' + country + '</div> \
+                    <div class="counter">references: ' + counter + '</div> \
                     <div class="edited">' + edited + '</div> \
                     <div class="updated">updated at ' + updatedAt + '</div> \
                     </div> \
+                    <div class="show-references"><i class="fa fa-book"></i></div> \
                     <div class="title">' + (name.toLowerCase().indexOf("неизвестно") >= 0 ? nearestLocality : name) + '</div> \
                     <div class="description">' + description + '</div> \
                     <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + '</div>';
@@ -180,7 +183,8 @@ exports.locationCell = LocationCell
 var LocationRow = Backgrid.Row.extend({
   events: {
     "click": "onClick",
-    "click .delete-document": "onRemove"
+    "click .delete-document": "onRemove",
+    "click .show-references": "onReference"
   },
   onClick: function (e) {
     e.preventDefault();
@@ -194,6 +198,18 @@ var LocationRow = Backgrid.Row.extend({
     if(confirm) {
       this.model.destroy();
     }
+  },
+  onReference: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var self = this;
+    var references = new models.documents();
+    references.url = '/api/locations/' + this.model.get('id') + '/references';
+    references.state.pageSize = null;
+    references.fetch().done(function() {
+      var refModal = new entityModalReferences({model: self.model, collection: references});
+      $('#main').append(refModal.render().el);
+    })
   }
 });
 
@@ -706,3 +722,13 @@ var PrisonsMap = LocationsMap.extend({
 exports.prisonsMap = PrisonsMap
 
 L.Icon.Default.imagePath = '/assets/img/leaflet';
+
+var entityModalReferences = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  keyControl: false,
+  template: _.template($('#entityModalReferences').html()),
+  cancelEl: '.cancel',
+  submitEl: '.ok',
+  submit: function() {
+  }
+});

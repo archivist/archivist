@@ -1,6 +1,9 @@
 var Person = require('../../models/person.js')
   , maintenance = require('../shared/maintenance.js')
+  , resourcesMapCache = require('./entities').cache
+  , getReferences = require('./entities').references
   , auth = require('../auth/utils.js')
+  , _ = require('underscore')
   , express = require('express')
   , api = express.Router();
 
@@ -38,8 +41,23 @@ var deletePerson = function(req, res, next) {
 var listPersons = function(req, res, next) {
   Person.list(req.query, function(err, persons) {
     if (err) return next(err);
-    res.json(persons);
+    resourcesMapCache.get(function(err, resources) {
+      if(err) return next(err);
+      _.each(persons[1], function(entity, id) {
+        persons[1][id] = entity.toJSON();
+        persons[1][id].docCounter = resources[entity._id] ? resources[entity._id].length : 0;
+      });
+      res.json(persons);
+    });
   });
+}
+
+var getPersonReferences = function(req, res, next) {
+  var id = req.params.id;
+  getReferences(id, function(err, docs){
+    if(err) return next(err);
+    res.json([{total_entries: docs.length}, docs]);
+  })
 }
 
 api.route('/persons')
@@ -50,5 +68,8 @@ api.route('/persons/:id')
   .get(maintenance.checkCurrentMode, readPerson)
   .put(maintenance.checkCurrentMode, auth.checkAuth, updatePerson)
   .delete(maintenance.checkCurrentMode, auth.checkAuth, auth.check_scopes, deletePerson)
+
+api.route('/persons/:id/references')
+  .get(getPersonReferences)
 
 module.exports = api;

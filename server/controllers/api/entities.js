@@ -1,7 +1,9 @@
-var Location = require('../../models/location.js')
+var Document = require('../../models/document.js')
+  , Location = require('../../models/location.js')
   , Person = require('../../models/person.js')
   , Definition = require('../../models/definition.js')
   , maintenance = require('../shared/maintenance.js')
+  , APICache = require('../shared/cache.js')
   , auth = require('../auth/utils.js')
   , mongoose = require('mongoose')
   , async = require('async')
@@ -195,6 +197,27 @@ var entitiesGetter = function(req, res, next) {
   });
 }
 
+var getResourcesMap = function(cb) {
+  Document.generateResourcesMap(function(err, map) {
+    if (err) return cb(err);
+    cb(null, map);
+  });
+}
+
+var getReferences = function(id, cb) {
+  resourcesMapCache.get(function(err, resources) {
+    if(err) return next(err);
+    var docs = resources[id];
+    Document.find({'_id': { $in: docs}}, 'nodes.document.title', function(err, docs){
+      if(err) return cb(err);
+      cb(null, docs);
+    });
+  });
+}
+
+// Cache results for 5 minutes
+var resourcesMapCache = new APICache(getResourcesMap, 5);
+
 api.route('/entities')
   .post(maintenance.checkCurrentMode, auth.checkAuth, entitiesGetter)
   .get(auth.checkAuth, auth.check_scopes, listEntities);
@@ -206,5 +229,7 @@ api.route('/entities/merge')
 module.exports = {
   api: api,
   get: getEntities,
-  list: getAllEntities
+  list: getAllEntities,
+  cache: resourcesMapCache,
+  references: getReferences
 }

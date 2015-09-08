@@ -94,6 +94,7 @@ var DefinitionCell = Backgrid.Cell.extend({
           type = _.isUndefined(formattedValue.get('definition_type')) ? 'unknown type' : formattedValue.get('definition_type'),
           updatedAt = _.isUndefined(formattedValue.get('updatedAt')) ? 'unknown' : new Date(formattedValue.get('updatedAt')).toDateString(),
           edited = _.isUndefined(formattedValue.get('edited')) || _.isNull(formattedValue.get('edited')) ? 'unknown' : formattedValue.get('edited').name,
+          counter = formattedValue.get('docCounter'),
           typeClass = type;
 
       if (type == 'сокращение') {
@@ -106,9 +107,11 @@ var DefinitionCell = Backgrid.Cell.extend({
 
       var markup = '<div class="meta-info"> \
                     <div class="definition-type ' + typeClass + '">' + type + '</div> \
+                    <div class="counter">references: ' + counter + '</div> \
                     <div class="edited">' + edited + '</div> \
                     <div class="updated">updated at ' + updatedAt + '</div> \
                     </div> \
+                    <div class="show-references"><i class="fa fa-book"></i></div> \
                     <div class="title">' + title + '</div> \
                     <div class="description">' + description + '</div> \
                     <div class="synonyms">' + (synonyms.length > 0 ? "Also know as: " + synonyms.join(", ") : "" ) + '</div>'
@@ -124,7 +127,8 @@ exports.definitionCell = DefinitionCell
 var DefinitionRow = Backgrid.Row.extend({
   events: {
     "click": "onClick",
-    "click .delete-document": "onRemove"
+    "click .delete-document": "onRemove",
+    "click .show-references": "onReference"
   },
   onClick: function (e) {
     e.preventDefault();
@@ -137,6 +141,18 @@ var DefinitionRow = Backgrid.Row.extend({
     if(confirm) {
       this.model.destroy();
     }
+  },
+  onReference: function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    var self = this;
+    var references = new models.documents();
+    references.url = '/api/definitions/' + this.model.get('id') + '/references';
+    references.state.pageSize = null;
+    references.fetch().done(function() {
+      var refModal = new entityModalReferences({model: self.model, collection: references});
+      $('#main').append(refModal.render().el);
+    })
   }
 });
 
@@ -238,5 +254,15 @@ var editorDialog = Backbone.Modal.extend({
   cancel: function() {
     Backbone.middle.trigger("changeUrl", '/' + this.gridUrl);
     //this.model.stopListening();
+  }
+});
+
+var entityModalReferences = Backbone.Modal.extend({
+  prefix: 'subject-modal',
+  keyControl: false,
+  template: _.template($('#entityModalReferences').html()),
+  cancelEl: '.cancel',
+  submitEl: '.ok',
+  submit: function() {
   }
 });
