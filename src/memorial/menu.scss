@@ -531,9 +531,12 @@ $url_1: url(../img/sprite.png);
 }
 
 #container,
-#resource_container,
 #map_container {
   padding-top: 75px;
+}
+
+#resource_container {
+  padding-top: 80px;
 }
 
 .reader-component,
