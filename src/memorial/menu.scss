@@ -196,6 +196,9 @@ $url_1: url(../img/sprite.png);
   background-color: $color_firefly_approx;
   z-index: 200;
   border-bottom: 3px $color_mirage_approx solid;
+  -moz-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.4);
   &.floated {
     position: fixed;
     opacity: 0;
