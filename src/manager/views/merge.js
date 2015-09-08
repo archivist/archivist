@@ -100,6 +100,26 @@ var MergeGrid = Grid.main.extend({
 
 exports.mergeGrid = MergeGrid;
 
+var HtmlCell = Backgrid.HtmlCell = Backgrid.Cell.extend({
+
+  className: "html-cell",
+  
+  initialize: function () {
+    Backgrid.Cell.prototype.initialize.apply(this, arguments);
+  },
+
+  render: function () {
+    this.$el.empty();
+    var rawValue = this.model.get(this.column.get("name"));
+    var formattedValue = this.formatter.fromRaw(rawValue, this.model);
+    this.$el.append(formattedValue);
+    this.delegateEvents();
+    return this;
+  }
+});
+
+exports.htmlCell = HtmlCell;
+
 var showDialog = function(mergeData, collection, model) {
   var dialog = new Backbone.Model({
     title: "Merge Entities",

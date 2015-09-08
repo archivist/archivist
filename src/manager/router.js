@@ -228,7 +228,7 @@ var Router = Backbone.Router.extend({
         name: 'description',
         label: 'description',
         editable: false,
-        cell: "string"
+        cell: views.htmlCell
       }
     ];
 
