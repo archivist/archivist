@@ -160,11 +160,12 @@ queries.countSubjects = function(cb) {
   });
 };
 
-queries.countEntities = function(cb) {
+queries.countEntities = function(opt, cb) {
+  var published = opt.published || true;
   searchInterviews({
     searchString: null,
     filters: null,
-    published: true,
+    published: published,
     entities: true
   }, function(err, result) {
     if (err) return cb(err);

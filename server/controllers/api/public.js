@@ -123,7 +123,10 @@ var getEntities = function(doc, cb) {
 }
 
 var getPublishedLocations = function(cb) {
-  interviews.countEntities(function(err, counters){
+  var options = {
+    published: true
+  }
+  interviews.countEntities(options, function(err, counters){
     var entities = _.keys(counters);
     var query = {
       _id: {
