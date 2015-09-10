@@ -124,7 +124,7 @@ var getEntities = function(doc, cb) {
 
 var getPublishedLocations = function(cb) {
   var options = {
-    published: true
+    //published: true
   }
   interviews.countEntities(options, function(err, counters){
     var entities = _.keys(counters);
@@ -171,6 +171,7 @@ var getLocationWithRefs = function(id, cb) {
   var metadataSet = {
     "id": 1, 
     "nodes.document.title": 1,
+    "nodes.document.published": 1,
     "nodes.document.published_on": 1,
     "nodes.document.record_type": 1,
     "nodes.document.interview_date": 1,
@@ -186,7 +187,7 @@ var getLocationWithRefs = function(id, cb) {
       });
     },
     function(callback){
-      Document.find({resources: id, "nodes.document.published": true}, metadataSet, {}, callback);
+      Document.find({resources: id}, metadataSet, {}, callback);
     }
   ],
   function(err, results){

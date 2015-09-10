@@ -227,6 +227,10 @@ html, body, #map {
     font-size: 13px;
     padding-bottom: 3px;
   }
+  &.unpublished {
+    opacity: 0.3;
+    cursor: default;
+  }
 }
 
 .document.preview .meta-info > div {
