@@ -18,6 +18,7 @@ var mongoose = require('mongoose')
 var index = process.env.INDEX || "false";
 var media_server = process.env.MEDIA_HOST;
 var mapbox_token = process.env.MAPBOX_TOKEN;
+var mapbox_mapid = process.env.MAPBOX_MAPID;
 
 // MONGOOSE CONNECT
 
@@ -120,7 +121,7 @@ app.route('/archivist')
 app.route('/maps')
 	.get(function(req, res, next) {
 		if(index == "true") {
-    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, locationId: "" });
+    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, mapbox_mapid: mapbox_mapid, locationId: "" });
 		} else {
 			res.redirect('/archivist');
 		}
@@ -129,7 +130,7 @@ app.route('/maps')
 app.route('/maps/:id')
 	.get(function(req, res, next) {
 		if(index == "true") {
-    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, locationId: req.params.id });
+    	res.render('maps', { media: media_server, mapbox_token: mapbox_token, mapbox_mapid: mapbox_mapid, locationId: req.params.id });
 		} else {
 			res.redirect('/archivist');
 		}
