@@ -41,9 +41,10 @@ var MapBrowser = Component.extend({
   initilizeMap: function() {
     var self = this;
 
+    var mapId = window.mapId || 'mapbox.light';
     L.mapbox.accessToken = window.mapboxToken;
 
-    this.map = L.mapbox.map('map', 'mapbox.light', {
+    this.map = L.mapbox.map('map', mapId, {
       maxZoom: '10',
       minZoom: '4',
       attributionControl: false
