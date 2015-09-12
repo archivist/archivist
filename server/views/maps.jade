@@ -1,7 +1,22 @@
 doctype html
 html
   head
-    title Карты · По ту сторону войны
+    - var description = "На картах отмечены все упомянутые в интервью географические названия и все перечисленные места работы и заключения. С точки на карте можно перейти к месту в интервью, где упоминается этот населенный пункт или лагерь."
+    title Карты · Устная история военнопленных и остарбайтеров
+    meta(name='description', content='#{description}')
+    meta(property='og:title' content='Карты · Устная история военнопленных и остарбайтеров')
+    meta(property='og:site_name' content='По ту сторону войны')
+    meta(property='og:url' content='http://archive.tastorona.su/maps')
+    meta(property='og:description' content='#{description}')
+    meta(property='og:image' content='http://tastorona.su/static/img/maps-social.jpg')
+    meta(property='og:type' content='website')
+    meta(property='og:locale' content='ru_RU')
+    meta(property='twitter:card' content='summary_large_image')
+    meta(property='twitter:title' content='Карты · Устная история военнопленных и остарбайтеров')
+    meta(property='twitter:description' content='#{description}')
+    meta(property='twitter:url' content='http://archive.tastorona.su/maps')
+    meta(property='twitter:image' content='http://tastorona.su/static/img/maps-social.jpg')
+    link(rel='canonical', href='http://tastorona.su')
     link(rel='stylesheet', href='/assets/styles/font-awesome/css/font-awesome.css')
     link(rel='stylesheet', href='/assets/styles/nprogress/nprogress.css')
     link(rel='stylesheet', href='/assets/styles/mapbox/mapbox.css')

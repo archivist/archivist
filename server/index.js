@@ -114,6 +114,7 @@ app.route('/documents/:id')
 		Document.getMetadata(id, function(err, doc){
 			if(err) return next(err);
 			var metadata = doc.nodes.document;
+			console.log(metadata)
 			res.render('reader', { media: media_server, metadata: metadata });
 		});
   })

@@ -1,7 +1,25 @@
 doctype html
 html
   head
-    title #{metadata.title}
+    if metadata.interviewee_photo == ""
+      - var photoUrl = "http://tastorona.su/static/img/social.jpg"
+    else
+      - var photoUrl = media + "/photos/" + metadata.interviewee_photo
+    title #{metadata.title} · По ту сторону войны
+    meta(name='description', content='#{metadata.short_summary}')
+    meta(property='og:title' content='#{metadata.title} · По ту сторону войны')
+    meta(property='og:site_name' content='По ту сторону войны')
+    meta(property='og:url' content='http://archive.tastorona.su/documents/#{metadata.guid}')
+    meta(property='og:description' content='#{metadata.short_summary}')
+    meta(property='og:image' content='#{photoUrl}')
+    meta(property='og:type' content='website')
+    meta(property='og:locale' content='ru_RU')
+    meta(property='twitter:card' content='summary_large_image')
+    meta(property='twitter:title' content='#{metadata.title} · По ту сторону войны')
+    meta(property='twitter:description' content='#{metadata.short_summary}')
+    meta(property='twitter:url' content='http://archive.tastorona.su/documents/#{metadata.guid}')
+    meta(property='twitter:image' content='#{photoUrl}')
+    link(rel='canonical', href='http://tastorona.su')
     link(rel='stylesheet', href='/assets/styles/font-awesome/css/font-awesome.css')
     link(rel='stylesheet', href='/assets/styles/nprogress/nprogress.css')
     link(rel='stylesheet', href='/assets/styles/jplayer/css/jplayer.blue.monday.min.css')

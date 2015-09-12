@@ -1,7 +1,22 @@
 doctype html
 html(xmlns:mml='http://www.w3.org/1998/Math/MathML')
   head
-    title Индекс интервью · По ту сторону войны
+    - var description = "На странице архива можно отобрать несколько из опубликованных интервью, указав темы, которые в них должны содержаться. В отдельных интервью можно одновременно слушать, читать и изучать созданный справочный и навигационный аппарат."
+    title Индекс интервью · Устная история военнопленных и остарбайтеров
+    meta(name='description', content='#{description}')
+    meta(property='og:title' content='Индекс интервью · Устная история военнопленных и остарбайтеров')
+    meta(property='og:site_name' content='По ту сторону войны')
+    meta(property='og:url' content='http://archive.tastorona.su')
+    meta(property='og:description' content='#{description}')
+    meta(property='og:image' content='http://tastorona.su/static/img/archive-social.jpg')
+    meta(property='og:type' content='website')
+    meta(property='og:locale' content='ru_RU')
+    meta(property='twitter:card' content='summary_large_image')
+    meta(property='twitter:title' content='Индекс интервью · Устная история военнопленных и остарбайтеров')
+    meta(property='twitter:description' content='#{description}')
+    meta(property='twitter:url' content='http://archive.tastorona.su')
+    meta(property='twitter:image' content='http://tastorona.su/static/img/archive-social.jpg')
+    link(rel='canonical', href='http://tastorona.su')
     link(rel='stylesheet', href='/assets/styles/font-awesome/css/font-awesome.css')
     link(rel='stylesheet', href='/assets/styles/main-menu.css')
     link(href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,400italic', rel='stylesheet', type='text/css')

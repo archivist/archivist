@@ -151,8 +151,8 @@ api.route('/subjects/move')
   .get(maintenance.checkCurrentMode, auth.checkAuth, moveSubjects)
 
 // force all subject leafs repairing
-// api.route('/subjects/repair')
-//   .get(maintenance.checkCurrentMode, forceRepairSubjects)
+api.route('/subjects/repair')
+  .get(maintenance.checkCurrentMode, forceRepairSubjects)
 
 api.route('/subjects/children/:id')
   .get(maintenance.checkCurrentMode, getSubjectsChildren)
