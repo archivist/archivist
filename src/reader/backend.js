@@ -57,7 +57,6 @@ Backend.Prototype = function() {
       var doc = Interview.fromJson(result.document);
       doc.subjects = new Interview.SubjectsModel(doc, result.subjects);
       doc.entities = new Interview.EntitiesModel(result.entities);
-      document.title = doc.getDocumentMeta().title;
       doc.connect(this, {'document:rendered': function(){nprogress.done();}});
       cb(null, doc);
     });
