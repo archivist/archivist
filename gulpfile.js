@@ -233,7 +233,7 @@ gulp.task('memo-styles', function () {
 
 gulp.task('memo-ga', function () {
   gulp.src('./src/memorial/ga.js')
-    .pipe(gulp.dest('./public/assets/javascripts/ga.js'));
+    .pipe(gulp.dest('./public/assets/javascripts'));
 });
 
 gulp.task('memo-assets', function () {
