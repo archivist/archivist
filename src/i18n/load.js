@@ -1,12 +1,12 @@
 var Polyglot = require('node-polyglot');
-var defaultPhrases = require('./en.json');
+var defaultPhrases = require('./ru.json');
 // Note: we use the HTML5 LocalStorage to store phrases which are defined in
 // the according locale files in this directory
 // To switch the language use `i18n.switchLocale('de')` and reload the page.
 var storage = window.storage || window.localStorage;
-var locale = storage.getItem('locale') || "en";
+var locale = storage.getItem('locale') || "ru";
 var phrases = JSON.parse(storage.getItem('phrases'));
-if (locale === "en" || !phrases) {
+if (locale === "ru" || !phrases) {
   phrases = defaultPhrases;
 }
 var i18n = new Polyglot({locale: locale, phrases: phrases});
