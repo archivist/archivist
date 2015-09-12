@@ -231,11 +231,16 @@ gulp.task('memo-styles', function () {
     .pipe(gulp.dest('./public/assets/styles'));
 });
 
+gulp.task('memo-ga', function () {
+  gulp.src('./src/memorial/ga.js')
+    .pipe(gulp.dest('./public/assets/javascripts/ga.js'));
+});
+
 gulp.task('memo-assets', function () {
   gulp.src('./src/memorial/img/**/*')
     .pipe(gulp.dest('./public/assets/img'));
 });
 
-gulp.task('memo', ['memo-styles', 'memo-assets']);
+gulp.task('memo', ['memo-styles', 'memo-ga', 'memo-assets']);
 
 gulp.task('default', ['manager', 'i18n', 'writer', 'reader', 'browser', 'resources', 'maps', 'memo']);
