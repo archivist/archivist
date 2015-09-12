@@ -110,7 +110,12 @@ app.route('/resources/:id')
 
 app.route('/documents/:id')
 	.get(function(req, res, next) {
-    res.render('reader', { media: media_server });
+		var id = req.params.id;
+		Document.getMetadata(id, function(err, doc){
+			if(err) return next(err);
+			var metadata = doc.nodes.document;
+			res.render('reader', { media: media_server, metadata: metadata });
+		});
   })
 
 app.route('/archivist')

@@ -38,6 +38,16 @@ gulp.task('manager-bundle', function() {
 
 gulp.task('manager', ['manager-assets', 'manager-bundle']);
 
+// i18n tasks
+// -------------
+
+gulp.task('i18n', function () {
+  gulp.src('./src/i18n/en.json')
+    .pipe(gulp.dest('./public/i18n'));
+  gulp.src('./src/i18n/ru.json')
+    .pipe(gulp.dest('./public/i18n'));
+});
+
 // Writer tasks
 // -------------
 
@@ -211,7 +221,7 @@ gulp.task('resources-bundle', function () {
 
 gulp.task('resources', ['resources-styles', 'resources-bundle']);
 
-// Resources browser tasks
+// Memorial specific tasks
 // -------------
 
 gulp.task('memo-styles', function () {
@@ -228,4 +238,4 @@ gulp.task('memo-assets', function () {
 
 gulp.task('memo', ['memo-styles', 'memo-assets']);
 
-gulp.task('default', ['manager', 'writer', 'reader', 'browser', 'resources', 'maps', 'memo']);
+gulp.task('default', ['manager', 'i18n', 'writer', 'reader', 'browser', 'resources', 'maps', 'memo']);
