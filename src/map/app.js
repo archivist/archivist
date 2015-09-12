@@ -1,7 +1,7 @@
 'use strict';
 
 // i18n
-require('./i18n/load');
+require('../i18n/load');
 
 var $ = window.$ = require('jquery');
 var MapBrowser = require('./map_browser');

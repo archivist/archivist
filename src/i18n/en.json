@@ -23,5 +23,21 @@
   "entity.unknown_name": "Unknown name",
   "reader.show_resources": "Find references",
   "reader.show_on_map": "Show on map",
-  "reader.loading_message": "Loading document... This may take a few seconds."
+  "reader.loading_message": "Loading document... This may take a few seconds.",
+  "browser.search_button": "Search",
+  "browser.search_placeholder": "Enter search terms",
+  "browser.clear_filters": "Clear Filters",
+  "browser.loading": "Loading documents...",
+  "browser.found": "documents found",
+  "browser.minutes": "min",
+  "browser.entity_suggestion": "We also found these articles:",
+  "browser.no_results": "Your search did not match any documents",
+  "interview.minutes": "min",
+  "entity.unknown_name": "Unknown name",
+  "map.toponyms": "Mentioned toponyms",
+  "map.prisons": "Mentioned prisons",
+  "map.click_helper": "Click on a location to see details",
+  "map.list_helper": "Go back to the list of locations",
+  "resources.go_back": "Go back to the list of documents",
+  "resources.open_map": "Open location on the map"
 }

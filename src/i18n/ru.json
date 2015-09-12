@@ -23,5 +23,21 @@
   "entity.unknown_name": "Название неизвестно",
   "reader.show_resources": "Найти в других документах",
   "reader.show_on_map": "Показать на карте",
-  "reader.loading_message": "Загрузка документа... Подождите, пожалуйста."
+  "reader.loading_message": "Загрузка документа... Подождите, пожалуйста.",
+  "browser.search_button": "Поиск",
+  "browser.search_placeholder": "Введите поисковой запрос",
+  "browser.clear_filters": "Сбросить фильтры",
+  "browser.loading": "Загрузка документов...",
+  "browser.found": "интервью",
+  "browser.minutes": "мин",
+  "browser.entity_suggestion": "Найдены словарные статьи:",
+  "browser.no_results": "Документов отвечающих вашему запросу не найдено",
+  "interview.minutes": "мин",
+  "entity.unknown_name": "Название неизвестно",
+  "map.toponyms": "Упомянутые топонимы",
+  "map.prisons": "Места работы и заключения",
+  "map.click_helper": "Нажмите на локацию для получения информации",
+  "map.list_helper": "Вернуться к списку локаций",
+  "resources.go_back": "Вернуться к списку интервью",
+  "resources.open_map": "Посмотреть на карте"
 }
