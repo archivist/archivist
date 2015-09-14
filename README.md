@@ -61,6 +61,8 @@ Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours
 
 Archivist Writer protects every request using Archivists [Auth API]().
 
+In the current Archivist platform we use a classical locking approach to avoid concurrent editing hazards. E.g. every document has version number, if your document version isn't equal to server one you'll not be able to save it.
+
 You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](). 
 Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core]().
 
@@ -168,11 +170,57 @@ This manager available only for super users.
 
 # Server APIs
 
+Let's look into server code.
+
+[Source code](https://github.com/archivist/archivist/tree/master/server) contains three folders:
+- views (it contains [Jade](http://jade-lang.com) templates)
+- models (here you can find [mongoose](http://mongoosejs.com/) data models definitions as well as a lot of static methods attached to each schema)
+- controllers (here you can find a lot of APIs)
+
+Let me describe some of the most important concepts.
+
+## REST like APIs
+
+All entities use [mongoose rest plugin](https://github.com/archivist/archivist/blob/master/server/controllers/shared/rest.js) which attach REST like methods to their schemas.
+
+## Maintanence mode
+
+During merging or removing entities/subjects system will activate a [maintanence mode](https://github.com/archivist/archivist/blob/master/server/controllers/shared/maintenance.js).
+This means that no one will allowed to save any changes until all affected documents will changed. All users who are editing afected documents will be forced to refresh Archivist Writer.
+
+System will create a backup of all changed documents and will restore it in case of any errors. If your system will crashed you'll likely stuck in maintenance mode. In this case you'll need to change maintanace mode flag manually. It is stored as a document inside mongodb system collection.
+
+## Caching
+
+Some APIs used [in memory caching](https://github.com/archivist/archivist/blob/master/server/controllers/shared/cache.js). You can define how often this cache will be refreshed.
+
+## Indexer
+
+All Elastic Search related things are defined [here](https://github.com/archivist/archivist/tree/master/server/controllers/indexer).
+For indexing Archivist used special [queue API](https://github.com/archivist/archivist/blob/master/server/controllers/shared/queue.js) which will gradually process all of your indexing tasks.
+If you need to run mass operations like index seeding or reindexing all documents do it from localhost, don't forget to uncommen [this routes](https://github.com/archivist/archivist/blob/master/server/controllers/api/indexer.js#L112). Don't expose this methods on production server.
+
+You can turn off indexing in your [.env file](). In this case system will only run protected part of Archvist, e.g. [managers]() and [writer](). 
+
+## Authentication
+
+Archivist use Google OAuth 2 for authentication (we are using [passport.js](http://passportjs.org/) for that, so you can easily add more methods). For any other operations we are using [JWT](http://jwt.io/). Tokens are stored in user's localStorage, they are valid during one week. Token will be automaticaly renewed in lat two days if user will remain active, otherwise user will be forced to login after one week. Before every operation we are validating token and checking user permissions.
+
+## Public APIs
+
+Most of public APIs, e.g. for open part of archive are [exposed here](https://github.com/archivist/archivist/blob/master/server/controllers/api/public.js). All of them are read-only and some are [cached]().
 
 
 # Archivist Core
 
-Available under MIT license.
+Archivist Core is isolated repository which contains:
+- Interview Model
+- Archivist Writer
+- Archivist Reader
+- Archivist Browser
+
+All of that tools use legacy version of Substance library.
+All of these tools are available under MIT license.
 
 # Translations
 
