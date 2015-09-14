@@ -12,17 +12,17 @@ Put .env file with credentials
 Variable name  | Description
 ------------- | -------------
 ARCHIVIST_HOST  | Url of your archive
-AUTH_SECRET  | Secret Key to sign JWT tokens
+AUTH_SECRET  | Secret key to sign [JSON Web Tokens (JWT)](http://jwt.io/)
 ES_HOST  | Elastic Search instance url
 INDEX  | Turn on indexing (true or false)
-GOOGLE_CALLBACK  | Url of Google OAuth callback
-GOOGLE_ID  | Client ID of your Web application
-GOOGLE_SECRET  | Client secret of your Web application
-MEDIA_HOST  | Url of your media storage
-MAPBOX_MAPID  | Id of your mapbox map
-MAPBOX_TOKEN  | Mapbox token
-MONGO_URL  | MongoDB URI
-RS_NAME  | Replica-set name
+GOOGLE_CALLBACK  | One of the redirect_uri values obtained from the [Google Developers Console](https://console.developers.google.com/)
+GOOGLE_ID  | The client ID you obtain from the [Google Developers Console](https://console.developers.google.com/)
+GOOGLE_SECRET  | The client secret you obtained from the [Google Developers Console](https://console.developers.google.com/)
+MEDIA_HOST  | Url of your [media storage]()
+MAPBOX_MAPID  | Mapbox [map ID](https://www.mapbox.com/help/define-map-id/)
+MAPBOX_TOKEN  | Mapbox [access token](https://www.mapbox.com/help/define-access-token/)
+MONGO_URL  | MongoDB [connection URI](http://docs.mongodb.org/manual/reference/connection-string/#standard-connection-string-format)
+RS_NAME  | MongoDB [replica set](http://docs.mongodb.org/manual/reference/glossary/#term-replica-set) name (optional)
 
 Like this:
 ```
