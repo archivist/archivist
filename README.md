@@ -42,6 +42,8 @@ All entities are pretty much independent from each other.
 
 ### Users
 
+[User schema](https://github.com/archivist/archivist/blob/master/server/models/user.js#L10) is pretty much oriented to store Google profile. However there is one important thing. Each user have *access* and *super* properties. First one it to grant access for the editing, second one is for granting *super access*. Super user can manage users and perform dangerous operations, e.g. merging and removing subjects and entities. 
+
 ## Archivist Writer
 
 At the heart of the platform there’s Archivist Writer, a modern web-editor which allows you to annotate your text with basic markup and external data, e.g. you can:
