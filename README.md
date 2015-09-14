@@ -1,9 +1,10 @@
-Archivist
-=========
+<p style="text-align:center"><img src="https://avatars1.githubusercontent.com/u/14059460?v=3&s=600" /></p>
 
 Archivist is a full-stack publishing solution involving different technologies to power digital archives.
+Archivist originally has been developed for the [Memorial International Society](http://memorial.de/index.php?id=18) to publish interviews of Ost-Arbeiters and WWII prisoners. They are published as full transcriptions (in russian) complete with multimedia sources (audio, video). Editors are able to tag and link subjects, locations, persons and definitions in the text, so that the archive can be queried later in interesting ways. Researchers are able to perform a full-text search, but also filter interviews by related subjects and external entities.
+Read more about Archivst in one of project's mantainers [post on Medium](https://medium.com/p/7019f6408ee6)
 
-![archivist](https://avatars1.githubusercontent.com/u/14059460?v=3&s=600)
+<p style="text-align:center"><img src="https://cloud.githubusercontent.com/assets/182010/9853503/8a7258f2-5b0c-11e5-837b-cfe37b560e9b.png" /></p>
 
 # Install
 
