@@ -1,6 +1,7 @@
 <img align="left" src="https://cloud.githubusercontent.com/assets/182010/9854134/e63973c0-5b0f-11e5-9c18-ac9d22d04083.png" />
 Archivist is a full-stack publishing solution involving different technologies to power digital archives.
-Archivist originally has been developed for the [Memorial International Society](http://memorial.de/index.php?id=18) to publish interviews of Ost-Arbeiters and WWII prisoners. They are published as full transcriptions (in russian) complete with multimedia sources (audio, video). Editors are able to tag and link subjects, locations, persons and definitions in the text, so that the archive can be queried later in interesting ways. Researchers are able to perform a full-text search, but also filter interviews by related subjects and external entities.  
+Archivist originally has been developed for the [Memorial International Society](http://memorial.de/index.php?id=18) to publish interviews of Ost-Arbeiters and WWII prisoners. They are published as full transcriptions (in russian) complete with multimedia sources (audio, video). Editors are able to tag and link subjects, locations, persons and definitions in the text, so that the archive can be queried later in interesting ways. Researchers are able to perform a full-text search, but also filter interviews by related subjects and external entities.
+
 Read more about Archivst in one of project's mantainers [post on Medium](https://medium.com/p/7019f6408ee6)
 
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/182010/9853503/8a7258f2-5b0c-11e5-837b-cfe37b560e9b.png" /></p>
@@ -44,7 +45,9 @@ All entities are pretty much independent from each other.
 
 [User schema](https://github.com/archivist/archivist/blob/master/server/models/user.js#L10) is pretty much oriented to store Google profile. However there is one important thing. Each user have *access* and *super* properties. First one it to grant access for the editing, second one is for granting *super access*. Super user can manage users and perform dangerous operations, e.g. merging and removing subjects and entities. 
 
-## Archivist Writer
+## Archivist Components
+
+### Archivist Writer
 
 At the heart of the platform there’s Archivist Writer, a modern web-editor which allows you to annotate your text with basic markup and external data, e.g. you can:
 
@@ -54,8 +57,33 @@ At the heart of the platform there’s Archivist Writer, a modern web-editor whi
 - leave comments for any piece of text for editors/researches collaboration
 - describe the document’s metadata
 
-Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours of time. The resulting documents are typically incredibly large, e.g., more than 10000 paragraphs, having the same amount of annotations and comments attached to it. That’s like a small book, isn’t it? And Archivist Writer was powerful enough to handle it. Amazing!
+Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours of time. The resulting documents are typically incredibly large, e.g., more than 10000 paragraphs, having the same amount of annotations and comments attached to it.
 
+You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](). 
+Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core]().
+
+If you want to use it in your project you'll probably need to overwrite [writer components](https://github.com/archivist/archivist-core/tree/master/writer/components) as well as [document schema]().
+
+You can learn how to connect Archivist Writer to your application by discover [source code](https://github.com/archivist/archivist/tree/master/src/writer) of Archivist.
+
+### Archivist Reader
+
+Archivist Reader was developed to present interviews in the best possible way.
+It makes possible exploring linked resources without losing the place in the interview. You can jump straight to the media source in that places where editors placed timecodes, so you can read and listen or watch the original record. Again without losing position in the text. All resources (locations, persons, etc.) have links to the [resource browser], so you can see a full description of locations and persons etc. as well as access all interviews where a specific entity was mentioned. You can also see every location on a map using our [map browser]().
+
+Archivist Reader designed to play videos from [Vimeo online video platform](https://vimeo.com). It uses [Vimeo JS API library Froogaloop](https://github.com/vimeo/player-api/tree/master/javascript) for easiest video control.
+For playing audio files Reader use [jPlayer library](https://github.com/happyworm/jPlayer). You will need to upload audio files to your [media server]() in two formats (mp3, ogg) to cover most of the modern browsers compability.
+
+Archivist Reader shared a lot of code with [Archivist Writer](). It is also built on top of [Substance library](https://github.com/substance/substance) and available as part of [Archivist Core]().
+
+Again, if you want to use it in your project you'll need to overwrite [reader components](https://github.com/archivist/archivist-core/tree/master/reader/components) as well as [document schema]().
+
+You can learn how to connect Archivist Reader to your application by discover [source code](https://github.com/archivist/archivist/tree/master/src/reader) of Archivist.
+
+### Archivist Browser
+
+Archivist Browser is the main entry point for your archive. Here you can see a list of all documents from your archive, perform full-text search queries and filter using the ontology tree.
+In fact Archivist Browser is just an interface for running ElasticSearch queries. Simple and powerful. We are indexing each fragment of documents as well as all entities. From the result list you are able to jump right into an interview highlighting the subject or entity you were interested in. Archivist Browser is based Lens Browser from eLife. We’d like to thank eLife for developing this browsing interface and making it available as an open source project. It allowed us to adapt the implementation for our needs. 
 
 # Install
 
