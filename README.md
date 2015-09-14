@@ -59,6 +59,8 @@ At the heart of the platform there’s Archivist Writer, a modern web-editor whi
 
 Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours of time. The resulting documents are typically incredibly large, e.g., more than 10000 paragraphs, having the same amount of annotations and comments attached to it.
 
+Archivist Writer protects every request using Archivists [Auth API]().
+
 You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](). 
 Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core]().
 
@@ -71,6 +73,9 @@ You can learn how to connect Archivist Writer to your application by discover [s
 Archivist Reader was developed to present interviews in the best possible way.
 It makes possible exploring linked resources without losing the place in the interview. You can jump straight to the media source in that places where editors placed timecodes, so you can read and listen or watch the original record. Again without losing position in the text. All resources (locations, persons, etc.) have links to the [resource browser], so you can see a full description of locations and persons etc. as well as access all interviews where a specific entity was mentioned. You can also see every location on a map using our [map browser]().
 
+Topics panel contains index like computed tree of used in concrete interviews subjects.
+You can click on each subject or entity and see where it mentioned inside of the document, e.g. it will hightlight exact fragments of text, scrollbar hightlighting will help you to understand where other fragemnts located.
+
 Archivist Reader designed to play videos from [Vimeo online video platform](https://vimeo.com). It uses [Vimeo JS API library Froogaloop](https://github.com/vimeo/player-api/tree/master/javascript) for easiest video control.
 For playing audio files Reader use [jPlayer library](https://github.com/happyworm/jPlayer). You will need to upload audio files to your [media server]() in two formats (mp3, ogg) to cover most of the modern browsers compability.
 
@@ -82,8 +87,100 @@ You can learn how to connect Archivist Reader to your application by discover [s
 
 ### Archivist Browser
 
-Archivist Browser is the main entry point for your archive. Here you can see a list of all documents from your archive, perform full-text search queries and filter using the ontology tree.
-In fact Archivist Browser is just an interface for running ElasticSearch queries. Simple and powerful. We are indexing each fragment of documents as well as all entities. From the result list you are able to jump right into an interview highlighting the subject or entity you were interested in. Archivist Browser is based Lens Browser from eLife. We’d like to thank eLife for developing this browsing interface and making it available as an open source project. It allowed us to adapt the implementation for our needs. 
+Archivist Browser is the main entry point for your archive.
+Here you can see a list of all documents from your archive, perform full-text search queries and filter using the ontology tree.
+Archivist Browser connected to our [indexer API]() which is kind of interface for running [ElasticSearch](https://www.elastic.co/) queries. Read more about indexing part of Archivist [below]().
+From the result list you are able to jump right into an interview highlighting the subject or entity you were interested in.
+
+If your query matched name of entity (or synonym) which are mentioned in published documents it will tell you that it founds articles about that entity. Article names are links to [resource browser] pages.
+
+Archivist Browser is based on [Lens Browser](http://lens.elifesciences.org/) from [eLife](http://elifesciences.org/) (thanks to eLife to make it [available as an open source project](https://github.com/elifesciences/lens-browser)). It's also available as part of [Archivist Core]().
+
+You can learn a lot from [Archivist Browser source code](https://github.com/archivist/archivist-core/tree/master/browser) and [indexer API](), but from our expierense Elastic Search configurations is too much related to concreate project.
+
+### Resource Browser
+
+This is additional peace to Archivist Browser, it will print you all details related to concreate entity as well as list of documents where this entity mentioned (with counters). From this list you can jump right into a document highlighting the entity you were interested in.
+
+It's very simple application which is built using [Substance light-weight component implementation](https://github.com/substance/substance/blob/master/ui/component.js) inspired by React and Ember.
+
+Checkout [source code](https://github.com/archivist/archivist/tree/master/src/resources).
+
+### Map Browser
+
+Map Browser is a map interface with two clustered layers which represents all records of toponyms and prisons entities. While hovering each point you’ll see the name of location and how often it’s mentioned in documents of your archive, you can click on the exact point and get the full description as well as all referenced documents complete with links to entry point of that entities inside a document.
+
+Map Browser built on top of [mapbox.js library](https://github.com/mapbox/mapbox.js), e.g. you can use your own tiles with the help of [Mapbox platform](https://www.mapbox.com). 
+Map Browser use power of [Leaflet.js](http://leafletjs.com/) and it's [marker clustering plugin](https://github.com/Leaflet/Leaflet.markercluster) to let you browse your document collection from geographical perspective. 
+
+Map Browser also built using [Substance components](https://github.com/substance/substance/blob/master/ui/component.js).
+
+Checkout [source code](https://github.com/archivist/archivist/tree/master/src/map).
+ 
+### Archvist Managers
+
+Protected part of Archivist contains set of data managers. All of them built on top of [Backbone.js library](http://backbonejs.org/).
+Let's look at them shortly.
+
+#### Documents dashboard
+
+Here you can see a list of documents. You can open exisitng, remove old one or create new document. You'll see when the document was edited last time as well as who edit exactly did it.
+Workflow and title filters will help you to find desired document.
+Document's workflow include four statuses: *transcripted*, *verified*, *finshed* and *published*. They are defined inside [document schema]() and can be edited inside [Archivist Writer]() along with other metadata.
+
+#### Subjects manager
+
+Subjects manager represents your ontology as a big hierarchical tree with names and counters (you will see number of fragments for each subject summed up by the tree and number of referenced documents). You can manage subjects right here. E.g. you can
+- add new subject
+- find subject by name
+- edit subjects name/workname/description
+- move subjects across tree leafs
+- request list of referenced documents
+- remove subjects
+- merge subjects
+Last two operations will activate [maintanance mode]().
+
+Subjects manager use [jstree library](https://github.com/vakata/jstree/) for tree editing and represenation of data.
+
+#### Locations managers
+
+Locations managers (toponyms and prisons) consists of list (similar to documents dashboard but with refernce counting and ability to request a list of referenced documents) and map views.
+You can add new locations in modal form. Forms are different for toponyms and prisons. However each of these forms contains maps with reversal geocoding for chosing location. You can also add number of synonyms for each location, later this values will be used as synonyms of location name inside [archivist browser]().
+All locations without geo coordinates will be placed in list inside map views, so you can easily fix them.
+
+#### Persons manager
+
+Persons manager is very similar to locations lists. You can also filter persons by global property. We used this property to filter out persons which a local to the document, e.g. we don't have enough information about person and it'll be excluded from search index.
+
+#### Definitions manager
+
+Definitions also inherited list view style with modal forms. For Memorial International Memorial's archive we used four different types of definitions: general comments, prison camp reality, abbreveations, language comments. Last two types are excluded from search index.
+
+#### Entity merging manager
+
+This is manager which allows you to merge two entities. Even different types of entities could be merged. This manager available only for super users cause it will activate [maintanance mode]().
+
+#### User manager
+
+This manager used for granting or restriction access to the protected part of Archivist. You can gave access to editing document/entities/subkects or assign super users.
+
+This manager available only for super users.
+
+# Server APIs
+
+
+
+# Archivist Core
+
+Available under MIT license.
+
+# Translations
+
+# Coming soon
+
+- Persons index
+- Find and replace
+- Bug fixes ;)
 
 # Install
 
@@ -137,6 +234,8 @@ npm run prepare
 ```
 
 # Development
+
+## Gulp
 
 If you want to make changes in some of the modules you need to check them out with git instead of npm and use npm link. Do this:
 
