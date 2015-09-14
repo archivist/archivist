@@ -1,25 +1,35 @@
-archivist
+Archivist
 =========
 
-![archivist](https://cloud.githubusercontent.com/assets/182010/8759794/9cf7d832-2d06-11e5-8653-344672eccc91.jpg)
+Archivist is a full-stack publishing solution involving different technologies to power digital archives.
+
+![archivist](https://avatars1.githubusercontent.com/u/14059460?v=3&s=600)
 
 # Install
 
 Put .env file with credentials
 
+Variable name  | Description
+------------- | -------------
+ARCHIVIST_HOST  | Url of your archive
+AUTH_SECRET  | Secret Key to sign JWT tokens
+ES_HOST  | Elastic Search instance url
+INDEX  | Turn on indexing (true or false)
+GOOGLE_CALLBACK  | Url of Google OAuth callback
+GOOGLE_ID  | Client ID of your Web application
+GOOGLE_SECRET  | Client secret of your Web application
+MEDIA_HOST  | Url of your media storage
+MAPBOX_MAPID  | Id of your mapbox map
+MAPBOX_TOKEN  | Mapbox token
+MONGO_URL  | MongoDB URI
+RS_NAME  | Replica-set name
+
+Like this:
 ```
-ARCHIVIST_HOST=url of your archive
-AUTH_SECRET=Secret Key to sign JWT tokens 
-ES_HOST=Elastic Search instance url
-GOOGLE_CALLBACK=url of Google OAuth callback
-GOOGLE_ID=Client ID of your Web application
-GOOGLE_SECRET=Client secret of your Web application
-INDEX=turn on indexing (true or false)
-MAPBOX_MAPID=id of your mapbox map
-MAPBOX_TOKEN=mapbox token
-MEDIA_HOST=url of your media storage
-MONGO_URL=mongodb URI
-RS_NAME=replica-set name
+ARCHIVIST_HOST=localhost:5000
+AUTH_SECRET=yourSescret
+ES_HOST=http://localhsot:9200
+etc
 ```
 
 Install Heroku Toolbelt or Foreman. Then pull in npm and Substance modules
@@ -110,5 +120,8 @@ Try everything out. If something is obviously broken you can fix it and try agai
 ```
 $ git push origin release
 ```
+
+![archivist](https://cloud.githubusercontent.com/assets/182010/8759794/9cf7d832-2d06-11e5-8653-344672eccc91.jpg)
+
 
 Repository logo based on [work](https://thenounproject.com/term/documents/54889/) done by [James Cook](https://thenounproject.com/mojocakes/) from the [Noun Project](https://thenounproject.com) which licensed under [CC BY 3.0 US](http://creativecommons.org/licenses/by/3.0/us/).
