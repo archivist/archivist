@@ -8,11 +8,21 @@ archivist
 Put .env file with credentials
 
 ```
-MONGO_URL=***
-RS_NAME=***
+ARCHIVIST_HOST=url of your archive
+AUTH_SECRET=Secret Key to sign JWT tokens 
+ES_HOST=Elastic Search instance url
+GOOGLE_CALLBACK=url of Google OAuth callback
+GOOGLE_ID=Client ID of your Web application
+GOOGLE_SECRET=Client secret of your Web application
+INDEX=turn on indexing (true or false)
+MAPBOX_MAPID=id of your mapbox map
+MAPBOX_TOKEN=mapbox token
+MEDIA_HOST=url of your media storage
+MONGO_URL=mongodb URI
+RS_NAME=replica-set name
 ```
 
-Install Heroku Toolbelt. Then pull in npm and Substance modules
+Install Heroku Toolbelt or Foreman. Then pull in npm and Substance modules
 
 ```
 $ npm install
