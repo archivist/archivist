@@ -5,6 +5,56 @@ Read more about Archivst in one of project's mantainers [post on Medium](https:/
 
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/182010/9853503/8a7258f2-5b0c-11e5-837b-cfe37b560e9b.png" /></p>
 
+# Technical overview
+
+Archivist is set of tools which all are communicating with Node.js server API, let's describe data models and each components afterwards.
+
+## Document Models
+
+There are several document models involved: interviews, subjects, entities and users.
+Interviews contain the transcripted text plus annotations and metadata, subjects are organized as a tree-structured ontology, and entities are just a list or set of units having additional information. Along with creating interview transcriptions, also the other ontologies are refined and extended. E.g., sometimes the editors merge two subjects or entities into one. Such changes need to have an immediate effect on the interviews, too, e.g., subject/entity references inside document need to be updated to reflect this change.
+
+### Interviews
+
+A custom but pretty conventional type of document, where paragraphs are statements of one person, the interviewer or the interviewee (still you can use it as usual paragraphs). The interview is annotated with basic markup, references to subjects, entities, and editor comments.
+
+Interview model also contains [a lot of metadata properties](https://github.com/archivist/archivist-core/blob/master/interview/nodes/document_node.js).
+If you will deceide to change it don't forget to change content of [mongodb empty document](https://github.com/archivist/archivist/blob/master/server/models/document.js#L69).
+
+### Subjects
+
+The whole ontology is stored in [one model](https://github.com/archivist/archivist-core/blob/master/interview/subjects_model.js) having a tree-structure, while nodes are stored inside [mongodb collection with extra information](https://github.com/archivist/archivist/blob/master/server/models/subject.js#L17).
+Basicly each subject node have these properties:
+- name (used to display subject names in public part of archive)
+- workname (used to display subject names in closed part of archive, e.g. Archivist Writer)
+- description (subject description, currently it's not display anywhere outside of tree manager)
+- parent (reference to the parent node inside tree)
+- position (position inside tree leaf)
+
+### Entities
+
+There are different types of entities:
+- [locations](https://github.com/archivist/archivist/blob/master/server/models/location.js#L14) (toponyms and prisons, they are different, but both contains geo-locational information)
+- [persons](https://github.com/archivist/archivist/blob/master/server/models/person.js#L13)
+- [definitions](https://github.com/archivist/archivist/blob/master/server/models/definition.js#L13)
+
+All entities are pretty much independent from each other.
+
+### Users
+
+## Archivist Writer
+
+At the heart of the platform there’s Archivist Writer, a modern web-editor which allows you to annotate your text with basic markup and external data, e.g. you can:
+
+- reference entities inside text 
+- mark any piece of text as related to some set of terms from an ontology-tree
+- insert timecodes to synchronize text with media source
+- leave comments for any piece of text for editors/researches collaboration
+- describe the document’s metadata
+
+Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours of time. The resulting documents are typically incredibly large, e.g., more than 10000 paragraphs, having the same amount of annotations and comments attached to it. That’s like a small book, isn’t it? And Archivist Writer was powerful enough to handle it. Amazing!
+
+
 # Install
 
 Put .env file with credentials
