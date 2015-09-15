@@ -59,12 +59,12 @@ At the heart of the platform there’s Archivist Writer, a modern web-editor whi
 
 Some of the interviews from Memorial’s Ost-Arbeiters archive last over 7 hours of time. The resulting documents are typically incredibly large, e.g., more than 10000 paragraphs, having the same amount of annotations and comments attached to it.
 
-Archivist Writer protects every request using Archivists [Auth API]().
+Archivist Writer protects every request using Archivists [Auth API](#authentication).
 
 In the current Archivist platform we use a classical locking approach to avoid concurrent editing hazards. E.g. every document has version number, if your document version isn't equal to server one you'll not be able to save it.
 
-You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](). 
-Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core]().
+You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](#archvist-managers). 
+Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core](#archivist-core).
 
 If you want to use it in your project you'll probably need to overwrite [writer components](https://github.com/archivist/archivist-core/tree/master/writer/components) as well as [document schema]().
 
@@ -81,7 +81,7 @@ You can click on each subject or entity and see where it mentioned inside of the
 Archivist Reader designed to play videos from [Vimeo online video platform](https://vimeo.com). It uses [Vimeo JS API library Froogaloop](https://github.com/vimeo/player-api/tree/master/javascript) for easiest video control.
 For playing audio files Reader use [jPlayer library](https://github.com/happyworm/jPlayer). You will need to upload audio files to your [media server]() in two formats (mp3, ogg) to cover most of the modern browsers compability.
 
-Archivist Reader shared a lot of code with [Archivist Writer](). It is also built on top of [Substance library](https://github.com/substance/substance) and available as part of [Archivist Core]().
+Archivist Reader shared a lot of code with [Archivist Writer](). It is also built on top of [Substance library](https://github.com/substance/substance) and available as part of [Archivist Core](#archivist-core).
 
 Again, if you want to use it in your project you'll need to overwrite [reader components](https://github.com/archivist/archivist-core/tree/master/reader/components) as well as [document schema]().
 
@@ -96,7 +96,7 @@ From the result list you are able to jump right into an interview highlighting t
 
 If your query matched name of entity (or synonym) which are mentioned in published documents it will tell you that it founds articles about that entity. Article names are links to [resource browser] pages.
 
-Archivist Browser is based on [Lens Browser](http://lens.elifesciences.org/) from [eLife](http://elifesciences.org/) (thanks to eLife to make it [available as an open source project](https://github.com/elifesciences/lens-browser)). It's also available as part of [Archivist Core]().
+Archivist Browser is based on [Lens Browser](http://lens.elifesciences.org/) from [eLife](http://elifesciences.org/) (thanks to eLife to make it [available as an open source project](https://github.com/elifesciences/lens-browser)). It's also available as part of [Archivist Core](#archivist-core).
 
 You can learn a lot from [Archivist Browser source code](https://github.com/archivist/archivist-core/tree/master/browser) and [indexer API](), but from our expierense Elastic Search configurations is too much related to concreate project.
 
@@ -280,7 +280,7 @@ npm start
 
 # Development
 
-You can use [Archivist Dev](https://github.com/archivist/archivist-dev) during development of [Core]() components.
+You can use [Archivist Dev](https://github.com/archivist/archivist-dev) during development of [Core](#archivist-core) components.
 
 ## Gulp
 
