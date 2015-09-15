@@ -265,7 +265,8 @@ ES_HOST=http://localhsot:9200
 etc
 ```
 
-Install [Heroku Toolbelt](https://toolbelt.heroku.com/) or [Foreman](https://github.com/ddollar/foreman). Then pull in npm and Substance modules
+Install [Heroku Toolbelt](https://toolbelt.heroku.com/) or [Foreman](https://github.com/ddollar/foreman). 
+[Fix npm permissions](https://docs.npmjs.com/getting-started/fixing-npm-permissions) if you still didn't do it. Then pull in npm and Substance modules
 
 ```
 $ npm install
@@ -279,10 +280,11 @@ npm start
 
 # Development
 
+You can use [Archivist Dev](https://github.com/archivist/archivist-dev) during development of [Core]() components.
+
 ## Gulp
 
-
-
+Archivist shipped with a number of gulp scripts for bundling every component. If you installed Gulp globally you can use it for bundling each component individually. Just gulp with one of this suffixes: manager, i18n, writer, reader, browser, resources, maps. Calling just gulp will run all of them.
 
 # Deploy Archivist
 
@@ -293,6 +295,8 @@ For running full version of Archivist platform you'll need:
 - HTTP static server
 
 For a platform hosting you can use [Heroku](http://heroku.com/) or whatever you want. But our advise is to use [dokku](https://github.com/progrium/dokku). In fact [DigitalOcean](https://www.digitalocean.com) have a [special distro with dokku](https://www.digitalocean.com/features/one-click-apps/dokku) and a lot of documentation [how to use it](https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-dokku-application).
+
+For uploading application you can use git as described in mentioned article. Don't forget [to set environment variables](http://progrium.viewdocs.io/dokku/configuration-management/), it will fail without them.
 
 For a MongoDB hosting you can find a lot of hosting services, you can also do it by yourself. Keep in mind that using replica set is much safer. Our choise is [Compose service](http://compose.io/).
 
