@@ -66,24 +66,24 @@ In the current Archivist platform we use a classical locking approach to avoid c
 You can connect any external data storage for referencing, basicly you just need to expose it as JSON REST API. Archivist as platform use [special set of managers for managing data](#archvist-managers). 
 Archivist Writer is built on top of [Substance library](https://github.com/substance/substance). It's available as part of [Archivist Core](#archivist-core).
 
-If you want to use it in your project you'll probably need to overwrite [writer components](https://github.com/archivist/archivist-core/tree/master/writer/components) as well as [document schema]().
+If you want to use it in your project you'll probably need to overwrite [writer components](https://github.com/archivist/archivist-core/tree/master/writer/components) as well as [document schema](#interviews).
 
 You can learn how to connect Archivist Writer to your application by discover [source code](https://github.com/archivist/archivist/tree/master/src/writer) of Archivist.
 
 ### Archivist Reader
 
 Archivist Reader was developed to present interviews in the best possible way.
-It makes possible exploring linked resources without losing the place in the interview. You can jump straight to the media source in that places where editors placed timecodes, so you can read and listen or watch the original record. Again without losing position in the text. All resources (locations, persons, etc.) have links to the [resource browser], so you can see a full description of locations and persons etc. as well as access all interviews where a specific entity was mentioned. You can also see every location on a map using our [map browser]().
+It makes possible exploring linked resources without losing the place in the interview. You can jump straight to the media source in that places where editors placed timecodes, so you can read and listen or watch the original record. Again without losing position in the text. All resources (locations, persons, etc.) have links to the [resource browser], so you can see a full description of locations and persons etc. as well as access all interviews where a specific entity was mentioned. You can also see every location on a map using our [map browser](#map-browser).
 
 Topics panel contains index like computed tree of used in concrete interviews subjects.
 You can click on each subject or entity and see where it mentioned inside of the document, e.g. it will hightlight exact fragments of text, scrollbar hightlighting will help you to understand where other fragemnts located.
 
 Archivist Reader designed to play videos from [Vimeo online video platform](https://vimeo.com). It uses [Vimeo JS API library Froogaloop](https://github.com/vimeo/player-api/tree/master/javascript) for easiest video control.
-For playing audio files Reader use [jPlayer library](https://github.com/happyworm/jPlayer). You will need to upload audio files to your [media server]() in two formats (mp3, ogg) to cover most of the modern browsers compability.
+For playing audio files Reader use [jPlayer library](https://github.com/happyworm/jPlayer). You will need to upload audio files to your [media server](#media-server) in two formats (mp3, ogg) to cover most of the modern browsers compability.
 
-Archivist Reader shared a lot of code with [Archivist Writer](). It is also built on top of [Substance library](https://github.com/substance/substance) and available as part of [Archivist Core](#archivist-core).
+Archivist Reader shared a lot of code with [Archivist Writer](#archivist-writer). It is also built on top of [Substance library](https://github.com/substance/substance) and available as part of [Archivist Core](#archivist-core).
 
-Again, if you want to use it in your project you'll need to overwrite [reader components](https://github.com/archivist/archivist-core/tree/master/reader/components) as well as [document schema]().
+Again, if you want to use it in your project you'll need to overwrite [reader components](https://github.com/archivist/archivist-core/tree/master/reader/components) as well as [document schema](#interviews).
 
 You can learn how to connect Archivist Reader to your application by discover [source code](https://github.com/archivist/archivist/tree/master/src/reader) of Archivist.
 
@@ -91,14 +91,14 @@ You can learn how to connect Archivist Reader to your application by discover [s
 
 Archivist Browser is the main entry point for your archive.
 Here you can see a list of all documents from your archive, perform full-text search queries and filter using the ontology tree.
-Archivist Browser connected to our [indexer API]() which is kind of interface for running [ElasticSearch](https://www.elastic.co/) queries. Read more about indexing part of Archivist [below]().
+Archivist Browser connected to our [indexer API](#indexer) which is kind of interface for running [ElasticSearch](https://www.elastic.co/) queries. Read more about indexing part of Archivist [below](#indexer).
 From the result list you are able to jump right into an interview highlighting the subject or entity you were interested in.
 
 If your query matched name of entity (or synonym) which are mentioned in published documents it will tell you that it founds articles about that entity. Article names are links to [resource browser] pages.
 
 Archivist Browser is based on [Lens Browser](http://lens.elifesciences.org/) from [eLife](http://elifesciences.org/) (thanks to eLife to make it [available as an open source project](https://github.com/elifesciences/lens-browser)). It's also available as part of [Archivist Core](#archivist-core).
 
-You can learn a lot from [Archivist Browser source code](https://github.com/archivist/archivist-core/tree/master/browser) and [indexer API](), but from our expierense Elastic Search configurations is too much related to concreate project.
+You can learn a lot from [Archivist Browser source code](https://github.com/archivist/archivist-core/tree/master/browser) and [indexer API](#indexer), but from our expierense Elastic Search configurations is too much related to concreate project.
 
 ### Resource Browser
 
@@ -128,7 +128,7 @@ Let's look at them shortly.
 
 Here you can see a list of documents. You can open exisitng, remove old one or create new document. You'll see when the document was edited last time as well as who edit exactly did it.
 Workflow and title filters will help you to find desired document.
-Document's workflow include four statuses: *transcripted*, *verified*, *finshed* and *published*. They are defined inside [document schema]() and can be edited inside [Archivist Writer]() along with other metadata.
+Document's workflow include four statuses: *transcripted*, *verified*, *finshed* and *published*. They are defined inside [document schema](#interviews) and can be edited inside [Archivist Writer](#archivist-writer) along with other metadata.
 
 #### Subjects manager
 
@@ -140,14 +140,14 @@ Subjects manager represents your ontology as a big hierarchical tree with names 
 - request list of referenced documents
 - remove subjects
 - merge subjects
-Last two operations will activate [maintanance mode]().
+Last two operations will activate [maintanance mode](#maintanence-mode).
 
 Subjects manager use [jstree library](https://github.com/vakata/jstree/) for tree editing and represenation of data.
 
 #### Locations managers
 
 Locations managers (toponyms and prisons) consists of list (similar to documents dashboard but with refernce counting and ability to request a list of referenced documents) and map views.
-You can add new locations in modal form. Forms are different for toponyms and prisons. However each of these forms contains maps with reversal geocoding for chosing location. You can also add number of synonyms for each location, later this values will be used as synonyms of location name inside [archivist browser]().
+You can add new locations in modal form. Forms are different for toponyms and prisons. However each of these forms contains maps with reversal geocoding for chosing location. You can also add number of synonyms for each location, later this values will be used as synonyms of location name inside [archivist browser](#archivist-browser).
 All locations without geo coordinates will be placed in list inside map views, so you can easily fix them.
 
 #### Persons manager
@@ -160,7 +160,7 @@ Definitions also inherited list view style with modal forms. For Memorial Intern
 
 #### Entity merging manager
 
-This is manager which allows you to merge two entities. Even different types of entities could be merged. This manager available only for super users cause it will activate [maintanance mode]().
+This is manager which allows you to merge two entities. Even different types of entities could be merged. This manager available only for super users cause it will activate [maintanance mode](#maintanence-mode).
 
 #### User manager
 
@@ -200,7 +200,7 @@ All Elastic Search related things are defined [here](https://github.com/archivis
 For indexing Archivist used special [queue API](https://github.com/archivist/archivist/blob/master/server/controllers/shared/queue.js) which will gradually process all of your indexing tasks.
 If you need to run mass operations like index seeding or reindexing all documents do it from localhost, don't forget to uncommen [this routes](https://github.com/archivist/archivist/blob/master/server/controllers/api/indexer.js#L112). Don't expose this methods on production server.
 
-You can turn off indexing in your [.env file](). In this case system will only run protected part of Archvist, e.g. [managers]() and [writer](). 
+You can turn off indexing in your [.env file](#install). In this case system will only run protected part of Archvist, e.g. [managers](#archvist-managers) and [writer](#archivist-writer). 
 
 ## Authentication
 
@@ -208,7 +208,7 @@ Archivist use Google OAuth 2 for authentication (we are using [passport.js](http
 
 ## Public APIs
 
-Most of public APIs, e.g. for open part of archive are [exposed here](https://github.com/archivist/archivist/blob/master/server/controllers/api/public.js). All of them are read-only and some are [cached]().
+Most of public APIs, e.g. for open part of archive are [exposed here](https://github.com/archivist/archivist/blob/master/server/controllers/api/public.js). All of them are read-only and some are [cached](#caching).
 
 
 # Archivist Core
@@ -250,7 +250,7 @@ INDEX  | Turn on indexing (true or false)
 GOOGLE_CALLBACK  | One of the redirect_uri values obtained from the [Google Developers Console](https://console.developers.google.com/)
 GOOGLE_ID  | The client ID you obtain from the [Google Developers Console](https://console.developers.google.com/)
 GOOGLE_SECRET  | The client secret you obtained from the [Google Developers Console](https://console.developers.google.com/)
-MEDIA_HOST  | Url of your [media storage]()
+MEDIA_HOST  | Url of your [media storage](#media-server)
 MAPBOX_MAPID  | Mapbox [map ID](https://www.mapbox.com/help/define-map-id/)
 MAPBOX_TOKEN  | Mapbox [access token](https://www.mapbox.com/help/define-access-token/)
 MONGO_URL  | MongoDB [connection URI](http://docs.mongodb.org/manual/reference/connection-string/#standard-connection-string-format)
@@ -305,6 +305,8 @@ For Elastic Search you can also find a lot of services. However we prefered to k
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/182010/8759794/9cf7d832-2d06-11e5-8653-344672eccc91.jpg" /></p>
 
 Repository logo based on [work](https://thenounproject.com/term/documents/54889/) done by [James Cook](https://thenounproject.com/mojocakes/) from the [Noun Project](https://thenounproject.com) which licensed under [CC BY 3.0 US](http://creativecommons.org/licenses/by/3.0/us/).
+
+Archivist platform released under the [GPL license](https://github.com/archivist/archivist/blob/master/LICENSE).
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
