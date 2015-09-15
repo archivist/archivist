@@ -219,10 +219,17 @@ Archivist Core is isolated repository which contains:
 - Archivist Reader
 - Archivist Browser
 
-All of that tools use legacy version of Substance library.
-All of these tools are available under MIT license.
+All of that tools use [legacy version of Substance library](https://github.com/archivist/substance).
+All of them are available under MIT license.
 
 # Translations
+
+You can translate interfaces of all open accessed tools using [polyglot.js](http://airbnb.io/polyglot.js/polyglot.html). Just fill all translations in [language files](https://github.com/archivist/archivist/tree/master/src/i18n) and require [our loader](https://github.com/archivist/archivist/blob/master/src/i18n/load.js). You can implement laguage switcher that will call ```i18n.switchLocale(locale)``` function, then after refresh you'll get translated interface.
+
+# Media server
+
+For Archivist Reader you will also need to run static server with your audio files and photos.
+Archivist will expect to get respondent photos from *photos* folder and audio records from *audio* folder.
 
 # Coming soon
 
@@ -232,7 +239,7 @@ All of these tools are available under MIT license.
 
 # Install
 
-Put .env file with credentials
+Archivist used environment file for all sensetive settings. Here is the list of available settings.
 
 Variable name  | Description
 ------------- | -------------
@@ -249,7 +256,8 @@ MAPBOX_TOKEN  | Mapbox [access token](https://www.mapbox.com/help/define-access-
 MONGO_URL  | MongoDB [connection URI](http://docs.mongodb.org/manual/reference/connection-string/#standard-connection-string-format)
 RS_NAME  | MongoDB [replica set](http://docs.mongodb.org/manual/reference/glossary/#term-replica-set) name (optional)
 
-Like this:
+Put them in .env file inside the root of Archivist directory, like this:
+
 ```
 ARCHIVIST_HOST=localhost:5000
 AUTH_SECRET=yourSescret
@@ -257,7 +265,7 @@ ES_HOST=http://localhsot:9200
 etc
 ```
 
-Install Heroku Toolbelt or Foreman. Then pull in npm and Substance modules
+Install [Heroku Toolbelt](https://toolbelt.heroku.com/) or [Foreman](https://github.com/ddollar/foreman). Then pull in npm and Substance modules
 
 ```
 $ npm install
@@ -266,88 +274,38 @@ $ npm install
 Now you can run the server
 
 ```
-npm run devmode
-```
-
-It'll start server app and recompile js bundle when you change source of platform app
-
-For starting server without watch mode use
-```
-npm run start
-```
-
-You could also prepare compress bundle (js&css) without starting server, use
-```
-npm run prepare
+npm start
 ```
 
 # Development
 
 ## Gulp
 
-If you want to make changes in some of the modules you need to check them out with git instead of npm and use npm link. Do this:
-
-```bash
-$ mkdir archivist-project
-$ cd archivist-project
-
-$ git clone https://github.com/substance/archivist.git
-$ git clone https://github.com/substance/archivist-composer.git
-$ git clone https://github.com/substance/substance.git
-$ cd archivist
-$ npm install
-```
-
-Now npm link stuff:
-
-```bash
-$ cd ..
-$ cd ../substance
-$ sudo npm link
-$ cd archivist-composer
-$ sudo npm link
-$ npm link substance
-$ cd ../archivist
-$ npm link archivist-composer
-```
-
-To make use of the Substance Sublime helpers, make a [Sublime project](http://github.com/substance/sublime) and add all three folders to it. Then you can press `ctrl+shift+s` to bring up a nice git status dialog.
-
-Rebundling of the composer happens automatically when you do npm install. For manual rebundling do:
-
-```bash
-$ gulp bundle-composer
-```
 
 
-# Deploy
 
-```
-$ git checkout release
-```
+# Deploy Archivist
 
-```
-$ git merge master
-```
+For running full version of Archivist platform you'll need:
+- Node.js server
+- MongoDB server
+- Elastic Search instance
+- HTTP static server
 
-> There might be conflicts, merge carefully. We will try to achieve a setup where the assets are the only difference.
+For a platform hosting you can use [Heroku](http://heroku.com/) or whatever you want. But our advise is to use [dokku](https://github.com/progrium/dokku). In fact [DigitalOcean](https://www.digitalocean.com) have a [special distro with dokku](https://www.digitalocean.com/features/one-click-apps/dokku) and a lot of documentation [how to use it](https://www.digitalocean.com/community/tutorials/how-to-use-the-digitalocean-dokku-application).
 
-```
-$ substance --bundle
-```
+For a MongoDB hosting you can find a lot of hosting services, you can also do it by yourself. Keep in mind that using replica set is much safer. Our choise is [Compose service](http://compose.io/).
 
-Commit all changes.
-
-```
-$ git push heroku release:master
-```
-
-Try everything out. If something is obviously broken you can fix it and try again.
-
-```
-$ git push origin release
-```
+For Elastic Search you can also find a lot of services. However we prefered to keep it in the [DigitalOcean droplet](https://www.digitalocean.com/community/tutorials/how-to-install-elasticsearch-on-an-ubuntu-vps) in private network with application. Just give it more RAM.
 
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/182010/8759794/9cf7d832-2d06-11e5-8653-344672eccc91.jpg" /></p>
 
 Repository logo based on [work](https://thenounproject.com/term/documents/54889/) done by [James Cook](https://thenounproject.com/mojocakes/) from the [Noun Project](https://thenounproject.com) which licensed under [CC BY 3.0 US](http://creativecommons.org/licenses/by/3.0/us/).
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
