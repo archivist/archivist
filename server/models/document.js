@@ -167,8 +167,12 @@ documentSchema.statics.getRecord = function(id, cb) {
 documentSchema.statics.getCleaned = function(id, published, cb) {
   var self = this;
 
-  var isValid = mongoose.Types.ObjectId.isValid(id);
-  if(!isValid) return cb('There is no such document, sorry...');
+  if (typeof(id.toString) !== 'undefined') {
+    var isValid = id.toString().match(/^[0-9a-fA-F]{24}$/);
+  } else {
+    var isValid = null;
+  }
+  if(_.isNull(isValid)) return cb('There is no such document, sorry...');
 
   var query = {
     _id: id
