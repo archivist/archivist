@@ -4,6 +4,8 @@ Archivist originally has been developed for the [Memorial International Society]
 
 Read more about Archivst in one of project mantainers [post on Medium](https://medium.com/@_daniel/publish-interactive-historical-documents-with-archivist-7019f6408ee6).
 
+Opened sourced under GNU General Public License v3.0, created by Data for Society e.V., Substance Software GmbH, Memorial International Historical, Educational, Charitable and Human Rights Society.
+
 <p align="center"><img src="https://cloud.githubusercontent.com/assets/182010/9853503/8a7258f2-5b0c-11e5-837b-cfe37b560e9b.png" /></p>
 
 # Technical overview
