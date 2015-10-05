@@ -109,8 +109,8 @@ api.route('/index/search')
 api.route('/index/search/document')
   .get(searchDocument)
 
-// api.route('/index/seed')
-//   .get(seedIndexes)
+api.route('/index/seed')
+  .get(seedIndexes)
 
 // api.route('/index/reindex')
 //   .get(requestReindex)
