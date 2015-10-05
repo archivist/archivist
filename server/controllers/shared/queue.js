@@ -188,7 +188,7 @@ queue.clean = function() {
 
 queue.requestFullReindex = function() {
 	this.clean();
-	//this.add({type: 'entity', op: 'reindex'});
+	this.add({type: 'entity', op: 'reindex'});
 	this.add({type: 'document', op: 'reindex', meta: false});
 }
 
