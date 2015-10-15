@@ -169,13 +169,17 @@ Backend.Prototype = function() {
         self.cache.entities[entity.id] = entity;
         entities.push(entity);
       }, self);
-      cb(null, entities);
+      var list = _.sortBy(entities, function(entity) {
+        var name = entity.title ? entity.title.toLowerCase().replace(/«/g,'') : entity.name.toLowerCase().replace(/"/g,'');
+        return name;
+      });
+      list = _.sortBy(list, "type");
+      cb(null, list);
     }.bind(this));
   };
 
   this.fetchEntities = function(entityIds, cb) {
     if (entityIds.length === 0) return cb(null, []);
-    console.log('Fetching entities', entityIds);
     
     var entities = {
       entityIds: entityIds
