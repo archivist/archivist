@@ -42,6 +42,10 @@
     "underscore": "1.7.0",
     "vinyl-source-stream": "*"
   },
+  "engines": {
+    "node": "4.1.1",
+    "npm": "2.1.x"
+  },
   "url": "http://github.com/archivist/archivist",
   "scripts": {
     "start": "foreman start",
