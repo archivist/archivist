@@ -28,6 +28,7 @@ var LocationsPrisons = Utility.collection.extend({
     order: 1
   }
 })
+window.entities = LocationsPrisons;
 exports.locationsPrisons = LocationsPrisons
 
 var Toponym = Utility.model.extend({
