@@ -32,6 +32,7 @@
   "browser.minutes": "мин",
   "browser.entity_suggestion": "Найдены словарные статьи:",
   "browser.no_results": "Документов отвечающих вашему запросу не найдено",
+  "browser.facets_title": "Темы:",
   "interview.minutes": "мин",
   "entity.unknown_name": "Название неизвестно",
   "map.toponyms": "Упомянутые топонимы",

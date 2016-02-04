@@ -32,6 +32,7 @@
   "browser.minutes": "min",
   "browser.entity_suggestion": "We also found these articles:",
   "browser.no_results": "Your search did not match any documents",
+  "browser.facets_title": "Topics:",
   "interview.minutes": "min",
   "entity.unknown_name": "Unknown name",
   "map.toponyms": "Mentioned toponyms",
