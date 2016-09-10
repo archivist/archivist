@@ -2,10 +2,14 @@
   "name": "archivist",
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "dependencies": {
+    "bluebird": "^3.4.6",
+    "body-parser": "^1.15.2",
+    "config": "^1.21.0",
     "express": "^4.14.0",
     "lodash": "^4.15.0",
     "massive": "^2.5.0",
-    "substance": "substance/substance#develop"
+    "substance": "substance/substance#develop",
+    "ws": "^1.1.1"
   },
   "devDependencies": {
     "tape": "^4.6.0"
