@@ -1,0 +1,13 @@
+{
+  "server": {
+    "port": 5000,
+    "host": "localhost",
+    "wsUrl": "ws://localhost:5000",
+    "appUrl": "http://localhost:5000"
+  },
+  "app": {
+    "port": 5000,
+    "host": "localhost"
+  },
+  "db_url": "postgres://archivist_user:archivist_pw@localhost:5432/archivist"
+}
