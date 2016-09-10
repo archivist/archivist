@@ -3,7 +3,9 @@
     "port": 5000,
     "host": "localhost",
     "wsUrl": "ws://localhost:5000",
-    "appUrl": "http://localhost:5000"
+    "appUrl": "http://localhost:5000",
+    "publisherEndpoint": "/",
+    //"browserEnpoint": "/"
   },
   "app": {
     "port": 5000,
