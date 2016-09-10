@@ -5,8 +5,9 @@ var extend = require('lodash/extend');
 var ServerConfig = extend({}, config.get('server'), {env: config.util.getEnv('NODE_ENV')});
 var Database = require('../common/Database');
 var EnginePackage = require('../engine/package');
-var DocumentServerPackage = require('./document/package');
+var AuthServerPackage = require('./auth/package');
 var CollabServerPackage = require('./collab/package');
+var DocumentServerPackage = require('./document/package');
 
 var db = new Database();
 
@@ -17,6 +18,7 @@ module.exports = {
     config.setDBConnection(db);
     config.import(EnginePackage);
     config.import(DocumentServerPackage);
+    config.import(AuthServerPackage);
     config.import(CollabServerPackage);
   }
 };
