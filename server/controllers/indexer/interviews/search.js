@@ -111,7 +111,7 @@ function buildQuery(options) {
     // only for debugging
     // explain: true,
     body: {
-      "size": 100,
+      "size": 200,
       // _source: false,
       "sort": [
         { "_score": { "order": "desc" } }
