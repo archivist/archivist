@@ -141,7 +141,7 @@ function buildQuery(options) {
             "sum" : {
               terms : {
                 "field": "subjects_count.id",
-                "size": 5000
+                "size": 10000
               },
               aggs: {
                 occurrences: {
@@ -162,7 +162,7 @@ function buildQuery(options) {
             "sum" : {
               terms : {
                 "field": "entities_count.id",
-                "size": 5000
+                "size": 10000
               },
               aggs: {
                 occurrences: {
