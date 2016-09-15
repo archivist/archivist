@@ -154,8 +154,8 @@ var MapBrowser = Component.extend({
     if(type == 'toponym') {
       props.title = props.name;
     } else if (type == 'prison') {
-      props.title = props.name === 'Неизвестно' ? props.nearest_locality : props.name;
-      if(props.name === 'Неизвестно' && props.prison_type) props.title += " (" + props.prison_type.join(', ') + ")";
+      props.title = (props.name === 'Неизвестно' || props.name === 'Untitled') ? props.nearest_locality : props.name;
+      if((props.name === 'Неизвестно' || props.name === 'Untitled') && props.prison_type) props.title += " (" + props.prison_type.join(', ') + ")";
     }
     var popupContent = "<h3>" + props.title + "</h3>";
     if(locale == "ru") {
