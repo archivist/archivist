@@ -128,6 +128,7 @@ var getPublishedLocations = function(cb) {
   }
   interviews.countEntities(options, function(err, counters){
     var entities = _.keys(counters);
+    console.log(entities);
     var query = {
       _id: {
         '$in': entities
