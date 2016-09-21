@@ -29,7 +29,7 @@ var Promise = require('bluebird');
 */
 function DocumentStore(config) {
   this.config = config;
-  this.db = config.db.connection;
+  this.db = config.db;
 }
 
 DocumentStore.Prototype = function() {

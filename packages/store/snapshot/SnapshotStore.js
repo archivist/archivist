@@ -25,7 +25,7 @@ var Promise = require('bluebird');
 */
 function SnapshotStore(config) {
   this.config = config;
-  this.db = config.db.connection;
+  this.db = config.db;
 }
 
 SnapshotStore.Prototype = function() {

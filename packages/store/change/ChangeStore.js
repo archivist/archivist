@@ -25,7 +25,7 @@ var Promise = require('bluebird');
 */
 function ChangeStore(config) {
   this.config = config;
-  this.db = config.db.connection;
+  this.db = config.db;
 }
 
 ChangeStore.Prototype = function() {

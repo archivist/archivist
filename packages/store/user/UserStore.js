@@ -12,7 +12,7 @@ var Promise = require('bluebird');
 */
 function UserStore(config) {
   this.config = config;
-  this.db = config.db.connection;
+  this.db = config.db;
 }
 
 UserStore.Prototype = function() {
