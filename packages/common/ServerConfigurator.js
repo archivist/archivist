@@ -1,5 +1,6 @@
 'use strict';
 
+var path = require('path');
 var Configurator = require('substance/util/Configurator');
 
 function ServerConfigurator() {
@@ -8,6 +9,7 @@ function ServerConfigurator() {
   // Extend config
   this.config.stores = {};
   this.config.engines = {};
+  this.config.styles = [];
 }
 
 ServerConfigurator.Prototype = function() {
@@ -75,7 +77,7 @@ ServerConfigurator.Prototype = function() {
   /*
     Add engine
   */
-  this.addEngine = function(name, engineInstance, config) {
+  this.addEngine = function(name, engineInstance) {
     this.config.engines[name] = engineInstance;
   };
 
@@ -84,6 +86,11 @@ ServerConfigurator.Prototype = function() {
   */
   this.getEngine = function(name) {
     return this.config.engines[name];
+  };
+
+  this.addStyle = function() {    
+    var sassFilePath = path.join.apply(this, arguments);    
+    this.config.styles.push(sassFilePath);    
   };
 
 };
