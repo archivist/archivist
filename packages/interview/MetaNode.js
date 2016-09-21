@@ -1,16 +1,10 @@
-'use strict';
-
-var DocumentNode = require('substance/model/DocumentNode');
+import { DocumentNode } from 'substance'
 
 /**
   Interview metadata container, holds interview metadata
 */
 
-function MetaNode() {
-  MetaNode.super.apply(this, arguments);
-}
-
-DocumentNode.extend(MetaNode);
+class MetaNode extends DocumentNode {}
 
 MetaNode.define({
   type: 'meta',
@@ -43,10 +37,10 @@ MetaNode.define({
   interviewee_bio_translation_second: { type: 'string', default: '' },
   interviewee_category: { type: 'string', default: '' },
   interviewee_forced_labor_type: { type: 'string', default: '' },
-  interviewee_photo: { type: 'string', default: '' },
+  interviewee_photo: { type: 'string', default: '' }
 
   // TODO: waypoints
   //interviewee_waypoints: { type: ['waypoint'], default: [] }
-});
+})
 
-module.exports = MetaNode;
+export default MetaNode

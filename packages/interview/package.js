@@ -1,21 +1,12 @@
-'use strict';
+import Interview from './Interview'
+import MetaNode from './MetaNode'
+import InterviewSeed from './InterviewSeed'
 
-var Interview = require('./Interview');
-var MetaNode = require('./MetaNode');
-var InterviewSeed = require('./InterviewSeed');
+import { ParagraphPackage, HeadingPackage, BlockquotePackage, ListPackage, LinkPackage, EmphasisPackage, StrongPackage} from 'substance'
+import CommentPackage from '../comment/package'
+import MarkPackage from '../mark/package'
 
-var ParagraphPackage = require('substance/packages/paragraph/ParagraphPackage');
-var HeadingPackage = require('substance/packages/heading/HeadingPackage');
-var BlockquotePackage = require('substance/packages/blockquote/BlockquotePackage');
-var ListPackage = require('substance/packages/list/ListPackage');
-var LinkPackage = require('substance/packages/link/LinkPackage');
-var EmphasisPackage = require('substance/packages/emphasis/EmphasisPackage');
-var StrongPackage = require('substance/packages/strong/StrongPackage');
-
-var CommentPackage = require('../comment/package');
-var MarkPackage = require('../mark/package');
-
-module.exports = {
+export default {
   name: 'archivist-interview',
   configure: function(config) {
     config.defineSchema({
@@ -23,20 +14,20 @@ module.exports = {
       ArticleClass: Interview,
       defaultTextType: 'paragraph'
     });
-    config.addNode(MetaNode);
-    config.addSeed(InterviewSeed);
+    config.addNode(MetaNode)
+    config.addSeed(InterviewSeed)
 
     // Import Substance Core packages
-    config.import(ParagraphPackage);
-    config.import(HeadingPackage);
-    config.import(BlockquotePackage);
-    config.import(ListPackage);
-    config.import(EmphasisPackage);
-    config.import(StrongPackage);
-    config.import(LinkPackage);
+    config.import(ParagraphPackage)
+    config.import(HeadingPackage)
+    config.import(BlockquotePackage)
+    config.import(ListPackage)
+    config.import(EmphasisPackage)
+    config.import(StrongPackage)
+    config.import(LinkPackage)
 
     // Import note specific packages
-    config.import(CommentPackage);
-    config.import(MarkPackage);
+    config.import(CommentPackage)
+    config.import(MarkPackage)
   }
-};
+}

@@ -1,7 +1,5 @@
-'use strict';
-
-var seed = function(tx) {
-  var body = tx.get('body');
+let seed = function(tx) {
+  let body = tx.get('body');
 
   tx.create({
     id: 'meta',
@@ -17,4 +15,4 @@ var seed = function(tx) {
   body.show('p1');
 };
 
-module.exports = seed;
+export default seed;
