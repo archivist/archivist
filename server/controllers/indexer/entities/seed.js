@@ -37,7 +37,7 @@ var seedIndex = function(cb) {
         if (!entity.global) return;
       } else if (entity.type == 'definition') {
         shortData.synonyms = entity.synonyms;
-        definition_type = entity.definition_type;
+        shortData.definition_type = entity.definition_type;
       } else {
         return;
       }
