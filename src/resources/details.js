@@ -92,9 +92,8 @@ var Details = Component.extend({
     var descriptionWrapper = $$("div").attr({class: "description"}).key('description');
     var el =$$("div").attr({"data-id": resource.id, class: className.join(" ")}).append([
       $$("div").attr({class: "name"}).append(resource.name),
-      descriptionWrapper
+      $$("div").attr({class: "description"}).html(resource.description)
     ]);
-    $$("div").attr({class: "description"}).html(resource.description)
     this._setTitle(resource.name);
     return el;
   },
