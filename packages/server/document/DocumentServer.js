@@ -10,13 +10,25 @@ function ArchivistDocumentServer() {
 }
 
 ArchivistDocumentServer.Prototype = function() {
-  // var _super = NotesDocumentServer.super.prototype;
+  var _super = ArchivistDocumentServer.super.prototype;
 
-  // this.bind = function(app) {
-  //   _super.bind.apply(this, arguments);
+  this.bind = function(app) {
+    _super.bind.apply(this, arguments);
 
-  //   // Add notes specific routes
-  // };
+    app.get(this.path, this._listDocuments.bind(this));
+  };
+
+  /*
+    List available documents
+  */
+  this._listDocuments = function(req, res, next) {
+    var args = req.query;
+
+    this.engine.listDocuments(args, function(err, docs) {
+      if (err) return next(err);
+      res.json(docs);
+    });
+  };
 
 };
 
