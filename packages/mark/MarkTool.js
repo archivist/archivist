@@ -1,11 +1,5 @@
-'use strict';
+import { AnnotationTool } from 'substance'
 
-var AnnotationTool = require('substance/ui/AnnotationTool');
+class MarkTool extends AnnotationTool {}
 
-function MarkTool() {
-  MarkTool.super.apply(this, arguments);
-}
-
-AnnotationTool.extend(MarkTool);
-
-module.exports = MarkTool;
+export default MarkTool

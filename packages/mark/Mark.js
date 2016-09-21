@@ -1,17 +1,7 @@
-'use strict';
+import { Annotation } from 'substance'
 
-var PropertyAnnotation = require('substance/model/PropertyAnnotation');
+class Mark extends Annotation {}
 
-/**
-  Simple mark for highlighting text in a note
-*/
+Mark.type = 'mark'
 
-function Mark() {
-  Mark.super.apply(this, arguments);
-}
-
-PropertyAnnotation.extend(Mark);
-
-Mark.type = 'mark';
-
-module.exports = Mark;
+export default Mark

@@ -1,11 +1,5 @@
-'use strict';
+import { AnnotationCommand } from 'substance'
 
-var AnnotationCommand = require('substance/ui/AnnotationCommand');
+class MarkCommand extends AnnotationCommand {}
 
-function MarkCommand() {
-  MarkCommand.super.apply(this, arguments);
-}
-
-AnnotationCommand.extend(MarkCommand);
-
-module.exports = MarkCommand;
+export default MarkCommand
