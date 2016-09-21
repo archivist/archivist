@@ -90,6 +90,12 @@ ArchivistDocumentEngine.Prototype = function() {
       cb(null, doc);
     });
   };
+
+  this.listDocuments = function(args, cb) {
+    var filters = args.filters || {};
+    var options = args.options || {};
+    this.documentStore.listDocuments(filters, options, cb);
+  };
 };
 
 DocumentEngine.extend(ArchivistDocumentEngine);
