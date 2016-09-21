@@ -1,0 +1,31 @@
+.sc-header {
+  height: 40px;
+  background: #fff;
+  overflow: visible;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
+}
+
+.sc-header .se-actions {
+  float: left;
+}
+
+.sc-header .se-actions .se-action {
+  line-height: 40px;
+  display: inline-block;
+  padding: 0px 20px;
+  color: rgba(0,0,0, 0.7);
+}
+
+.sc-header .se-actions .se-action:focus {
+  color: rgba(0,0,0, 1);
+  outline: none;
+}
+
+.sc-header .se-actions .se-action:hover {
+  color: rgba(0,0,0, 1);
+}
+
+.sc-header .se-content {
+  float: right;
+}
