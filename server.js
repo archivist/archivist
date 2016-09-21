@@ -27,6 +27,16 @@ var config = configurator.getAppConfig();
 app.use(bodyParser.json({limit: '3mb'}));
 app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
 
+// Development server 
+// Serves HTML, bundled JS and CSS in non-production mode
+var server = require('substance/util/server');
+
+/*
+  Serve app
+*/
+
+app.use(config.publisherEndpoint, express.static(path.join(__dirname, '/dist/publisher')));
+
 // Error handling
 // We send JSON to the client so they can display messages in the UI.
 
@@ -57,7 +67,7 @@ httpServer.on('request', app);
 // NOTE: binding to localhost means that the app is not exposed
 // to the www directly.
 // E.g. we'll need to establish a reverse proxy
-// forwarding http+ws from domain name to localhost:5001 for instance
+// forwarding http+ws from domain name to localhost:5000 for instance
 httpServer.listen(config.port, config.host, function() {
   console.log('Listening on ' + httpServer.address().port); // eslint-disable-line
 });
