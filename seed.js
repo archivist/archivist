@@ -1,10 +1,32 @@
 'use strict';
 
-var Database = require('./Database');
-var db = new Database();
+var Database = require('./packages/common/Database');
+var Configurator = require('./packages/common/ServerConfigurator');
+var StorePackage = require('./packages/store/package');
 
-db.reset()
+var db = new Database();
+var configurator = new Configurator().import(StorePackage);
+var seed = require('./data/devSeed');
+
+db.reset() // Clear the database, set up the schema
   .then(function() {
+    // We should drop connection and establish it again,
+    // so massive will have new tables attached
+    db.shutdown();
+    db = new Database();
+    configurator.setDBConnection(db);
+    var userStore = configurator.getStore('user');
+    return userStore.seed(seed.users);
+  }).then(function() {
+    var sessionStore = configurator.getStore('session');
+    return sessionStore.seed(seed.sessions);
+  }).then(function() {
+    var documentStore = configurator.getStore('document');
+    return documentStore.seed(seed.documents);
+  }).then(function() {
+    var changeStore = configurator.getStore('change');
+    return changeStore.seed(seed.changes);
+  }).then(function() {
     // eslint-disable-next-line
     console.log('Done seeding.');
     db.shutdown();
