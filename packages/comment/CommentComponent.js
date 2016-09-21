@@ -1,20 +1,13 @@
-'use strict';
+import { Component, TextProperty, Icon } from 'substance'
+import moment from 'moment/src/moment'
 
-var Component = require('substance/ui/Component');
-var TextProperty = require('substance/ui/TextPropertyComponent');
-var Icon = require('substance/ui/FontAwesomeIcon');
-var moment = require('moment');
 
-function CommentComponent() {
-  Component.apply(this, arguments);
-}
+class CommentComponent extends Component {
 
-CommentComponent.Prototype = function() {
-
-  this.render = function($$) {
-    var author = this.props.node.author;
-    var date = moment(this.props.createdAt).fromNow();
-    var authored = '<strong>' + author + '</strong> ' + date;
+  render($$) {
+    let author = this.props.node.author;
+    let date = moment(this.props.createdAt).fromNow();
+    let authored = '<strong>' + author + '</strong> ' + date;
 
     return $$('div')
       .addClass('sc-comment')
@@ -35,16 +28,14 @@ CommentComponent.Prototype = function() {
             path: [ this.props.node.id, "content"],
           })
         )
-      );
-  };
+      )
+  }
 
-  this.getDate = function() {
-    var date = this.props.node.createdAt;
-    var result = this.timeSince(new Date(date)) + ' ago';
-    return result;
-  };
-};
+  getDate() {
+    let date = this.props.node.createdAt
+    let result = this.timeSince(new Date(date)) + ' ago'
+    return result
+  }
+}
 
-Component.extend(CommentComponent);
-
-module.exports = CommentComponent;
+export default CommentComponent

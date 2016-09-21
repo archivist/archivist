@@ -1,11 +1,5 @@
-'use strict';
+import { AnnotationTool } from 'substance'
 
-var AnnotationTool = require('substance/ui/AnnotationTool');
+class CommentTool extends AnnotationTool {}
 
-function CommentTool() {
-  CommentTool.super.apply(this, arguments);
-}
-
-AnnotationTool.extend(CommentTool);
-
-module.exports = CommentTool;
+export default CommentTool
