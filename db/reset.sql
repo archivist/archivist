@@ -9,26 +9,26 @@ drop table if exists "users";
 
 -- Users:
 CREATE TABLE "users" (
-  "userId" UUID UNIQUE PRIMARY KEY,
+  "userId" text UNIQUE PRIMARY KEY,
   email text UNIQUE,
   name text,
   created timestamp,
-  "loginKey" UUID UNIQUE
+  "loginKey" text UNIQUE
 );
 
 CREATE UNIQUE INDEX login_key_index ON users("loginKey");
 
 -- Sessions:
 CREATE TABLE "sessions" (
-  "sessionToken" UUID UNIQUE PRIMARY KEY,
-  "userId" UUID REFERENCES users ON DELETE CASCADE,
+  "sessionToken" text UNIQUE PRIMARY KEY,
+  "userId" text REFERENCES users ON DELETE CASCADE,
   -- ex timestamp
   created timestamp
 );
 
 -- Documents:
 CREATE TABLE "documents" (
-  "documentId" UUID UNIQUE PRIMARY KEY,
+  "documentId" text UNIQUE PRIMARY KEY,
   "schemaName" text,
   "schemaVersion" text,
   info jsonb,
@@ -36,19 +36,19 @@ CREATE TABLE "documents" (
   title text,
   annotations text[],
   "updatedAt" timestamp,
-  "updatedBy" UUID REFERENCES users ON DELETE SET DEFAULT,
-  "userId" UUID REFERENCES users ON DELETE SET DEFAULT
+  "updatedBy" text REFERENCES users ON DELETE SET DEFAULT,
+  "userId" text REFERENCES users ON DELETE SET DEFAULT
 );
 
 CREATE UNIQUE INDEX document_id_index ON documents("documentId");
 
 -- Changes:
 CREATE TABLE "changes" (
-  "documentId" UUID REFERENCES documents ON DELETE CASCADE,
+  "documentId" text REFERENCES documents ON DELETE CASCADE,
   version integer,
   data jsonb,
   "createdAt" timestamp,
-  "userId" UUID REFERENCES users ON DELETE SET DEFAULT,
+  "userId" text REFERENCES users ON DELETE SET DEFAULT,
   PRIMARY KEY("documentId", version)
 );
 
@@ -59,7 +59,7 @@ CREATE INDEX changes_document_user_idx_index ON changes("documentId", "userId");
 
 -- Snapshots:
 CREATE TABLE "snapshots" (
-  "documentId" UUID REFERENCES documents ON DELETE CASCADE,
+  "documentId" text REFERENCES documents ON DELETE CASCADE,
   version integer,
   data jsonb,
   created timestamp,
@@ -69,7 +69,7 @@ CREATE TABLE "snapshots" (
 -- Fragments:
 CREATE TABLE "fragments" (
   "fragmentId" text,
-  "documentId" UUID REFERENCES documents ON DELETE CASCADE,
+  "documentId" text REFERENCES documents ON DELETE CASCADE,
   -- plain text version
   content text,
   -- xml version
