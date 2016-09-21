@@ -1,0 +1,51 @@
+.sc-document-list {
+
+}
+
+.sc-document-list .sc-document-item {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-direction: row;
+  flex-direction: row;
+  padding: 10px 20px;
+}
+
+.sc-document-list .sc-document-item:hover {
+  background: #f7f8fb;
+  cursor: pointer;
+}
+
+.sc-document-list .sc-document-item .se-badge {
+  width: 40px;
+  height: 40px;
+  font-size: 40px;
+  color: #d8d8d8;
+  margin-right: 10px;
+  float: left;
+}
+
+.sc-document-list .sc-document-item .se-meta {
+  -webkit-flex: auto;
+  flex: auto;
+}
+
+.sc-document-list .sc-document-item .se-meta .se-title {
+  font-size: 20px;
+  line-height: 20px;
+}
+
+.sc-document-list .sc-document-item .se-meta .se-title a {
+  color: #0b0b0b;
+}
+
+.sc-document-list .sc-document-item .se-more {
+  width: 25px;
+  height: 25px;
+  padding: 3px;
+  border-radius: 60px;
+  box-shadow: 0px 0px 2px #888;
+  font-size: 21px;
+  color: #888;
+  text-align: center;
+  float: right;
+}
