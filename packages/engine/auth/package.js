@@ -1,16 +1,14 @@
-'use strict';
-
-var AuthEngine = require('./AuthEngine');
+let AuthEngine = require('./AuthEngine')
 
 module.exports = {
   name: 'auth-engine',
   configure: function(config) {
-    var authEngine = new AuthEngine({
+    let authEngine = new AuthEngine({
       configurator: config,
       userStore: config.getStore('user'),
       sessionStore: config.getStore('session')
-    });
+    })
 
-    config.addEngine('auth', authEngine);
+    config.addEngine('auth', authEngine)
   }
-};
+}
