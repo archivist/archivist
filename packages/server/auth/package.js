@@ -1,17 +1,15 @@
-'use strict';
-
-var AuthServer = require('./AuthServer');
+let AuthServer = require('./AuthServer')
 
 module.exports = {
   name: 'auth-server',
   configure: function(config) {
-    var server = config.getServerApp();
-    var authEngine = config.getEngine('auth');
+    let server = config.getServerApp()
+    let authEngine = config.getEngine('auth')
 
-    var authServer = new AuthServer({
+    let authServer = new AuthServer({
       authEngine: authEngine,
       path: '/api/auth'
-    });
-    authServer.bind(server);
+    })
+    authServer.bind(server)
   }
-};
+}

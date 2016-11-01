@@ -1,17 +1,17 @@
-'use strict';
-
-var DocumentServer = require('./DocumentServer');
+let DocumentServer = require('./DocumentServer')
 
 module.exports = {
   name: 'document-server',
   configure: function(config) {
-    var server = config.getServerApp();
-    var documentEngine = config.getEngine('document');
+    let server = config.getServerApp()
+    let documentEngine = config.getEngine('document')
+    let indexer = config.getEngine('indexer')
 
-    var documentServer = new DocumentServer({
+    let documentServer = new DocumentServer({
       documentEngine: documentEngine,
+      indexer: indexer,
       path: '/api/documents'
-    });
-    documentServer.bind(server);
+    })
+    documentServer.bind(server)
   }
-};
+}

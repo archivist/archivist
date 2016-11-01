@@ -11,6 +11,12 @@ var httpServer = http.createServer();
 var wss = new WebSocketServer({ server: httpServer });
 
 /*
+  Express body-parser configureation 
+*/
+app.use(bodyParser.json({limit: '3mb'}));
+app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
+
+/*
   Config
 */
 var ServerConfigurator = require('./packages/common/ServerConfigurator');
@@ -22,20 +28,9 @@ configurator.import(ServerPackage);
 var config = configurator.getAppConfig();
 
 /*
-  Express body-parser configureation 
-*/
-app.use(bodyParser.json({limit: '3mb'}));
-app.use(bodyParser.urlencoded({ extended: true, limit: '3mb', parameterLimit: 3000 }));
-
-// Development server 
-// Serves HTML, bundled JS and CSS in non-production mode
-var server = require('substance/util/server');
-
-/*
   Serve app
 */
-
-app.use(config.publisherEndpoint, express.static(path.join(__dirname, '/dist/publisher')));
+app.use(config.publisherEndpoint, express.static(path.join(__dirname, '/dist')));
 
 // Error handling
 // We send JSON to the client so they can display messages in the UI.
