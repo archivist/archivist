@@ -6,18 +6,12 @@ import { request, DocumentClient } from 'substance';
   HTTP client for talking with DocumentServer
 */
 
-function ArchivistDocumentClient() {
-  ArchivistDocumentClient.super.apply(this, arguments);
+class ArchivistDocumentClient extends DocumentClient {
+
+  listDocuments(cb) {
+    request('GET', '/api/documents', null, cb);
+  }
+
 }
 
-ArchivistDocumentClient.Prototype = function() {
-
-  this.listDocuments = function(cb) {
-    request('GET', '/api/documents', null, cb);
-  };
-
-};
-
-DocumentClient.extend(ArchivistDocumentClient);
-
-export default ArchivistDocumentClient;
+export default ArchivistDocumentClient

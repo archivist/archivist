@@ -1,12 +1,12 @@
-import { ProseEditorPackage } from 'substance'
 import ArchivistPackage from '../../packages/archivist/package'
 import DocumentsPackage from '../../packages/documents/package'
 import PublisherPackage from '../../packages/publisher/package'
+import ArchivistSubConfigurator from '../../packages/archivist/ArchivistSubConfigurator'
 import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
 import FileClient from './FileClient'
 
-let appConfig = '{"protocol":"http","host":"localhost","port":5000}'
+let appConfig = 'ARCHIVISTCONFIG'
 appConfig = JSON.parse(appConfig)
 
 export default {
@@ -17,8 +17,7 @@ export default {
     config.import(DocumentsPackage)
 
     // Add subconfigurators
-    let Configurator = ProseEditorPackage.Configurator
-    config.addConfigurator('archivist-interview-editor', new Configurator().import(PublisherPackage))
+    config.addConfigurator('archivist-interview-editor', new ArchivistSubConfigurator().import(PublisherPackage))
 
     // Add app's root style
     //config.addStyle(__dirname, 'app.scss');

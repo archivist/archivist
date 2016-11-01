@@ -3,3 +3,6 @@
 @import '../../packages/toolbox/_index.css';
 @import '../../packages/documents/_index.css';
 @import '../../packages/publisher/_index.css';
+
+@import '../../packages/person/_index.css';
+@import '../../packages/definition/_index.css';
