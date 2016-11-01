@@ -1,5 +1,4 @@
-import { ProseEditorPackage } from 'substance'
-const Configurator = ProseEditorPackage.Configurator
+import { Configurator } from 'substance'
 
 /*
   Archivist configurator.
@@ -118,7 +117,8 @@ class ArchivistConfigurator extends Configurator {
     return this.config.configurators[name]
   }
 
-  addPage(pageName) {
+  addPage(pageName, component) {
+    this.addComponent(pageName, component)
     this.config.pages.push(pageName)
   }
 

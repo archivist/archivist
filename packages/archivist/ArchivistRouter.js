@@ -1,26 +1,23 @@
 import { Router } from 'substance'
 
-function ArchivistRouter(app) {
-  Router.call(this);
-  this.app = app;
-}
-
-ArchivistRouter.Prototype = function() {
+class ArchivistRouter extends Router{
+  constructor(app) {
+    super()
+    this.app = app
+  }
 
   // URL helpers
-  this.openDocument = function(documentId) {
+  openDocument(documentId) {
     return '#' + Router.objectToRouteString({
       page: 'document',
       documentId: documentId
-    });
-  };
+    })
+  }
 
-  this.getRoute = function() {
-    var routerString = this.getRouteString();
-    return Router.routeStringToObject(routerString);
-  };
-};
+  getRoute() {
+    let routerString = this.getRouteString()
+    return Router.routeStringToObject(routerString)
+  }
+}
 
-Router.extend(ArchivistRouter);
-
-export default ArchivistRouter;
+export default ArchivistRouter
