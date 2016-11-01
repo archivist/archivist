@@ -6,6 +6,8 @@ drop table if exists "fragments";
 drop table if exists "documents";
 drop table if exists "sessions";
 drop table if exists "users";
+drop function if exists documents_search_trigger();
+drop function if exists fragments_search_trigger();
 
 -- Users:
 CREATE TABLE "users" (
@@ -32,15 +34,37 @@ CREATE TABLE "documents" (
   "schemaName" text,
   "schemaVersion" text,
   info jsonb,
+  meta jsonb,
   version integer,
+  "indexedVersion" integer,
   title text,
+  language text,
   annotations text[],
+  "fullText" text,
   "updatedAt" timestamp,
   "updatedBy" text REFERENCES users ON DELETE SET DEFAULT,
-  "userId" text REFERENCES users ON DELETE SET DEFAULT
+  "userId" text REFERENCES users ON DELETE SET DEFAULT,
+  -- fts
+  tsv tsvector
 );
 
 CREATE UNIQUE INDEX document_id_index ON documents("documentId");
+
+-- Documents search index
+CREATE INDEX tsv_documents_idx ON documents USING gin(tsv);
+
+CREATE FUNCTION documents_search_trigger() RETURNS trigger AS $$
+begin
+  new.tsv :=
+    setweight(to_tsvector('russian', COALESCE(new.title,'')), 'A') || 
+    setweight(to_tsvector('russian', COALESCE(new.meta->>'summary','')),'B') ||
+    setweight(to_tsvector('russian', COALESCE(new."fullText",'')),'C');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tsvectordocumentsupdate BEFORE INSERT OR UPDATE
+ON documents FOR EACH ROW EXECUTE PROCEDURE documents_search_trigger();
 
 -- Changes:
 CREATE TABLE "changes" (
@@ -77,8 +101,23 @@ CREATE TABLE "fragments" (
   -- array with annotations references
   annotations text[],
   -- previous fragment reference
-  prev text REFERENCES fragments ON DELETE SET DEFAULT,
+  prev text,
   -- next fragment reference
-  next text REFERENCES fragments ON DELETE SET DEFAULT,
-  PRIMARY KEY("fragmentId")
+  next text,
+  -- fts
+  tsv tsvector,
+  PRIMARY KEY("fragmentId", "documentId")
 );
+
+CREATE INDEX tsv_fragments_idx ON fragments USING gin(tsv);
+
+CREATE FUNCTION fragments_search_trigger() RETURNS trigger AS $$
+begin
+  new.tsv :=
+    setweight(to_tsvector('russian', COALESCE(new.content,'')), 'C');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tsvectorfragmentsupdate BEFORE INSERT OR UPDATE
+ON fragments FOR EACH ROW EXECUTE PROCEDURE fragments_search_trigger();
