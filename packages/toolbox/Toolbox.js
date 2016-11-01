@@ -1,41 +1,34 @@
-'use strict';
-
-import { Component } from 'substance'
+import { Button, Component } from 'substance'
 import forEach from 'lodash/forEach'
 
-function Toolbox() {
-  Component.apply(this, arguments);
-}
+class Toolbox extends Component {
 
-Toolbox.Prototype = function() {
-
-  this.render = function($$) {
-    var el = $$('div').addClass('sc-toolbox');
-    var actionEls = [];
+  render($$) {
+    let el = $$('div').addClass('sc-toolbox')
+    let actionEls = []
 
     if (this.props.actions) {
       forEach(this.props.actions, function(label, actionName) {
         actionEls.push(
-          $$('button').addClass('se-action')
+          $$(Button).addClass('se-action')
             .append(label)
             .on('click', this.send.bind(this, actionName))
-        );
-      }.bind(this));
+        )
+      }.bind(this))
     }
 
-    var content = [];
+    let content = []
     if (this.props.content) {
-      content = content.concat(this.props.content);
+      content = content.concat(this.props.content)
     }
 
     el.append(
       $$('div').addClass('se-actions').append(actionEls),
       $$('div').addClass('se-content').append(content)
-    );
-    return el;
-  };
-};
+    )
 
-Component.extend(Toolbox);
+    return el
+  }
+}
 
-export default Toolbox;
+export default Toolbox
