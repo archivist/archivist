@@ -21816,7 +21816,37 @@ let sample = {
         "id": "paragraph-934",
         "type": "paragraph",
         "content": "<***>"
-      }
+      },
+      {
+        "containerId":"body",
+        "endOffset":1,
+        "endPath":["paragraph-9","content"],
+        "id":"subject-78f219cdf52913339c39dad1de206fbf",
+        "reference":"",
+        "startOffset":31,
+        "startPath":["paragraph-7","content"],
+        "type":"subject"
+      },
+      {
+        "id": "definition-dd41975d0453cc0656161de390d2cf2d",
+        "path": [
+          "paragraph-5",
+          "content"
+        ],
+        "type": "definition",
+        "endOffset": 24,
+        "startOffset": 11
+      },
+      {
+        "id": "person-150891ca324777950ab052a3a9064026",
+        "path": [
+          "paragraph-7",
+          "content"
+        ],
+        "type": "person",
+        "endOffset": 48,
+        "startOffset": 35
+      },
     ],
     "schema": {
       "name": "archivist-interview",
