@@ -1,4 +1,40 @@
-.sc-publisher .se-context-section { background: #fafafa; border-left: 1px solid var(--border-color); }
-.sc-publisher .se-context-section .se-toc-entries { padding-right: 20px; }
+.sc-publisher .se-context-section { 
+  background: #fafafa;
+  border-left: 1px solid var(--border-color);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.sc-publisher .se-context-section .se-toggle-context {
+  height: 41px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sc-publisher .se-context-section .se-toggle-context .se-toggle-item {
+  float: left;
+  height: 41px;
+  line-height: 40px;
+  padding: 0px 20px;
+  color: #444;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sc-publisher .se-context-section .se-toggle-context .se-toggle-item.se-active {
+  background: #eee;
+  border-bottom: 1px solid #444;
+}
+
+.sc-publisher .se-context-section .sc-scroll-pane {
+  top: 41px;
+}
+
+.sc-publisher .se-context-section .sc-entity-entry {
+  position: relative;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+}
+
 .sc-publisher .se-main-section .sc-container-editor > * { margin-bottom: 20px; }
 .sc-publisher .sc-toolbar { border-bottom: 1px solid var(--border-color); }

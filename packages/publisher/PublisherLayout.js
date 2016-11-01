@@ -18,8 +18,8 @@ class PublisherLayout extends Loader {
   }
 
   render($$) {
-    let Notification = this.getComponent('notification')
-    let Collaborators = this.getComponent('collaborators')
+    //let Notification = this.getComponent('notification')
+    //let Collaborators = this.getComponent('collaborators')
     let Header = this.getComponent('header')
 
     let notification = this.state.notification

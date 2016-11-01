@@ -1,5 +1,5 @@
-import { ProseEditorPackage, SplitPane, ScrollPane, Layout, Overlay, ContainerEditor } from 'substance'
-const ProseEditor = ProseEditorPackage.ProseEditor
+import { ProseEditor, SplitPane, ScrollPane, Layout, Overlay, ContainerEditor } from 'substance'
+import PublisherContext from './PublisherContext'
 
 class Publisher extends ProseEditor {
 
@@ -16,7 +16,9 @@ class Publisher extends ProseEditor {
 
   _renderContextSection($$) {
     return $$('div').addClass('se-context-section').append(
-      'context'
+      $$(PublisherContext, {
+        configurator: this.props.configurator
+      })
     )
   }
 
