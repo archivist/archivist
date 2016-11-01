@@ -4,6 +4,17 @@
   overflow: visible;
   -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
   box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  z-index: 99;
+}
+
+.sc-header:after {
+  background: linear-gradient(to right, rgba(180, 228, 32, 0.4), #9cea8e);
+  content: '';
+  width: 100%;
+  position: absolute;
+  top: 40px;
+  height: 1px;
+  left: 0;
 }
 
 .sc-header .se-actions {
@@ -28,4 +39,15 @@
 
 .sc-header .se-content {
   float: right;
+}
+
+.se-icon {
+  float: left;
+  width: 40px;
+  height: 40px;
+  margin-left: 20px;
+  background: url(/publisher/assets/icon.png);
+  background-size: initial;
+  background-repeat: no-repeat;
+  background-position: center;
 }
