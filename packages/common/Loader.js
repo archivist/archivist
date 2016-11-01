@@ -16,23 +16,23 @@ class Loader extends Component {
 
     let config = this.context.config
 
-    // this.conn = new WebSocketConnection({
-    //   wsUrl: config.wsUrl || 'ws://'+config.host+':'+config.port
-    // })
+    this.conn = new WebSocketConnection({
+      wsUrl: config.wsUrl || 'ws://'+config.host+':'+config.port
+    })
 
-    // this.collabClient = new CollabClient({
-    //   connection: this.conn,
-    //   enhanceMessage: function(message) {
-    //     var userSession = this.props.userSession
-    //     if (userSession) {
-    //       message.sessionToken = userSession.sessionToken
-    //     }
-    //     return message
-    //   }.bind(this)
-    // })
+    this.collabClient = new CollabClient({
+      connection: this.conn,
+      enhanceMessage: function(message) {
+        var userSession = this.props.userSession
+        if (userSession) {
+          message.sessionToken = userSession.sessionToken
+        }
+        return message
+      }.bind(this)
+    })
 
-    // this.collabClient.on('disconnected', this._onCollabClientDisconnected, this)
-    // this.collabClient.on('connected', this._onCollabClientConnected, this)
+    this.collabClient.on('disconnected', this._onCollabClientDisconnected, this)
+    this.collabClient.on('connected', this._onCollabClientConnected, this)
   }
 
   getInitialState() {
@@ -100,25 +100,28 @@ class Loader extends Component {
     let configurator = this.props.configurator
     let documentClient = this.context.documentClient
 
-    // documentClient.getDocument(documentId, function(err, docRecord) {
-    //   if (err) {
-    //     this._onError(err)
-    //     return
-    //   }
-      let docRecord = SampleDoc
+    documentClient.getDocument(documentId, function(err, docRecord) {
+      if (err) {
+        this._onError(err)
+        return
+      }
+      //let docRecord = SampleDoc
       let document = configurator.createArticle()
       let doc = converter.importDocument(document, docRecord.data)
 
-      // let session = new CollabSession(doc, {
-      //   documentId: documentId,
-      //   version: docRecord.version,
-      //   collabClient: collabClient
-      // })
+      // For debugging
+      window.doc = doc
 
-      let session = new DocumentSession(doc, {
+      let session = new CollabSession(doc, {
         documentId: documentId,
-        version: docRecord.version
+        version: docRecord.version,
+        collabClient: collabClient
       })
+
+      // let session = new DocumentSession(doc, {
+      //   documentId: documentId,
+      //   version: docRecord.version
+      // })
 
       if(docRecord.version === 0) {
         let seed = configurator.getSeed()
@@ -132,7 +135,7 @@ class Loader extends Component {
       this.setState({
         session: session
       })
-    //}.bind(this))
+    }.bind(this))
   }
 }
 

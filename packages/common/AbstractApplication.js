@@ -52,7 +52,7 @@ class AbstractApplication extends ResponsiveApplication {
   */
   navigate(route, opts) {
     let loginData = this._getLoginData(route)
-
+    
     this._authenticate(loginData, function(err, userSession) {
       if (err) {
         console.error(err)
@@ -75,7 +75,7 @@ class AbstractApplication extends ResponsiveApplication {
   }
 
   _getPageProps() {
-    var props = cloneDeep(this.state.route)
+    let props = cloneDeep(this.state.route)
     delete props.page
     props.mobile = this.state.mobile
     props.userSession = this.state.userSession
@@ -114,9 +114,9 @@ class AbstractApplication extends ResponsiveApplication {
     Returns login key either session token of logged in user.
   */
   _getLoginData(route) {
-    var loginKey = route.loginKey
-    var storedToken = this._getSessionToken()
-    var loginData
+    let loginKey = route.loginKey
+    let storedToken = this._getSessionToken()
+    let loginData
 
     if (loginKey) {
       loginData = {loginKey: loginKey}
