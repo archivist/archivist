@@ -1,10 +1,8 @@
-'use strict';
-
-var ChangeStore = require('./ChangeStore');
+let ChangeStore = require('./ChangeStore')
 
 module.exports = {
   name: 'change-store',
   configure: function(config) {
-    config.addStore('change', ChangeStore);
+    config.addStore('change', ChangeStore)
   }
-};
+}

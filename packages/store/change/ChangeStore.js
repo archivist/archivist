@@ -1,11 +1,8 @@
-"use strict";
-
-var oo = require('substance/util/oo');
-var Err = require('substance/util/SubstanceError');
-var forEach = require('lodash/forEach');
-var has = require('lodash/has');
-var map = require('lodash/map');
-var Promise = require('bluebird');
+let Err = require('substance').SubstanceError
+let forEach = require('lodash/forEach')
+let has = require('lodash/has')
+let map = require('lodash/map')
+let Promise = require('bluebird')
 
 /*
   Archivist Change Store API
@@ -23,12 +20,11 @@ var Promise = require('bluebird');
   All methods expects callback functions, 
   except seed which is using promise based change creation clone
 */
-function ChangeStore(config) {
-  this.config = config;
-  this.db = config.db;
-}
-
-ChangeStore.Prototype = function() {
+class ChangeStore {
+  constructor(config) {
+    this.config = config
+    this.db = config.db
+  }
 
   // Changes API
   // -----------
@@ -42,45 +38,45 @@ ChangeStore.Prototype = function() {
     @param {Callback} cb callback
     @returns {Callback}
   */
-  this.addChange = function(args, cb) {
+  addChange(args, cb) {
     if(!has(args, 'documentId')) {
       return cb(new Err('ChangeStore.CreateError', {
         message: 'documentId is mandatory'
-      }));
+      }))
     }
 
-    var userId = null;
+    let userId = null;
     if(args.change.info) {
-      userId = args.change.info.userId;
+      userId = args.change.info.userId
     }
     
     this.getVersion(args.documentId, function(err, headVersion) {
       if (err) {
         return cb(new Err('ChangeStore.GetVersionError', {
           cause: err
-        }));
+        }))
       }
-      var version = headVersion + 1;
-      var record = {
+      let version = headVersion + 1
+      let record = {
         documentId: args.documentId,
         version: version,
         data: args.change,
         createdAt: args.createdAt || new Date(),
         userId: userId
-      };
+      }
 
       this.db.changes.insert(record, function(err, change) {
         if (err) {
           return cb(new Err('ChangeStore.CreateError', {
             cause: err
-          }));
+          }))
         }
 
-        cb(null, change.version);
-      });
+        cb(null, change.version)
+      })
 
-    }.bind(this));
-  };
+    }.bind(this))
+  }
 
   /*
     Add a change to a document
@@ -92,47 +88,47 @@ ChangeStore.Prototype = function() {
     @param {Object} args.change JSON object
     @returns {Promise}
   */
-  this._addChange = function(args) {    
+  _addChange(args) {    
     return new Promise(function(resolve, reject) {
       if(!has(args, 'documentId')) {
         return reject(new Err('ChangeStore.CreateError', {
           message: 'documentId is mandatory'
-        }));
+        }))
       }
 
-      var userId = null;
+      let userId = null;
       if(args.change.info) {
-        userId = args.change.info.userId;
+        userId = args.change.info.userId
       }
 
       this.getVersion(args.documentId, function(err, headVersion) {
         if (err) {
           return reject(new Err('ChangeStore.GetVersionError', {
             cause: err
-          }));
+          }))
         }
-        var version = headVersion + 1;
-        var record = {
+        let version = headVersion + 1;
+        let record = {
           documentId: args.documentId,
           version: version,
           data: args.change,
           createdAt: args.createdAt || new Date(),
           userId: userId
-        };
+        }
 
         this.db.changes.insert(record, function(err, change) {
           if (err) {
             return reject(new Err('ChangeStore.CreateError', {
               cause: err
-            }));
+            }))
           }
 
-          resolve(change.version);
-        });
+          resolve(change.version)
+        })
 
-      }.bind(this));
-    }.bind(this));
-  };
+      }.bind(this))
+    }.bind(this))
+  }
 
   /*
     Get changes from the DB
@@ -143,44 +139,44 @@ ChangeStore.Prototype = function() {
     @param {Callback} cb callback
     @returns {Callback}
   */
-  this.getChanges = function(args, cb) {
+  getChanges(args, cb) {
     if(args.sinceVersion < 0) {
       return cb(new Err('ChangeStore.ReadError', {
         message: 'sinceVersion should be grater or equal then 0'
-      }));
+      }))
     }
 
     if(args.toVersion < 0) {
       return cb(new Err('ChangeStore.ReadError', {
         message: 'toVersion should be grater then 0'
-      }));
+      }))
     }
 
     if(args.sinceVersion >= args.toVersion) {
       return cb(new Err('ChangeStore.ReadError', {
         message: 'toVersion should be greater then sinceVersion'
-      }));
+      }))
     }
 
     if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
 
-    var query = {
+    let query = {
       'documentId': args.documentId,
       'version >': args.sinceVersion
-    };
+    }
 
     if(args.toVersion) query['version <='] = args.toVersion;
 
-    var options = {
+    let options = {
       order: 'version asc',
       columns: ["data"]
-    };
+    }
 
     this.db.changes.find(query, options, function(err, changes) {
       if (err) {
         return cb(new Err('ChangeStore.ReadError', {
           cause: err
-        }));
+        }))
       }
 
       // transform results to an array of changes 
@@ -190,18 +186,18 @@ ChangeStore.Prototype = function() {
         if (err) {
           return cb(new Err('ChangeStore.ReadError', {
             cause: err
-          }));
+          }))
         }
 
-        var res = {
+        let res = {
           version: headVersion,
           changes: changes
-        };
+        }
 
-        cb(null, res);
-      });
-    }.bind(this));
-  };
+        cb(null, res)
+      })
+    }.bind(this))
+  }
 
   /*
     Remove all changes of a document
@@ -210,16 +206,16 @@ ChangeStore.Prototype = function() {
     @param {Callback} cb callback
     @returns {Callback}
   */
-  this.deleteChanges = function(id, cb) {
+  deleteChanges(id, cb) {
     this.db.changes.destroy({documentId: id}, function(err, changes) {
       if (err) {
         return cb(new Err('ChangeStore.DeleteError', {
           cause: err
-        }));
+        }))
       }
-      cb(null, changes.length);
-    });
-  };
+      cb(null, changes.length)
+    })
+  }
 
   /*
     Get the version number for a document
@@ -228,17 +224,17 @@ ChangeStore.Prototype = function() {
     @param {Callback} cb callback
     @returns {Callback}
   */
-  this.getVersion = function(id, cb) {
+  getVersion(id, cb) {
     this.db.changes.count({documentId: id}, function(err, count) {
       if (err) {
         return cb(new Err('ChangeStore.GetVersionError', {
           cause: err
-        }));
+        }))
       }
 
-      cb(null, parseInt(count, 10));
-    });
-  };
+      cb(null, parseInt(count, 10))
+    })
+  }
 
   /*
     Get the version number for a document
@@ -248,19 +244,19 @@ ChangeStore.Prototype = function() {
     @param {String} id document id
     @returns {Promise}
   */
-  this._getVersion = function(id) {
+  _getVersion(id) {
     return new Promise(function(resolve, reject) {
       this.db.changes.count({documentId: id}, function(err, count) {
         if (err) {
           return reject(new Err('ChangeStore.GetVersionError', {
             cause: err
-          }));
+          }))
         }
 
-        resolve(parseInt(count, 10));
-      });
-    }.bind(this));
-  };
+        resolve(parseInt(count, 10))
+      })
+    }.bind(this))
+  }
 
   /*
     Resets the database and loads a given seed object
@@ -271,28 +267,26 @@ ChangeStore.Prototype = function() {
     @param {Function} cb callback
   */
 
-  this.seed = function(changesets) {
-    var self = this;
-    var changes = [];
+  seed(changesets) {
+    let self = this
+    let changes = []
     forEach(changesets, function(set, docId) {
       forEach(set, function(change) {
-        var args = {
+        let args = {
           documentId: docId,
           change: change
-        };
+        }
         changes.push(args);
-      });
-    });
+      })
+    })
 
     // Seed changes in sequence
     return changes.reduce(function(promise, change) {
       return promise.then(function() {
-        return self._addChange(change);
-      });
-    }, Promise.resolve());
-  };
-};
+        return self._addChange(change)
+      })
+    }, Promise.resolve())
+  }
+}
 
-oo.initClass(ChangeStore);
-
-module.exports = ChangeStore;
+module.exports = ChangeStore
