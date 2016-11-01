@@ -1,75 +1,79 @@
-'use strict';
-
-import { Component, Layout, SubstanceError as Err } from 'substance'
-import Item from './Item'
+import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import moment from 'moment'
 
 // Sample data for debugging
 import DataSample from '../../data/docs'
 
-function DocumentsPage() {
-  Component.apply(this, arguments);
-}
+class DocumentsPage extends Component {
 
-DocumentsPage.Prototype = function() {
+  didMount() {
+    this._loadData()
+  }
 
-  this.didMount = function() {
-    this._loadData();
-  };
+  // willReceiveProps() {
+  //   this._loadData()
+  // }
 
-  this.willReceiveProps = function() {
-    this._loadData();
-  };
+  render($$) {
+    let documentItems = this.state.items
+    let el = $$('div').addClass('sc-documents')
 
-  this.render = function($$) {
-    var documentItems = this.state.documentItems;
-    var el = $$('div').addClass('sc-document-list');
+    let header = this.renderHeader($$)
+    el.append(header)
 
-    var header = this.renderHeader($$);
-    el.append(header);
-
-    var toolbox = this.renderToolbox($$);
-    el.append(toolbox);
+    let toolbox = this.renderToolbox($$)
+    el.append(toolbox)
 
     if (!documentItems) {
-      return el;
+      return el
     }
 
     if (documentItems.length > 0) {
-      el.append(this.renderFull($$));
+      el.append(this.renderFull($$))
     } else {
-      el.append(this.renderEmpty($$));
+      el.append(this.renderEmpty($$))
     }
-    return el;
-  };
+    return el
+  }
 
-  this.renderHeader = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var Header = componentRegistry.get('header');
+  renderFilters($$) {
+    let filters = []
+    let search = $$('div').addClass('se-search').append(
+      $$(Icon, {icon: 'fa-search'}),
+      $$(Input, {placeholder: 'Search...'})
+    )
+    filters.push(search)
 
-    return $$(Header);
-  };
+    return filters
+  }
 
-  this.renderToolbox = function($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var Toolbox = componentRegistry.get('toolbox');
+  renderHeader($$) {
+    let Header = this.getComponent('header')
+    return $$(Header)
+  }
 
-    var toolbox = $$(Toolbox, {
+  renderToolbox($$) {
+    let Toolbox = this.getComponent('toolbox')
+    let filters = this.renderFilters($$)
+
+    let toolbox = $$(Toolbox, {
       actions: {
-        'newDocument': 'New Document'
-      }
-    });
+        'newDocument': '+ New Document'
+      },
+      content: filters
+    })
 
-    return toolbox;
-  };
+    return toolbox
+  }
 
-  this.renderStatusBar = function($$) {
+  renderStatusBar($$) {
     var componentRegistry = this.context.componentRegistry;
     var StatusBar = componentRegistry.get('status-bar');
 
     return $$(StatusBar);
-  };
+  }
 
-  this.renderEmpty = function($$) {
+  renderEmpty($$) {
     var layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -83,68 +87,69 @@ DocumentsPage.Prototype = function() {
     );
 
     return layout;
-  };
+  }
 
-  this.renderFull = function($$) {
-    var documentItems = this.state.documentItems;
-    var layout = $$(Layout, {
-      width: 'full',
-      noPadding: true
-    });
+  renderFull($$) {
+    let urlHelper = this.context.urlHelper
+    let items = this.state.items
+    let total = this.state.total
+    let page = this.state.page
+    let perPage = this.state.perPage
+    //let Pager = this.getComponent('pager')
+    let grid = $$(Grid)
 
-    // layout.append(
-    //   $$('div').addClass('se-intro').append(
-    //     $$('div').addClass('se-note-count').append(
-    //       'Showing ',
-    //       documentItems.length.toString(),
-    //       ' notes'
-    //     ),
-    //     $$(Button).addClass('se-new-note-button').append('New Note')
-    //       .on('click', this.send.bind(this, 'newNote'))
-    //   )
-    // );
+    if (items) {
+      items.forEach(function(item) {
+        let url = urlHelper.openDocument(item.documentId)
+        let icon = $$(Icon, {icon: 'fa-file-text-o'})
+        let title = $$('a').attr({href: url}).append(item.title)
+        let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
+        let more = $$(Icon, {icon: 'fa-ellipsis-v'})
 
-    if (documentItems) {
-      documentItems.forEach(function(documentItem) {
-        layout.append(
-          $$(Item, documentItem)
-        );
-      });
+        grid.append(
+          $$(Grid.Row).ref(item.documentId).append(
+            $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(icon),
+            $$(Grid.Cell, {columns: 6}).addClass('se-title').append(title),
+            $$(Grid.Cell, {columns: 4}).append(updatedAt),
+            $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
+          )
+        )
+      }.bind(this))
     }
-    return layout;
-  };
+    return grid
+  }
 
   /*
     Loads documents
   */
-  this._loadData = function() {
+  _loadData() {
     // Sample data for debugging
 
-    this.extendState({
-      documentItems: DataSample
-    });
+    // this.extendState({
+    //   items: DataSample,
+    //   total: DataSample.length
+    // });
 
-    // var documentClient = this.context.documentClient;
+    let documentClient = this.context.documentClient;
 
-    // documentClient.listDocuments(function(err, docs) {
-    //   if (err) {
-    //     this.setState({
-    //       error: new Err('DocumentsPage.LoadingError', {
-    //         message: 'Documents could not be loaded.',
-    //         cause: err
-    //       })
-    //     });
-    //     console.error('ERROR', err);
-    //     return;
-    //   }
+    documentClient.listDocuments(function(err, docs) {
+      if (err) {
+        this.setState({
+          error: new Err('DocumentsPage.LoadingError', {
+            message: 'Documents could not be loaded.',
+            cause: err
+          })
+        });
+        console.error('ERROR', err);
+        return;
+      }
 
-    //   this.extendState({
-    //     documentItems: docs
-    //   });
-    // }.bind(this));
-  };
-};
+      this.extendState({
+        items: docs.records,
+        total: docs.total
+      });
+    }.bind(this));
+  }
+}
 
-Component.extend(DocumentsPage);
-
-export default DocumentsPage;
+export default DocumentsPage
