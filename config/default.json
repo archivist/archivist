@@ -8,8 +8,9 @@
     //"browserEnpoint": "/"
   },
   "app": {
-    "port": 5000,
-    "host": "localhost"
+    "protocol": "http",
+    "host": "localhost",
+    "port": 5000
   },
   "db_url": "postgres://archivist_user:archivist_pw@localhost:5432/archivist"
 }
