@@ -182,10 +182,10 @@ ORDER BY count DESC limit ${limit} offset ${offset}`
 
       query = `SELECT 
 "fragmentId",
-ts_headline(${language}, content, q) as content
+ts_headline(${language}, content, q, 'StartSel=<strong>, StopSel=</strong>, HighlightAll=TRUE') as content
 FROM fragments,
 plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
-limit ${limit} offset ${offset}`
+ORDER BY SUBSTRING("fragmentId", '([0-9]+)')::int ASC limit ${limit} offset ${offset}`
 
     } else {
       args = ArgTypes.findArgs(arguments, this)
@@ -197,7 +197,7 @@ limit ${limit} offset ${offset}`
 "fragmentId",
 content
 FROM fragments ${whereQuery} 
-limit ${limit} offset ${offset}`
+ORDER BY SUBSTRING("fragmentId", '([0-9]+)')::int ASC limit ${limit} offset ${offset}`
     }
 
     return new Promise(function(resolve, reject) {

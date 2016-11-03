@@ -102,6 +102,8 @@ class ArchivistDocumentEngine extends DocumentEngine {
     let options = args.options || {}
     let results = {}
 
+    if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '"updatedBy"', '"userId"']
+
     this.documentStore.countDocuments(filters, function(err, count) {
       if(err) {
         return cb(new Err('ArchivistDocumentEngine.ListDocumentsError', {

@@ -29,7 +29,7 @@ class ArchivistDocumentServer extends DocumentServer {
   */
   _listDocuments(req, res, next) {
     let args = req.query
-
+    
     this.engine.listDocuments(args, function(err, docs) {
       if (err) return next(err)
       res.json(docs)
@@ -51,8 +51,8 @@ class ArchivistDocumentServer extends DocumentServer {
     if(!isEmpty(filters)) filters = JSON.parse(filters)
     if(!isEmpty(options)) options = JSON.parse(options)
 
-    if(search) filters.query = search
-    if(language) filters.language = language
+    if(search) filters.query = "'" + search + "'"
+    if(language) filters.language = "'" + language + "'"
 
     this.indexer.searchDocuments(filters, options)
       .then(function(resp) {
@@ -80,8 +80,8 @@ class ArchivistDocumentServer extends DocumentServer {
     if(!isEmpty(options)) options = JSON.parse(options)
 
     filters.documentId = documentId
-    if(search) filters.query = search
-    if(language) filters.language = language
+    if(search) filters.query = "'" + search + "'"
+    if(language) filters.language = "'" + language + "'"
 
     this.indexer.searchFragments(filters, options)
       .then(function(resp) {
