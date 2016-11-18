@@ -1,0 +1,345 @@
+{
+  "changes": {
+    "note-4": [
+      {
+        "documentId": "note-4"
+      }
+    ],
+    "note-2": [
+      {
+        "documentId": "note-2"
+      }
+    ],
+    "note-3": [
+      {
+        "documentId": "note-3"
+      }
+    ],
+    "note-1": [
+      {
+        "documentId": "note-1"
+      }
+    ],
+    "note-6": [
+      {
+        "documentId": "note-6"
+      }
+    ],
+    "note-5": [
+      {
+        "documentId": "note-5"
+      }
+    ]
+  },
+  "documents": {
+    "note-1": {
+      "documentId": "note-1",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser",
+        "updatedAt": "2016-11-13T10:32:46.011Z"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser",
+      "userId": "testuser"
+    },
+    "note-2": {
+      "documentId": "note-2",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser",
+        "updatedAt": "2016-11-13T10:32:46.011Z",
+        "updatedBy": "testuser2"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser",
+      "userId": "testuser"
+    },
+    "note-3": {
+      "documentId": "note-3",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser",
+        "updatedAt": "2016-11-13T10:32:46.011Z"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser",
+      "userId": "testuser"
+    },
+    "note-4": {
+      "documentId": "note-4",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser2",
+        "updatedAt": "2016-11-13T10:32:46.011Z",
+        "updatedBy": "testuser2"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser2",
+      "userId": "testuser2"
+    },
+    "note-5": {
+      "documentId": "note-5",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser2",
+        "updatedAt": "2016-11-13T10:32:46.011Z"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser2",
+      "userId": "testuser2"
+    },
+    "note-6": {
+      "documentId": "note-6",
+      "schemaName": "substance-note",
+      "schemaVersion": "1.0.0",
+      "info": {
+        "title": "Untitled Note",
+        "userId": "testuser2",
+        "updatedAt": "2016-11-13T10:32:46.011Z"
+      },
+      "version": 1,
+      "title": "Untitled Note",
+      "updatedAt": null,
+      "updatedBy": "testuser2",
+      "userId": "testuser2"
+    }
+  },
+  "snapshots": {
+    "note-4": {
+      "1": {
+        "documentId": "note-4",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.444Z"
+      }
+    },
+    "note-2": {
+      "1": {
+        "documentId": "note-2",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.446Z"
+      }
+    },
+    "note-3": {
+      "1": {
+        "documentId": "note-3",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.447Z"
+      }
+    },
+    "note-1": {
+      "1": {
+        "documentId": "note-1",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.452Z"
+      }
+    },
+    "note-6": {
+      "1": {
+        "documentId": "note-6",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.455Z"
+      }
+    },
+    "note-5": {
+      "1": {
+        "documentId": "note-5",
+        "version": 1,
+        "data": {
+          "nodes": [
+            {
+              "id": "body",
+              "type": "container",
+              "nodes": [
+                "p1"
+              ]
+            },
+            {
+              "id": "meta",
+              "type": "meta",
+              "title": "Untitled Note"
+            },
+            {
+              "id": "p1",
+              "type": "paragraph",
+              "content": "Write your note here."
+            }
+          ],
+          "schema": {
+            "name": "substance-note",
+            "version": "1.0.0"
+          }
+        },
+        "created": "2016-11-13T10:34:25.456Z"
+      }
+    }
+  },
+  "users": {
+    "testuser": {
+      "userId": "testuser",
+      "email": "test@example.com",
+      "name": "Test User",
+      "created": "2016-11-13T10:32:46.094Z",
+      "loginKey": "1234"
+    },
+    "testuser2": {
+      "userId": "testuser2",
+      "email": "test2@example.com",
+      "name": "Test User 2",
+      "created": "2016-11-13T10:32:46.100Z",
+      "loginKey": "12345"
+    },
+    "testuser3": {
+      "userId": "testuser3",
+      "email": "test3@example.com",
+      "name": "",
+      "created": "2016-11-13T10:32:46.101Z",
+      "loginKey": "123456"
+    }
+  }
+}
