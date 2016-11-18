@@ -122,7 +122,7 @@ class DocumentsPage extends Component {
 
         if(item.summary) {
           row.append(
-            $$(Grid.Row).addClass('se-document-summary').ref(item.documentId).append(
+            $$(Grid.Row).addClass('se-document-summary').append(
               $$(Grid.Cell, {columns: 12}).addClass('se-summary').append(item.summary)
             )
           )
@@ -134,7 +134,7 @@ class DocumentsPage extends Component {
           item.fragments.forEach(function(fragment) {
             let fragmentIcon = $$(Icon, {icon: 'fa-comments-o'})
             grid.append(
-              $$(Grid.Row).addClass('se-document-fragment').ref(item.documentId).append(
+              $$(Grid.Row).addClass('se-document-fragment').append(
                 $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(fragmentIcon),
                 $$(Grid.Cell, {columns: 11}).addClass('se-fragment').append($$('p').setInnerHTML(fragment.content))
               )
@@ -198,7 +198,7 @@ class DocumentsPage extends Component {
 
     let documentClient = this.context.documentClient
 
-    documentClient.listDocuments(function(err, docs) {
+    documentClient.listDocuments({}, {}, function(err, docs) {
       if (err) {
         this.setState({
           error: new Err('DocumentsPage.LoadingError', {
@@ -259,7 +259,7 @@ class DocumentsPage extends Component {
     // Perform search query on pressing enter
     if (e.which === 13 || e.keyCode === 13) {
       this.searchData()
-      return false;
+      return false
     }
   }
 }

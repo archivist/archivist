@@ -14,6 +14,13 @@ class ArchivistRouter extends Router{
     })
   }
 
+  openEntity(entityId) {
+    return '#' + Router.objectToRouteString({
+      page: 'entity',
+      entityId: entityId
+    })
+  }
+
   getRoute() {
     let routerString = this.getRouteString()
     return Router.routeStringToObject(routerString)

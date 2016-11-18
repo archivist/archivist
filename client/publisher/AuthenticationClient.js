@@ -1,4 +1,4 @@
-import { request } from 'substance';
+import { request } from 'substance'
 
 /*
   HTTP client for talking with AuthenticationServer
