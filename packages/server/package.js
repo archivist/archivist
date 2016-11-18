@@ -7,6 +7,7 @@ var IndexerPackage = require('../indexer/package')
 let AuthServerPackage = require('./auth/package')
 let CollabServerPackage = require('./collab/package')
 let DocumentServerPackage = require('./document/package')
+let ResourceServerPackage = require('./resource/package')
 
 let db = new Database()
 
@@ -23,5 +24,6 @@ module.exports = {
     config.import(DocumentServerPackage)
     config.import(AuthServerPackage)
     config.import(CollabServerPackage)
+    config.import(ResourceServerPackage)
   }
 }
