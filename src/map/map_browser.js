@@ -159,7 +159,7 @@ var MapBrowser = Component.extend({
     }
     var popupContent = "<h3>" + props.title + "</h3>";
     if(locale == "ru") {
-      props.stats = props.fragments + " " + util.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + util.declOfNum(props.documents, ['документе', 'документах', 'документах']);
+      props.stats = props.fragments + " " + util.declOfNum(props.fragments, ['упоминание', 'упоминания', 'упоминаний']) + " в " + props.documents + " " + util.declOfNum(props.documents, ['интервью', 'интервью', 'интервью']);
     } else {
       props.stats = "mentioned " + props.fragments + " times in " + props.documents + " documents";
     }

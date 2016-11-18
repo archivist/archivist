@@ -162,7 +162,7 @@ function buildQuery(options) {
             "sum" : {
               terms : {
                 "field": "entities_count.id",
-                "size": 10000
+                "size": 50000
               },
               aggs: {
                 occurrences: {
