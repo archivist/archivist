@@ -21,6 +21,9 @@ db.reset() // Clear the database, set up the schema
     var sessionStore = configurator.getStore('session');
     return sessionStore.seed(seed.sessions);
   }).then(function() {
+    var entityStore = configurator.getStore('entity');
+    return entityStore.seed(seed.entities);
+  }).then(function() {
     var documentStore = configurator.getStore('document');
     return documentStore.seed(seed.documents);
   }).then(function() {
