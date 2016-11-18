@@ -1,10 +1,12 @@
 import ArchivistPackage from '../../packages/archivist/package'
 import DocumentsPackage from '../../packages/documents/package'
+import PersonManagerPackage from '../../packages/person-manager/package'
 import PublisherPackage from '../../packages/publisher/package'
 import ArchivistSubConfigurator from '../../packages/archivist/ArchivistSubConfigurator'
 import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
 import FileClient from './FileClient'
+import ResourceClient from './ResourceClient'
 
 let appConfig = 'ARCHIVISTCONFIG'
 appConfig = JSON.parse(appConfig)
@@ -16,6 +18,9 @@ export default {
     config.import(ArchivistPackage)
     config.import(DocumentsPackage)
 
+    // Manage person entity type
+    config.import(PersonManagerPackage)
+
     // Add subconfigurators
     config.addConfigurator('archivist-interview-editor', new ArchivistSubConfigurator().import(PublisherPackage))
 
@@ -26,7 +31,7 @@ export default {
       protocol: appConfig.protocol,
       host: appConfig.host,
       port: appConfig.port
-    });
+    })
 
     // Define Authentication Client
     config.setAuthenticationServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/auth/')
@@ -37,9 +42,13 @@ export default {
     // Define File Client
     config.setFileServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/files/')
     config.setFileClient(FileClient)
+    // Define Resource Client
+    config.setResourceServerUrl(appConfig.protocol + '://'+appConfig.host+':'+appConfig.port+'/api/entities/')
+    config.setResourceClient(ResourceClient)
 
     config.setMenuItems([
-      {label: 'Documents', action: 'documents'}
+      {label: 'Documents', action: 'documents'},
+      {label: 'Persons', action: 'persons'}
     ])
   }
 }

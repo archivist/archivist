@@ -58,25 +58,10 @@ class ArchivistConfigurator extends Configurator {
   }
 
   /*
-    Set File Client class
+    Set Resource Server url
   */
-  setFileClient(fileClient) {
-    this.config.fileClient = fileClient
-  }
-
-  /*
-    Set Document Client class
-  */
-  setDocumentClient(DocumentClientClass) {
-    this.config.DocumentClientClass = DocumentClientClass
-  }
-
-  /*
-    Get Document Client instance
-  */
-  getDocumentClient() {
-    var DocumentClientClass = this.config.DocumentClientClass;
-    return new DocumentClientClass({httpUrl: this.config.documentServerUrl})
+  setResourceServerUrl(url) {
+    this.config.resourceServerUrl = url
   }
 
   /*
@@ -90,16 +75,53 @@ class ArchivistConfigurator extends Configurator {
     Get Authentication Client instance
   */
   getAuthenticationClient() {
-    var AuthenticationClientClass = this.config.AuthenticationClientClass
+    let AuthenticationClientClass = this.config.AuthenticationClientClass
     return new AuthenticationClientClass({httpUrl: this.config.authenticationServerUrl})
+  }
+
+  /*
+    Set Document Client class
+  */
+  setDocumentClient(DocumentClientClass) {
+    this.config.DocumentClientClass = DocumentClientClass
+  }
+
+  /*
+    Get Document Client instance
+  */
+  getDocumentClient() {
+    let DocumentClientClass = this.config.DocumentClientClass;
+    return new DocumentClientClass({httpUrl: this.config.documentServerUrl})
+  }
+
+  /*
+    Set File Client class
+  */
+  setFileClient(fileClient) {
+    this.config.fileClient = fileClient
   }
 
   /*
     Get File Client instance
   */
   getFileClient() {
-    var FileClientClass = this.config.fileClient
+    let FileClientClass = this.config.fileClient
     return new FileClientClass({httpUrl: this.config.fileServerUrl})
+  }
+
+  /*
+    Set Resource Client class
+  */
+  setResourceClient(resourceClient) {
+    this.config.resourceClient = resourceClient
+  }
+
+  /*
+    Get Resource Client instance
+  */
+  getResourceClient() {
+    let ResourceClientClass = this.config.resourceClient
+    return new ResourceClientClass({httpUrl: this.config.resourceServerUrl})
   }
 
   /*
