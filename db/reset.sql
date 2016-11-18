@@ -1,5 +1,6 @@
 -- Reset database:
 
+drop table if exists "entities";
 drop table if exists "snapshots";
 drop table if exists "changes";
 drop table if exists "fragments";
@@ -7,6 +8,7 @@ drop table if exists "documents";
 drop table if exists "sessions";
 drop table if exists "users";
 drop function if exists documents_search_trigger();
+drop function if exists entities_search_trigger();
 drop function if exists fragments_search_trigger();
 
 -- Users:
@@ -27,6 +29,40 @@ CREATE TABLE "sessions" (
   -- ex timestamp
   created timestamp
 );
+
+-- Entities:
+CREATE TABLE "entities" (
+  "entityId" varchar(40) UNIQUE PRIMARY KEY,
+  name varchar(255),
+  description text,
+  synonyms text[],
+  created timestamp,
+  edited timestamp,
+  "updatedBy" text REFERENCES users ON DELETE SET DEFAULT,
+  "userId" text REFERENCES users ON DELETE SET DEFAULT,
+  "entityType" varchar(255),
+  data jsonb,
+  tsv tsvector
+);
+
+-- Entities search index
+CREATE INDEX tsv_entities_idx ON entities USING gin(tsv);
+
+CREATE OR REPLACE FUNCTION arr2text(text[]) 
+  RETURNS text LANGUAGE sql IMMUTABLE AS 'SELECT $1::text';
+
+CREATE FUNCTION entities_search_trigger() RETURNS trigger AS $$
+begin
+  new.tsv :=
+    setweight(to_tsvector('russian', COALESCE(new.name,'')), 'A') || 
+    setweight(to_tsvector('russian', COALESCE(arr2text(new.synonyms),'')),'B') ||
+    setweight(to_tsvector('russian', COALESCE(new.description,'')),'C');
+  return new;
+end
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tsvectorentitiesupdate BEFORE INSERT OR UPDATE
+ON entities FOR EACH ROW EXECUTE PROCEDURE entities_search_trigger();
 
 -- Documents:
 CREATE TABLE "documents" (
