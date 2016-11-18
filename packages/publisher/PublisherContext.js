@@ -46,24 +46,41 @@ class PublisherContext extends Component {
   }
 
   render($$) {
+    let TabbedPane = this.getComponent('tabbed-pane')
     let el = $$('div').addClass('sc-context-panel')
     let currentContextName = this.getContextName()
+    let tabs = []
 
-    let toggleItems = $$('div').addClass('se-toggle-context')
-    forEach(this.contexts, function(context, contextName) {
-      let item = $$('div').addClass('se-toggle-item').append(
-        $$(Icon, {icon: context.icon}),
-        $$('span').addClass('se-toggle-title').append(context.title)
-      )
-
-      if(contextName === currentContextName) item.addClass('se-active')
-      toggleItems.append(item)
+    forEach(this.contexts, function(context, contextId) {
+      tabs.push({id: contextId, name: context.title})
     })
 
     el.append(
-      toggleItems,
-      this.renderContext($$)
+      $$(TabbedPane, {
+        tabs: tabs,
+        activeTab: currentContextName
+      }).ref('tabbedPane').append(
+        this.renderContext($$)
+      )
     )
+
+
+
+    // let toggleItems = $$('div').addClass('se-toggle-context')
+    // forEach(this.contexts, function(context, contextName) {
+    //   let item = $$('div').addClass('se-toggle-item').append(
+    //     $$(Icon, {icon: context.icon}),
+    //     $$('span').addClass('se-toggle-title').append(context.title)
+    //   )
+
+    //   if(contextName === currentContextName) item.addClass('se-active')
+    //   toggleItems.append(item)
+    // })
+
+    // el.append(
+    //   toggleItems,
+    //   this.renderContext($$)
+    // )
 
     return el
   }
