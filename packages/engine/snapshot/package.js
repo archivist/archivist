@@ -11,7 +11,7 @@ module.exports = {
       snapshotStore: config.getStore('snapshot'),
       frequency: 50
     })
-
+    
     config.addEngine('snapshot', snapshotEngine)
   }
 }

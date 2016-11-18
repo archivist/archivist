@@ -1,5 +1,6 @@
 let DocumentEngine = require('substance').DocumentEngine
 let Err = require('substance').SubstanceError
+let isEmpty = require('lodash/isEmpty')
 let Promise = require('bluebird')
 
 /*
@@ -98,10 +99,10 @@ class ArchivistDocumentEngine extends DocumentEngine {
   }
 
   listDocuments(args, cb) {
-    let filters = args.filters || {}
-    let options = args.options || {}
+    let filters = !isEmpty(args.filters) ? JSON.parse(args.filters) : {}
+    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}  
     let results = {}
-
+    
     if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '"updatedBy"', '"userId"']
 
     this.documentStore.countDocuments(filters, function(err, count) {

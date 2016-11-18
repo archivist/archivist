@@ -240,7 +240,7 @@ class DocumentStore {
   countDocuments(filters, cb) {
     this.db.documents.count(filters, function(err, count) {
       if (err) {
-        return cb(new Err('UserStore.CountError', {
+        return cb(new Err('DocumentStore.CountError', {
           cause: err
         }))
       }

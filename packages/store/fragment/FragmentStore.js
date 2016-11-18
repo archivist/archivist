@@ -13,7 +13,7 @@ class FragmentStore {
   }
 
   /*
-    Create a new fragment record (aka signup)
+    Create a new fragment record
 
     @param {Object} fragmentData JSON object
     @returns {Promise}
