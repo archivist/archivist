@@ -1,0 +1,32 @@
+.sc-entity-page > .sc-grid > .se-entity-meta {
+  border: none;
+}
+
+.sc-entity-page > .sc-grid > .se-entity-description {
+
+}
+
+.sc-entity-page  .se-document-reference {
+  display: table;
+  width: 100%;
+}
+
+.sc-entity-page  > .sc-grid > .se-row.se-document-reference > .se-cell {
+  display: table-cell;
+  float: none;
+  vertical-align: middle;
+}
+
+.sc-entity-page  .se-document-reference .se-badge {
+  background: #fafafa;
+  text-align: center;
+}
+
+.sc-entity-page  .se-document-reference:hover > .se-badge {
+  background: #EEEEEE;
+}
+
+.sc-entity-page  .sc-grid > .se-document-referencet:before, .sc-documents .sc-grid > .se-document-reference:after {
+  content: none;
+  display: table;
+}

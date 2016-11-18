@@ -1,5 +1,5 @@
 .sc-grid {
-  overflow: scroll;
+  overflow-y: auto;
   height: 100%;
   width: 100%;
   position: relative;
@@ -7,15 +7,39 @@
 }
 
 .se-row {
-  border-bottom: solid 1px #DDDDDD;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .se-row:hover {
   background: #EEEEEE;
+  cursor: pointer;
 }
 
 .se-cell {
   min-height: 30px;
   padding: 15px 10px;
   font-size: 13px;
+}
+
+.sc-grid .se-row .se-badge {
+  font-size: 23px;
+  color: rgba(0, 0, 0, 0.6); 
+}
+
+.sc-grid .se-row .se-title a {
+  font-size: 20px;
+  line-height: 21px;
+  color: var(--default-text-color);
+}
+
+.sc-grid .se-row .se-more i {
+  width: 23px;
+  height: 23px;
+  padding: 5px;
+  border-radius: 60px;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+  font-size: 14px;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.4);
+  float: right;
 }
