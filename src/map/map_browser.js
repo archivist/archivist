@@ -173,7 +173,6 @@ var MapBrowser = Component.extend({
     var filters = this.getState().filters;
     var list = [];
     window.history.pushState("", "Archivist Maps", "/maps");
-    document.title = "Archivist Maps";
     this.map.setView([48.6, 18.8], 5);
     this.layers.eachLayer(function(layer){
       var props = layer.feature.properties;

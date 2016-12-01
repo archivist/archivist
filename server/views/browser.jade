@@ -38,3 +38,4 @@ html(xmlns:mml='http://www.w3.org/1998/Math/MathML')
     include public/menu
     script(type='text/javascript')
       | $("li.archive").addClass("active");
+      | $(document).scroll(function() {if ($(document).scrollTop() >= 250) {$(".fixed-header").addClass("floated visible");} else {$(".fixed-header").removeClass("floated visible");}});

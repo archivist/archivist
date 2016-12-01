@@ -466,27 +466,7 @@ $url_1: url(../img/sprite.png);
     }
   }
 }
-@media(-webkit-min-device-pixel-ratio: 1.3),(-webkit-min-device-pixel-ratio: 1.25),(min-resolution: 120dpi) {
-  .fixed-header__menu li {
-    a {
-      &.menu-icons::before {
-        background: $url_0 no-repeat 0 0 transparent;
-        background-size: 300px 300px;
-      }
-      &:visited.menu-icons::before {
-        background: $url_0 no-repeat 0 0 transparent;
-        background-size: 300px 300px;
-      }
-    }
-    .hamburger .icon::before {
-      background: $url_0 no-repeat -208px -11px transparent;
-      background-size: 300px 300px;
-    }
-    &.have-submenu {
-      cursor: pointer;
-    }
-  }
-}
+
 .fixed-header__submenu {
   display: none;
   position: absolute;
@@ -530,9 +510,12 @@ $url_1: url(../img/sprite.png);
   }
 }
 
-#container,
 #map_container {
   padding-top: 75px;
+}
+
+#container {
+  padding-top: 120px;
 }
 
 #resource_container {
