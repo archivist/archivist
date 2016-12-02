@@ -38,7 +38,7 @@ $url_1: url(../img/sprite.png);
   content: '';
   position: absolute;
   left: 0;
-  top: 6px;
+  top: -5px;
   width: 215px;
   height: 65px;
   background: $url_0 no-repeat 0 -480px transparent;
@@ -309,9 +309,9 @@ $url_1: url(../img/sprite.png);
 }
 .fixed-header__logo {
   position: absolute;
-  top: 20px;
+  top: 30px;
   left: 50px;
-  width: 387px;
+  width: 587px;
   a {
     @extend %extend_1;
     &:visited {
@@ -343,7 +343,7 @@ $url_1: url(../img/sprite.png);
     vertical-align: top;
     position: relative;
     height: 100%;
-    padding: 0 32px;
+    padding: 0 31px;
     margin-right: 0;
     .hamburger {
       position: relative;
