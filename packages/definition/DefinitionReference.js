@@ -1,10 +1,10 @@
-import { Annotation, Fragmenter } from 'substance'
+import { Fragmenter, PropertyAnnotation} from 'substance'
 
-class DefinitionReference extends Annotation {}
+class DefinitionReference extends PropertyAnnotation {}
 
 DefinitionReference.define({
   type: "definition",
-  reference: { type: 'string', default: 'example' }
+  reference: { type: 'string', optional: true }
 })
 
 // a hint that makes in case of overlapping annotations that this

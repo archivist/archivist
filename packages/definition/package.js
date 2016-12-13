@@ -7,7 +7,7 @@ export default {
   name: 'definition',
   configure: function(config) {
     config.addNode(DefinitionReference)
-    config.addTool(DefinitionReference.type, DefinitionTool, {target: 'annotations'})
+    config.addTool(DefinitionReference.type, DefinitionTool, {toolGroup: 'annotations'})
     config.addCommand(DefinitionReference.type, DefinitionCommand, { nodeType: DefinitionReference.type })
     config.addIcon(DefinitionReference.type, {'fontawesome': 'fa-book'})
 

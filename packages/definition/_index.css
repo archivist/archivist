@@ -2,3 +2,12 @@
   background: rgba(11, 36, 217, 0.2);
   border-bottom: 1px solid rgba(11, 36, 217, 0.3);
 }
+
+.sc-definition.sm-highlighted {
+  background: rgba(11, 36, 217, 0.3);
+  border-bottom: 1px solid rgba(11, 36, 217, 0.7);
+}
+
+.se-highlight.sm-definition {
+  background-color: rgb(11, 36, 217);
+}
