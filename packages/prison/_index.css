@@ -1,0 +1,13 @@
+.sc-prison {
+  background: rgba(255, 87, 34, 0.2);
+  border-bottom: 1px solid rgba(255, 87, 34, 0.3);
+}
+
+.sc-prison.sm-highlighted {
+  background: rgba(255, 87, 34, 0.4);
+  border-bottom: 1px solid rgba(255, 87, 34, 0.7);
+}
+
+.se-highlight.sm-prison {
+  background-color: rgb(255, 87, 34);
+}
