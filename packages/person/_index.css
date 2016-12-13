@@ -2,3 +2,12 @@
   background: rgba(11, 157, 217, 0.2);
   border-bottom: 1px solid rgba(11, 157, 217, 0.3);
 }
+
+.sc-person.sm-highlighted {
+  background: rgba(11, 157, 217, 0.4);
+  border-bottom: 1px solid rgba(11, 157, 217, 0.7);
+}
+
+.se-highlight.sm-person {
+  background-color: rgb(11, 157, 217);
+}

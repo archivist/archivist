@@ -12,8 +12,7 @@ class PersonsPage extends AbstractEntityPage {
       page: 1,
       order: 'created',
       direction: 'desc',
-      items: [],
-      total: 0
+      items: []
     }
   }
 }
