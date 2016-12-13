@@ -5,9 +5,12 @@ import InterviewSeed from './InterviewSeed'
 import { ParagraphPackage, HeadingPackage, BlockquotePackage, LinkPackage, EmphasisPackage, StrongPackage} from 'substance'
 import CommentPackage from '../comment/package'
 import MarkPackage from '../mark/package'
+import TimecodePackage from '../timecode/package'
 import SubjectPackage from '../subject/package'
-import PersonPackage from '../person/package'
 import DefinitionPackage from '../definition/package'
+import PersonPackage from '../person/package'
+import PrisonPackage from '../prison/package'
+import ToponymPackage from '../toponym/package'
 
 export default {
   name: 'archivist-interview',
@@ -31,8 +34,11 @@ export default {
     // Import archivist specific packages
     config.import(CommentPackage)
     config.import(MarkPackage)
+    config.import(TimecodePackage)
     config.import(SubjectPackage)
-    config.import(PersonPackage)
     config.import(DefinitionPackage)
+    config.import(PersonPackage)
+    config.import(PrisonPackage)
+    config.import(ToponymPackage)
   }
 }
