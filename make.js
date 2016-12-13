@@ -19,6 +19,7 @@ b.task('substance', function() {
 
 function buildApp(app) {
   return function() {
+    _archvistJS()
     b.copy('client/'+app+'/index.html', './dist/'+app+'/')
     b.copy('client/'+app+'/assets', './dist/'+app+'/assets/')
     b.css('./client/' + app + '/app.css', 'dist/' + app + '/' + app + '.css', {variables: true})
@@ -46,6 +47,18 @@ function buildApp(app) {
     b.rm('./dist/app.js')
     b.rm('./dist/app.js.map')
   }
+}
+
+function _archvistJS() {
+  b.js('./index.es.js', {
+    buble: true,
+    external: ['substance'],
+    commonjs: { include: ['node_modules/lodash/**'] },
+    targets: [{
+      dest: 'dist/archivist.cjs.js',
+      format: 'cjs', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist'
+    }]
+  })
 }
 
 b.task('publisher', ['clean', 'substance', 'assets'], buildApp('publisher'))
