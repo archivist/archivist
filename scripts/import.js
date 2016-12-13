@@ -9,11 +9,13 @@ let process = require('process')
 let fs = require('fs')
 let forEach = require('lodash/forEach')
 let uniq = require('lodash/uniq')
+let JSONConverter = require('substance').JSONConverter
+let documentHelpers = require('substance').documentHelpers
 let Database = require('../packages/common/Database')
 let Configurator = require('../packages/common/ServerConfigurator')
 let EnginePackage = require('../packages/engine/package')
 let IndexerPackage = require('../packages/indexer/package')
-let InterviewPackage = require('../packages/server/interview')
+let InterviewPackage = require('../dist/archivist.cjs').InterviewPackage
 
 let args = process.argv.slice(2)
 let config = {}
@@ -27,6 +29,7 @@ args.forEach(function(arg) {
 
 let db = new Database()
 let configurator = new Configurator().import(InterviewPackage)
+let converter = new JSONConverter()
 configurator.setDBConnection(db)
 configurator.import(EnginePackage)
 configurator.import(IndexerPackage)
@@ -101,22 +104,22 @@ function importDefinitions() {
   jsonData.forEach(function(definition) {
     let definitionData = {
       entityId: definition._id['$oid'],
-      name: definition.name,
+      name: definition.title,
       description: definition.description,
       synonyms: [],
       created: definition.createdAt['$date'],
       edited: definition.updatedAt['$date'],
       entityType: 'definition',
       data: {
-        name: definition.name,
+        name: definition.title,
         description: definition.description,
         definitionType: definition.type
       }
     }
 
     definitionData.synonyms = definition.synonyms
-    if(definitionData.synonyms.indexOf(definition.name) > -1) {
-      let pos = definitionData.synonyms.indexOf(definition.name)
+    if(definitionData.synonyms.indexOf(definition.title) > -1) {
+      let pos = definitionData.synonyms.indexOf(definition.title)
       definitionData.synonyms.splice(pos, 1)
     }
     definitionData.data.synonyms = definitionData.synonyms
@@ -376,11 +379,11 @@ function importDocuments() {
 
     let annotations = []
 
-    changes[docId] = [
-      {
-        documentId: docId
-      }
-    ]
+    let article = configurator.createArticle();
+    let jsonDoc = converter.importDocument(article, documentData);
+    let changeset = documentHelpers.getChangeFromDocument(jsonDoc);
+
+    changes[docId] = [changeset]
 
     documents[docId] = {
       documentId: docId,
@@ -389,7 +392,7 @@ function importDocuments() {
       info: {},
       meta: metaNode,
       version: 1,
-      indexedVersion: 1,
+      indexedVersion: 0,
       title: metaNode.title,
       language: 'russian',
       annotations: annotations.concat(entities, subjects),
@@ -399,14 +402,14 @@ function importDocuments() {
       userId: defaultUser
     }
 
-    snapshots[docId] = {
-      '1': {
-        documentId: docId,
-        version: 1,
-        data: documentData,
-        created: new Date()
-      }
-    }
+    // snapshots[docId] = {
+    //   '1': {
+    //     documentId: docId,
+    //     version: 1,
+    //     data: documentData,
+    //     created: new Date()
+    //   }
+    // }
 
   })
   
