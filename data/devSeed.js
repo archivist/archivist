@@ -1,31 +1,18 @@
 'use strict';
 
-var EditorSession = require('substance').EditorSession;
+var JSONConverter = require('substance').JSONConverter;
+var documentHelpers = require('substance').documentHelpers;
 var Configurator = require('../packages/common/ServerConfigurator');
-var InterviewPackage = require('./interview');
+var InterviewPackage = require('../dist/archivist.cjs').InterviewPackage;
 
 var configurator = new Configurator().import(InterviewPackage);
-var seed = configurator.getSeed();
-var doc = configurator.createArticle();
-var session = new EditorSession(doc, { configurator: configurator });
-var change = session.transaction(seed);
-var result = [change.toJSON()];
-
-var testUserChange = result.map(function(c) {
-  c.info = {
-    userId: 'testuser',
-    createdAt: new Date()
-  };
-  return c;
-})[0];
-
-var testUser2Change = result.map(function(c) {
-  c.info = {
-    userId: 'testuser2',
-    createdAt: new Date()
-  };
-  return c;
-})[0];
+var converter = new JSONConverter();
+var changes = {}
+for (var i = 1; i < 7; i++) {
+  var article = configurator.createArticle();
+  var doc = converter.importDocument(article, require('./snapshots/doc' + i));
+  changes['change' + i] = documentHelpers.getChangeFromDocument(doc);
+}
 
 // App seed
 var devSeed = {
@@ -188,12 +175,12 @@ var devSeed = {
     }
   },
   changes: {
-    'interview-1': [require('./changes/doc1')],
-    'interview-2': [require('./changes/doc2')],
-    'interview-3': [require('./changes/doc3')],
-    'interview-4': [require('./changes/doc4')],
-    'interview-5': [require('./changes/doc5')],
-    'interview-6': [require('./changes/doc6')]
+    'interview-1': [changes.change1],
+    'interview-2': [changes.change2],
+    'interview-3': [changes.change3],
+    'interview-4': [changes.change4],
+    'interview-5': [changes.change5],
+    'interview-6': [changes.change6]
   },
   entities: {
     'entity-1': {
