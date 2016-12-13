@@ -1,0 +1,13 @@
+.sc-toponym {
+  background: rgba(139, 195, 74, 0.2);
+  border-bottom: 1px solid rgba(139, 195, 74, 0.3);
+}
+
+.sc-toponym.sm-highlighted {
+  background: rgba(139, 195, 74, 0.4);
+  border-bottom: 1px solid rgba(139, 195, 74, 0.7);
+}
+
+.se-highlight.sm-toponym {
+  background-color: rgb(139, 195, 74);
+}
