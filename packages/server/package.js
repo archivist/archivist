@@ -11,7 +11,7 @@ let ResourceServerPackage = require('./resource/package')
 
 let db = new Database()
 
-let InterviewPackage = require('./interview')
+let InterviewPackage = require('../../dist/archivist.cjs').InterviewPackage
 
 module.exports = {
   name: 'server',
