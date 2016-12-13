@@ -45,6 +45,8 @@ CREATE TABLE "entities" (
   tsv tsvector
 );
 
+-- Entities created time index
+CREATE INDEX entities_created_idx ON entities(created);
 -- Entities search index
 CREATE INDEX tsv_entities_idx ON entities USING gin(tsv);
 
