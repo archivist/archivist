@@ -65,7 +65,7 @@ class PublisherLayout extends Loader {
       let fileClient = this.context.fileClient
       main = $$(Publisher, {
         configurator: this.props.configurator,
-        documentSession: this.state.session,
+        editorSession: this.state.session,
         onUploadFile: fileClient.uploadFile.bind(fileClient)
       }).ref('publisher')
     }

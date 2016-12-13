@@ -113,6 +113,7 @@ class Loader extends Component {
       window.doc = doc
 
       let session = new CollabSession(doc, {
+        configurator: configurator,
         documentId: documentId,
         version: docRecord.version,
         collabClient: collabClient

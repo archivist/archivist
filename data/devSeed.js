@@ -1,13 +1,13 @@
 'use strict';
 
-var DocumentSession = require('substance').DocumentSession;
+var EditorSession = require('substance').EditorSession;
 var Configurator = require('../packages/common/ServerConfigurator');
 var InterviewPackage = require('./interview');
 
 var configurator = new Configurator().import(InterviewPackage);
 var seed = configurator.getSeed();
 var doc = configurator.createArticle();
-var session = new DocumentSession(doc);
+var session = new EditorSession(doc, { configurator: configurator });
 var change = session.transaction(seed);
 var result = [change.toJSON()];
 

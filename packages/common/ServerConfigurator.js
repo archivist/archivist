@@ -1,6 +1,5 @@
-var path = require('path');
-var Configurator = require('substance').Configurator;
-
+let path = require('path')
+let Configurator = require('substance').Configurator
 
 class ServerConfigurator extends Configurator {
   constructor(...args) {
@@ -86,9 +85,12 @@ class ServerConfigurator extends Configurator {
     return this.config.engines[name]
   }
 
-  addStyle() {    
-    let sassFilePath = path.join.apply(this, arguments)
-    this.config.styles.push(sassFilePath)
+  getDocumentEngine() {
+    return this.config.engines.document
+  }
+
+  addContextItem(rendererName, contextRenderer) {
+    this.addComponent(rendererName + '-context-item', contextRenderer)
   }
 
 }
