@@ -88,14 +88,26 @@ class ArchivistDocumentEngine extends DocumentEngine {
     })
   }
 
-  updateDocumentFullText(documentId, text) {
+  updateDocumentFullText(documentId, text, version) {
     return new Promise(function(resolve, reject) {
-      this.documentStore.updateDocument(documentId, {'fullText': text}, function(err) {
+      this.documentStore.updateDocument(documentId, {'fullText': text, indexedVersion: version}, function(err) {
         if(err) return reject(err)
 
         resolve()
       })
     }.bind(this))
+  }
+
+  getOutdatedDocuments(cb) {
+    this.db.run('SELECT "documentId" from documents WHERE version > "indexedVersion"', function(err, docs) {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.ReadOutdatedDocumentsError', {
+          cause: err
+        }))
+      }
+
+      cb(null, docs)
+    })
   }
 
   listDocuments(args, cb) {
