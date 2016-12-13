@@ -34,10 +34,10 @@ class ResourceEngine {
     if(!options.columns) options.columns = ['"entityId"', "name", "description", "synonyms", 'created', 'edited', '"updatedBy"', '"userId"', "(SELECT COUNT(*) from documents WHERE \"entityId\"=ANY(documents.annotations)) AS count"]
 
     return this.entityStore.countEntities(filters) 
-      .then(function(count) {
+      .then(count => {
         results.total = count
         return this.entityStore.listEntities(filters, options)
-      }.bind(this))
+      })
       .then(function(entities) {
         results.records = entities
         return results
