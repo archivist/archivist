@@ -1,3 +1,4 @@
+import {ContainerAnnotation} from 'substance'
 import Subject from './Subject'
 import SubjectTool from './SubjectTool'
 import SubjectCommand from './SubjectCommand'
@@ -9,7 +10,7 @@ export default {
     config.addNode(Subject)
     config.addTool(Subject.type, SubjectTool)
     config.addCommand(Subject.type, SubjectCommand, { nodeType: Subject.type })
-    config.addComponent(Subject.type, SubjectComponent)
+    //config.addComponent(Subject.type, ContainerAnnotation)
     config.addIcon(Subject.type, {'fontawesome': 'fa-tag'})
   }
 }
