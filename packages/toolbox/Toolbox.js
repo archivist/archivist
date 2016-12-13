@@ -10,8 +10,7 @@ class Toolbox extends Component {
     if (this.props.actions) {
       forEach(this.props.actions, function(label, actionName) {
         actionEls.push(
-          $$(Button).addClass('se-action')
-            .append(label)
+          $$(Button, {style: 'outline', label: label}).addClass('se-action')
             .on('click', this.send.bind(this, actionName))
         )
       }.bind(this))
