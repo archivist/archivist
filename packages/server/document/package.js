@@ -8,6 +8,7 @@ module.exports = {
     let indexer = config.getEngine('indexer')
 
     let documentServer = new DocumentServer({
+      configurator: config,
       documentEngine: documentEngine,
       indexer: indexer,
       path: '/api/documents'
