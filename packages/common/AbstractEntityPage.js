@@ -53,11 +53,18 @@ class AbstractEntityPage extends Component {
   renderFilters($$) {
     let filters = []
     let search = $$('div').addClass('se-search').append(
-      $$(Icon, {icon: 'fa-search'}),
-      $$(Input, {placeholder: 'Search...'})
-        .on('keypress', this._onSearchKeyPress)
-        .ref('searchInput')
+      $$(Icon, {icon: 'fa-search'})
     )
+    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+      .ref('searchInput')
+
+    if(this.isSearchEventSupported) {
+      searchInput.on('search', this.searchData)
+    } else {
+      searchInput.on('keypress', this._onSearchKeyPress)
+    }
+    search.append(searchInput)
+
     filters.push(search)
 
     return filters
@@ -95,12 +102,27 @@ class AbstractEntityPage extends Component {
       textAlign: 'center'
     });
 
-    layout.append(
-      $$('h1').html(
-        'No results'
-      ),
-      $$('p').html('Sorry, no entities matches your query')
-    );
+    if(this.state.total === 0) {
+      layout.append(
+        $$('h1').html(
+          'No results'
+        ),
+        $$('p').html('Sorry, no entities matches your query')
+      );
+    } else {
+      layout.append(
+        $$('div').addClass('se-spinner').append(
+          $$('div').addClass('se-rect1'),
+          $$('div').addClass('se-rect2'),
+          $$('div').addClass('se-rect3'),
+          $$('div').addClass('se-rect4'),
+          $$('div').addClass('se-rect5')
+        ),
+        $$('h2').html(
+          'Loading...'
+        )
+      );
+    }
 
     return layout;
   }
@@ -201,7 +223,7 @@ class AbstractEntityPage extends Component {
 
       this.extendState({
         items: res.records,
-        total: res.total,
+        total: parseInt(res.total, 10),
         details: details
       })
     }.bind(this))
@@ -237,7 +259,7 @@ class AbstractEntityPage extends Component {
 
       this.extendState({
         items: res.records,
-        total: res.total
+        total: parseInt(res.total, 10)
       })
     }.bind(this))
   }
@@ -283,6 +305,14 @@ class AbstractEntityPage extends Component {
       this.searchData()
       return false;
     }
+  }
+
+  isSearchEventSupported() {
+    let element = document.createElement('input')
+    let eventName = 'onsearch'
+    let isSupported = (eventName in element)
+    
+    return isSupported
   }
 }
 
