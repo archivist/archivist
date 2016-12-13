@@ -1,6 +1,6 @@
-import { Annotation } from 'substance'
+import { PropertyAnnotation } from 'substance'
 
-class Mark extends Annotation {}
+class Mark extends PropertyAnnotation {}
 
 Mark.type = 'mark'
 
