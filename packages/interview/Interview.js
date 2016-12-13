@@ -1,4 +1,5 @@
 import { Document } from 'substance'
+import EntityIndex from '../common/EntityIndex'
 
 /*
   Archivist Interview model.
@@ -16,6 +17,8 @@ class Interview extends Document {
       id: 'body',
       nodes: []
     })
+
+    this.addIndex('entities', new EntityIndex())
   }
 
   getDocumentMeta() {
