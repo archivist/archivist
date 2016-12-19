@@ -8,7 +8,7 @@ var db = new Database();
 var configurator = new Configurator().import(StorePackage);
 
 if (process.argv[2] === 'dev') {
-  var seed = require('../data/devSeed');
+  var seed = require('./data/devSeed');
   // eslint-disable-next-line
   console.log('Development seeding...');
 
