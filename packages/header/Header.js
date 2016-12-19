@@ -1,4 +1,5 @@
 import { Component } from 'substance'
+import LoginStatus from './LoginStatus'
 import forEach from 'lodash/forEach'
 
 class Header extends Component {
@@ -6,8 +7,6 @@ class Header extends Component {
   render($$) {
     let configurator = this.context.configurator
     let authenticationClient = this.context.authenticationClient
-    // var componentRegistry = this.context.componentRegistry;
-    // var LoginStatus = componentRegistry.get('login-status');
 
     let el = $$('div').addClass('sc-header')
     let actionEls = []
@@ -29,10 +28,10 @@ class Header extends Component {
     el.append(
       $$('div').addClass('se-icon'),
       $$('div').addClass('se-actions').append(actionEls),
-      $$('div').addClass('se-content').append(content)
-      // $$(LoginStatus, {
-      //   user: authenticationClient.getUser()
-      // })
+      $$('div').addClass('se-content').append(content),
+      $$(LoginStatus, {
+        user: authenticationClient.getUser()
+      })
     )
     return el
   }
