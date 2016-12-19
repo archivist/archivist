@@ -1,39 +1,71 @@
-let uuid = require('substance').uuid
 let Err = require('substance').SubstanceError
+let uuid = require('substance').uuid
 let Promise = require('bluebird')
+let bcrypt = require('bcryptjs')
+let generatePassword = require('password-generator')
 
 /*
   Implements authentication logic
 */
-class AuthenticationEngine {
+class AuthEngine {
   constructor(config) {
     this.userStore = config.userStore
     this.sessionStore = config.sessionStore
-    this.emailService = config.emailService
+    this.mailer = config.mailer
   }
 
-  /*
-    Generate new loginKey for user and send email with a link
-  */
-  requestLoginLink(args) {
+  requestNewUser(userData) {
     let userStore = this.userStore
-    return userStore.getUserByEmail(args.email)
-      .catch(function() {
-        // User does not exist, we create a new one
-        return userStore.createUser({email: args.email})
-      })
-      .then(this._updateLoginKey.bind(this))
-      .then(function(user) {
-        return this._sendLoginLink(user, args.documentId);
+    let password = generatePassword()
+    let createdUser = {}
+    return new Promise(function(resolve, reject) {
+      bcrypt.hash(password, 10, function(err, bcryptedPassword) {
+        if(err) return reject(err)
+        userData.password = bcryptedPassword
+        return userStore.createUser(userData).bind(this)
+          .then(function(user) {
+            createdUser = user
+            return this._sendInvitation(user, password)
+          }.bind(this))
+          .then(function() {
+            resolve(createdUser)
+          })
+          .catch(function(err) {
+            reject(err)
+          })
       }.bind(this))
+    }.bind(this))
+  }
+
+  requestNewPassword(userId) {
+    let userStore = this.userStore
+    let password = generatePassword()
+    let updatedUser = {}
+    return new Promise(function(resolve, reject) {
+      bcrypt.hash(password, 10, function(err, bcryptedPassword) {
+        if(err) return reject(err)
+        updatedUser.password = bcryptedPassword
+        return userStore.updateUser(userId, updatedUser).bind(this)
+          .then(function(user) {
+            updatedUser = user
+            return this._sendPasswordReset(user, password)
+          }.bind(this))
+          .then(function() {
+            resolve(updatedUser)
+          })
+          .catch(function(err) {
+            reject(err)
+          })
+      }.bind(this))
+    }.bind(this))
   }
 
   /*
     Authenticate based on either sessionToken
   */
   authenticate(loginData) {
-    if (loginData.loginKey) {
-      return this._authenticateWithLoginKey(loginData.loginKey)
+    if (loginData.password) {
+      return this._authenticateWithPassword(loginData.email, loginData.password)
     } else {
       return this._authenticateWithToken(loginData.sessionToken)
     }
@@ -66,32 +98,17 @@ class AuthenticationEngine {
   }
 
   /*
-    Send a login link via email
+    Send an invitation via email
   */
-  _sendLoginLink(user, documentId) {
-    // var url = appConfig.get('server.appUrl');
-    // var subject = "Your login key!";
-    // var msg;
+  _sendInvitation(user, password) {
+    return this.mailer.invite({email: user.email, password: password})
+  }
 
-    // if (documentId) {
-    //   msg = "Click the following link to edit: "+url + "/#section=note,documentId=" +documentId+",loginKey=" + user.loginKey;
-    // } else {
-    //   msg = "Click the following link to login: "+url + "/#loginKey=" + user.loginKey;
-    // }
-    // // eslint-disable-next-line
-    // console.log('Message: ', msg);
-    // return Mail.sendPlain(user.email, subject, msg)
-    //   .then(function(info){
-    //     // eslint-disable-next-line
-    //     console.log(info);
-    //     return {
-    //       loginKey: user.loginKey
-    //     };
-    //   }).catch(function(err) {
-    //     throw new Err('EmailError', {
-    //       cause: err
-    //     });
-    //   });
+   /*
+    Send a password reset notification via email
+  */
+  _sendPasswordReset(user, password) {
+    return this.mailer.reset({email: user.email, password: password})
   }
 
   /*
@@ -143,6 +160,65 @@ class AuthenticationEngine {
   }
 
   /*
+    Authenicate based on password
+  */
+  _authenticateWithPassword(email, password) {
+    let sessionStore = this.sessionStore
+    let userStore = this.userStore
+    let self = this
+
+    return new Promise(function(resolve, reject) {
+      userStore.getUserByEmail(email).then(function(user) {
+        return self._checkPassword(password, user)
+      }).then(function(user) {
+        return self._checkAccess(user)
+      }).then(function(user) {
+        return sessionStore.createSession({userId: user.userId})
+      }).then(function(newSession) {
+        return self._enrichSession(newSession)
+      }).then(function(richSession) {
+        resolve(richSession)
+      }).catch(function(err) {
+        reject(new Err('AuthenticationError', {
+          cause: err
+        }))
+      })
+    })
+  }
+
+  /*
+    Check password
+  */
+  _checkPassword(suppliedPassword, user) {
+    return new Promise(function(resolve, reject) {
+      bcrypt.compare(suppliedPassword, user.password, function(err, doesMatch) {
+        if (doesMatch) {
+          resolve(user)
+        } else{
+          reject(new Err('AuthenticationError', {
+            message: 'Wrong password'
+          }))
+        }
+      })
+    })
+  }
+
+  /*
+    Check user access
+  */
+  _checkAccess(user) {
+    return new Promise(function(resolve, reject) {
+      if(user.access || user.super) {
+        resolve(user)
+      } else {
+        reject(new Err('AuthenticationError', {
+          message: 'No access, sorry'
+        }))
+      }
+    })
+  }
+
+  /*
     Attached a full user object to the session record
   */
   _enrichSession(session) {
@@ -158,6 +234,44 @@ class AuthenticationEngine {
       })
     })
   }
+
+  /*
+    Check if user has access
+  */
+  hasAccess(req, res, next) {
+    let token = req.headers['x-access-token']
+    if(!token) return res.status(403).end('forbidden')
+
+    this.sessionStore.getSession(token).then(function(session) {
+      return this.userStore.getUser(session.userId)
+    }.bind(this)).then(function(user) {
+      req.user = user
+      if(user.access) {
+        next()
+      } else {
+        return res.status(403).end('forbidden')
+      }
+    })
+  }
+
+  /*
+    Check if user has super access
+  */
+  hasSuperAccess(req, res, next) {
+    let token = req.headers['x-access-token']
+    if(!token) return res.status(403).end('forbidden')
+
+    this.sessionStore.getSession(token).then(function(session) {
+      return this.userStore.getUser(session.userId)
+    }.bind(this)).then(function(user) {
+      req.user = user
+      if(user.super) {
+        next()
+      } else {
+        return res.status(403).end('forbidden')
+      }
+    })
+  }
 }
 
-module.exports = AuthenticationEngine
+module.exports = AuthEngine

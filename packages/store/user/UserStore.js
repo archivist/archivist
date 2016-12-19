@@ -111,7 +111,7 @@ class UserStore {
       .then(function(exists) {
         if (!exists) {
           throw new Err('UserStore.DeleteError', {
-            message: 'User with user_id ' + userId + ' does not exists'
+            message: 'User with userId ' + userId + ' does not exists'
           })
         }
 
@@ -197,7 +197,10 @@ class UserStore {
       name: userData.name,
       email: userData.email,
       created: new Date(),
-      loginKey: loginKey
+      loginKey: loginKey,
+      password: userData.password,
+      access: userData.access,
+      super: userData.super
     }
 
     return new Promise(function(resolve, reject) {
