@@ -21,19 +21,28 @@ var devSeed = {
       userId: 'testuser',
       name: 'Test User',
       loginKey: '1234',
-      email: 'test@example.com'
+      email: 'test@example.com',
+      password: '$2a$10$jMNvFQrz7iRDRv3dczKBJOvnZkQWFNJ0r1YsjE/FgqkIw/zv7DbMW',
+      access: true,
+      super: true
     },
     'testuser2': {
       userId: 'testuser2',
       name: 'Test User 2',
       loginKey: '12345',
-      email: 'test2@example.com'
+      email: 'test2@example.com',
+      password: '$2a$10$jMNvFQrz7iRDRv3dczKBJOvnZkQWFNJ0r1YsjE/FgqkIw/zv7DbMW',
+      access: true,
+      super: false
     },
     'testuser3': {
       userId: 'testuser3',
       name: '',
       loginKey: '123456',
-      email: 'test3@example.com'
+      email: 'test3@example.com',
+      password: '$2a$10$jMNvFQrz7iRDRv3dczKBJOvnZkQWFNJ0r1YsjE/FgqkIw/zv7DbMW',
+      access: false,
+      super: false
     }
   },
   sessions: {
