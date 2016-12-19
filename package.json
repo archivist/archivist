@@ -2,12 +2,14 @@
   "name": "archivist",
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "dependencies": {
+    "bcryptjs": "^2.4.0",
     "bluebird": "^3.4.6",
     "body-parser": "^1.15.2",
     "config": "^1.21.0",
     "express": "^4.14.0",
     "lodash": "^4.15.0",
     "massive": "^2.5.0",
+    "password-generator": "^2.1.0",
     "substance": "substance/substance#develop",
     "ws": "^1.1.1"
   },
