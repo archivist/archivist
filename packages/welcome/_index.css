@@ -1,0 +1,74 @@
+.sc-welcome {
+  height: 100%;
+  padding: 20px;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  background-image: -webkit-gradient(linear, left top, right top, from(rgba(255, 152, 0, 0.3)), to(rgba(139, 195, 74, 0.3))), url('./assets/entrance.jpg');
+}
+
+.sc-welcome .sc-request-login {
+  margin-top: 150px;
+}
+
+.sc-welcome .sc-request-login input {
+  margin-bottom: 30px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  border-radius: 2px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 4px;
+  width: 100%;
+  max-width: 500px;
+  height: 40px;
+  line-height: 30px;
+  border: 1px solid #E0E4E4;
+}
+
+.sc-welcome .sc-request-login input:focus {
+  outline: none;
+  border: 1px solid rgba(255,255,255,0.9);
+  background: transparent;
+}
+
+.sc-welcome input:-webkit-autofill,
+.sc-welcome input:-webkit-autofill:hover,
+.sc-welcome input:-webkit-autofill:focus,
+.sc-welcome input:-webkit-autofill:active {
+  transition: color 5000s ease-out, background-color 5000s ease-in-out 0s;
+}
+
+.sc-welcome .sc-request-login button {
+  color: #fff;
+  border-color: #fff;
+  padding: 0px 20px;
+  text-align: center;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-block;
+  border-radius: 3px;
+}
+
+.sc-welcome .sc-request-login input::-webkit-input-placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.sc-welcome .sc-request-login input::-moz-input-placeholder {
+  color: rgba(255,255,255,0.6);
+}
+
+.sc-welcome .sc-request-login.sc-notification {
+  color: #fff;
+  font-style: italic;
+  margin-top: 15px;
+}
+
+.sc-enter-name .se-change-name .se-label {
+  float: left;
+  line-height: 14px;
+  padding-right: 10px;
+}
