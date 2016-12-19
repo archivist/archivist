@@ -9,9 +9,9 @@ class PrisonsPage extends AbstractEntityPage {
       search: null,
       dialog: false,
       perPage: 30,
-      page: 1,
       order: 'created',
       direction: 'desc',
+      pagination: false,
       items: []
     }
   }

@@ -1,4 +1,5 @@
 import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import concat from 'lodash/concat'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
 
@@ -8,6 +9,13 @@ import moment from 'moment'
 // import DataSample from '../../data/docs'
 
 class AbstractEntityPage extends Component {
+  constructor(...args) {
+    super(...args)
+
+    this.handleActions({
+      'loadMore': this._loadMore
+    })
+  }
 
   getInitialState() {
     return {
@@ -17,9 +25,9 @@ class AbstractEntityPage extends Component {
       search: null,
       dialog: false,
       perPage: 30,
-      page: 1,
       order: 'created',
       direction: 'desc',
+      pagination: false,
       items: []
     }
   }
@@ -135,9 +143,7 @@ class AbstractEntityPage extends Component {
     let urlHelper = this.context.urlHelper
     let items = this.state.items
     let total = this.state.total
-    let page = this.state.page
-    let perPage = this.state.perPage
-    //let Pager = this.getComponent('pager')
+    let Pager = this.getComponent('pager')
     let grid = $$(Grid)
 
     if (items) {
@@ -179,6 +185,16 @@ class AbstractEntityPage extends Component {
         }
       }.bind(this))
     }
+
+    if(total > this.state.perPage) {
+      grid.append(
+        $$(Pager, {
+          total: total,
+          loaded: items.length
+        })
+      )
+    }
+
     return grid
   }
 
@@ -195,12 +211,13 @@ class AbstractEntityPage extends Component {
     let language = 'russian'
     let filters = this.state.filters
     let perPage = this.state.perPage
-    let page = this.state.page
     let order = this.state.order
     let direction = this.state.direction
+    let pagination = this.state.pagination
+    let items = []
     let options = {
       limit: perPage, 
-      offset: perPage * (page - 1),
+      offset: this.state.items.length,
       order: order + ' ' + direction
     }
     let resourceClient = this.context.resourceClient
@@ -221,12 +238,28 @@ class AbstractEntityPage extends Component {
         return record.fragments
       })
 
+      if(pagination) {
+        items = concat(this.state.items, res.records)
+      } else {
+        items = res.records
+      }
+
       this.extendState({
-        items: res.records,
+        items: items,
         total: parseInt(res.total, 10),
         details: details
       })
     }.bind(this))
+  }
+
+  /*
+    Load more data
+  */
+  _loadMore() {
+    this.extendState({
+      pagination: true
+    })
+    this.searchData()
   }
 
   /*
@@ -236,16 +269,17 @@ class AbstractEntityPage extends Component {
     let resourceClient = this.context.resourceClient
     let filters = this.state.filters
     let perPage = this.state.perPage
-    let page = this.state.page
     let order = this.state.order
     let direction = this.state.direction
+    let pagination = this.state.pagination
+    let items = []
     let options = {
       limit: perPage, 
-      offset: perPage * (page - 1),
+      offset: this.state.items.length,
       order: order + ' ' + direction
     }
 
-    resourceClient.listEntities(filters, options, function(err, res) {
+    resourceClient.listEntities(filters, options, (err, res) => {
       if (err) {
         this.setState({
           error: new Err('DocumentsPage.LoadingError', {
@@ -257,11 +291,17 @@ class AbstractEntityPage extends Component {
         return
       }
 
+      if(pagination) {
+        items = concat(this.state.items, res.records)
+      } else {
+        items = res.records
+      }
+
       this.extendState({
-        items: res.records,
+        items: items,
         total: parseInt(res.total, 10)
       })
-    }.bind(this))
+    })
   }
 
 

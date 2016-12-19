@@ -1,16 +1,18 @@
 import DocumentPackage from '../document/package'
 import HeaderPackage from '../header/package'
+import PagerPackage from '../pager/package'
 import ToolboxPackage from '../toolbox/package'
 
 export default {
   name: 'archivist',
   configure: function(config) {
-    config.import(DocumentPackage);
+    config.import(DocumentPackage)
 
     // config.import(Note);
     // config.import(Dashboard);
-    config.import(HeaderPackage);
-    config.import(ToolboxPackage);
+    config.import(HeaderPackage)
+    config.import(PagerPackage)
+    config.import(ToolboxPackage)
     // //config.import(LoaderPackage);
     // config.import(NotificationPackage);
     // config.import(CollaboratorsPackage);
@@ -21,4 +23,4 @@ export default {
     // config.addConfigurator('reader', ReaderConfigurator);
     // config.addConfigurator('writer', WriterConfigurator);
   }
-};
+}
