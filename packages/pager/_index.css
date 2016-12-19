@@ -1,0 +1,10 @@
+.sc-pager {
+  margin: 0px auto;
+  text-align: center;
+  padding: 10px;
+}
+
+.sc-pager .sc-button {
+  width: 100%;
+  border-radius: 3px;
+}
