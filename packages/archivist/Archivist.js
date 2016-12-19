@@ -31,6 +31,7 @@ class Archivist extends AbstractApplication {
 
     this.handleActions({
       'navigate': this.navigate,
+      'home': this._home,
       'addDocument': this._addDocument,
       'removeDocument': this._removeDocument
     })
@@ -56,7 +57,7 @@ class Archivist extends AbstractApplication {
   }
 
   getLoginPage() {
-    return 'documents'
+    return 'welcome'
   }
 
   getRouter() {
@@ -64,13 +65,19 @@ class Archivist extends AbstractApplication {
   }
 
   _onAuthentication(route, session) {
-    // if(!session) {
-    //   route.page = this.getLoginPage()
-    // } else if (!session.user.name) {
-    //   route.page = 'entername'
-    // }
+    if(!session) {
+      route.page = this.getLoginPage()
+    } else if (!session.user.name) {
+      route.page = 'entername'
+    }
 
     return route
+  }
+
+  _home() {
+    this.navigate({
+      page: this.getDefaultPage()
+    })
   }
 
   /*

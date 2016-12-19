@@ -2,6 +2,7 @@ import DocumentPackage from '../document/package'
 import HeaderPackage from '../header/package'
 import PagerPackage from '../pager/package'
 import ToolboxPackage from '../toolbox/package'
+import WelcomePackage from '../welcome/package'
 
 export default {
   name: 'archivist',
@@ -16,7 +17,7 @@ export default {
     // //config.import(LoaderPackage);
     // config.import(NotificationPackage);
     // config.import(CollaboratorsPackage);
-    // config.import(WelcomePackage);
+    config.import(WelcomePackage)
 
 
     // // Default configuration for available modes
