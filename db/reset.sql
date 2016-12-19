@@ -17,7 +17,10 @@ CREATE TABLE "users" (
   email text UNIQUE,
   name text,
   created timestamp,
-  "loginKey" text UNIQUE
+  "loginKey" text UNIQUE,
+  password varchar(255),
+  access boolean,
+  super boolean
 );
 
 CREATE UNIQUE INDEX login_key_index ON users("loginKey");
