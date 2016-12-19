@@ -1,16 +1,42 @@
 import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import concat from 'lodash/concat'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
 
 import moment from 'moment'
 
 // Sample data for debugging
-import DataSample from '../../data/docs'
+// import DataSample from '../../data/docs'
 
 class DocumentsPage extends Component {
+  constructor(...args) {
+    super(...args)
+
+    this.handleActions({
+      'loadMore': this._loadMore
+    })
+  }
 
   didMount() {
     this._loadData()
+  }
+
+  didUpdate(oldProps, oldState) {
+    if(oldState.search !== this.state.search) {
+      this.searchData()
+    }
+  }
+
+  getInitialState() {
+    return {
+      filters: {},
+      search: '',
+      perPage: 30,
+      order: 'created',
+      direction: 'desc',
+      pagination: false,
+      items: []
+    }
   }
 
   // willReceiveProps() {
@@ -42,11 +68,18 @@ class DocumentsPage extends Component {
   renderFilters($$) {
     let filters = []
     let search = $$('div').addClass('se-search').append(
-      $$(Icon, {icon: 'fa-search'}),
-      $$(Input, {placeholder: 'Search...'})
-        .on('keypress', this._onSearchKeyPress)
-        .ref('searchInput')
+      $$(Icon, {icon: 'fa-search'})
     )
+    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+      .ref('searchInput')
+
+    if(this.isSearchEventSupported) {
+      searchInput.on('search', this._onSearch)
+    } else {
+      searchInput.on('keypress', this._onSearchKeyPress)
+    }
+    search.append(searchInput)
+
     filters.push(search)
 
     return filters
@@ -84,12 +117,27 @@ class DocumentsPage extends Component {
       textAlign: 'center'
     });
 
-    layout.append(
-      $$('h1').html(
-        'No results'
-      ),
-      $$('p').html('Sorry, no documents matches your query')
-    );
+    if(this.state.total === 0) {
+      layout.append(
+        $$('h1').html(
+          'No results'
+        ),
+        $$('p').html('Sorry, no entities matches your query')
+      );
+    } else {
+      layout.append(
+        $$('div').addClass('se-spinner').append(
+          $$('div').addClass('se-rect1'),
+          $$('div').addClass('se-rect2'),
+          $$('div').addClass('se-rect3'),
+          $$('div').addClass('se-rect4'),
+          $$('div').addClass('se-rect5')
+        ),
+        $$('h2').html(
+          'Loading...'
+        )
+      );
+    }
 
     return layout;
   }
@@ -98,9 +146,7 @@ class DocumentsPage extends Component {
     let urlHelper = this.context.urlHelper
     let items = this.state.items
     let total = this.state.total
-    let page = this.state.page
-    let perPage = this.state.perPage
-    //let Pager = this.getComponent('pager')
+    let Pager = this.getComponent('pager')
     let grid = $$(Grid)
 
     if (items) {
@@ -143,6 +189,16 @@ class DocumentsPage extends Component {
         }
       }.bind(this))
     }
+
+    if(total > this.state.perPage) {
+      grid.append(
+        $$(Pager, {
+          total: total,
+          loaded: items.length
+        })
+      )
+    }
+
     return grid
   }
 
@@ -150,7 +206,7 @@ class DocumentsPage extends Component {
     Search documents
   */
   searchData() {
-    let searchValue = this.refs['searchInput'].val()
+    let searchValue = this.state.search
 
     if(isEmpty(searchValue)) {
       return this._loadData()
@@ -158,7 +214,13 @@ class DocumentsPage extends Component {
 
     let language = 'russian'
     let filters = {}
-    let options = {}
+    let perPage = this.state.perPage
+    let pagination = this.state.pagination
+    let options = {
+      limit: perPage, 
+      offset: pagination ? this.state.items.length : 0
+    }
+    let items = []
     let documentClient = this.context.documentClient
 
     documentClient.searchDocuments(searchValue, language, filters, options, function(err, docs) {
@@ -177,12 +239,28 @@ class DocumentsPage extends Component {
         return record.fragments
       })
 
+      if(pagination) {
+        items = concat(this.state.items, docs.records)
+      } else {
+        items = docs.records
+      }
+
       this.extendState({
-        items: docs.records,
-        total: docs.total,
+        items: items,
+        total: parseInt(docs.total, 10),
         details: details
       })
     }.bind(this))
+  }
+
+  /*
+    Load more data
+  */
+  _loadMore() {
+    this.extendState({
+      pagination: true
+    })
+    this.searchData()
   }
 
   /*
@@ -195,10 +273,17 @@ class DocumentsPage extends Component {
     //   items: DataSample,
     //   total: DataSample.length
     // });
+    let pagination = this.state.pagination
+    let perPage = this.state.perPage
+    let options = {
+      limit: perPage, 
+      offset: pagination ? this.state.items.length : 0
+    }
+    let items = []
 
     let documentClient = this.context.documentClient
 
-    documentClient.listDocuments({}, {}, function(err, docs) {
+    documentClient.listDocuments({}, options, function(err, docs) {
       if (err) {
         this.setState({
           error: new Err('DocumentsPage.LoadingError', {
@@ -210,15 +295,21 @@ class DocumentsPage extends Component {
         return
       }
 
+      if(pagination) {
+        items = concat(this.state.items, docs.records)
+      } else {
+        items = docs.records
+      }
+
       this.extendState({
-        items: docs.records,
-        total: docs.total
+        items: items,
+        total: parseInt(docs.total, 10)
       })
     }.bind(this))
   }
 
   _loadFragments(documentId, index) {
-    let searchValue = this.refs['searchInput'].val()
+    let searchValue = this.state.search
 
     if(isEmpty(searchValue)) {
       return
@@ -258,9 +349,29 @@ class DocumentsPage extends Component {
   _onSearchKeyPress(e) {
     // Perform search query on pressing enter
     if (e.which === 13 || e.keyCode === 13) {
-      this.searchData()
-      return false
+      let searchValue = this.refs['searchInput'].val()
+      this.extendState({
+        search: searchValue,
+        pagination: false
+      })
+      return false;
     }
+  }
+
+  _onSearch() {
+    let searchValue = this.refs['searchInput'].val()
+    this.extendState({
+      search: searchValue,
+      pagination: false
+    })
+  }
+
+  isSearchEventSupported() {
+    let element = document.createElement('input')
+    let eventName = 'onsearch'
+    let isSupported = (eventName in element)
+    
+    return isSupported
   }
 }
 

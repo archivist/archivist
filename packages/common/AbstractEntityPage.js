@@ -22,7 +22,7 @@ class AbstractEntityPage extends Component {
       edit: false,
       active: {},
       filters: {},
-      search: null,
+      search: '',
       dialog: false,
       perPage: 30,
       order: 'created',
@@ -34,6 +34,12 @@ class AbstractEntityPage extends Component {
 
   didMount() {
     this._loadData()
+  }
+
+  didUpdate(oldProps, oldState) {
+    if(oldState.search !== this.state.search) {
+      this.searchData()
+    }
   }
 
   render($$) {
@@ -67,7 +73,7 @@ class AbstractEntityPage extends Component {
       .ref('searchInput')
 
     if(this.isSearchEventSupported) {
-      searchInput.on('search', this.searchData)
+      searchInput.on('search', this._onSearch)
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)
     }
@@ -202,7 +208,7 @@ class AbstractEntityPage extends Component {
     Search entities
   */
   searchData() {
-    let searchValue = this.refs['searchInput'].val()
+    let searchValue = this.state.search
 
     if(isEmpty(searchValue)) {
       return this._loadData()
@@ -217,7 +223,7 @@ class AbstractEntityPage extends Component {
     let items = []
     let options = {
       limit: perPage, 
-      offset: this.state.items.length,
+      offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
     let resourceClient = this.context.resourceClient
@@ -275,7 +281,7 @@ class AbstractEntityPage extends Component {
     let items = []
     let options = {
       limit: perPage, 
-      offset: this.state.items.length,
+      offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
 
@@ -342,9 +348,21 @@ class AbstractEntityPage extends Component {
   _onSearchKeyPress(e) {
     // Perform search query on pressing enter
     if (e.which === 13 || e.keyCode === 13) {
-      this.searchData()
+      let searchValue = this.refs['searchInput'].val()
+      this.extendState({
+        search: searchValue,
+        pagination: false
+      })
       return false;
     }
+  }
+
+  _onSearch() {
+    let searchValue = this.refs['searchInput'].val()
+    this.extendState({
+      search: searchValue,
+      pagination: false
+    })
   }
 
   isSearchEventSupported() {
