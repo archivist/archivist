@@ -245,6 +245,8 @@ class UserStore {
   listUsers(filters, options) {
     // Default limit to avoid unlimited listing
     if(!options.limit) options.limit = 100
+    if(!options.offset) options.offset = 0
+    if(!options.order) options.order = 'created DESC'
 
     return new Promise(function(resolve, reject) {
       this.db.users.find(filters, options, function(err, users) {
