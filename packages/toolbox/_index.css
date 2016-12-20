@@ -19,6 +19,7 @@
 
 .sc-toolbox .se-content {
   padding: 10px;
+  float: left;
 }
 
 .sc-toolbox .se-content input {
