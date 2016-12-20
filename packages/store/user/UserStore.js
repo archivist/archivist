@@ -79,7 +79,7 @@ class UserStore {
       .then(function(exists) {
         if (!exists) {
           throw new Err('UserStore.UpdateError', {
-            message: 'User with user_id ' + userId + ' does not exists'
+            message: 'User with userId ' + userId + ' does not exists'
           })
         }
 
