@@ -4,6 +4,7 @@ import PersonManagerPackage from '../../packages/person-manager/package'
 import PrisonManagerPackage from '../../packages/prison-manager/package'
 import ToponymManagerPackage from '../../packages/toponym-manager/package'
 import DefinitionManagerPackage from '../../packages/definition-manager/package'
+import UsersPackage from '../../packages/users/package'
 import PublisherPackage from '../../packages/publisher/package'
 import ArchivistSubConfigurator from '../../packages/archivist/ArchivistSubConfigurator'
 import AuthenticationClient from './AuthenticationClient'
@@ -29,6 +30,8 @@ export default {
     config.import(ToponymManagerPackage)
     // Manage definition entity type
     config.import(DefinitionManagerPackage)
+    // Manahe users
+    config.import(UsersPackage)
 
     // Add subconfigurators
     config.addConfigurator('archivist-interview-editor', new ArchivistSubConfigurator().import(PublisherPackage))
@@ -60,7 +63,8 @@ export default {
       {label: 'Persons', action: 'persons'},
       {label: 'Prisons', action: 'prisons'},
       {label: 'Toponyms', action: 'toponyms'},
-      {label: 'Definitions', action: 'definitions'}
+      {label: 'Definitions', action: 'definitions'},
+      {label: 'Users', action: 'users'}
     ])
   }
 }

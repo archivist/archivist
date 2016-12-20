@@ -1,0 +1,70 @@
+.sc-users-page .sc-grid .se-checkbox .se-label {
+  float: left;
+  font-size: 13px;
+  margin-right: 10px;
+}
+
+.sc-users-page .sc-grid .se-reset {
+  padding: 9px 10px;
+}
+
+.se-cell .se-checkbox i {
+  font-size: 17px;
+  top: 1px;
+  position: relative;
+}
+
+.se-user-form-modal .se-body {
+  width: 500px; 
+}
+
+.sc-user-form {
+  padding: 10px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sc-user-form .se-checkbox {
+  display: block;
+  float: left;
+  height: 50px;
+  width: 240px;
+}
+
+.sc-user-form .se-error {
+  font-style: italic;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px 0px 5px;
+}
+
+.sc-user-form .se-checkbox input {
+  float: left;
+  width: 20px;
+}
+
+.sc-user-form .se-checkbox .se-label {
+  float: left;
+  height: 40px;
+  line-height: 40px;
+  margin-right: 20px;
+}
+
+.sc-user-form .se-actions {
+  text-align: center;
+  clear: both;
+}
+
+.sc-user-form .se-actions button {
+  margin: 10px;
+}
+
+.sc-user-form .se-actions .se-invite-user {
+  float: right;
+}
+
+.sc-user-form .se-actions .se-cancel {
+  float: left;
+}
