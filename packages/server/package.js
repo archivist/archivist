@@ -8,6 +8,7 @@ let AuthServerPackage = require('./auth/package')
 let CollabServerPackage = require('./collab/package')
 let DocumentServerPackage = require('./document/package')
 let ResourceServerPackage = require('./resource/package')
+let UserServerPackage = require('./user/package')
 
 let db = new Database()
 
@@ -25,5 +26,6 @@ module.exports = {
     config.import(AuthServerPackage)
     config.import(CollabServerPackage)
     config.import(ResourceServerPackage)
+    config.import(UserServerPackage)
   }
 }
