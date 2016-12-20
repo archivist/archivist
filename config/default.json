@@ -12,5 +12,9 @@
     "host": "localhost",
     "port": 5000
   },
+  "mail": {
+    "transport": "",
+    "sender": "archivist@archivist"
+  },
   "db_url": "postgres://archivist_user:archivist_pw@localhost:5432/archivist"
 }
