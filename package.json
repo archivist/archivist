@@ -9,6 +9,7 @@
     "express": "^4.14.0",
     "lodash": "^4.15.0",
     "massive": "^2.5.0",
+    "nodemailer": "^2.7.0",
     "password-generator": "^2.1.0",
     "substance": "substance/substance#develop",
     "ws": "^1.1.1"
