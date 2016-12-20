@@ -104,17 +104,17 @@ class AbstractEntityPage extends Component {
   }
 
   renderStatusBar($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var StatusBar = componentRegistry.get('status-bar');
+    let componentRegistry = this.context.componentRegistry
+    let StatusBar = componentRegistry.get('status-bar')
 
-    return $$(StatusBar);
+    return $$(StatusBar)
   }
 
   renderEmpty($$) {
-    var layout = $$(Layout, {
+    let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
-    });
+    })
 
     if(this.state.total === 0) {
       layout.append(
@@ -122,7 +122,7 @@ class AbstractEntityPage extends Component {
           'No results'
         ),
         $$('p').html('Sorry, no entities matches your query')
-      );
+      )
     } else {
       layout.append(
         $$('div').addClass('se-spinner').append(
@@ -135,10 +135,10 @@ class AbstractEntityPage extends Component {
         $$('h2').html(
           'Loading...'
         )
-      );
+      )
     }
 
-    return layout;
+    return layout
   }
 
   renderEntityIcon($$) {
@@ -288,8 +288,8 @@ class AbstractEntityPage extends Component {
     resourceClient.listEntities(filters, options, (err, res) => {
       if (err) {
         this.setState({
-          error: new Err('DocumentsPage.LoadingError', {
-            message: 'Documents could not be loaded.',
+          error: new Err('EntitiesPage.LoadingError', {
+            message: 'Entities could not be loaded.',
             cause: err
           })
         })
