@@ -1,0 +1,9 @@
+.sc-input {
+  width: 100%;
+  max-width: 500px;
+  height: 40px;
+  padding: 0px 10px;
+  line-height: 40px;
+  border: 1px solid var(--border-color);
+  border-radius: 3px;
+}
