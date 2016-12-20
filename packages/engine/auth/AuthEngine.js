@@ -1,5 +1,6 @@
 let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
+let isEmpty = require('lodash/isEmpty')
 let Promise = require('bluebird')
 let bcrypt = require('bcryptjs')
 let generatePassword = require('password-generator')
@@ -89,6 +90,32 @@ class AuthEngine {
   }
 
   /*
+    Updates User's record from json object
+  */
+  updateUser(userId, data) {
+    return this.userStore.updateUser(userId, data)
+  }
+
+  /*
+    List users with given filters and options
+  */
+  listUsers(args) {
+    let filters = !isEmpty(args.filters) ? JSON.parse(args.filters) : {}
+    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}      
+    let results = {}
+
+    return this.userStore.countUsers(filters) 
+      .then(count => {
+        results.total = count
+        return this.userStore.listUsers(filters, options)
+      })
+      .then(function(users) {
+        results.records = users
+        return results
+      })
+  }
+
+  /*
     Generates a new login key for a given email
   */
   _updateLoginKey(user) {
@@ -104,7 +131,8 @@ class AuthEngine {
     return this.mailer.invite({email: user.email, password: password})
   }
 
-   /*
+   
+  /*
     Send a password reset notification via email
   */
   _sendPasswordReset(user, password) {
