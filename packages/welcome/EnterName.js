@@ -53,8 +53,7 @@ class EnterName extends Component {
       $$(Button, {
         disabled: Boolean(this.state.loading), // disable button when in loading state
         label: 'continue',
-        icon: 'continue',
-        style: 'default'
+        style: 'outline'
       }).addClass('se-change-name')
       .on('click', this._updateUserName)
     )
@@ -87,7 +86,7 @@ class EnterName extends Component {
       })
     }
 
-    authenticationClient.changeName(userSession.user.user_id, name, function(err) {
+    authenticationClient.changeName(userSession.user.userId, name, function(err) {
       if(err) {
         this.setState({
           notification: {

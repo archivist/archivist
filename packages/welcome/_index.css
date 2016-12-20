@@ -67,8 +67,16 @@
   margin-top: 15px;
 }
 
-.sc-enter-name .se-change-name .se-label {
-  float: left;
-  line-height: 14px;
-  padding-right: 10px;
+.sc-enter-name h1 {
+  padding-top: 20px;
+}
+
+.sc-enter-name .se-help {
+  margin-top: 10px;
+}
+
+.sc-enter-name .se-change-name {
+  margin: 0px auto;
+  border-radius: 3px;
+  height: 40px;
 }
