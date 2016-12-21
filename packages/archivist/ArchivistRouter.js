@@ -1,6 +1,6 @@
 import { Router } from 'substance'
 
-class ArchivistRouter extends Router{
+class ArchivistRouter extends Router {
   constructor(app) {
     super()
     this.app = app
@@ -14,9 +14,9 @@ class ArchivistRouter extends Router{
     })
   }
 
-  openEntity(entityId) {
+  openEntity(page, entityId) {
     return '#' + Router.objectToRouteString({
-      page: 'entity',
+      page: page,
       entityId: entityId
     })
   }
