@@ -1,0 +1,35 @@
+.sc-form {
+  max-width: 500px;
+  max-height: 600px;
+  margin: 10px auto;
+  overflow: auto;
+}
+
+.sc-form .sc-field {
+  padding-bottom: 15px;
+}
+
+.sc-form .sc-field .sc-input {
+  padding: 6px;
+}
+
+.sc-form .sc-field .sc-input:focus {
+  background: #fff;
+  border-color: rgb(198, 224, 243);
+}
+
+.sc-form .sc-field .sc-textarea {
+  padding: 6px;
+  width: 100%;
+}
+      
+.sc-form .sc-field .sc-textarea:focus {
+  background: #fff;
+  border-color: rgb(198, 224, 243);
+}
+  
+.sc-form .sc-field .help {
+  font-size: 12px;
+  line-height: 25px;
+  clear: both;
+}

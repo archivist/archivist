@@ -1,0 +1,42 @@
+.sc-field-multiple {
+  position: relative;
+}
+
+.sc-field-multiple input {
+  margin: 10px 0 0px;
+}
+
+.sc-field-multiple .se-dropdown-list {
+  color: #444;
+  position: relative;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0px;
+  padding: 0px;
+  max-height: 240px;
+  z-index: 1010;
+  width: 100%;
+  border: 1px solid #aaa;
+  border-top: 0;
+  background: #fff;
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.15);
+}
+
+.sc-field-multiple .se-dropdown-list .se-dropdown-item {
+  padding: 4px 10px;
+  font-size: 13px;
+}
+
+.sc-field-multiple .se-dropdown-list .se-dropdown-item:hover {
+  background: #ccc;
+  cursor: pointer;
+}
+
+.sc-field-multiple .se-dropdown-list .se-dropdown-item.se-disabled-item {
+  color: #ccc;
+}
+
+.sc-field-multiple .se-dropdown-list .se-dropdown-item.se-disabled-item:hover {
+  background: inherit;
+  cursor: default;
+}

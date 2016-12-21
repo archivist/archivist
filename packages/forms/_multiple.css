@@ -1,0 +1,32 @@
+.sc-field-multiple .se-multiple .se-value {
+  display: block;
+  float: left;
+  background-color: rgba(52, 152, 219, 0.5);
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin-right: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+      
+.sc-field-multiple .se-multiple .se-value.se-hihglight-remove {
+  background-color: red;
+  color: #fff;
+}
+        
+.sc-field-multiple .se-multiple .se-value.se-hihglight-remove:after {
+  content: "×";
+  margin-left: 5px;
+}
+
+.sc-field-multiple input {
+  margin: 10px 0 2px;
+  width: 100%;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  min-width: auto;
+  padding: 0 23px 0 10px;
+}
