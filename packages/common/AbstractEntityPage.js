@@ -1,4 +1,4 @@
-import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
 import concat from 'lodash/concat'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
@@ -13,8 +13,14 @@ class AbstractEntityPage extends Component {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadMore': this._loadMore,
+      'updateEntity': this._updateEntity,
+      'closeModal': this._doneEditing
     })
+  }
+
+  get pageName() {
+    return this.constructor.pageName
   }
 
   getInitialState() {
@@ -52,6 +58,17 @@ class AbstractEntityPage extends Component {
     let toolbox = this.renderToolbox($$)
     el.append(toolbox)
 
+    if (this.props.entityId) {
+      let EntityEditor = this.getComponent('entity-editor')
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(EntityEditor, {entityId: this.props.entityId})
+        )
+      )
+    }
+
     if (!items) {
       return el
     }
@@ -61,6 +78,7 @@ class AbstractEntityPage extends Component {
     } else {
       el.append(this.renderEmpty($$))
     }
+
     return el
   }
 
@@ -153,19 +171,19 @@ class AbstractEntityPage extends Component {
     let grid = $$(Grid)
 
     if (items) {
-      items.forEach(function(item, index) {
-        let url = urlHelper.openEntity(item.entityId)
+      items.forEach((item, index) => {
+        let url = urlHelper.openEntity(this.pageName, item.entityId)
         let entityIcon = this.renderEntityIcon($$)
         let name = $$('a').attr({href: url}).append(item.name)
         let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
         let more = $$(Icon, {icon: 'fa-ellipsis-v'})
 
         let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
-            $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
-            $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
-            $$(Grid.Cell, {columns: 3}).append(updatedAt),
-            $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : ''),
-            $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
+          $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
+          $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
+          $$(Grid.Cell, {columns: 3}).append(updatedAt),
+          $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : ''),
+          $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
         ).on('click', this._loadReferences.bind(this, item.entityId, index))
 
         if(item.description) {
@@ -189,7 +207,7 @@ class AbstractEntityPage extends Component {
             )
           })
         }
-      }.bind(this))
+      })
     }
 
     if(total > this.state.perPage) {
@@ -266,6 +284,25 @@ class AbstractEntityPage extends Component {
       pagination: true
     })
     this.searchData()
+  }
+
+  /*
+    Close modal and change url
+  */
+  _doneEditing() {
+    this.send('navigate', {page: this.pageName})
+  }
+
+  /*
+    Update grid data
+  */
+  _updateEntity(entity) {
+    let items = this.state.items
+    let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
+    if(changedItem > -1) {
+      items[changedItem] = entity
+      this.extendState({items: items})
+    }
   }
 
   /*
