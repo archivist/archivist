@@ -12,8 +12,48 @@ class ResourceServer {
 
   bind(app) {
     // search
-    app.get(this.path + '/entities/search', this._searchEntities.bind(this))
+    app.post(this.path + '/entities', this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
+    app.get(this.path + '/entities/search', this._searchEntities.bind(this))
+    app.get(this.path + '/entities/:id', this._getEntity.bind(this))
+    app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+  }
+
+  /*
+    Create Entity
+  */
+  _createEntity(req, res, next) {
+    let entityData = req.body
+    this.engine.createEntity(entityData).then(function(entity) {
+      res.json(entity)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Get Entity
+  */
+  _getEntity(req, res, next) {
+    let entityId = req.params.id
+    this.engine.getEntity(entityId).then(function(result) {
+      res.json(result)
+    }).catch(function(err) {
+      return next(err)
+    })
+  }
+
+  /*
+    Update Entity
+  */
+  _updateEntity(req, res, next) {
+    let entityId = req.params.id
+    let entityData = req.body
+    this.engine.updateEntity(entityId, entityData).then(function(entity) {
+      res.json(entity)
+    }).catch(function(err) {
+      return next(err)
+    })
   }
 
   /*

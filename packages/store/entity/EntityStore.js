@@ -65,7 +65,7 @@ class EntityStore {
     @returns {Promise}
   */
   updateEntity(entityId, props) {
-    return this.entityExistsExists(entityId).bind(this)
+    return this.entityExists(entityId).bind(this)
       .then(function(exists) {
         if (!exists) {
           throw new Err('EntityStore.UpdateError', {

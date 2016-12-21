@@ -17,7 +17,7 @@ class ResourceEngine {
   }
 
   updateEntity(entityId, entityData) {
-    return this.entityStore.updateEntity(entityData, entityData)
+    return this.entityStore.updateEntity(entityId, entityData)
   }
 
   removeEntity(entityId) {

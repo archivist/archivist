@@ -9,6 +9,27 @@ class ResourceClient {
     this.config = config
   }
 
+  /*
+    Create an entity
+  */
+  createEntity(entityData, cb) {
+    request('POST', '/api/entities', entityData, cb)
+  }
+
+  /*
+    Read an entity
+  */
+  getEntity(entityId, cb) {
+    request('GET', '/api/entities/' + entityId, null, cb)
+  }
+
+  /*
+    Update an entity
+  */
+  updateEntity(entityId, entityData, cb) {
+    request('PUT', '/api/entities/' + entityId, entityData, cb)
+  }
+
   listEntities(filters, options, cb) {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters))
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
