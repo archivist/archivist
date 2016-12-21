@@ -9,6 +9,8 @@ class Toponym extends DocumentNode {
 
 }
 
+Toponym.type = 'toponym'
+
 /*
   Entities Toponym node.
   Holds Toponym entity.

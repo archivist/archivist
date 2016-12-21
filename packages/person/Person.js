@@ -9,6 +9,8 @@ class Person extends DocumentNode {
 
 }
 
+Person.type = 'person'
+
 /*
   Entities Person node.
   Holds Person entity.
@@ -22,7 +24,7 @@ class Person extends DocumentNode {
 Person.define({
   name: { type: 'string', default: 'Unknown person', field: { type: "text", dataType: "text", placeholder: "Enter person's name" }},
   description: { type: 'string', default: '', field: { type: "prose", placeholder: "Enter person's description" }},
-  global: { type: 'boolean', default: false, field: { type: "toggle", placeholder: "Global person" }}
+  global: { type: 'boolean', default: false, field: { type: "toggle", placeholder: "Global person", nullable: false }}
 })
 
 export default Person

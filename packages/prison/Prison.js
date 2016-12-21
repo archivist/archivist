@@ -9,6 +9,8 @@ class Prison extends DocumentNode {
 
 }
 
+Prison.type = 'prison'
+
 /*
   Entities Prison node.
   Holds Prison entity.

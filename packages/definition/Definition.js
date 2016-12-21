@@ -9,6 +9,8 @@ class Definition extends DocumentNode {
 
 }
 
+Definition.type = 'definition'
+
 /*
   Entities Definition node.
   Holds Definition entity.
