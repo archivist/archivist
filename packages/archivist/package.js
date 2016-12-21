@@ -1,4 +1,5 @@
 import DocumentPackage from '../document/package'
+import EntityEditor from '../entity-editor/package'
 import HeaderPackage from '../header/package'
 import PagerPackage from '../pager/package'
 import ToolboxPackage from '../toolbox/package'
@@ -11,6 +12,7 @@ export default {
 
     // config.import(Note);
     // config.import(Dashboard);
+    config.import(EntityEditor)
     config.import(HeaderPackage)
     config.import(PagerPackage)
     config.import(ToolboxPackage)

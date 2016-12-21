@@ -1,3 +1,4 @@
+import { ProseArticle } from 'substance'
 import ArchivistPackage from '../../packages/archivist/package'
 import DocumentsPackage from '../../packages/documents/package'
 import PersonManagerPackage from '../../packages/person-manager/package'
@@ -11,6 +12,12 @@ import AuthenticationClient from './AuthenticationClient'
 import DocumentClient from './DocumentClient'
 import FileClient from './FileClient'
 import ResourceClient from './ResourceClient'
+
+// Entities definitions
+import Definition from '../../packages/definition/Definition'
+import Person from '../../packages/person/Person'
+import Prison from '../../packages/prison/Prison'
+import Toponym from '../../packages/toponym/Toponym'
 
 let appConfig = 'ARCHIVISTCONFIG'
 appConfig = JSON.parse(appConfig)
@@ -35,6 +42,18 @@ export default {
 
     // Add subconfigurators
     config.addConfigurator('archivist-interview-editor', new ArchivistSubConfigurator().import(PublisherPackage))
+
+    // Entities subconfigurator
+    let EntitiesConfigurator = new ArchivistSubConfigurator()
+    EntitiesConfigurator.defineSchema({
+      name: 'archivist-entities',
+      ArticleClass: ProseArticle
+    })
+    EntitiesConfigurator.addNode(Definition)
+    EntitiesConfigurator.addNode(Person)
+    EntitiesConfigurator.addNode(Prison)
+    EntitiesConfigurator.addNode(Toponym)
+    config.addConfigurator('archivist-entities', EntitiesConfigurator)
 
     // Add app's root style
     //config.addStyle(__dirname, 'app.scss');
