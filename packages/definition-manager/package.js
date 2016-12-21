@@ -3,6 +3,6 @@ import DefinitionsPage from './DefinitionsPage'
 export default {
   name: 'definition-manager',
   configure: function(config) {
-    config.addPage('definitions', DefinitionsPage)
+    config.addPage(DefinitionsPage.pageName, DefinitionsPage)
   }
 }

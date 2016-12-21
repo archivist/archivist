@@ -17,4 +17,6 @@ class ToponymsPage extends AbstractEntityPage {
   }
 }
 
+ToponymsPage.pageName = 'toponyms'
+
 export default ToponymsPage

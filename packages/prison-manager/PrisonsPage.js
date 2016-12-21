@@ -17,4 +17,6 @@ class PrisonsPage extends AbstractEntityPage {
   }
 }
 
+PrisonsPage.pageName = 'prisons'
+
 export default PrisonsPage

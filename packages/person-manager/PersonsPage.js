@@ -17,4 +17,6 @@ class PersonsPage extends AbstractEntityPage {
   }
 }
 
+PersonsPage.pageName = 'persons'
+
 export default PersonsPage

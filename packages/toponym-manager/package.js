@@ -3,6 +3,6 @@ import ToponymsPage from './ToponymsPage'
 export default {
   name: 'toponym-manager',
   configure: function(config) {
-    config.addPage('toponyms', ToponymsPage)
+    config.addPage(ToponymsPage.pageName, ToponymsPage)
   }
 }

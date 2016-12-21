@@ -17,4 +17,6 @@ class DefinitionsPage extends AbstractEntityPage {
   }
 }
 
+DefinitionsPage.pageName = 'definitions'
+
 export default DefinitionsPage
