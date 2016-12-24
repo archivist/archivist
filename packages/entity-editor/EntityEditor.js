@@ -75,12 +75,14 @@ class EntityEditor extends Component {
     })
   }
 
-  _updateEntity(data, name) {
+  _updateEntity(data, name, synonyms, description) {
     let entityId = this.props.entityId
     let resourceClient = this.context.resourceClient
     let entityData = {
       data: data.toJSON(),
-      name: name
+      name: name,
+      synonyms: synonyms,
+      description: description
     }
     // Remove node props
     delete entityData.data.id
@@ -104,7 +106,9 @@ class EntityEditor extends Component {
     let entity = this.state.entity
     let entityData = doc.get(entity.entityType)
     let name = entityData.getName()
-    this._updateEntity(entityData, name)
+    let synonyms = entityData.getSynonyms()
+    let description = entityData.getDescription()
+    this._updateEntity(entityData, name, synonyms, description)
   }
 }
 
