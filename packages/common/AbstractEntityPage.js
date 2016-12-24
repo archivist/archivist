@@ -15,7 +15,8 @@ class AbstractEntityPage extends Component {
     this.handleActions({
       'loadMore': this._loadMore,
       'updateEntity': this._updateEntity,
-      'closeModal': this._doneEditing
+      'closeModal': this._doneEditing,
+      'newEntity': this._newEntity
     })
   }
 
@@ -23,13 +24,15 @@ class AbstractEntityPage extends Component {
     return this.constructor.pageName
   }
 
+  get entityType() {
+    return this.constructor.entityType
+  }
+
   getInitialState() {
     return {
-      edit: false,
       active: {},
-      filters: {},
+      filters: {entityType: this.entityType},
       search: '',
-      dialog: false,
       perPage: 30,
       order: 'created',
       direction: 'desc',
@@ -58,7 +61,7 @@ class AbstractEntityPage extends Component {
     let toolbox = this.renderToolbox($$)
     el.append(toolbox)
 
-    if (this.props.entityId) {
+    if (this.props.entityId || this.state.dialog) {
       let EntityEditor = this.getComponent('entity-editor')
       el.append(
         $$(Modal, {
@@ -113,7 +116,7 @@ class AbstractEntityPage extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'newEntity': '+ New Entity'
+        'newEntity': '+ Add ' + this.entityType
       },
       content: filters
     })
@@ -170,19 +173,19 @@ class AbstractEntityPage extends Component {
     let Pager = this.getComponent('pager')
     let grid = $$(Grid)
 
-    if (items) {
+    if(items) {
       items.forEach((item, index) => {
         let url = urlHelper.openEntity(this.pageName, item.entityId)
         let entityIcon = this.renderEntityIcon($$)
         let name = $$('a').attr({href: url}).append(item.name)
-        let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
+        let edited = ['Updated', moment(item.edited).fromNow(), 'by', item.updatedBy].join(' ')
         let more = $$(Icon, {icon: 'fa-ellipsis-v'})
 
         let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
           $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
           $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
-          $$(Grid.Cell, {columns: 3}).append(updatedAt),
-          $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : ''),
+          $$(Grid.Cell, {columns: 3}).append(edited),
+          $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
           $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
         ).on('click', this._loadReferences.bind(this, item.entityId, index))
 
@@ -284,6 +287,42 @@ class AbstractEntityPage extends Component {
       pagination: true
     })
     this.searchData()
+  }
+
+  /*
+    Create a new entity 
+  */
+  _newEntity() {
+    let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
+    let resourceClient = this.context.resourceClient
+    let items = this.state.items
+    let entityData = {
+      name: 'Unknown ' + this.entityType,
+      synonyms: [],
+      description: '',
+      entityType: this.entityType,
+      userId: user.userId,
+      updatedBy: user.userId,
+      data: {}
+    }
+    resourceClient.createEntity(entityData, (err, entity) => {
+      if (err) {
+        this.setState({
+          error: new Err('EntitiesPage.CreateError', {
+            message: 'Entity could not be created.',
+            cause: err
+          })
+        })
+        console.error('ERROR', err)
+        return
+      }
+
+      entity.count = 0
+      items.unshift(entity)
+
+      this.send('navigate', {page: this.pageName, entityId: entity.entityId})
+    })
   }
 
   /*
