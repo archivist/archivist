@@ -7,6 +7,17 @@ class Definition extends DocumentNode {
     return this.title
   }
 
+  // Get entity description
+  getDescription() {
+    return this.description
+  }
+
+  // Get entity synonyms
+  getSynonyms() {
+    let synonyms = this.synonyms
+    synonyms.push(this.title)
+    return synonyms
+  }
 }
 
 Definition.type = 'definition'

@@ -7,6 +7,18 @@ class Prison extends DocumentNode {
     return this.name
   }
 
+  // Get entity description
+  getDescription() {
+    return this.description
+  }
+
+  // Get entity synonyms
+  getSynonyms() {
+    let synonyms = this.synonyms
+    synonyms.push(this.name, this.nearestLocality)
+    return synonyms
+  }
+
 }
 
 Prison.type = 'prison'
@@ -14,16 +26,6 @@ Prison.type = 'prison'
 /*
   Entities Prison node.
   Holds Prison entity.
-
-  {
-  "name": "Цезарь", 
-  "point": [10.451526, 51.165691], 
-  "country": "Германия", 
-  "synonyms": ["Германия"], 
-  "prisonType": ["штрафлагерь"], 
-  "description": "<p id=\"p_9904370243938c955c51bce979997742\">респондент Г.А. Агафонов сообщает, что был в штрафлагере Цезарь (Германия). Найти такой объект не удалось.</p>", 
-  "nearestLocality": "Германия"
-  }
 
   Attributes
     - name Prison name

@@ -7,6 +7,18 @@ class Toponym extends DocumentNode {
     return this.name
   }
 
+  // Get entity description
+  getDescription() {
+    return this.description
+  }
+
+  // Get entity synonyms
+  getSynonyms() {
+    let synonyms = this.synonyms
+    synonyms.push(this.name, this.currentName)
+    return synonyms
+  }
+
 }
 
 Toponym.type = 'toponym'

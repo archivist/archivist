@@ -7,6 +7,16 @@ class Person extends DocumentNode {
     return this.name
   }
 
+  // Get entity description
+  getDescription() {
+    return this.description
+  }
+
+  // Get entity synonyms
+  getSynonyms() {
+    let synonyms = [this.name]
+    return synonyms
+  }
 }
 
 Person.type = 'person'
