@@ -1,15 +1,15 @@
 import { ContainerAnnotation } from 'substance'
 
 /**
-  Subject Node.
+  SubjectReference Node.
   Used for highlighting subject references inside documents.
 */
 
-class Subject extends ContainerAnnotation {}
+class SubjectReference extends ContainerAnnotation {}
 
-Subject.define({
+SubjectReference.define({
   "type": 'subject',
   "reference": {type: ["string"], default: []}
 })
 
-export default Subject
+export default SubjectReference
