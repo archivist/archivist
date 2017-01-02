@@ -1,5 +1,6 @@
-import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
 import concat from 'lodash/concat'
+import each from 'lodash/each'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
 
@@ -142,6 +143,21 @@ class DocumentsPage extends Component {
     return layout;
   }
 
+  renderAdditionalMenu($$, actions) {
+    let el = $$('div').addClass('se-more').attr({'tabindex': 0})
+    let actionsList = $$('ul').addClass('se-more-content')
+    each(actions, action => {
+      actionsList.append(
+        $$('li').addClass('se-more-item').append(
+          $$(Button, {label: action.label}).on('click', action.action)
+        )
+      )
+    })
+    el.append(actionsList)
+
+    return el
+  }
+
   renderFull($$) {
     let urlHelper = this.context.urlHelper
     let items = this.state.items
@@ -155,15 +171,22 @@ class DocumentsPage extends Component {
         let documentIcon = $$(Icon, {icon: 'fa-file-text-o'})
         let title = $$('a').attr({href: url}).append(item.title)
         let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
-        let more = $$(Icon, {icon: 'fa-ellipsis-v'})
-        let className = item.summary ? 'se-expanded' : '' 
+        let className = item.summary ? 'se-expanded' : ''
+
+        let additionalActions = [
+          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
+        ]
 
         let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(
             $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(documentIcon),
             $$(Grid.Cell, {columns: 5}).addClass('se-title').append(title),
             $$(Grid.Cell, {columns: 3}).append(updatedAt),
             $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' fragments' : ''),
-            $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
+            $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
+              this.renderAdditionalMenu($$, additionalActions)
+            ).on('click', function(e) {
+              e.stopPropagation()
+            })
         ).on('click', this._loadFragments.bind(this, item.documentId, index))
 
         if(item.summary) {
@@ -200,6 +223,10 @@ class DocumentsPage extends Component {
     }
 
     return grid
+  }
+
+  _removeItem(id) {
+    console.log(id)
   }
 
   /*
