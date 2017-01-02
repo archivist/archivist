@@ -1,5 +1,15 @@
 import { DocumentNode } from 'substance'
 
+/*
+  Entities Definition node.
+  Holds Definition entity.
+  
+  Attributes
+    - title Definition title
+    - synonyms Definiiton synonyms
+    - definition_type Definition type
+    - description Definition description
+*/
 class Definition extends DocumentNode {
   
   // Get entity name
@@ -21,17 +31,6 @@ class Definition extends DocumentNode {
 }
 
 Definition.type = 'definition'
-
-/*
-  Entities Definition node.
-  Holds Definition entity.
-  
-  Attributes
-    - title Definition title
-    - synonyms Definiiton synonyms
-    - definition_type Definition type
-    - description Definition description
-*/
 
 Definition.define({
   title: { type: 'string', default: 'Unknown definition', field: { type: "text", dataType: "text", placeholder: "Enter definition's title" }},

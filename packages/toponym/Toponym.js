@@ -1,5 +1,17 @@
 import { DocumentNode } from 'substance'
 
+/*
+  Entities Toponym node.
+  Holds Toponym entity.
+
+  Attributes
+    - name Toponym name
+    - currentName Current name of toponym
+    - synonyms List of toponym synonyms
+    - country Country of toponym
+    - point Geographical point coordinates (Long, Lat)
+    - description Toponym description
+*/
 class Toponym extends DocumentNode {
   
   // Get entity name
@@ -22,19 +34,6 @@ class Toponym extends DocumentNode {
 }
 
 Toponym.type = 'toponym'
-
-/*
-  Entities Toponym node.
-  Holds Toponym entity.
-
-  Attributes
-    - name Toponym name
-    - currentName Current name of toponym
-    - synonyms List of toponym synonyms
-    - country Country of toponym
-    - point Geographical point coordinates (Long, Lat)
-    - description Toponym description
-*/
 
 Toponym.define({
   name: { type: 'string', default: 'Unknown toponym', field: { type: "text", dataType: "text", placeholder: "Enter toponym's name" }},

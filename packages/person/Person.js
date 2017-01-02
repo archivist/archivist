@@ -1,5 +1,14 @@
 import { DocumentNode } from 'substance'
 
+/*
+  Entities Person node.
+  Holds Person entity.
+  
+  Attributes
+    - name Person name
+    - description Person description
+    - global Whatever person is global
+*/
 class Person extends DocumentNode {
   
   // Get entity name
@@ -20,16 +29,6 @@ class Person extends DocumentNode {
 }
 
 Person.type = 'person'
-
-/*
-  Entities Person node.
-  Holds Person entity.
-  
-  Attributes
-    - name Person lastname
-    - description Person firstname
-    - global Person middlename
-*/
 
 Person.define({
   name: { type: 'string', default: 'Unknown person', field: { type: "text", dataType: "text", placeholder: "Enter person's name" }},

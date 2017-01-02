@@ -1,5 +1,18 @@
 import { DocumentNode } from 'substance'
 
+/*
+  Entities Prison node.
+  Holds Prison entity.
+
+  Attributes
+    - name Prison name
+    - nearestLocality Nearest location to prisom
+    - prisonType Type of prison
+    - synonyms List of prison synonyms
+    - country Country of prison
+    - point Geographical point coordinates (Long, Lat)
+    - description Prison description
+*/
 class Prison extends DocumentNode {
   
   // Get entity name
@@ -22,20 +35,6 @@ class Prison extends DocumentNode {
 }
 
 Prison.type = 'prison'
-
-/*
-  Entities Prison node.
-  Holds Prison entity.
-
-  Attributes
-    - name Prison name
-    - nearestLocality Nearest location to prisom
-    - prisonType Type of prison
-    - synonyms List of prison synonyms
-    - country Country of prison
-    - point Geographical point coordinates (Long, Lat)
-    - description Prison description
-*/
 
 Prison.define({
   name: { type: 'string', default: 'Untitled prison', field: { type: "text", dataType: "text", placeholder: "Enter prison's name" }},
