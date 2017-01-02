@@ -1,8 +1,8 @@
-import { Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
 import concat from 'lodash/concat'
+import each from 'lodash/each'
 import findIndex from 'lodash/findIndex'
 import isEmpty from 'lodash/isEmpty'
-
 import moment from 'moment'
 
 // Sample data for debugging
@@ -166,6 +166,21 @@ class AbstractEntityPage extends Component {
     return $$(Icon, {icon: 'fa-users'})
   }
 
+  renderAdditionalMenu($$, actions) {
+    let el = $$('div').addClass('se-more').attr({'tabindex': 0})
+    let actionsList = $$('ul').addClass('se-more-content')
+    each(actions, action => {
+      actionsList.append(
+        $$('li').addClass('se-more-item').append(
+          $$(Button, {label: action.label}).on('click', action.action)
+        )
+      )
+    })
+    el.append(actionsList)
+
+    return el
+  }
+
   renderFull($$) {
     let urlHelper = this.context.urlHelper
     let items = this.state.items
@@ -179,14 +194,21 @@ class AbstractEntityPage extends Component {
         let entityIcon = this.renderEntityIcon($$)
         let name = $$('a').attr({href: url}).append(item.name)
         let edited = ['Updated', moment(item.edited).fromNow(), 'by', item.updatedBy].join(' ')
-        let more = $$(Icon, {icon: 'fa-ellipsis-v'})
+
+        let additionalActions = [
+          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
+        ]
 
         let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
           $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
           $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
           $$(Grid.Cell, {columns: 3}).append(edited),
           $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
-          $$(Grid.Cell, {columns: 1}).addClass('se-more').append(more)
+          $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
+            this.renderAdditionalMenu($$, additionalActions)
+          ).on('click', function(e) {
+            e.stopPropagation()
+          })
         ).on('click', this._loadReferences.bind(this, item.entityId, index))
 
         if(item.description) {
@@ -323,6 +345,10 @@ class AbstractEntityPage extends Component {
 
       this.send('navigate', {page: this.pageName, entityId: entity.entityId})
     })
+  }
+
+  _removeItem(id) {
+    console.log(id)
   }
 
   /*
