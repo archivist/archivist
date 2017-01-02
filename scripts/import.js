@@ -182,6 +182,42 @@ function importLocations() {
   return entityStore.seed(locationsData)
 }
 
+function importSubjects() {
+  let exists = _fileExists(config.subjects)
+  if(!exists) return
+
+  let jsonContents = fs.readFileSync(config.subjects)
+  let jsonData = JSON.parse(jsonContents)
+  let subjectsData = []
+
+  jsonData.forEach(function(subject) {
+    let subjectData = {
+      entityId: subject._id['$oid'],
+      name: subject.name,
+      synonyms: [subject.name],
+      description: subject.description || '',
+      edited: subject.updatedAt['$date'],
+      entityType: 'subject',
+      data: {
+        name: subject.name,
+        workname: subject.workname,
+        description: subject.description || '',
+        parent: subject.parent || null,
+        position: subject.position
+      }
+    }
+
+    if(subject.name !== subject.workname) subjectData.synonyms.push(subject.workname)
+    subjectData.created = subject.createdAt ? subject.createdAt['$date'] : subject.updatedAt['$date']
+    subjectData.updatedBy = subject.edited ? subject.edited['$oid'] : defaultUser
+    subjectData.userId = subject.edited ? subject.edited['$oid'] : defaultUser
+    subjectsData.push(subjectData)
+  })
+
+  let entityStore = configurator.getStore('entity')
+  return entityStore.seed(subjectsData)
+}
+
 function importDocuments() {
   let exists = _fileExists(config.documents)
   if(!exists) return
@@ -457,6 +493,10 @@ importUsers()
   })
   .then(function() {
     console.log('Definitions has been imported!')
+    return importSubjects()
+  })
+  .then(function() {
+    console.log('Subjects has been imported!')
     return importDocuments()
   })
   .then(function() {
