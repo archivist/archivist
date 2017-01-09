@@ -12,7 +12,7 @@ let UserServerPackage = require('./user/package')
 
 let db = new Database()
 
-let InterviewPackage = require('../../dist/archivist.cjs').InterviewPackage
+let InterviewPackage = require('../../dist/archivist/archivist.cjs').InterviewPackage
 
 module.exports = {
   name: 'server',
