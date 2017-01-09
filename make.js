@@ -31,7 +31,7 @@ function buildApp(app, core) {
       // need buble if we want to minify later
       buble: true,
       external: ['substance'],
-      commonjs: { include: ['node_modules/lodash/**', 'node_modules/moment/moment.js'] },
+      commonjs: { include: ['node_modules/lodash/**', 'node_modules/moment/moment.js', 'node_modules/plyr/src/js/plyr.js'] },
       dest: './dist/' + app + '/app.js',
       format: 'umd',
       moduleName: app
