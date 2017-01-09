@@ -266,7 +266,7 @@ function importDocuments() {
       'person': 1,
       'definition': 1,
       'prison': 1,
-      'location': 1
+      'toponym': 1
     }
 
     contentNodes.forEach(function(nodeId) {
@@ -312,9 +312,9 @@ function importDocuments() {
             'content'
           ],
           endOffset: node.endOffset,
-          references: node.target
+          reference: node.target
         }
-        subjects.concat(node.target)
+        subjects = subjects.concat(node.target)
         documentData.nodes.push(subject)
         subjectIndex++
       } else if (node.type === 'comment') {
