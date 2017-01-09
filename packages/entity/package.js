@@ -1,5 +1,3 @@
-'use strict';
-
 import EntitiesContext from './EntitiesContext'
 
 export default {

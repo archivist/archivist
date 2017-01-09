@@ -1,4 +1,5 @@
 import { Component } from 'substance'
+import filter from 'lodash/filter'
 
 class EntitiesContext extends Component {
 
@@ -12,28 +13,12 @@ class EntitiesContext extends Component {
   //   tocProvider.off(this)
   // }
 
-  getEntries() {
-    return [
-      {
-        entity_id: '1', 
-        type: 'person',
-        data: {
-          name: 'Test person',
-          global: false,
-          description: 'Person description'
-        }
-      },
-      {
-        entity_id: '2',
-        type: 'definition',
-        data: {
-          title: 'Test definition',
-          synonyms: ['test, definition'],
-          definition_type: 'Test def type',
-          description: 'Definition description'
-        }
-      }
-    ]
+  getEntries(entityType) {
+    let editorSession = this.context.editorSession
+    let resources = editorSession.resources
+    let entries = filter(resources, {entityType: entityType})
+    
+    return entries
   }
 
   getEntityRender(entityType) {
@@ -50,15 +35,15 @@ class EntitiesContext extends Component {
       .addClass("se-entity-entries")
       .ref('entityEntries')
 
-    let entries = this.getEntries()
+    let entries = this.getEntries('person')
 
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i]
 
-      let EntityComp = this.getEntityRender(entry.type)
+      let EntityComp = this.getEntityRender(entry.entityType)
 
       entityEntries.append(
-        $$(EntityComp, entry).ref(entry.entity_id)
+        $$(EntityComp, entry).ref(entry.entityId)
       )
 
       // let entityEntryEl = $$('a')
