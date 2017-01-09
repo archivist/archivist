@@ -1,0 +1,5 @@
+/* Publisher Component styles */
+@import '../../node_modules/substance/dist/substance.next.css';
+@import './scholar.css';
+body { overflow: hidden; }
+.sc-publisher { position: absolute; left: 0px; right: 0px; bottom: 0px; top: 0px; }
