@@ -16,7 +16,8 @@ class PrisonContextItem extends Component {
   }
 
   handleClick() {
-    
+    this.send('switchActive', this.props.entityType, this.props.entityId)
+    this.send('showReferences', this.props.entityId)
   }
 
 }
