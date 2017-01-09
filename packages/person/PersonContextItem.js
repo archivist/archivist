@@ -4,6 +4,7 @@ class PersonContextItem extends Component {
 
   render($$) {
     let el = $$('div')
+      .attr("data-id", this.props.entityId)
       .addClass('sc-entity-entry se-person')
       .on('click', this.handleClick)
       .append(
