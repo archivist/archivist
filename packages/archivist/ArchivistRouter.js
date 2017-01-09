@@ -9,7 +9,7 @@ class ArchivistRouter extends Router {
   // URL helpers
   openDocument(documentId) {
     return '#' + Router.objectToRouteString({
-      page: 'document',
+      page: 'documents',
       documentId: documentId
     })
   }

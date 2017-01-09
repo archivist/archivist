@@ -85,7 +85,7 @@ export default {
     config.setResourceClient(ResourceClient)
 
     config.setMenuItems([
-      {label: 'Documents', action: 'documents'},
+      {label: 'Documents', action: 'archive'},
       {label: 'Subjects', action: 'subjects'},
       {label: 'Persons', action: 'persons'},
       {label: 'Prisons', action: 'prisons'},

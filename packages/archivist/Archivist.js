@@ -53,7 +53,7 @@ class Archivist extends AbstractApplication {
   }
 
   getDefaultPage() {
-    return 'documents'
+    return 'archive'
   }
 
   getLoginPage() {
