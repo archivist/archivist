@@ -3,6 +3,6 @@ import DocumentPage from './DocumentPage'
 export default {
   name: 'archivist-document',
   configure: function(config) {
-    config.addPage('document', DocumentPage)
+    config.addPage('documents', DocumentPage)
   }
 }
