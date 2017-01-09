@@ -1,0 +1,50 @@
+.sc-reader .sc-layout {
+  padding: 20px;
+}
+
+.sc-reader .se-context-section { 
+  background: #fafafa;
+  border-left: 1px solid var(--border-color);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.sc-reader .se-context-section .se-toggle-context {
+  height: 41px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sc-reader .se-context-section .se-toggle-context .se-toggle-item {
+  float: left;
+  height: 41px;
+  line-height: 40px;
+  padding: 0px 20px;
+  color: #444;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sc-reader .se-context-section .se-toggle-context .se-toggle-item.se-active {
+  background: #eee;
+  border-bottom: 1px solid #444;
+}
+
+.sc-reader .se-context-section .sc-entity-entry {
+  position: relative;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+}
+
+.sc-reader .se-context-section .sc-entity-entry.se-active {
+  background: white;
+  border-left: 2px solid #0b9dd9;
+}
+
+.sc-reader .se-context-section .sc-entity-entry .se-description {
+  font-size: 12px;
+  padding-top: 10px;
+}
+
+.sc-reader .se-main-section .sc-container-editor > * { margin-bottom: 20px; }
+.sc-reader .sc-toolbar { border-bottom: 1px solid var(--border-color); }
