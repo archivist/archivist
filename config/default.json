@@ -4,8 +4,8 @@
     "host": "localhost",
     "wsUrl": "ws://localhost:5000",
     "appUrl": "http://localhost:5000",
-    "publisherEndpoint": "/",
-    //"browserEnpoint": "/"
+    "publisherEndpoint": "/publisher",
+    "scholarEndpoint": "/"
   },
   "app": {
     "protocol": "http",
