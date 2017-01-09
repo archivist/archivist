@@ -8,8 +8,8 @@ import { ContainerAnnotation } from 'substance'
 class SubjectReference extends ContainerAnnotation {}
 
 SubjectReference.define({
-  "type": 'subject',
-  "reference": {type: ["string"], default: []}
+  type: 'subject',
+  reference: {type: ["string"], default: []}
 })
 
 export default SubjectReference
