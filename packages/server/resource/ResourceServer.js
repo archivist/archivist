@@ -14,6 +14,7 @@ class ResourceServer {
     // search
     app.post(this.path + '/entities', this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
+    app.get(this.path + '/entities/document/:id', this._getDocumentResources.bind(this))
     app.get(this.path + '/entities/search', this._searchEntities.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
@@ -87,6 +88,21 @@ class ResourceServer {
     let args = req.query
     
     this.engine.listEntities(args)
+      .then(function(entities) {
+        res.json(entities)
+      })
+      .catch(function(err) {
+        next(err)
+      })
+  }
+
+  /*
+    Get document resources
+  */
+  _getDocumentResources(req, res, next) {
+    let documentId = req.params.id
+
+    this.engine.getDocumentResources(documentId)
       .then(function(entities) {
         res.json(entities)
       })
