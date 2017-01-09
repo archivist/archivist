@@ -459,6 +459,40 @@ class SubjectsPage extends Component {
     })
   }
 
+  _loadReferences(entityId, index) {
+    let filters = {}
+    let options = {
+      columns: ['"documentId"', 'title'],
+      order: '"updatedAt" DESC'
+    }
+    let documentClient = this.context.documentClient
+    let items = this.state.items
+
+    if(!items[index].references) {
+      documentClient.getReferences(entityId, filters, options, function(err, references) {
+        if (err) {
+          this.setState({
+            error: new Err('EntitiesPage.GetReferencesError', {
+              message: 'Search results could not be loaded.',
+              cause: err
+            })
+          })
+          console.error('ERROR', err)
+          return
+        }
+
+        items[index].references = references.records
+
+        this.extendState({
+          items: items,
+          details: index 
+        })
+      }.bind(this))
+    } else {
+      this.extendState({details: index})
+    }
+  }
+
   _onSearchKeyPress(e) {
     // Perform search query on pressing enter
     if (e.which === 13 || e.keyCode === 13) {
