@@ -24,11 +24,12 @@ class DocumentPage extends Component {
     let configuratorName = [schemaName, mode].join('-')
     let configurator = this.getChildConfigurator(configuratorName)
     let childComponentRegistry = configurator.getComponentRegistry()
-    let EditorComponent = childComponentRegistry.get('editor')
+    let EditorComponent = childComponentRegistry.get(mode)
     
     el.append($$(EditorComponent, {
       configurator: configurator,
       documentId: this.props.documentId,
+      entityId: this.props.entityId,
       userSession: userSession,
       mobile: this.props.mobile
     }).ref('editor'))
