@@ -3,3 +3,30 @@
   background: #444;
   color: #fff;
 }
+
+.sc-media-jumper {
+  background: #fff;
+  color: #fff;
+  position: absolute;
+  overflow: hidden;
+  width: 20px;
+  height: 27px;
+  left: 18px;
+}
+
+.sc-media-jumper::after {
+  font-family: FontAwesome;
+  content: "\f01d";
+  position: absolute;
+  top: 0px;
+  color: #3c3c3c;
+  font-size: 15px;
+  left: 1px;
+  cursor: pointer;
+  font-weight: 100;
+  opacity: 0.3;
+}
+
+.sc-media-jumper:hover::after {
+  opacity: 1; 
+}

@@ -1,6 +1,5 @@
 import { Fragmenter, PropertyAnnotation } from 'substance'
 
-
 class Timecode extends PropertyAnnotation {}
 
 Timecode.type = "timecode"
