@@ -10,7 +10,8 @@ class ResourcesContext extends Component {
     super(...args)
 
     this.handleActions({
-      'switchTab': this._switchTab
+      'switchTab': this._switchTab,
+      'switchActive': this._switchActive
     })
   }
 
@@ -27,7 +28,7 @@ class ResourcesContext extends Component {
   }
 
   didUpdate() {
-    if(this.state.entityId) {
+    if(this.state.entityId && !this.state.noScroll) {
       this.refs.panelEl.scrollTo(this.state.entityId)
     }
   }
@@ -77,11 +78,15 @@ class ResourcesContext extends Component {
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i]
 
+      if(entry.entityId === entityId) {
+        entry.active = true
+      }
+
       let EntityComp = this.getEntityRender(entry.entityType)
       let item = $$(EntityComp, entry).ref(entry.entityId)
 
       if(entry.entityId === entityId) {
-        item.addClass('sm-active')
+        item.addClass('se-active')
       }
 
       entityEntries.append(item)
@@ -124,11 +129,19 @@ class ResourcesContext extends Component {
     let resource = this.getEntry(entityId)
 
     if(resource) {
-      this.extendState({
+      this.setState({
         contextId: resource.entityType,
         entityId: entityId
       })
     }
+  }
+
+  _switchActive(entityType, entityId) {
+    this.setState({
+      contextId: entityType,
+      entityId: entityId,
+      noScroll: true
+    })
   }
 
   _switchTab(contextId) {
