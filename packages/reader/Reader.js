@@ -36,10 +36,9 @@ class Reader extends ProseEditor {
   }
 
   _renderContextSection($$) {
+    let parent = this.getParent()
     return $$('div').addClass('se-context-section').append(
-      $$(ReaderContext, {
-        configurator: this.props.configurator
-      })
+      $$(ReaderContext, parent.props).ref('contextPanel')
     )
   }
 

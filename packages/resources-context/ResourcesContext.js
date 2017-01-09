@@ -1,5 +1,6 @@
 import { Component } from 'substance'
 import filter from 'lodash/filter'
+import find from 'lodash/find'
 import forEach from 'lodash/forEach'
 import orderBy from 'lodash/orderBy'
 
@@ -13,6 +14,24 @@ class ResourcesContext extends Component {
     })
   }
 
+  didMount() {
+    if(this.props.entityId) {
+      this.focusResource(this.props.entityId)
+    }
+  }
+
+  willReceiveProps(newProps) {
+    if(newProps.entityId !== this.props.entityId && newProps.entityId !== undefined) {
+      this.focusResource(newProps.entityId)
+    }
+  }
+
+  didUpdate() {
+    if(this.state.entityId) {
+      this.refs.panelEl.scrollTo(this.state.entityId)
+    }
+  }
+
   getInitialState() {
     let configurator = this.props.configurator
     let contexts = configurator.getResourceTypes()
@@ -20,6 +39,15 @@ class ResourcesContext extends Component {
     return {
       contextId: contexts[0].id
     }
+  }
+
+  getEntry(entityId) {
+    let editorSession = this.context.editorSession
+    let resources = editorSession.resources
+
+    return find(resources, function(r) { 
+      return r.entityId === entityId 
+    })
   }
 
   getEntries(entityType) {
@@ -38,6 +66,7 @@ class ResourcesContext extends Component {
 
   renderContext($$, resourceType) {
     let ScrollPane = this.getComponent('scroll-pane')
+    let entityId = this.state.entityId
 
     let entityEntries = $$("div")
       .addClass("se-entity-entries")
@@ -49,10 +78,13 @@ class ResourcesContext extends Component {
       let entry = entries[i]
 
       let EntityComp = this.getEntityRender(entry.entityType)
+      let item = $$(EntityComp, entry).ref(entry.entityId)
 
-      entityEntries.append(
-        $$(EntityComp, entry).ref(entry.entityId)
-      )
+      if(entry.entityId === entityId) {
+        item.addClass('sm-active')
+      }
+
+      entityEntries.append(item)
     }
 
     let el = $$('div').addClass('sc-entity-panel').append(
@@ -60,6 +92,7 @@ class ResourcesContext extends Component {
         entityEntries
       )
     )
+
     return el
   }
 
@@ -87,8 +120,19 @@ class ResourcesContext extends Component {
     return el
   }
 
+  focusResource(entityId) {
+    let resource = this.getEntry(entityId)
+
+    if(resource) {
+      this.extendState({
+        contextId: resource.entityType,
+        entityId: entityId
+      })
+    }
+  }
+
   _switchTab(contextId) {
-    this.extendState({
+    this.setState({
       contextId: contextId
     })
   }

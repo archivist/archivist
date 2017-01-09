@@ -19,6 +19,20 @@ class ReaderContext extends Component {
     })
   }
 
+  didMount() {
+    if(this.props.entityId) {
+      this.extendState({
+        contextId: 'resources'
+      })
+    }
+  }
+
+  willReceiveProps(newProps) {
+    if(newProps.entityId !== this.props.entityId && newProps.entityId !== undefined) {
+      this._switchTab('resources')
+    }
+  }
+
   addContext(contextName, ContextClass) {
     this.contexts[contextName] = ContextClass
   }
@@ -45,7 +59,7 @@ class ReaderContext extends Component {
   renderContext($$) {
     let contextName = this.getContextName()
     let Context = this.getContext(contextName)
-    return $$(Context, this.getContextProps()).ref(contextName)
+    return $$(Context, this.props).ref(contextName)
   }
 
   render($$) {
