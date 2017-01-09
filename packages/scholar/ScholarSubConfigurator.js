@@ -9,6 +9,7 @@ class ScholarSubConfigurator extends Configurator {
   constructor(...args) {
     super(...args)
     // Extend config
+    this.config.isReader = true
     this.config.context = []
     this.config.resourceTypes = []
     this.config.contextRenderers = []
