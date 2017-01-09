@@ -1,9 +1,12 @@
+let Err = require('substance').SubstanceError
 let uuid = require('substance').uuid
 let isEmpty = require('lodash/isEmpty')
+let Promise = require('bluebird')
 
 class ResourceEngine {
   constructor(config) {
     this.configurator = config
+    this.db = config.db
     this.entityStore = config.entityStore
   }
 
@@ -43,6 +46,29 @@ class ResourceEngine {
         results.records = entities
         return results
       })
+  }
+
+  getDocumentResources(documentId) {
+    let query = `
+      SELECT "entityId", "entityType", data, name 
+      FROM entities
+      WHERE "entityId" IN (
+        SELECT unnest(annotations)
+        FROM documents
+        WHERE "documentId" = $1 
+      )
+    `
+    return new Promise((resolve, reject) => {
+      this.db.run(query, [documentId], (err, entities) => {
+        if (err) {
+          return reject(new Err('ResourceEngine.ReadDocumentResources', {
+            cause: err
+          }))
+        }
+        
+        resolve(entities)
+      })
+    })
   }
 
 }
