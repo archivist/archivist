@@ -18,6 +18,11 @@ class ScholarRouter extends Router {
     return '/resources/' + entityId
   }
 
+  focusResource(entityId) {
+    let route = '#entityId=' + entityId
+    this._writeRoute(route, {})
+  }
+
   getRoute() {
     let routerString = this.getRouteString()
     return this.routeStringToObject(routerString)
