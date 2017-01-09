@@ -1,0 +1,32 @@
+.sc-documents .sc-grid .sc-grid {
+  overflow: inherit;
+}
+
+.sc-documents .se-document-summary {
+  border-bottom: none;
+}
+
+.sc-documents .se-document-fragment {
+  display: table;
+  width: 100%;
+}
+
+.sc-documents > .sc-grid > .se-row.se-document-fragment > .se-cell {
+  display: table-cell;
+  float: none;
+  vertical-align: middle;
+}
+
+.sc-documents .se-document-fragment .se-badge {
+  background: #fafafa;
+  text-align: center;
+}
+
+.sc-documents .se-document-fragment:hover > .se-badge {
+  background: #EEEEEE;
+}
+
+.sc-documents .sc-grid > .se-document-fragment:before, .sc-documents .sc-grid > .se-document-fragment:after {
+  content: none;
+  display: table;
+}
