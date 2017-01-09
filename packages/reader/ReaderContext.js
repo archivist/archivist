@@ -31,6 +31,10 @@ class ReaderContext extends Component {
     if(newProps.entityId !== this.props.entityId && newProps.entityId !== undefined) {
       this._switchTab('resources')
     }
+
+    if(newProps.time !== this.props.time && newProps.time !== undefined) {
+      this._switchTab('source')
+    }
   }
 
   addContext(contextName, ContextClass) {
@@ -59,7 +63,7 @@ class ReaderContext extends Component {
   renderContext($$) {
     let contextName = this.getContextName()
     let Context = this.getContext(contextName)
-    return $$(Context, this.props).ref(contextName)
+    return $$(Context, this.props).addClass('sc-context-' + contextName).ref(contextName)
   }
 
   render($$) {

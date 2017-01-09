@@ -30,6 +30,7 @@ class DocumentPage extends Component {
       configurator: configurator,
       documentId: this.props.documentId,
       entityId: this.props.entityId,
+      time: this.props.time,
       userSession: userSession,
       mobile: this.props.mobile
     }).ref('editor'))
