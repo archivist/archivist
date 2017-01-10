@@ -25,6 +25,17 @@ class ArchivistDocumentServer extends DocumentServer {
   }
 
   /*
+    Get a document with given document id
+  */
+  _getDocument(req, res, next) {
+    const documentId = req.params.id
+    this.engine.getDocument(documentId, function(err, doc) {
+      if (err) return next(err)
+      res.json(doc)
+    })
+  }
+
+  /*
     List available documents
   */
   _listDocuments(req, res, next) {

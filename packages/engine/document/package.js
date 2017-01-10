@@ -7,9 +7,10 @@ module.exports = {
     let documentEngine = new DocumentEngine({
       db: db,
       configurator: config,
+      snapshotFrequency: 50,
       documentStore: config.getStore('document'),
       changeStore: config.getStore('change'),
-      snapshotEngine: config.getEngine('snapshot')
+      snapshotStore: config.getStore('snapshot')
     })
 
     config.addEngine('document', documentEngine)

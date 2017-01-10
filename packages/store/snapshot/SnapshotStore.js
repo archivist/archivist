@@ -1,5 +1,6 @@
 let Err = require('substance').SubstanceError
 let forEach = require('lodash/forEach')
+let map = require('lodash/map')
 let Promise = require('bluebird')
 
 /*
@@ -27,16 +28,31 @@ class SnapshotStore {
   }
 
   /*
-    Stores a snapshot for a given documentId and version.
+    Get all available versions for a document
+  */
+  getVersions(documentId, cb) {
+    this.db.snapshots.find({documentId: documentId}, {columns: ['version']}, function(err, versions) {
+      if (err) {
+        return cb(new Err('SnapshotStore.GetVersionsError', {
+          cause: err
+        }))
+      }
+      let res = map(versions, function(d){ return d.version})
+      cb(null, res)
+    })
+  }
+
+  /*
+    Saves a snapshot for a given documentId and version.
 
     Please note that an existing snapshot will be overwritten.
   */
-  saveSnapshot(args, cb) {
+  saveSnapshot(documentId, version, data, cb) {
     let record = {
-      documentId: args.documentId,
-      version: args.version,
-      data: args.data,
-      created: args.createdAt || new Date()
+      documentId: documentId,
+      version: version,
+      data: data,
+      created: new Date()
     }
 
     this.db.snapshots.insert(record, function(err, snapshot) {
@@ -45,9 +61,6 @@ class SnapshotStore {
           cause: err
         }))
       }
-
-      // Set documentId explictly as it will be used by Document Engine
-      snapshot.documentId = snapshot.document_id
 
       cb(null, snapshot)
     })
@@ -72,29 +85,23 @@ class SnapshotStore {
     
     @return {Object} snapshot record
   */
-  getSnapshot(args, cb) {
-    if (!args || !args.documentId) {
+  getSnapshot(documentId, version, cb) {
+    if (!arguments.length === 3) {
       return cb(new Err('InvalidArgumentsError', {
-        message: 'args require a documentId'
+        message: 'Invalid Arguments'
       }))
     }
 
-    let filters = {documentId: args.documentId}
-
-    if(args.version && args.findClosest) {
-      filters['version <='] = args.version
-    } else if (args.version) {
-      filters.version = args.version
-    }
-
-    this.db.snapshots.findOne(filters, {order: 'version desc'}, function(err, snapshot) {
+    let filters = {documentId: documentId, version: version}
+    
+    this.db.snapshots.findOne(filters, function(err, snapshot) {
       if (err) {
         return cb(new Err('SnapshotStore.ReadError', {
           cause: err
         }))
       }
 
-      cb(null, snapshot)
+      cb(null, snapshot, version)
     })
   }
 

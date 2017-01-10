@@ -38,19 +38,19 @@ class ChangeStore {
     @param {Callback} cb callback
     @returns {Callback}
   */
-  addChange(args, cb) {
-    if(!has(args, 'documentId')) {
+  addChange(documentId, change, cb) {
+    if (!documentId || !change) {
       return cb(new Err('ChangeStore.CreateError', {
-        message: 'documentId is mandatory'
+        message: 'Invalid arguments'
       }))
     }
 
     let userId = null;
-    if(args.change.info) {
-      userId = args.change.info.userId
+    if(change.info) {
+      userId = change.info.userId
     }
     
-    this.getVersion(args.documentId, function(err, headVersion) {
+    this.getVersion(documentId, function(err, headVersion) {
       if (err) {
         return cb(new Err('ChangeStore.GetVersionError', {
           cause: err
@@ -58,10 +58,10 @@ class ChangeStore {
       }
       let version = headVersion + 1
       let record = {
-        documentId: args.documentId,
+        documentId: documentId,
         version: version,
-        data: args.change,
-        createdAt: args.createdAt || new Date(),
+        data: change,
+        createdAt: new Date(),
         userId: userId
       }
 
@@ -133,39 +133,30 @@ class ChangeStore {
   /*
     Get changes from the DB
 
-    @param {Object} args arguments
-    @param {String} args.documentId document id
-    @param {String} args.sinceVersion changes since version (0 = all changes, 1 all except first change)
+    @param {String} documentId document id
+    @param {Number} sinceVersion since which change (optional)
+    @param {Number} toVersion up to and including version (optional)
     @param {Callback} cb callback
     @returns {Callback}
   */
-  getChanges(args, cb) {
-    if(args.sinceVersion < 0) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'sinceVersion should be grater or equal then 0'
-      }))
+  getChanges(documentId, sinceVersion, toVersion, cb) {
+    if (typeof sinceVersion === 'function') {
+      cb = sinceVersion
+      sinceVersion = 0
+    } else if (typeof toVersion === 'function') {
+      cb = toVersion
+      toVersion = undefined
     }
-
-    if(args.toVersion < 0) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'toVersion should be grater then 0'
-      }))
+    if (!(documentId && sinceVersion >= 0 && cb)) {
+      throw new Error('Invalid arguments')
     }
-
-    if(args.sinceVersion >= args.toVersion) {
-      return cb(new Err('ChangeStore.ReadError', {
-        message: 'toVersion should be greater then sinceVersion'
-      }))
-    }
-
-    if(!has(args, 'sinceVersion')) args.sinceVersion = 0;
 
     let query = {
-      'documentId': args.documentId,
-      'version >': args.sinceVersion
+      'documentId': documentId,
+      'version >': sinceVersion
     }
 
-    if(args.toVersion) query['version <='] = args.toVersion;
+    if(toVersion) query['version <='] = toVersion
 
     let options = {
       order: 'version asc',
@@ -180,21 +171,16 @@ class ChangeStore {
       }
 
       // transform results to an array of changes 
-      changes = map(changes, function(c) {return c.data; });
+      changes = map(changes, function(c) {return c.data })
 
-      this.getVersion(args.documentId, function(err, headVersion) {
+      this.getVersion(documentId, function(err, headVersion) {
         if (err) {
           return cb(new Err('ChangeStore.ReadError', {
             cause: err
           }))
         }
 
-        let res = {
-          version: headVersion,
-          changes: changes
-        }
-
-        cb(null, res)
+        cb(null, changes, headVersion)
       })
     }.bind(this))
   }

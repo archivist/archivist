@@ -10,6 +10,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
   constructor(config) {
     super(config)
 
+    this.documentStore = config.documentStore
     this.configurator = config
     this.db = config.db
   }
@@ -28,22 +29,21 @@ class ArchivistDocumentEngine extends DocumentEngine {
     super.createDocument(args, cb)
   }
 
-  getDocument(args, cb) {
-    let self = this;
-    // SQL query powered
-    this.queryDocumentMetaData(args.documentId, function(err, docEntry) {
+  getDocument(documentId, cb) {
+    this.queryDocumentMetaData(documentId, (err, docEntry) => {
       if (err) {
         return cb(new Err('ArchivistDocumentEngine.ReadDocumentMetadataError', {
           cause: err
         }))
       }
-      self.snapshotEngine.getSnapshot(args, function(err, snapshot) {
+
+      this.snapshotEngine.getSnapshot(docEntry.documentId, docEntry.version, function(err, snapshot) {
         if (err) {
           return cb(new Err('ArchivistDocumentEngine.ReadSnapshotError', {
             cause: err
           }))
         }
-        docEntry.data = snapshot.data
+        docEntry.data = snapshot.data ? snapshot.data : snapshot
         cb(null, docEntry)
       })
     })
@@ -135,6 +135,29 @@ class ArchivistDocumentEngine extends DocumentEngine {
         cb(null, results)
       })
     }.bind(this))
+  }
+
+  /*
+    Add change to a given documentId.
+
+    Snapshot creation is requested on each change to be stored.
+  */
+  addChange(documentId, change, cb) {
+    this.changeStore.addChange(documentId, change, (err, newVersion) => {
+      if (err) return cb(err)
+
+      this.documentStore.updateDocument(documentId, {
+        version: newVersion,
+        // Store custom documentInfo
+        // info: args.documentInfo
+      }, err => {
+        if (err) return cb(err)
+        this.requestSnapshot(documentId, newVersion, () => {
+          // no matter if snaphot creation errored or not we will confirm change
+          cb(null, newVersion)
+        })
+      })
+    })
   }
 }
 
