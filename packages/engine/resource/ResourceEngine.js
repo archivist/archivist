@@ -48,6 +48,28 @@ class ResourceEngine {
       })
   }
 
+
+  getResourcesTree(entityType) {
+    let query = `
+      SELECT "entityId", "name", data->'parent' AS parent, data->'position' AS position
+      FROM entities
+      WHERE "entityType" = $1 
+      ORDER BY cast(data->>'position' as integer) ASC
+    `
+
+    return new Promise((resolve, reject) => {
+      this.db.run(query, [entityType], (err, entities) => {
+        if (err) {
+          return reject(new Err('ResourceEngine.GetResourcesTree', {
+            cause: err
+          }))
+        }
+        
+        resolve(entities)
+      })
+    })
+  }
+
   getDocumentResources(documentId) {
     let query = `
       SELECT "entityId", "entityType", data, name 

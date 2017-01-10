@@ -17,6 +17,13 @@ class ResourceClient {
   }
 
   /*
+    Get subjects data
+  */
+  getSubjects(cb) {
+    request('GET', '/api/entities/tree/subject', null, cb)
+  }
+
+  /*
     Read an entity
   */
   getEntity(entityId, cb) {

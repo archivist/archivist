@@ -1,4 +1,4 @@
-import { Component, EditorSession, JSONConverter, SplitPane } from 'substance'
+import { Component, EditorSession, JSONConverter, SplitPane, series } from 'substance'
 import Reader from './Reader'
 
 let converter = new JSONConverter()
@@ -107,20 +107,48 @@ class ReaderLayout extends Component {
       window.doc = doc
       window.session = session
 
-      // load document resources
-      this._loadDocumentResources(documentId, (err, resources) => {
-        if (err) {
-          this._onError(err)
-          return
-        }
-
-        session.resources = resources
-
+      series([
+        this._loadResources(documentId, session),
+        this._loadSubjects(session)
+      ], () => {
         this.setState({
           session: session
         })
       })
     })
+  }
+
+  _loadResources(documentId, session) {
+    return function(cb) {
+      this._loadDocumentResources(documentId, (err, resources) => {
+        session.resources = resources
+        cb()
+      })
+    }.bind(this)
+  }
+
+  /*
+    Loads subjects tree data
+  */
+  _loadSubjects(session) {
+    return function(cb) {
+      let resourceClient = this.context.resourceClient
+      let mainConfigurator = this.context.configurator
+      let configurator = mainConfigurator.getConfigurator('archivist-subjects')
+
+      resourceClient.getSubjects((err, res) => {
+        if (err) {
+          console.error('ERROR', err)
+          return
+        }
+
+        let importer = configurator.createImporter('subjects')
+        let subjects = importer.importDocument(res, true)
+
+        session.subjects=subjects
+        cb()
+      })
+    }.bind(this)
   }
 
   /*

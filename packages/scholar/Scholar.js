@@ -66,6 +66,10 @@ class Scholar extends AbstractApplication {
     });
   }
 
+  _getSubjects() {
+    return this.subjects
+  }
+
   _getPageProps() {
     let props = cloneDeep(this.state.route)
     delete props.page
