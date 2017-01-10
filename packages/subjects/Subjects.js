@@ -46,6 +46,11 @@ class Subjects extends Document {
     return !isEmpty(children)
   }
 
+  hasParent(node) {
+    if(!node) return false
+    return Boolean(node.parent) && node.parent !== 'root'
+  }
+
   // Get parent node for a given nodeId
   getParent(nodeId) {
     return this.get(nodeId).getParent()
@@ -56,9 +61,9 @@ class Subjects extends Document {
   getParents(nodeId) {
     let node = this.get(nodeId)
     let parents = []
-    while (node.hasParent()) {
+    while (this.hasParent(node)) {
       node = node.getParent()
-      parents.push(node.id)
+      if(node) parents.push(node.id)
     }
     return parents
   }

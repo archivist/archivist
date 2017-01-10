@@ -5,21 +5,33 @@ let converters = []
 
 class SubjectsImporter extends HTMLImporter {
 
-  importDocument(subjectsData) {
+  importDocument(subjectsData, reader) {
     this.reset()
 
     let doc = this.generateDocument()
     each(subjectsData, function(subject) {
-      doc.create({
-        id: subject.entityId,
-        type: 'subject',
-        name: subject.data.name,
-        workname: subject.data.workname,
-        position: subject.data.position,
-        count: parseInt(subject.count, 10),
-        description: subject.data.description,
-        parent: subject.data.parent || 'root'
-      })
+
+      if(reader) {
+        doc.create({
+          id: subject.entityId,
+          type: 'subject',
+          name: subject.name,
+          position: subject.position,
+          count: 0,
+          parent: subject.parent || 'root'
+        })
+      } else {
+        doc.create({
+          id: subject.entityId,
+          type: 'subject',
+          name: subject.data.name,
+          workname: subject.data.workname,
+          position: subject.data.position,
+          count: parseInt(subject.count, 10),
+          description: subject.data.description,
+          parent: subject.data.parent || 'root'
+        })
+      }
     })
 
     return doc
