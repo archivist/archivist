@@ -1,4 +1,5 @@
 import { Component } from 'substance'
+import extend from 'lodash/extend'
 
 class DocumentPage extends Component {
 
@@ -8,7 +9,6 @@ class DocumentPage extends Component {
   }
 
   render($$) {
-    let userSession = this.props.userSession
     // let schemaName = this.props.schemaName
     let schemaName = 'archivist-interview'
     let el = $$('div').addClass('sc-document-page')
@@ -25,15 +25,10 @@ class DocumentPage extends Component {
     let configurator = this.getChildConfigurator(configuratorName)
     let childComponentRegistry = configurator.getComponentRegistry()
     let EditorComponent = childComponentRegistry.get(mode)
+
+    let props = extend({}, this.props, {configurator: configurator})
     
-    el.append($$(EditorComponent, {
-      configurator: configurator,
-      documentId: this.props.documentId,
-      entityId: this.props.entityId,
-      time: this.props.time,
-      userSession: userSession,
-      mobile: this.props.mobile
-    }).ref('editor'))
+    el.append($$(EditorComponent, props).ref('editor'))
 
     return el
   }
