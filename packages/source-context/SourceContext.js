@@ -15,6 +15,7 @@ class SourceContext extends Component {
       if(player) {
         let seconds = this.hmsToSecondsOnly(time)
         player.seek(seconds)
+        player.play()
       }
     }
   }
@@ -34,13 +35,30 @@ class SourceContext extends Component {
   }
 
   render($$) {
+    let config = this.context.config
     let el = $$('div').addClass('sc-context-panel')
 
     if(this.state.type === 'video') {
-      //<div data-type="youtube" data-video-id="bTqVqk7FSmY"></div
       let player = $$('div')
         .addClass('se-media')
         .attr({'data-type': 'vimeo', 'data-video-id': this.state.media})
+
+      el.append(player)
+    } else if (this.state.type === 'audio') {
+      let player = $$('audio')
+        .addClass('se-media')
+        .attr({controls: true})
+
+      player.append(
+        $$('source').attr({
+          src: config.mediaServer + '/audio/' + this.state.media + '.mp3',
+          type: 'audio/mp3'
+        }),
+        $$('source').attr({
+          src: config.mediaServer + '/audio/' + this.state.media + '.ogg',
+          type: 'audio/ogg'
+        })
+      )
 
       el.append(player)
     }
