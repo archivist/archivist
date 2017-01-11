@@ -48,25 +48,6 @@ class SubjectsContext extends Component {
     })
   }
 
-  // renderFull($$) {
-  //   let urlHelper = this.context.urlHelper
-  //   let items = this.state.items
-  //   let grid = $$(Grid)
-
-  //   if(items) {
-  //     let childNodes = items.getRoots()
-  //     childNodes = sortBy(childNodes, ['position'])
-
-  //     let childEls = childNodes.map(function(node) {
-  //       return this.renderChildren($$, node, 1)
-  //     }.bind(this))
-
-  //     grid.append(flattenDeep(childEls))
-  //   }
-
-  //   return grid
-  // }
-
   renderChildren($$, node, level) {
     let editorSession = this.context.editorSession
     let subjects = editorSession.subjects
@@ -80,7 +61,8 @@ class SubjectsContext extends Component {
         return this.renderChildren($$, сhildNode, level + 1)
       }.bind(this))
     
-      let el = $$('div').addClass('se-tree-node se-level-' + level)
+      let el = $$('a').addClass('se-tree-node se-level-' + level)
+      .attr("href", '#topicId=' + node.id)
       .append(node.name)
       .ref(node.id)
 
