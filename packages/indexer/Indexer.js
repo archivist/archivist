@@ -51,14 +51,14 @@ class Indexer extends EventEmitter {
     return new Promise(function(resolve, reject) {
       this._clearDocumentIndex(documentId)
         .then(function() {
-          this.snapshotEngine.getSnapshot({documentId: documentId}, function(err, snapshot) {
+          this.documentEngine.getDocument(documentId, function(err, docEntry) {
             if(err) {
               return reject(new Err('Indexer.IndexError', {
                 cause: err
               }))
             }
             let emptyDoc = this.configurator.createArticle()
-            let doc = converter.importDocument(emptyDoc, snapshot.data)
+            let doc = converter.importDocument(emptyDoc, docEntry.data)
             let body = doc.get('body')
             let fullText = ''
             let t0 = new Date()
@@ -69,7 +69,7 @@ class Indexer extends EventEmitter {
               let nextId = body.nodes[index + 1] || null
               return this._processNode(nodeId, doc, documentId, prevId, nextId)
             }.bind(this), {concurrency: 10}).then(function() {
-              return this._saveFullText(documentId, fullText, snapshot.version)
+              return this._saveFullText(documentId, fullText, docEntry.version)
             }.bind(this)).then(function() {
               let t1 = new Date()
               console.log('finish fragment generation, takes', t1-t0, 'ms')
