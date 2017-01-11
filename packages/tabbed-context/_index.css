@@ -1,10 +1,37 @@
-.se-tab-label > .se-label {
+.sc-tabbed-pane .se-tab-label > .se-label {
   font-weight: 600;
   display: inline-block;
   padding: 0px 5px;
 }
 
 /* Add spacing between icon and label */
-.se-tab-label > * + * {
+.sc-tabbed-pane .se-tab-label > * + * {
   padding-left: 5px;
+}
+
+.sc-tabbed-pane .se-tabs {
+  background-color: #fff;
+}
+
+.sc-tabbed-pane .se-tab-content {
+  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.25);
+}
+
+/* Nested tabs */
+.sc-tabbed-pane .sc-tabbed-pane .se-tabs {
+  height: 32px;
+}
+
+.sc-tabbed-pane .sc-tabbed-pane .se-tab {
+  display: block;
+  padding: 6px 14px;
+  color: rgba(0, 0, 0, 0.4);
+  line-height: 18px;
+  height: 32px;
+  float: left;
+  cursor: pointer;
+}
+
+.sc-tabbed-pane .sc-tabbed-pane .se-tab-content {
+  top: 32px;
 }

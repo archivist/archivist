@@ -1,35 +1,57 @@
+.sc-context-subjects .se-content {
+  font-size: 12px;
+  padding: 10px;
+  line-height: 24px;
+}
+
+.se-tree-node {
+  padding: 2px 0px;
+  display: block;
+  font-weight: 600;
+  color: #999;
+}
+
+.se-tree-node.sm-selected {
+  color: #333;
+}
+
+.se-tree-node:hover {
+  color: #333;
+  cursor: pointer;
+}
+
 .se-level-1 {
   padding-left: 20px;
 }
 
 .se-level-2 {
-  padding-left: 50px;
+  padding-left: 40px;
 }
 
 .se-level-3 {
-  padding-left: 80px;
+  padding-left: 60px;
 }
 
 .se-level-4 {
-  padding-left: 110px;
+  padding-left: 80px;
 }
 
 .se-level-5 {
-  padding-left: 140px;
+  padding-left: 100px;
 }
 
 .se-level-6 {
-  padding-left: 170px;
+  padding-left: 120px;
 }
 
 .se-level-7 {
-  padding-left: 200px;
+  padding-left: 140px;
 }
 
 .se-level-8 {
-  padding-left: 230px;
+  padding-left: 160px;
 }
 
 .se-level-9 {
-  padding-left: 260px;
+  padding-left: 180px;
 }
