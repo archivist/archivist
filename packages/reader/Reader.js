@@ -59,6 +59,7 @@ class Reader extends ProseEditor {
 
     let ScrollPane = this.componentRegistry.get('scroll-pane')
     let Overlay = this.componentRegistry.get('overlay')
+    let Brackets = this.componentRegistry.get('brackets')
 
     let contentPanel = $$(ScrollPane, {
       scrollbarType: 'substance',
@@ -71,6 +72,7 @@ class Reader extends ProseEditor {
     })
     
     layout.append(
+      $$(Brackets, {}),
       $$(ContainerEditor, {
         disabled: 'true',
         editorSession: this.editorSession,

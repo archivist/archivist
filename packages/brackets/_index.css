@@ -1,0 +1,39 @@
+.sc-brackets {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 30px;
+}
+
+.sc-brackets .se-bracket {
+  border-bottom: 1px solid #91bb04;
+  border-top: 1px solid #91bb04;
+  border-right: 1px solid #91bb04;
+  width: 6px;
+  position: absolute;
+  top: 30px;
+  right: 10px;
+  height: 100px;
+  cursor: pointer;
+}
+
+.sc-brackets .se-bracket.sm-level-1 {
+  right: 30px;
+}
+
+.sc-brackets .se-bracket.sm-level-2 {
+  right: 45px;
+}
+
+.sc-reader .sc-brackets .se-bracket {
+  border-top: none;
+  border-width: 1px;
+  border-bottom: none;
+  right: 15px; 
+  display: none;
+}
+
+.sc-reader .sc-brackets .se-bracket.sm-active {
+  display: block;
+}
