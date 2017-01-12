@@ -142,11 +142,22 @@ class Reader extends ProseEditor {
   }
 
   _showTopics(topics) {
-    console.log(topics)
+    let editorSession = this.editorSession
+    let doc = editorSession.getDocument()
+    let entityIndex = doc.getIndex('entities')
+    let paragraphs = []
+    forEach(topics, topic => {
+      let refs = entityIndex.get(topic)
+      let paras = map(refs, n => {return n.startPath[0]})
+      paragraphs = paragraphs.concat(paras)
+    })
+    let firstPara = doc.getFirst(paragraphs)
+    this.refs.contentPanel.scrollTo(firstPara)
+
     setTimeout(function(){
       this.highlightReferences(topics, true)
       this.refs.brackets.highlight(topics)
-    }.bind(this), 100)
+    }.bind(this), 10)
   }
 
 }

@@ -1,6 +1,6 @@
 import { Document } from 'substance'
 import EntityIndex from '../common/EntityIndex'
-
+import map from 'lodash/map'
 /*
   Archivist Interview model.
 */
@@ -36,6 +36,16 @@ class Interview extends Document {
     }
 
     return range
+  }
+
+  getFirst(nodes) {
+    let container = this.get('body')
+    let positions = map(nodes, node => { return container.getPosition(node)})
+    positions.sort(function(a, b) {
+      return a - b
+    })
+
+    return container.getNodeAt(positions[0]).id
   }
 
 }
