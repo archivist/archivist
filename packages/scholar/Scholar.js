@@ -31,6 +31,7 @@ class Scholar extends AbstractApplication {
     this.handleActions({
       'navigate': this.navigate,
       'home': this._home,
+      'changeLanguage': this._changeLanguage
     })
   }
 
@@ -82,6 +83,12 @@ class Scholar extends AbstractApplication {
     this.navigate({
       page: this.getDefaultPage()
     })
+  }
+
+  _changeLanguage(lang) {
+    this.configurator.setDefaultLanguage(lang)
+    this.labelProvider = this.configurator.getLabelProvider()
+    this.rerender()
   }
 
 }

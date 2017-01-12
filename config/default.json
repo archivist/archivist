@@ -11,6 +11,7 @@
     "protocol": "http",
     "host": "localhost",
     "port": 5000,
+    "defaultLanguage": "en",
     "mediaServer": ""
   },
   "mail": {

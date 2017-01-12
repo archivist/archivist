@@ -1,4 +1,5 @@
 import { Configurator } from 'substance'
+import ScholarLabelProvider from './ScholarLabelProvider'
 
 /*
   Scholar configurator.
@@ -112,6 +113,9 @@ class ScholarConfigurator extends Configurator {
     return this.config.menu
   }
 
+  getLabelProvider() {
+    return new ScholarLabelProvider(this.config.labels, this.config.lang)
+  }
 }
 
 export default ScholarConfigurator

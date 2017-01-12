@@ -44,6 +44,7 @@ export default {
       {id: 'person', name: 'person-resources'},
       {id: 'definition', name: 'definition-resources'}
     ])
+    ReaderConfigurator.setDefaultLanguage(appConfig.defaultLanguage)
     config.addConfigurator('archivist-interview-reader', ReaderConfigurator)
 
     // Entities subconfigurator
@@ -61,13 +62,11 @@ export default {
     // Subjects subconfigurator
     config.addConfigurator('archivist-subjects', new ScholarSubConfigurator().import(SubjectsPackage))
 
-    // Add app's root style
-    //config.addStyle(__dirname, 'app.scss');
-
     config.setAppConfig({
       protocol: appConfig.protocol,
       host: appConfig.host,
       port: appConfig.port,
+      defaultLanguage: appConfig.defaultLanguage,
       mediaServer: appConfig.mediaServer
     })
 
