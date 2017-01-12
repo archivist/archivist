@@ -4,19 +4,19 @@ import plyr from 'plyr'
 class SourceContext extends Component {
 
   didMount() {
-    plyr.setup()
+    let pl = plyr.setup()
+    this.player = pl[0]
+    this.player.on('ready', () => {
+      this._onPlayerLoad()
+    })
   }
 
   didUpdate() {
     let time = this.props.time
-    if(time) {
-      let player = plyr.get()
-      player = player[0]
-      if(player) {
-        let seconds = this.hmsToSecondsOnly(time)
-        player.seek(seconds)
-        player.play()
-      }
+    if(time && this.player && this.initialized) {
+      let seconds = this.hmsToSecondsOnly(time)
+      this.player.seek(seconds)
+      this.player.play()
     }
   }
 
@@ -75,6 +75,25 @@ class SourceContext extends Component {
     }
 
     return s
+  }
+
+  /*
+    Rewind player to initial time
+    TODO: find a proper way to rewind when video is ready
+    we can't relay on plyr's ready event as it fired too early 
+  */
+  _onPlayerLoad() {
+    let time = this.props.time
+    if(time) {
+      let seconds = this.hmsToSecondsOnly(time)
+      setTimeout(() => {
+        this.player.seek(seconds)
+        this.initialized = true
+        setTimeout(() => {
+          this.player.pause()
+        }, 0)
+      }, 1000)
+    }
   }
 }
 
