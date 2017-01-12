@@ -30,7 +30,7 @@ class SourceContext extends Component {
     }
   }
 
-  shouldRerender(newProps, newState) { // eslint-disable-line
+  shouldRerender(newProps, newState) {
     return false
   }
 
@@ -63,7 +63,31 @@ class SourceContext extends Component {
       el.append(player)
     }
 
+    let technicalData = $$('div').addClass('se-technical-info').append(
+      this._renderMetaProp($$, 'project_name', 'tech-project_name'),
+      this._renderMetaProp($$, 'conductor', 'tech-conductor'),
+      this._renderMetaProp($$, 'operator', 'tech-operator'),
+      this._renderMetaProp($$, 'sound_operator', 'tech-sound_operator'),
+      this._renderMetaProp($$, 'interview_location', 'tech-interview_location'),
+      this._renderMetaProp($$, 'interview_date', 'tech-interview_date')
+    )
+
+    el.append(technicalData)
+
     return el
+  }
+
+  _renderMetaProp($$, prop, label) {
+    let doc = this.context.doc
+    let metadata = doc.getDocumentMeta()
+    let value = metadata[prop]
+    if(!value) {
+      return
+    }
+    return $$('div').addClass('se-meta-prop se-meta-' + prop).append(
+      $$('div').addClass('se-meta-label').append(this.getLabel(label)),
+      $$('div').addClass('se-meta-value').append(value)
+    )
   }
 
   hmsToSecondsOnly(str) {
@@ -93,6 +117,8 @@ class SourceContext extends Component {
           this.player.pause()
         }, 0)
       }, 1000)
+    } else {
+      this.initialized = true
     }
   }
 }

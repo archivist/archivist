@@ -1,3 +1,33 @@
 .sc-context-source {
   padding: 20px;
 }
+
+.sc-context-source .plyr {
+  padding-bottom: 20px;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.sc-context-source .se-technical-info {
+  font-size: 13px;
+  line-height: 25px;
+  padding-bottom: 20px;
+  margin-bottom: 15px;
+  white-space: pre-wrap;
+} 
+
+.sc-context-source .se-technical-info .se-meta-prop {
+  margin-bottom: 10px;
+  line-height: 20px;
+  font-size: 13px;
+}
+
+.sc-context-source .se-technical-info .se-meta-prop .se-meta-label {
+  float: left;
+  width: 130px;
+  color: #757575;
+}
+
+.sc-context-source .se-technical-info .se-meta-prop .se-meta-value {
+  margin-left: 160px;
+}
