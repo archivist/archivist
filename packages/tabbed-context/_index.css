@@ -13,6 +13,10 @@
   background-color: #fff;
 }
 
+.sc-tabbed-pane .se-tabs .se-tab {
+  padding: 0px 14px;
+}
+
 .sc-tabbed-pane .se-tab-content {
   box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
@@ -30,6 +34,12 @@
   height: 32px;
   float: left;
   cursor: pointer;
+}
+
+.sc-tabbed-pane .sc-tabbed-pane .se-tab.sm-active {
+  color: #444;
+  background: rgba(0, 0, 0, 0.05);
+  border-bottom: none;
 }
 
 .sc-tabbed-pane .sc-tabbed-pane .se-tab-content {
