@@ -1,5 +1,4 @@
 import { DocumentIndex, TreeIndex } from 'substance'
-import filter from 'lodash/filter'
 
 class EntityIndex extends DocumentIndex {
   constructor(...args) {
@@ -11,7 +10,7 @@ class EntityIndex extends DocumentIndex {
   get property() { return "reference" }
 
   select(node) {
-    return Boolean(node._isPropertyAnnotation)
+    return Boolean(node._isPropertyAnnotation || node._isContainerAnnotation) && Boolean(node.reference)
   }
 
   reset(data) {
@@ -25,11 +24,25 @@ class EntityIndex extends DocumentIndex {
   }
 
   create(anno) {
-    this.byReference.set([anno.reference, anno.id], anno)
+    let isMultiReference = anno.reference.constructor === Array ? true : false
+    if(isMultiReference) {
+      anno.reference.forEach(ref => {
+        this.byReference.set([ref, anno.id], anno)
+      })
+    } else {
+      this.byReference.set([anno.reference, anno.id], anno)
+    }
   }
 
   delete(anno) {
-    this.byReference.delete([anno.reference, anno.id])
+    let isMultiReference = anno.reference.constructor === Array ? true : false
+    if(isMultiReference) {
+      anno.reference.forEach(ref => {
+        this.byReference.delete([ref, anno.id], anno)
+      })
+    } else {
+      this.byReference.delete([anno.reference, anno.id], anno)
+    }
   }
 
   update(node, path, newValue, oldValue) {

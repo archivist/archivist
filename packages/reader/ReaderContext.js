@@ -20,20 +20,38 @@ class ReaderContext extends Component {
   }
 
   didMount() {
+    if(this.props.time) {
+      this.extendState({
+        contextId: 'source'
+      })
+    }
+
     if(this.props.entityId) {
       this.extendState({
         contextId: 'resources'
       })
     }
+
+    if(this.props.topic) {
+      this.extendState({
+        contextId: 'subjects'
+      })
+    }
+
+
   }
 
   willReceiveProps(newProps) {
+    if(newProps.time !== this.props.time && newProps.time !== undefined) {
+      this._switchTab('source')
+    }
+
     if(newProps.entityId !== this.props.entityId && newProps.entityId !== undefined) {
       this._switchTab('resources')
     }
 
-    if(newProps.time !== this.props.time && newProps.time !== undefined) {
-      this._switchTab('source')
+    if(newProps.topic !== this.props.topic && newProps.topic !== undefined) {
+      this._switchTab('subjects')
     }
   }
 

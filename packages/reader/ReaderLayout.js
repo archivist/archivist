@@ -36,7 +36,7 @@ class ReaderLayout extends Component {
 
     if (newProps.entityId !== this.props.entityId && newProps.entityId !== undefined) {
       setTimeout(function(){
-        this.refs.reader.highlightReference(newProps.entityId)
+        this.refs.reader.highlightReferences([newProps.entityId])
       }.bind(this), 10)
     }
   }

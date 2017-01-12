@@ -12,7 +12,8 @@ class Reader extends ProseEditor {
     this.contentHighlights = new Highlights(doc)
 
     this.handleActions({
-      'showReferences': this._showReferences
+      'showReferences': this._showReferences,
+      'showTopics': this._showTopics
     })
   }
 
@@ -72,7 +73,7 @@ class Reader extends ProseEditor {
     })
     
     layout.append(
-      $$(Brackets, {}),
+      $$(Brackets).ref('brackets'),
       $$(ContainerEditor, {
         disabled: 'true',
         editorSession: this.editorSession,
@@ -87,7 +88,7 @@ class Reader extends ProseEditor {
     return contentPanel
   }
 
-  highlightReference(entityId) {
+  highlightReferences(entities, containerAnnos) {
     let editorSession = this.editorSession
     let doc = editorSession.getDocument()
     let entityIndex = doc.getIndex('entities')
@@ -95,18 +96,29 @@ class Reader extends ProseEditor {
     let nodes = schema.nodeRegistry.entries
     let highlights = {}
     forEach(nodes, node => {
-      if(node.schema.hasOwnProperty('reference') && node.schema.hasOwnProperty('path')) {
+      if(node.schema.hasOwnProperty('reference')) {
         highlights[node.type] = []
       }
     })
+    forEach(entities, entityId => {
+      if(containerAnnos) {
+        let refs = entityIndex.get(entityId)
+        forEach(refs, ref => {
+          let entityType = ref.type
+          highlights[entityType] = highlights[entityType].concat(doc.getPathRange(ref.startPath[0], ref.endPath[0]))
+        })
+      } else {
+        let refs = entityIndex.get(entityId)
+        let keys = Object.keys(refs)
+        if(keys.length > 0) {
+          let entityType = refs[keys[0]].type
+          let annos = map(refs, n => {return n.id})
+          highlights[entityType] = highlights[entityType].concat(annos)
+        }
+      }
+    })
 
-    let refs = entityIndex.get(entityId)
-    let keys = Object.keys(refs)
-    if(keys.length > 0) {
-      let entityType = refs[keys[0]].type
-      highlights[entityType] = map(refs, n => {return n.id})
-      this.contentHighlights.set(highlights)
-    }
+    this.contentHighlights.set(highlights)
   }
 
   _showReferences(entityId, silent) {
@@ -121,13 +133,20 @@ class Reader extends ProseEditor {
     })
 
     this.refs.contentPanel.scrollTo(ordered[0].id)
-    this.highlightReference(entityId)
+    this.highlightReferences([entityId])
 
     if(!silent) {
       let urlHelper = this.context.urlHelper
       urlHelper.focusResource(entityId)
     }
+  }
 
+  _showTopics(topics) {
+    console.log(topics)
+    setTimeout(function(){
+      this.highlightReferences(topics, true)
+      this.refs.brackets.highlight(topics)
+    }.bind(this), 100)
   }
 
 }

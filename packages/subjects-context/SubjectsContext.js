@@ -9,6 +9,15 @@ class SubjectsContext extends Component {
   
   didMount() {
     this.buildTree()
+    if(this.props.topic) {
+      this.highlightNodes(this.props.topic)
+    }
+  }
+
+  willReceiveProps(newProps) {
+    if(newProps.topic !== this.props.topic && newProps.topic !== undefined) {
+      this.highlightNodes(newProps.topic)
+    }
   }
 
   render($$) {
@@ -48,6 +57,14 @@ class SubjectsContext extends Component {
     })
   }
 
+  highlightNodes(activeNode) {
+    let subjects = this.state.subjects
+    subjects.resetSelection()
+    let activeNodes = subjects.getAllChildren(activeNode)
+    activeNodes.unshift(activeNode)
+    this.send('showTopics', activeNodes)
+  }
+
   renderChildren($$, node, level) {
     let editorSession = this.context.editorSession
     let subjects = editorSession.subjects
@@ -62,9 +79,13 @@ class SubjectsContext extends Component {
       }.bind(this))
     
       let el = $$('a').addClass('se-tree-node se-level-' + level)
-      .attr("href", '#topicId=' + node.id)
+      .attr("href", '#topic=' + node.id)
       .append(node.name)
       .ref(node.id)
+
+      if(node.id === this.props.topic) {
+        el.addClass('sm-active')
+      }
 
       return concat(el, childrenEls);
     } else {

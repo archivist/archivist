@@ -11,7 +11,7 @@
   color: #999;
 }
 
-.se-tree-node.sm-selected {
+.se-tree-node.sm-active {
   color: #333;
 }
 

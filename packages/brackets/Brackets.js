@@ -21,7 +21,7 @@ class Brackets extends Component {
   }
 
   render($$) {
-    let activeEntity = this.props.topic
+    let topics = this.state.topics
     let doc = this.context.doc
     let anchorIndex = doc.getIndex('container-annotation-anchors')
 
@@ -31,8 +31,14 @@ class Brackets extends Component {
     forEach(anchorIndex.byId, function(anchor, nodeId) {
       let reference = anchor.reference
       let bracket = $$('div').addClass('se-bracket').ref(nodeId)
-      if(reference.indexOf(activeEntity) > -1) {
-        bracket.addClass('sm-active')
+      if(topics) {
+        let intersection = reference.filter(function(r) {
+          return topics.indexOf(r) !== -1
+        })
+
+        if(intersection.length > 0) {
+          bracket.addClass('sm-active')
+        }
       }
       el.append(bracket)
     })
@@ -127,13 +133,23 @@ class Brackets extends Component {
         top: bracket.top,
         height: bracket.height
       })
-      
-      bracketEl.attr({class: 'se-bracket sm-level-' + bracket.slot})
+
+      bracketEl.removeClass('sm-level-0')
+      bracketEl.removeClass('sm-level-1')
+      bracketEl.removeClass('sm-level-2')
+
+      bracketEl.addClass('sm-level-' + bracket.slot)
     })
   }
 
   onResize() {
     this.rerender()
+  }
+
+  highlight(topics) {
+    this.extendState({
+      topics: topics
+    })
   }
 }
 
