@@ -14,8 +14,16 @@ class ScholarRouter extends Router {
     return '/documents/' + documentId
   }
 
-  openEntity(entityId) {
+  openResource(entityId) {
     return '/resources/' + entityId
+  }
+
+  openMap(entityId) {
+    return '/maps/' + entityId
+  }
+
+  openPerson(entityId) {
+    return '/persons/' + entityId
   }
 
   focusResource(entityId) {
