@@ -9,5 +9,17 @@ export default {
       en: 'About',
       ru: 'О респонденте'
     })
+    config.addLabel('expand-abstract', {
+      en: 'Full version ↓',
+      ru: 'Полная версия ↓'
+    })
+    config.addLabel('collapse-abstract', {
+      en: 'Hide ↑',
+      ru: 'Скрыть ↑'
+    })
+    config.addLabel('meta-bio-section', {
+      en: 'Biography',
+      ru: 'Биография'
+    })
   }
 }
