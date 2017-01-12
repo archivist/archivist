@@ -1,6 +1,9 @@
 .sc-person {
-  background: rgba(11, 157, 217, 0.2);
+  background: rgba(11, 157, 217, 0.1);
   border-bottom: 1px solid rgba(11, 157, 217, 0.3);
+  cursor: pointer;
+  padding: 0px 1px;
+  color: inherit;
 }
 
 .sc-person.sm-highlighted {

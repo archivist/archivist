@@ -1,6 +1,9 @@
 .sc-prison {
-  background: rgba(255, 87, 34, 0.2);
+  background: rgba(255, 87, 34, 0.1);
   border-bottom: 1px solid rgba(255, 87, 34, 0.3);
+  cursor: pointer;
+  padding: 0px 1px;
+  color: inherit;
 }
 
 .sc-prison.sm-highlighted {
