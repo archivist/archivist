@@ -1,4 +1,5 @@
 import { Component } from 'substance'
+import moment from 'moment'
 import plyr from 'plyr'
 
 class SourceContext extends Component {
@@ -65,11 +66,14 @@ class SourceContext extends Component {
 
     let technicalData = $$('div').addClass('se-technical-info').append(
       this._renderMetaProp($$, 'project_name', 'tech-project_name'),
+      this._renderMetaProp($$, 'title', 'tech-interviewee'),
       this._renderMetaProp($$, 'conductor', 'tech-conductor'),
       this._renderMetaProp($$, 'operator', 'tech-operator'),
       this._renderMetaProp($$, 'sound_operator', 'tech-sound_operator'),
       this._renderMetaProp($$, 'interview_location', 'tech-interview_location'),
-      this._renderMetaProp($$, 'interview_date', 'tech-interview_date')
+      this._renderMetaProp($$, 'interview_date', 'tech-interview_date', function(date) {
+        return moment(date).format('DD.MM.YYYY')
+      })
     )
 
     el.append(technicalData)
@@ -77,12 +81,15 @@ class SourceContext extends Component {
     return el
   }
 
-  _renderMetaProp($$, prop, label) {
+  _renderMetaProp($$, prop, label, transformer) {
     let doc = this.context.doc
     let metadata = doc.getDocumentMeta()
     let value = metadata[prop]
     if(!value) {
       return
+    }
+    if(transformer) {
+      value = transformer(value)
     }
     return $$('div').addClass('se-meta-prop se-meta-' + prop).append(
       $$('div').addClass('se-meta-label').append(this.getLabel(label)),

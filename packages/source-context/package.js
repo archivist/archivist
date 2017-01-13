@@ -13,6 +13,10 @@ export default {
       en: 'Project name',
       ru: 'Название проекта'
     })
+    config.addLabel('tech-interviewee', {
+      en: 'Interviewee',
+      ru: 'Респондент'
+    })
     config.addLabel('tech-conductor', {
       en: 'Interview conductor',
       ru: 'Интервьюер'
