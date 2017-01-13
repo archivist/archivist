@@ -1,5 +1,10 @@
 .sc-reader .sc-layout {
-  padding: 20px;
+  padding: 30px;
+}
+
+.sc-reader .sc-text-property {
+  white-space: pre-wrap;
+  position: relative;
 }
 
 .sc-reader .se-context-section { 
