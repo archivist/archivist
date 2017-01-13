@@ -20,6 +20,7 @@ class ReaderContext extends Component {
   }
 
   didMount() {
+    // TODO: loop through config
     if(this.props.time) {
       this.extendState({
         contextId: 'source'
@@ -37,11 +38,10 @@ class ReaderContext extends Component {
         contextId: 'subjects'
       })
     }
-
-
   }
 
   willReceiveProps(newProps) {
+    // TODO: loop through config
     if(newProps.time !== this.props.time && newProps.time !== undefined) {
       this._switchTab('source')
     }
@@ -53,6 +53,16 @@ class ReaderContext extends Component {
     if(newProps.topic !== this.props.topic && newProps.topic !== undefined) {
       this._switchTab('subjects')
     }
+  }
+
+  getChildContext() {
+    return {
+      readerContext: this
+    }
+  }
+
+  getPlayer() {
+    return this.refs.player
   }
 
   addContext(contextName, ContextClass) {
@@ -85,9 +95,15 @@ class ReaderContext extends Component {
   }
 
   render($$) {
-    let TabbedContext = this.getComponent('tabbed-context')
-    let el = $$('div').addClass('sc-context-panel')
     let currentContextName = this.getContextName()
+    let TabbedContext = this.getComponent('tabbed-context')
+    let SourcePlayer = this.getComponent('source-player')
+    let PlayerOverlay = $$(SourcePlayer, {
+      time: this.props.time,
+      currentContext: currentContextName,
+      boundContext: 'source'
+    }).ref('player')
+    let el = $$('div').addClass('sc-context-panel')
     let tabs = []
 
     forEach(this.contexts, function(context, contextId) {
@@ -95,6 +111,7 @@ class ReaderContext extends Component {
     })
 
     el.append(
+      PlayerOverlay,
       $$(TabbedContext, {
         tabs: tabs,
         activeTab: currentContextName

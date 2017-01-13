@@ -1,9 +1,11 @@
 import SourceContext from './SourceContext'
+import SourcePlayerOverlay from './SourcePlayerOverlay'
 
 export default {
   name: 'archivist-reader-source',
   configure: function(config) {
     config.addContext('source', SourceContext, true)
+    config.addComponent('source-player', SourcePlayerOverlay)
     config.addIcon('source', {'fontawesome': 'fa-youtube-play'})
     config.addLabel('source', {
       en: 'Source',

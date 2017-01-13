@@ -1,11 +1,9 @@
 .sc-context-source {
-  padding: 20px;
-}
-
-.sc-context-source .plyr {
-  padding-bottom: 20px;
-  margin-bottom: 15px;
-  border-bottom: 1px solid #e5e5e5;
+  top: 300px;
+  position: absolute;
+  margin: 0 20px;
+  padding: 20px 0;
+  border-top: 1px solid #e5e5e5;
 }
 
 .sc-context-source .se-technical-info {
@@ -30,4 +28,12 @@
 
 .sc-context-source .se-technical-info .se-meta-prop .se-meta-value {
   margin-left: 160px;
+}
+
+.sc-overlay-player {
+  position: absolute;
+  width: 560px;
+  z-index: 99;
+  top: 40px;
+  padding: 20px;
 }
