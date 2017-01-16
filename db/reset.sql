@@ -81,6 +81,7 @@ CREATE TABLE "documents" (
   title text,
   language text,
   annotations text[],
+  "references" jsonb,
   "fullText" text,
   "updatedAt" timestamp,
   "updatedBy" text REFERENCES users ON DELETE SET DEFAULT,
