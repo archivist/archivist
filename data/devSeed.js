@@ -3,7 +3,7 @@
 var JSONConverter = require('substance').JSONConverter;
 var documentHelpers = require('substance').documentHelpers;
 var Configurator = require('../packages/common/ServerConfigurator');
-var InterviewPackage = require('../dist/archivist.cjs').InterviewPackage;
+var InterviewPackage = require('../dist/archivist/archivist.cjs').InterviewPackage;
 
 var configurator = new Configurator().import(InterviewPackage);
 var converter = new JSONConverter();
