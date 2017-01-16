@@ -24,9 +24,9 @@ appConfig = JSON.parse(appConfig)
 export default {
   name: 'archivist-scholar',
   configure: function(config) {
-    // Use the default Archivist package
     config.import(ScholarPackage)
     config.import(ExplorerPackage)
+    config.setDefaultLanguage(appConfig.defaultLanguage)
 
 
     // Add subconfigurators

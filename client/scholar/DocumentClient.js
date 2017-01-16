@@ -9,7 +9,7 @@ class ScholarDocumentClient extends DocumentClient {
   listDocuments(filters, options, cb) {
     let filtersRequest = encodeURIComponent(JSON.stringify(filters))
     let optionsRequest = encodeURIComponent(JSON.stringify(options))
-    request('GET', '/api/documents?&filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
+    request('GET', '/api/documents?filters=' + filtersRequest + '&options=' + optionsRequest, null, cb)
   }
 
   getReferences(resourceId, filters, options, cb) {
