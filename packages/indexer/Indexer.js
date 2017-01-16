@@ -128,8 +128,7 @@ class Indexer extends EventEmitter {
       countQuery = `SELECT COUNT(*) FROM documents, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}`
 
       query = `SELECT 
-"documentId",
-title, meta->>'summary' AS summary,
+"documentId", title, meta,
 (SELECT COUNT(*) 
   FROM fragments ${whereQuery} 
   AND "documentId" = documents."documentId"
@@ -146,8 +145,7 @@ ORDER BY rank DESC limit ${limit} offset ${offset}`
       countQuery = `SELECT COUNT(*) FROM documents ${whereQuery}`
 
       query = `SELECT 
-"documentId",
-title, meta->>'summary' AS summary,
+"documentId", title, meta,
 (SELECT COUNT(*) 
   FROM fragments ${whereQuery} 
   AND "documentId" = documents."documentId"
