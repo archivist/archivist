@@ -1,32 +1,91 @@
-.sc-documents .sc-grid .sc-grid {
+.sc-explorer {
+}
+
+.sc-explorer .sc-searchbar {
+  position: relative;
+}
+
+.sc-explorer .sc-searchbar .se-search-input {
+  max-width: 100%;
+}
+
+.sc-explorer .sc-searchbar .se-search-submit {
+  position: absolute;
+  top: 5px;
+  right: 6px;
+  background: #4A90E2;
+  padding: 0px 10px;
+  color: #fff;
+  border-radius: 3px;
+}
+
+.sc-explorer .se-explorer-layout {
+  height: 100%;
+  position: relative;
+  margin: 10px 0px 0px 0px;
+  height: 100%;
+  position: relative;
+  padding: 20px;
+}
+
+.sc-explorer .se-explorer-layout > .sc-split-pane {
+  padding: inherit;
+}
+
+.sc-explorer .sc-grid .se-row:hover {
+  background: none;
+}
+
+.sc-explorer .sc-grid .sc-grid {
   overflow: inherit;
 }
 
-.sc-documents .se-document-summary {
+.sc-explorer .sc-document-item.sm-expanded {
   border-bottom: none;
 }
 
-.sc-documents .se-document-fragment {
-  display: table;
-  width: 100%;
+.sc-explorer .se-document-fragment {
+  clear: both;
 }
 
-.sc-documents > .sc-grid > .se-row.se-document-fragment > .se-cell {
+.sc-explorer .se-document-fragment > .se-cell {
   display: table-cell;
   float: none;
   vertical-align: middle;
 }
 
-.sc-documents .se-document-fragment .se-badge {
+.sc-explorer .se-document-fragment .se-badge {
   background: #fafafa;
   text-align: center;
 }
 
-.sc-documents .se-document-fragment:hover > .se-badge {
-  background: #EEEEEE;
+.sc-explorer .se-document-fragment:before,
+.sc-explorer .se-document-fragment:after { 
+  content: " "; 
+  display: table; 
 }
 
-.sc-documents .sc-grid > .se-document-fragment:before, .sc-documents .sc-grid > .se-document-fragment:after {
-  content: none;
-  display: table;
+.sc-document-item .se-document-photo {
+  height: 0;
+  padding-bottom: 100%;
+  width: 100%;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3),
+}
+
+.sc-document-item .se-meta-info > * {
+  display: inline-block;
+  padding-right: 15px;
+  color: #888;
+}
+
+.sc-document-item .se-document-title {
+  display: block;
+  font-size: 18px;
+  padding: 5px 0px;
+  color: inherit;
 }

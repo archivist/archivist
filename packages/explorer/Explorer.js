@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, Grid, Layout, SplitPane } from 'substance'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
 import findIndex from 'lodash/findIndex'
@@ -9,12 +9,14 @@ import moment from 'moment'
 // Sample data for debugging
 // import DataSample from '../../data/docs'
 
-class DocumentsPage extends Component {
+class Explorer extends Component {
   constructor(...args) {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadFragments': this._loadFragments,
+      'loadMore': this._loadMore,
+      'search': this._searchData
     })
   }
 
@@ -30,95 +32,73 @@ class DocumentsPage extends Component {
 
   getInitialState() {
     return {
-      filters: {},
+      filters: {"meta->>'state'": "published"},
       search: '',
       perPage: 30,
-      order: 'created',
+      order: "meta->>'published_on'",
       direction: 'desc',
       pagination: false,
       items: []
     }
   }
 
-  // willReceiveProps() {
-  //   this._loadData()
-  // }
-
   render($$) {
     let documentItems = this.state.items
-    let el = $$('div').addClass('sc-documents')
+    let el = $$('div').addClass('sc-explorer')
 
     if (!documentItems) {
       return el
     }
 
-    if (documentItems.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
-    }
+    let SearchBar = this.getComponent('searchbar')
+
+    let layout = $$(Layout, {
+      width: 'full',
+      textAlign: 'left',
+      noPadding: true
+    }).addClass('se-explorer-layout')
+
+    layout.append(
+      $$(SplitPane, {splitType: 'horizontal'}).append(
+        $$(SearchBar, {value: this.state.search}),
+        $$(SplitPane, {splitType: 'vertical', sizeB: '30%'}).append(
+          this.renderMainSection($$),
+          this.renderSidebarSection($$)
+        )
+      )
+    )
+
+    el.append(layout)
+
     return el
   }
 
-  renderFilters($$) {
-    let filters = []
-    let search = $$('div').addClass('se-search').append(
-      $$(Icon, {icon: 'fa-search'})
-    )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
-      .ref('searchInput')
-
-    if(this.isSearchEventSupported) {
-      searchInput.on('search', this._onSearch)
+  renderMainSection($$) {
+    let documentItems = this.state.items
+    if (documentItems.length > 0) {
+      return this.renderFull($$)
     } else {
-      searchInput.on('keypress', this._onSearchKeyPress)
+      return this.renderEmpty($$)
     }
-    search.append(searchInput)
-
-    filters.push(search)
-
-    return filters
   }
 
-  renderHeader($$) {
-    let Header = this.getComponent('header')
-    return $$(Header)
-  }
+  renderSidebarSection($$) {
+    let el = $$('div').addClass('se-sidebar')
 
-  renderToolbox($$) {
-    let Toolbox = this.getComponent('toolbox')
-    let filters = this.renderFilters($$)
-
-    let toolbox = $$(Toolbox, {
-      actions: {
-        'newDocument': '+ New Document'
-      },
-      content: filters
-    })
-
-    return toolbox
-  }
-
-  renderStatusBar($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var StatusBar = componentRegistry.get('status-bar');
-
-    return $$(StatusBar);
+    return el
   }
 
   renderEmpty($$) {
-    var layout = $$(Layout, {
+    let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
-    });
+    })
 
     if(this.state.total === 0) {
       layout.append(
-        $$('h1').html(
-          'No results'
-        ),
-        $$('p').html('Sorry, no entities matches your query')
-      );
+        $$('h1').append(this.getLabel('no-results')),
+        $$('p').append(this.getLabel('no-results-info'))
+      )
     } else {
       layout.append(
         $$('div').addClass('se-spinner').append(
@@ -137,74 +117,20 @@ class DocumentsPage extends Component {
     return layout;
   }
 
-  renderAdditionalMenu($$, actions) {
-    let el = $$('div').addClass('se-more').attr({'tabindex': 0})
-    let actionsList = $$('ul').addClass('se-more-content')
-    each(actions, action => {
-      actionsList.append(
-        $$('li').addClass('se-more-item').append(
-          $$(Button, {label: action.label}).on('click', action.action)
-        )
-      )
-    })
-    el.append(actionsList)
-
-    return el
-  }
-
   renderFull($$) {
-    let urlHelper = this.context.urlHelper
     let items = this.state.items
     let total = this.state.total
+    let DocumentItem = this.getComponent('document-item')
     let Pager = this.getComponent('pager')
     let grid = $$(Grid)
 
     if (items) {
-      items.forEach(function(item, index) {
-        let url = urlHelper.openDocument(item.documentId)
-        let documentIcon = $$(Icon, {icon: 'fa-file-text-o'})
-        let title = $$('a').attr({href: url}).append(item.title)
-        let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
-        let className = item.summary ? 'se-expanded' : ''
-
-        let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
-        ]
-
-        let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(
-            $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(documentIcon),
-            $$(Grid.Cell, {columns: 5}).addClass('se-title').append(title),
-            $$(Grid.Cell, {columns: 3}).append(updatedAt),
-            $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' fragments' : ''),
-            $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
-              this.renderAdditionalMenu($$, additionalActions)
-            ).on('click', function(e) {
-              e.stopPropagation()
-            })
-        ).on('click', this._loadFragments.bind(this, item.documentId, index))
-
-        if(item.summary) {
-          row.append(
-            $$(Grid.Row).addClass('se-document-summary').append(
-              $$(Grid.Cell, {columns: 12}).addClass('se-summary').append(item.summary)
-            )
-          )
-        }
-
-        grid.append(row)
-
-        if(this.state.details === index && item.fragments) {
-          item.fragments.forEach(function(fragment) {
-            let fragmentIcon = $$(Icon, {icon: 'fa-comments-o'})
-            grid.append(
-              $$(Grid.Row).addClass('se-document-fragment').append(
-                $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(fragmentIcon),
-                $$(Grid.Cell, {columns: 11}).addClass('se-fragment').append($$('p').setInnerHTML(fragment.content))
-              )
-            )
-          })
-        }
-      }.bind(this))
+      items.forEach((item, index) => {
+        let active = this.state.details === index
+        grid.append(
+          $$(DocumentItem, {item: item, index: index, active: active}).ref(item.documentId)
+        )
+      })
     }
 
     if(total > this.state.perPage) {
@@ -219,10 +145,6 @@ class DocumentsPage extends Component {
     return grid
   }
 
-  _removeItem(id) {
-    console.log(id)
-  }
-
   /*
     Search documents
   */
@@ -234,7 +156,7 @@ class DocumentsPage extends Component {
     }
 
     let language = 'russian'
-    let filters = {}
+    let filters = this.state.filters
     let perPage = this.state.perPage
     let pagination = this.state.pagination
     let options = {
@@ -246,13 +168,7 @@ class DocumentsPage extends Component {
 
     documentClient.searchDocuments(searchValue, language, filters, options, function(err, docs) {
       if (err) {
-        this.setState({
-          error: new Err('DocumentsPage.SearchError', {
-            message: 'Search results could not be loaded.',
-            cause: err
-          })
-        })
-        console.error('ERROR', err)
+        console.error('Search results could not be loaded', err)
         return
       }
 
@@ -288,15 +204,11 @@ class DocumentsPage extends Component {
     Loads documents
   */
   _loadData() {
-    // Sample data for debugging
-
-    // this.extendState({
-    //   items: DataSample,
-    //   total: DataSample.length
-    // });
+    let filters = this.state.filters
     let pagination = this.state.pagination
     let perPage = this.state.perPage
     let options = {
+      order: this.state.order + ' ' + this.state.direction,
       limit: perPage, 
       offset: pagination ? this.state.items.length : 0
     }
@@ -304,15 +216,9 @@ class DocumentsPage extends Component {
 
     let documentClient = this.context.documentClient
 
-    documentClient.listDocuments({}, options, function(err, docs) {
+    documentClient.listDocuments(filters, options, function(err, docs) {
       if (err) {
-        this.setState({
-          error: new Err('DocumentsPage.LoadingError', {
-            message: 'Documents could not be loaded.',
-            cause: err
-          })
-        })
-        console.error('ERROR', err)
+        console.error('Documents could not be loaded', err)
         return
       }
 
@@ -345,13 +251,7 @@ class DocumentsPage extends Component {
     if(!items[index].fragments) {
       documentClient.searchFragments(documentId, searchValue, language, filters, options, function(err, fragments) {
         if (err) {
-          this.setState({
-            error: new Err('DocumentsPage.FragmentsSearchError', {
-              message: 'Search results could not be loaded.',
-              cause: err
-            })
-          })
-          console.error('ERROR', err)
+          console.error('Search results could not be loaded', err)
           return
         }
 
@@ -367,33 +267,12 @@ class DocumentsPage extends Component {
     }
   }
 
-  _onSearchKeyPress(e) {
-    // Perform search query on pressing enter
-    if (e.which === 13 || e.keyCode === 13) {
-      let searchValue = this.refs['searchInput'].val()
-      this.extendState({
-        search: searchValue,
-        pagination: false
-      })
-      return false;
-    }
-  }
-
-  _onSearch() {
-    let searchValue = this.refs['searchInput'].val()
+  _searchData(value) {
     this.extendState({
-      search: searchValue,
+      search: value,
       pagination: false
     })
   }
-
-  isSearchEventSupported() {
-    let element = document.createElement('input')
-    let eventName = 'onsearch'
-    let isSupported = (eventName in element)
-    
-    return isSupported
-  }
 }
 
-export default DocumentsPage
+export default Explorer
