@@ -8,6 +8,7 @@
 let process = require('process')
 let fs = require('fs')
 let forEach = require('lodash/forEach')
+let map = require('lodash/map')
 let uniq = require('lodash/uniq')
 let JSONConverter = require('substance').JSONConverter
 let documentHelpers = require('substance').documentHelpers
@@ -15,7 +16,7 @@ let Database = require('../packages/common/Database')
 let Configurator = require('../packages/common/ServerConfigurator')
 let EnginePackage = require('../packages/engine/package')
 let IndexerPackage = require('../packages/indexer/package')
-let InterviewPackage = require('../dist/archivist.cjs').InterviewPackage
+let InterviewPackage = require('../dist/archivist/archivist.cjs').InterviewPackage
 
 let args = process.argv.slice(2)
 let config = {}
@@ -36,6 +37,7 @@ configurator.import(IndexerPackage)
 
 let defaultUser = '54bd3cff742c750408dacf9d'
 let entitiesTypesMap = {}
+let subjectsTree = {}
 
 function importUsers() {
   let exists = _fileExists(config.users)
@@ -212,6 +214,8 @@ function importSubjects() {
     subjectData.updatedBy = subject.edited ? subject.edited['$oid'] : defaultUser
     subjectData.userId = subject.edited ? subject.edited['$oid'] : defaultUser
     subjectsData.push(subjectData)
+
+    subjectsTree[subjectData.entityId] = {id: subjectData.entityId, parent: subjectData.data.parent}
   })
 
   let entityStore = configurator.getStore('entity')
@@ -252,6 +256,7 @@ function importDocuments() {
     let contentNodes = doc.nodes.content.nodes
     let entities = []
     let subjects = []
+    let references = {}
     let paragraphsMap = {}
     let fullText = ''
     let metaSource = {}
@@ -314,6 +319,13 @@ function importDocuments() {
           endOffset: node.endOffset,
           reference: node.target
         }
+        forEach(node.target, function(subject) {
+          if(references[subject]) {
+            references[subject]++
+          } else {
+            references[subject] = 1
+          }
+        })
         subjects = subjects.concat(node.target)
         documentData.nodes.push(subject)
         subjectIndex++
@@ -350,6 +362,11 @@ function importDocuments() {
           ],
           reference: node.target,
           type: entityType
+        }
+        if(references[node.target]) {
+          references[node.target]++
+        } else {
+          references[node.target] = 1
         }
         entities.push(node.target)
         documentData.nodes.push(entity)
@@ -414,6 +431,21 @@ function importDocuments() {
     subjects = uniq(subjects)
 
     let annotations = []
+    annotations = annotations.concat(entities, subjects)
+
+    forEach(references, function(cnt, ref) {
+      if(subjectsTree[ref]) {
+        let parent = subjectsTree[ref].parent
+        while(parent) {
+          if(references[parent]) {
+            references[parent]++
+          } else {
+            references[parent] = 1
+          }
+          parent = subjectsTree[parent] ? subjectsTree[parent].parent : false
+        }
+      }
+    })
 
     let article = configurator.createArticle();
     let jsonDoc = converter.importDocument(article, documentData);
@@ -431,7 +463,8 @@ function importDocuments() {
       indexedVersion: 0,
       title: metaNode.title,
       language: 'russian',
-      annotations: annotations.concat(entities, subjects),
+      annotations: annotations,
+      references: references,
       fullText: fullText,
       updatedAt: metaSource.updated_at,
       updatedBy: defaultUser,
