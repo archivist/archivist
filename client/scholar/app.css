@@ -1,9 +1,0 @@
-/* Scholar styles */
-@import '../../node_modules/substance/dist/substance.next.css';
-@import '../../node_modules/plyr/dist/plyr.css';
-@import './scholar.css';
-
-body {
-  overflow: hidden;
-  -webkit-font-smoothing: antialiased;
-}
