@@ -1,6 +1,6 @@
-let FragmentStore = require('./FragmentStore')
+import FragmentStore from './FragmentStore'
 
-module.exports = {
+export default {
   name: 'fragment-store',
   configure: function(config) {
     config.addStore('fragment', FragmentStore)

@@ -1,10 +1,5 @@
 import Field from './Field'
-import extend from 'lodash/extend'
-import filter from 'lodash/filter'
-import isEmpty from 'lodash/isEmpty'
-import find from'lodash/find'
-import each from 'lodash/each'
-import map from 'lodash/map'
+import { each, extend, filter, find, isEmpty, map } from 'lodash-es'
 
 class Reference extends Field {
 

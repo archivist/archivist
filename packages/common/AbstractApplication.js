@@ -1,6 +1,5 @@
 import { ResponsiveApplication } from 'substance'
-import cloneDeep from 'lodash/cloneDeep'
-import isNull from 'lodash/isNull'
+import { cloneDeep, isNull } from 'lodash-es'
 
 /*
   Abstract Application class.

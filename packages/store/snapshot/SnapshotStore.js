@@ -1,7 +1,6 @@
-let Err = require('substance').SubstanceError
-let forEach = require('lodash/forEach')
-let map = require('lodash/map')
-let Promise = require('bluebird')
+import { SubstanceError as Err } from 'substance'
+import { forEach, map } from 'lodash-es'
+import Promise from 'bluebird'
 
 /*
   Archivist Snapshot Store API
@@ -176,4 +175,4 @@ class SnapshotStore {
   }
 }
 
-module.exports = SnapshotStore
+export default SnapshotStore

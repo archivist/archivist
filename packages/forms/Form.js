@@ -1,5 +1,5 @@
 import { Component } from 'substance'
-import each from 'lodash/each'
+import { each } from 'lodash-es'
 import Text from './Text'
 import Checkbox from './Checkbox'
 import Select from './Select'

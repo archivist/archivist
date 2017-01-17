@@ -1,16 +1,11 @@
-let Err = require('substance').SubstanceError
-let EventEmitter = require('substance').EventEmitter
-let JSONConverter = require('substance').JSONConverter
-let findIndex = require('lodash/findIndex')
-let isEmpty = require('lodash/isEmpty')
-let Promise = require('bluebird')
+import { EventEmitter, JSONConverter, SubstanceError as Err } from 'substance'
+import { findIndex, isEmpty } from 'lodash-es'
+import Args from 'args-js'
+import Promise from 'bluebird'
+
 let converter = new JSONConverter()
 
 //import { EventEmitter, SubstanceError as Err } from 'substance'
-
-// Massive internal libs
-let ArgTypes = require('../../node_modules/massive/lib/arg_types')
-let Where = require('../../node_modules/massive/lib/where')
 
 class Indexer extends EventEmitter {
   constructor(config) {
@@ -121,7 +116,7 @@ class Indexer extends EventEmitter {
       delete filters.language
 
       args = ArgTypes.findArgs(arguments, this)
-      where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
+      where = isEmpty(args.conditions) ? {} : Where. able(args.conditions)
 
       let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
 
@@ -263,7 +258,7 @@ ORDER BY SUBSTRING("fragmentId", '([0-9]+)')::int ASC limit ${limit} offset ${of
       delete filters.query
       delete filters.language
 
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
 
       let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
@@ -277,7 +272,7 @@ plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}
 ORDER BY rank DESC limit ${limit} offset ${offset}`
 
     } else {
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
 
       let whereQuery = where.where
@@ -316,6 +311,14 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
     })
   }
 
+  _getWhere(args) {
+    args = Args([
+      {conditions : Args.ANY | Args.Optional, _default : {}}
+    ], args)
+
+    return args
+  }
+
   _clearDocumentIndex(documentId) {
     return this.fragmentStore.deleteDocumentFragments(documentId)
   }
@@ -344,5 +347,4 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
   }
 }
 
-//export default Indexer
-module.exports = Indexer
+export default Indexer

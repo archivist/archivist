@@ -1,7 +1,6 @@
 import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane } from 'substance'
+import { forEach, map } from 'lodash-es'
 import PublisherContext from './PublisherContext'
-import forEach from 'lodash/forEach'
-import map from 'lodash/map'
 
 class Publisher extends ProseEditor {
   constructor(...args) {

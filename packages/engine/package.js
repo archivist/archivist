@@ -1,13 +1,18 @@
-let StorePackage = require('../store/package')
+import ArchivistStorePackage from '../store/package'
+import AuthEnginePackage from './auth/package'
+import DocumentEnginePackage from './document/package'
+//import MailerEnginePackage from './mailer/package'
+import ResourceEnginePackage from './resource/package'
+import SnapshotEnginePackage from './snapshot/package'
 
-module.exports = {
+export default {
   name: 'engine',
   configure: function(config) {
-    config.import(StorePackage);
-    config.import(require('./mailer/package'))
-    config.import(require('./auth/package'))
-    config.import(require('./snapshot/package'))
-    config.import(require('./document/package'))
-    config.import(require('./resource/package'))
+    config.import(ArchivistStorePackage)
+    //config.import(MailerEnginePackage)
+    config.import(AuthEnginePackage)
+    config.import(SnapshotEnginePackage)
+    config.import(DocumentEnginePackage)
+    config.import(ResourceEnginePackage)
   }
 }

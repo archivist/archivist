@@ -1,6 +1,6 @@
 import AbstractApplication from '../common/AbstractApplication'
 import ArchivistRouter from './ArchivistRouter'
-import forEach from 'lodash/forEach'
+import { forEach } from 'lodash-es'
 
 /*
   Archivist Application component.

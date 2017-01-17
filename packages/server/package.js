@@ -14,7 +14,7 @@ let db = new Database()
 
 let InterviewPackage = require('../../dist/archivist/archivist.cjs').InterviewPackage
 
-module.exports = {
+export default {
   name: 'server',
   configure: function(config) {
     config.setAppConfig(ServerConfig)

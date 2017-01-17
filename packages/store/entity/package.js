@@ -1,6 +1,6 @@
-let EntityStore = require('./EntityStore')
+import EntityStore from './EntityStore'
 
-module.exports = {
+export default {
   name: 'entity-store',
   configure: function(config) {
     config.addStore('entity', EntityStore)

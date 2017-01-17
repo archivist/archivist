@@ -1,7 +1,5 @@
 import { Component, Button, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
-import concat from 'lodash/concat'
-import findIndex from 'lodash/findIndex'
-import isEqual from 'lodash/isEqual'
+import { concat, findIndex, isEqual } from 'lodash-es'
 import moment from 'moment'
 import UserForm from './UserForm'
 

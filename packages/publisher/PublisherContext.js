@@ -1,5 +1,5 @@
-import { Component, FontAwesomeIcon as Icon } from 'substance'
-import forEach from 'lodash/forEach'
+import { Component } from 'substance'
+import { forEach } from 'lodash-es'
 
 class PublisherContext extends Component {
   constructor(...args) {

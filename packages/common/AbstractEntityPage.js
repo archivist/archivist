@@ -1,8 +1,5 @@
 import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
-import concat from 'lodash/concat'
-import each from 'lodash/each'
-import findIndex from 'lodash/findIndex'
-import isEmpty from 'lodash/isEmpty'
+import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
 // Sample data for debugging

@@ -77,4 +77,4 @@ class ArchivistCollabServer extends CollabServer {
 
 }
 
-module.exports = ArchivistCollabServer
+export default ArchivistCollabServer

@@ -1,5 +1,5 @@
 import { Component } from 'substance'
-import extend from 'lodash/extend'
+import { extend } from 'lodash-es'
 
 class DocumentPage extends Component {
 

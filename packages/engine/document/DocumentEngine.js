@@ -1,7 +1,6 @@
-let DocumentEngine = require('substance').DocumentEngine
-let Err = require('substance').SubstanceError
-let isEmpty = require('lodash/isEmpty')
-let Promise = require('bluebird')
+import { DocumentEngine, SubstanceError as Err } from 'substance'
+import { isEmpty } from 'lodash-es'
+import Promise from 'bluebird'
 
 /*
   Archivist Document Engine API
@@ -161,4 +160,4 @@ class ArchivistDocumentEngine extends DocumentEngine {
   }
 }
 
-module.exports = ArchivistDocumentEngine
+export default ArchivistDocumentEngine

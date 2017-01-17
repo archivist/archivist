@@ -1,7 +1,6 @@
-let Err = require('substance').SubstanceError
-let uuid = require('substance').uuid
-let isEmpty = require('lodash/isEmpty')
-let Promise = require('bluebird')
+import { SubstanceError as Err, uuid } from 'substance'
+import { isEmpty } from 'lodash-es'
+import Promise from 'bluebird'
 
 class ResourceEngine {
   constructor(config) {
@@ -95,4 +94,4 @@ class ResourceEngine {
 
 }
 
-module.exports = ResourceEngine
+export default ResourceEngine

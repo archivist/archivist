@@ -1,5 +1,5 @@
 import { Component, EditorSession } from 'substance'
-import extend from 'lodash/extend'
+import { extend } from 'lodash-es'
 
 /*
   Entity Editor

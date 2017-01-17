@@ -1,6 +1,6 @@
-let SessionStore = require('./SessionStore')
+import SessionStore from './SessionStore'
 
-module.exports = {
+export default {
   name: 'session-store',
   configure: function(config) {
     config.addStore('session', SessionStore)

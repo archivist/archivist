@@ -1,6 +1,6 @@
-let UserStore = require('./UserStore')
+import UserStore from './UserStore'
 
-module.exports = {
+export default {
   name: 'user-store',
   configure: function(config) {
     config.addStore('user', UserStore)

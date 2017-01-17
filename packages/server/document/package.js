@@ -1,6 +1,6 @@
-let DocumentServer = require('./DocumentServer')
+import DocumentServer from './DocumentServer'
 
-module.exports = {
+export default {
   name: 'document-server',
   configure: function(config) {
     let server = config.getServerApp()

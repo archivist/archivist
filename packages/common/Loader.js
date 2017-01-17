@@ -1,7 +1,7 @@
-import { Component, CollabSession, JSONConverter, CollabClient, WebSocketConnection, DocumentSession } from 'substance'
+import { Component, CollabSession, JSONConverter, CollabClient, WebSocketConnection } from 'substance'
 
 // Sample document for debugging
-import SampleDoc from '../../data/sample_doc'
+// import SampleDoc from '../../data/sample_doc'
 
 let converter = new JSONConverter()
 

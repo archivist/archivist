@@ -1,5 +1,5 @@
 import { Button, Component } from 'substance'
-import forEach from 'lodash/forEach'
+import { forEach } from 'lodash-es'
 
 class Toolbox extends Component {
 

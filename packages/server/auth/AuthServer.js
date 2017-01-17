@@ -47,4 +47,4 @@ class AuthenticationServer{
   }
 }
 
-module.exports = AuthenticationServer
+export default AuthenticationServer

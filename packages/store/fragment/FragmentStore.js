@@ -1,7 +1,6 @@
-let Err = require('substance').SubstanceError
-let isUndefined = require('lodash/isUndefined')
-let map = require('lodash/map')
-let Promise = require('bluebird')
+import { SubstanceError as Err } from 'substance'
+import { isUndefined, map } from 'lodash-es'
+import Promise from 'bluebird'
 
 /*
   Archivist Fragment Store API
@@ -247,4 +246,4 @@ class FragmentStore {
   }
 }
 
-module.exports = FragmentStore
+export default FragmentStore

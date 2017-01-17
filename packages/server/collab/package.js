@@ -1,6 +1,6 @@
-let CollabServer = require('./CollabServer')
+import CollabServer from './CollabServer'
 
-module.exports = {
+export default {
   name: 'collab-server',
   configure: function(config) {
     let socketServer = config.getWebSocketServer()
