@@ -1,6 +1,6 @@
-let SnapshotEngine = require('substance').SnapshotEngine
+import { SnapshotEngine } from 'substance'
 
-module.exports = {
+export default {
   name: 'snapshot-engine',
   configure: function(config) {
 

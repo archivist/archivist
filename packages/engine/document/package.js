@@ -1,6 +1,6 @@
-let DocumentEngine = require('./DocumentEngine')
+import DocumentEngine from './DocumentEngine'
 
-module.exports = {
+export default {
   name: 'document-engine',
   configure: function(config) {
     let db = config.getDBConnection()

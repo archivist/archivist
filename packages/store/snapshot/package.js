@@ -1,6 +1,6 @@
-let SnapshotStore = require('./SnapshotStore')
+import SnapshotStore from './SnapshotStore'
 
-module.exports = {
+export default {
   name: 'snapshot-store',
   configure: function(config) {
     config.addStore('snapshot', SnapshotStore)

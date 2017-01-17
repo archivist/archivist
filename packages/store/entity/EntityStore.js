@@ -1,7 +1,6 @@
-let Err = require('substance').SubstanceError
-let isUndefined = require('lodash/isUndefined')
-let map = require('lodash/map')
-let Promise = require('bluebird')
+import { SubstanceError as Err } from 'substance'
+import { isUndefined, map } from 'lodash-es'
+import Promise from 'bluebird'
 
 /*
   Archivist Entity Store API
@@ -232,4 +231,4 @@ class EntityStore {
   }
 }
 
-module.exports = EntityStore
+export default EntityStore

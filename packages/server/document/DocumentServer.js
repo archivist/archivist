@@ -132,4 +132,4 @@ class ArchivistDocumentServer extends DocumentServer {
 
 }
 
-module.exports = ArchivistDocumentServer
+export default ArchivistDocumentServer

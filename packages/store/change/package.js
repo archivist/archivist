@@ -1,6 +1,6 @@
-let ChangeStore = require('./ChangeStore')
+import ChangeStore from './ChangeStore'
 
-module.exports = {
+export default {
   name: 'change-store',
   configure: function(config) {
     config.addStore('change', ChangeStore)

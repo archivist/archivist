@@ -1,9 +1,8 @@
-let Err = require('substance').SubstanceError
-let uuid = require('substance').uuid
-let isEmpty = require('lodash/isEmpty')
-let Promise = require('bluebird')
-let bcrypt = require('bcryptjs')
-let generatePassword = require('password-generator')
+import { SubstanceError as Err, uuid } from 'substance'
+import { isEmpty } from 'lodash-es'
+import Promise from 'bluebird'
+import bcrypt from 'bcryptjs'
+import generatePassword from 'password-generator'
 
 /*
   Implements authentication logic
@@ -302,4 +301,4 @@ class AuthEngine {
   }
 }
 
-module.exports = AuthEngine
+export default AuthEngine

@@ -1,6 +1,6 @@
-let MailerEngine = require('./MailerEngine')
+import MailerEngine from './MailerEngine'
 
-module.exports = {
+export default {
   name: 'mailer-engine',
   configure: function(config) {
     let mailerEngine = new MailerEngine()

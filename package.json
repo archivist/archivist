@@ -1,13 +1,16 @@
 {
   "name": "archivist",
   "description": "A modern interface for tagging entities and subjects in digital archives",
+  "main": "dist/archivist.cjs.js",
+  "jsnext:main": "index.es.js",
   "dependencies": {
+    "args-js": "^0.10.12",
     "bcryptjs": "^2.4.0",
-    "bluebird": "^3.4.6",
+    "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",
     "config": "^1.21.0",
     "express": "^4.14.0",
-    "lodash": "^4.15.0",
+    "lodash-es": "^4.17.4",
     "massive": "^2.5.0",
     "nodemailer": "^2.7.0",
     "password-generator": "^2.1.0",

@@ -1,5 +1,5 @@
 import { Component, TextProperty, Icon } from 'substance'
-import moment from 'moment/src/moment'
+import moment from 'moment'
 
 
 class CommentComponent extends Component {

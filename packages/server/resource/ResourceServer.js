@@ -128,4 +128,4 @@ class ResourceServer {
   }
 }
 
-module.exports = ResourceServer
+export default ResourceServer

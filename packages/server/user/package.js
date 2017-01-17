@@ -1,6 +1,6 @@
-let UserServer = require('./UserServer')
+import UserServer from './UserServer'
 
-module.exports = {
+export default {
   name: 'user-server',
   configure: function(config) {
     let server = config.getServerApp()

@@ -1,6 +1,6 @@
-let AuthEngine = require('./AuthEngine')
+import AuthEngine from './AuthEngine'
 
-module.exports = {
+export default {
   name: 'auth-engine',
   configure: function(config) {
     let authEngine = new AuthEngine({

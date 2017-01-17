@@ -1,5 +1,5 @@
 import { Component, DefaultDOMElement } from 'substance'
-import forEach from 'lodash/forEach'
+import { forEach } from 'lodash-es'
 
 class Brackets extends Component {
 

@@ -1,6 +1,5 @@
 import Field from './Field'
-import map from 'lodash/map'
-import range from 'lodash/range'
+import { map, range } from 'lodash-es'
 
 class Date extends Field {
 

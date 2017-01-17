@@ -1,6 +1,6 @@
-let DocumentStore = require('./DocumentStore')
+import DocumentStore from './DocumentStore'
 
-module.exports = {
+export default {
   name: 'document-store',
   configure: function(config) {
     config.addStore('document', DocumentStore)

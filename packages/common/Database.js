@@ -1,6 +1,6 @@
-let massive = require('massive')
-let config = require('config')
-let Promise = require("bluebird")
+import massive from 'massive'
+//import config from 'config'
+import Promise from 'bluebird'
 
 /*
   Implements Database Conection API.
@@ -49,4 +49,4 @@ class Database {
 
 }
 
-module.exports = Database
+export default Database

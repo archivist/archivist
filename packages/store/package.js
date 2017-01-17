@@ -1,13 +1,21 @@
-module.exports = {
+import ChangeStorePackage from './change/package'
+import DocumentStorePackage from './document/package'
+import EntityStorePackage from './entity/package'
+import FragmentStorePackage from './fragment/package'
+import SessionStorePackage from './session/package'
+import SnapshotStorePackage from './snapshot/package'
+import UserStorePackage from './user/package'
+
+export default {
   name: 'store',
   configure: function(config) {
-    config.import(require('./change/package'))
-    config.import(require('./document/package'))
-    config.import(require('./entity/package'))
-    config.import(require('./fragment/package'))
-    config.import(require('./session/package'))
-    config.import(require('./snapshot/package'))
-    config.import(require('./user/package'))
+    config.import(ChangeStorePackage)
+    config.import(DocumentStorePackage)
+    config.import(EntityStorePackage)
+    config.import(FragmentStorePackage)
+    config.import(SessionStorePackage)
+    config.import(SnapshotStorePackage)
+    config.import(UserStorePackage)
 
     // Not implemented yet
     // config.import(require('./subject/package'));

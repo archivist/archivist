@@ -67,4 +67,4 @@ class UserServer {
   }
 }
 
-module.exports = UserServer
+export default UserServer

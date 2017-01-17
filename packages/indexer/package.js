@@ -1,6 +1,6 @@
-let Indexer = require('./Indexer')
+import Indexer from './Indexer'
 
-module.exports = {
+export default {
   name: 'archivist-indexer',
   configure: function(config) {
     let db = config.getDBConnection()

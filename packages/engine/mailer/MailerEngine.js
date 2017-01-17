@@ -1,5 +1,5 @@
-let config = require('config')
-let nodemailer = require('nodemailer')
+import config from 'config'
+import nodemailer from 'nodemailer'
 
 let sender = config.get('mail.sender')
 let transport = config.get('mail.transport')
@@ -59,4 +59,4 @@ Archivist Team`
   }
 }
 
-module.exports = MailerEngine
+export default MailerEngine

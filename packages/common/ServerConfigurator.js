@@ -1,5 +1,4 @@
-let path = require('path')
-let Configurator = require('substance').Configurator
+import { Configurator } from 'substance'
 
 class ServerConfigurator extends Configurator {
   constructor(...args) {
@@ -95,5 +94,4 @@ class ServerConfigurator extends Configurator {
 
 }
 
-
-module.exports = ServerConfigurator;
+export default ServerConfigurator

@@ -1,6 +1,6 @@
-let ResourceServer = require('./ResourceServer')
+import ResourceServer from './ResourceServer'
 
-module.exports = {
+export default {
   name: 'resource-server',
   configure: function(config) {
     let server = config.getServerApp()

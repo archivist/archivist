@@ -1,5 +1,5 @@
 import Field from './Field'
-import each from 'lodash/each'
+import { each } from 'lodash-es'
 
 class Select extends Field {
   

@@ -1,6 +1,6 @@
 import { Component } from 'substance'
+import { forEach } from 'lodash-es'
 import LoginStatus from './LoginStatus'
-import forEach from 'lodash/forEach'
 
 class Header extends Component {
 

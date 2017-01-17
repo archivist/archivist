@@ -1,6 +1,6 @@
-let AuthServer = require('./AuthServer')
+import AuthServer from './AuthServer'
 
-module.exports = {
+export default {
   name: 'auth-server',
   configure: function(config) {
     let server = config.getServerApp()

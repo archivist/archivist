@@ -1,6 +1,6 @@
-let ResourceEngine = require('./ResourceEngine')
+import ResourceEngine from './ResourceEngine'
 
-module.exports = {
+export default {
   name: 'resource-engine',
   configure: function(config) {
     let db = config.getDBConnection()
