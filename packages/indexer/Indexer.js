@@ -1,5 +1,5 @@
 import { EventEmitter, JSONConverter, SubstanceError as Err } from 'substance'
-import { findIndex, isEmpty } from 'lodash-es'
+import { each, findIndex, isEmpty } from 'lodash-es'
 import Args from 'args-js'
 import Promise from 'bluebird'
 
@@ -335,6 +335,17 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
 
     record.content = doc.get(nodeId).content
     record.annotations = Object.keys(annos)
+    record.references = {}
+    each(annos, function(anno) {
+      let ref = anno.reference
+      if(ref) {
+        if(record.references[ref]) {
+          record.references[ref] = record.references[ref] + 1
+        } else {
+          record.references[ref] = 1
+        }
+      }
+    })
     return this._saveFragment(record)
   }
 
