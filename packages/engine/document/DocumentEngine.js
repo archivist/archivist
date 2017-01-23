@@ -136,6 +136,25 @@ class ArchivistDocumentEngine extends DocumentEngine {
     }.bind(this))
   }
 
+  listResourceDocuments(resourceId, cb) {
+    let query = `
+      SELECT "documentId", title, meta, "references"->>$1 AS cnt
+      FROM documents
+      WHERE "references" ? $1
+      ORDER BY meta->>'published_on' DESC;
+    `
+
+    this.db.run(query, [resourceId], function(err, docs) {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.ListResourceDocumentsError', {
+          cause: err
+        }))
+      }
+
+      cb(null, docs)
+    })
+  }
+
   /*
     Add change to a given documentId.
 

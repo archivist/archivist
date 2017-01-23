@@ -16,6 +16,7 @@ class ArchivistDocumentServer extends DocumentServer {
     super.bind(app)
 
     // search
+    app.get(this.path + '/resource/:id', this._listResourceDocuments.bind(this))
     app.get(this.path, this._listDocuments.bind(this))
     app.get(this.path + '/:id/search', this._searchFragments.bind(this))
 
@@ -42,6 +43,18 @@ class ArchivistDocumentServer extends DocumentServer {
     let args = req.query
     
     this.engine.listDocuments(args, function(err, docs) {
+      if (err) return next(err)
+      res.json(docs)
+    })
+  }
+
+  /*
+    List documents with particuar resource reference
+  */
+  _listResourceDocuments(req, res, next) {
+    let resourceId = req.params.id
+    
+    this.engine.listResourceDocuments(resourceId, function(err, docs) {
       if (err) return next(err)
       res.json(docs)
     })
