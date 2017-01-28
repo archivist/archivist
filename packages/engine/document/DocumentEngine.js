@@ -138,7 +138,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
 
   listResourceDocuments(resourceId, cb) {
     let query = `
-      SELECT "documentId", title, meta, "references"->>$1 AS cnt
+      SELECT "documentId", title, meta, "references"->>$1 AS count
       FROM documents
       WHERE "references" ? $1
       ORDER BY meta->>'published_on' DESC;
