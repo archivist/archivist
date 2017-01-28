@@ -6,7 +6,8 @@ export default {
     config.addComponent('pager', Pager)
 
     config.addLabel('load-more', {
-      en: 'Load more'
+      en: 'Load more',
+      ru: 'Загрузить еще'
     })
   }
 }
