@@ -111,21 +111,6 @@ class ResourceServer {
         next(err)
       })
   }
-
-  // /*
-  //   Get resources tree data for given entity type
-  // */
-  // _getResourcesTree(req, res, next) {
-  //   let type = req.params.type
-
-  //   this.engine.getResourcesTree(type)
-  //     .then(function(entities) {
-  //       res.json(entities)
-  //     })
-  //     .catch(function(err) {
-  //       next(err)
-  //     })
-  // }
 }
 
 export default ResourceServer
