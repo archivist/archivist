@@ -61,18 +61,13 @@ function _substanceJS(DEST) {
 function _buildServerArchivistJS(DEST) {
   b.js('./server.es.js', {
     buble: true,
-    external: ['substance'],
-    commonjs: { include: [
-      'node_modules/moment/moment.js',
-      'node_modules/massive/**',
-      'node_modules/bluebird/js/release/**',
-      'node_modules/password-generator/**',
-      'node_modules/bcryptjs/**',
-      'node_modules/args-js/Args.js'
-    ]},
+    commonjs: true,
+    external: ['substance', 'moment', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js'],
     targets: [{
       dest: DEST + 'archivist.cjs.js',
-      format: 'cjs', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist'
+      format: 'cjs', 
+      sourceMapRoot: __dirname, 
+      sourceMapPrefix: 'archivist'
     }]
   })
 }
