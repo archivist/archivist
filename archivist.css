@@ -1,4 +1,3 @@
-@import './node_modules/substance/dist/substance.next.css';
 @import './packages/common/_index.css';
 @import './packages/brackets/_index.css';
 @import './packages/tabbed-context/_index.css';

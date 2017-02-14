@@ -13,12 +13,6 @@ var DIST = 'dist/'
 //   b.copy('node_modules/font-awesome', './dist/font-awesome')
 // })
 
-// this optional task makes it easier to work on Substance core
-b.task('substance', function() {
-  b.make('substance', 'clean', 'browser', 'server')
-  b.copy('node_modules/substance/dist', './dist/substance')
-})
-
 // function buildApp(app, core) {
 //   return function() {
 //     if(core) {
@@ -53,9 +47,11 @@ b.task('substance', function() {
 //   }
 // }
 
-function _substanceJS(DEST) {
+function _substanceJS(DEST, external) {
+  var path = './node_modules/'
+  if(external) path = '../'
   b.make('substance', 'clean', 'browser', 'server')
-  b.copy('node_modules/substance/dist', DEST)
+  b.copy(path + 'substance/dist', DEST)
 }
 
 function _buildServerArchivistJS(DEST) {
@@ -75,8 +71,7 @@ function _buildServerArchivistJS(DEST) {
 function _buildBrowserArchivist(DEST) {
   b.js('./index.es.js', {
     buble: true,
-    external: ['substance'],
-    commonjs: { include: ['node_modules/moment/moment.js']},
+    external: ['substance', 'momemnt'],
     targets: [{
       useStrict: false,
       dest: DEST + 'archivist.js',
@@ -85,15 +80,17 @@ function _buildBrowserArchivist(DEST) {
   })
 }
 
-function _buildDist(DEST) {
+function _buildDist(DEST, external) {
+  var path = './node_modules/'
+  if(external) path = '../'
   // Bundle Substance and Archivist
-  _substanceJS(DEST+'substance')
+  _substanceJS(DEST+'substance', external)
   _buildServerArchivistJS(DEST)
   _buildBrowserArchivist(DEST)
   // Bundle CSS
   b.css('archivist.css', DEST+'archivist.css', {variables: true})
-  b.css('./node_modules/substance/dist/substance-pagestyle.css', DIST+'archivist-pagestyle.css', {variables: true})
-  b.css('./node_modules/substance/dist/substance-reset.css', DIST+'archivist-reset.css', {variables: true})
+  b.css(path + 'substance/dist/substance-pagestyle.css', DIST+'archivist-pagestyle.css', {variables: true})
+  b.css(path + 'substance/dist/substance-reset.css', DIST+'archivist-reset.css', {variables: true})
 
   // Copy assets
   //_distCopyAssets(DIST)
@@ -102,6 +99,11 @@ function _buildDist(DEST) {
 b.task('dev', function() {
   b.rm(DIST)
   _buildDist(DIST)
+})
+
+b.task('build', function() {
+  b.rm(DIST)
+  _buildDist(DIST, true)
 })
 
 b.task('default', ['dev'])
