@@ -23,7 +23,7 @@ class Brackets extends Component {
   render($$) {
     let topics = this.state.topics
     let doc = this.context.doc
-    let anchorIndex = doc.getIndex('container-annotations')
+    let anchorIndex = doc.getIndex('container-annotation-anchors')
 
     let el = $$('div')
       .addClass('sc-brackets')
@@ -48,7 +48,7 @@ class Brackets extends Component {
 
   updateBrackets() {
     let doc = this.context.doc
-    let anchorIndex = doc.getIndex('container-annotations')
+    let anchorIndex = doc.getIndex('container-annotation-anchors')
     let layout = this.getParent()
     let layoutEl = layout.el
     let brackets = {}
