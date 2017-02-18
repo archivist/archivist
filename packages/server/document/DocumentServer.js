@@ -53,8 +53,9 @@ class ArchivistDocumentServer extends DocumentServer {
   */
   _listResourceDocuments(req, res, next) {
     let resourceId = req.params.id
+    let published = req.query.public
     
-    this.engine.listResourceDocuments(resourceId, function(err, docs) {
+    this.engine.listResourceDocuments(resourceId, published, function(err, docs) {
       if (err) return next(err)
       res.json(docs)
     })
