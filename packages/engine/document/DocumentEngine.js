@@ -143,7 +143,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
       SELECT "documentId", title, meta, "references"->>$1 AS count
       FROM documents
       WHERE "references" ? $1 ${publishedProviso}
-      ORDER BY meta->>'published_on' DESC;
+      ORDER BY count DESC;
     `
 
     this.db.run(query, [resourceId], function(err, docs) {
