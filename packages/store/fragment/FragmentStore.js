@@ -153,6 +153,7 @@ class FragmentStore {
       prev: fragmentData.prev,
       next: fragmentData.next,
       content: fragmentData.content,
+      time: fragmentData.time,
       annotations: fragmentData.annotations
     }
 
