@@ -333,7 +333,16 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
       next: nextId
     }
 
-    record.content = doc.get(nodeId).content
+    let timeRegExp = /\{(.*?)\}/
+    let content = doc.get(nodeId).content
+    let timecodes = timeRegExp.exec(content)
+
+    if(!isEmpty(timecodes)) {
+      if(timecodes.length > 1) {
+        record.time = timecodes[1]
+      }
+    }
+    record.content = content.replace(timeRegExp, '')
     record.annotations = Object.keys(annos)
     record.references = {}
     each(annos, function(anno) {
