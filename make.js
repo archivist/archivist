@@ -4,7 +4,7 @@ var config = require('config')
 
 var DIST = 'dist/'
 
-function _substanceCSS(DEST, external) {
+function _substanceCSS(DEST) {
   b.make('substance', 'css')
 }
 
@@ -34,8 +34,9 @@ function _buildBrowserArchivist(DEST) {
   })
 }
 
-function _buildDist(DEST) {
+function _buildDist(DEST, dependency) {
   var path = './node_modules/'
+  if(dependency) path = '../'
   // Bundle Substance and Archivist
   _substanceCSS(DEST+'substance')
   _buildServerArchivistJS(DEST)
@@ -51,4 +52,9 @@ b.task('build', function() {
   _buildDist(DIST, true)
 })
 
-b.task('default', ['build'])
+b.task('dev', function() {
+  b.rm(DIST)
+  _buildDist(DIST, false)
+})
+
+b.task('default', ['dev'])
