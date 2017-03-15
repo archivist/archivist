@@ -239,6 +239,8 @@ Archivist will expect to get respondent photos from *photos* folder and audio re
 - Find and replace
 - Bug fixes ;)
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/substance/archivist?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 # Install
 
 Archivist used environment file for all sensetive settings. Here is the list of available settings.
