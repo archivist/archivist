@@ -58,7 +58,7 @@ class Publisher extends ProseEditor {
     let ScrollPane = this.componentRegistry.get('scroll-pane')
     let Overlay = this.componentRegistry.get('overlay')
     let ContextMenu = this.componentRegistry.get('context-menu')
-    let DropTeaser = this.componentRegistry.get('drop-teaser')
+    //let DropTeaser = this.componentRegistry.get('drop-teaser')
 
     let contentPanel = $$(ScrollPane, {
       contextMenu: 'custom',
@@ -80,8 +80,8 @@ class Publisher extends ProseEditor {
         textTypes: configurator.getTextTypes()
       }).ref('body'),
       $$(Overlay),
-      $$(ContextMenu),
-      $$(DropTeaser)
+      $$(ContextMenu)
+      //$$(DropTeaser)
     )
 
     contentPanel.append(layout)

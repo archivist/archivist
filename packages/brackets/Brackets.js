@@ -23,14 +23,16 @@ class Brackets extends Component {
   render($$) {
     let topics = this.state.topics
     let doc = this.context.doc
-    let anchorIndex = doc.getIndex('container-annotation-anchors')
+    let anchorIndex = doc.getIndex('container-annotations')
 
     let el = $$('div')
       .addClass('sc-brackets')
 
-    forEach(anchorIndex.byId, function(anchor, nodeId) {
+    forEach(anchorIndex.annosById.body, function(anchor, nodeId) {
       let reference = anchor.reference
-      let bracket = $$('div').addClass('se-bracket').ref(nodeId)
+      let bracket = $$('div').addClass('se-bracket')
+        .attr({'data-id': nodeId + '-bracket'})
+        .ref(nodeId)
       if(topics) {
         let intersection = reference.filter(function(r) {
           return topics.indexOf(r) !== -1
@@ -48,7 +50,7 @@ class Brackets extends Component {
 
   updateBrackets() {
     let doc = this.context.doc
-    let anchorIndex = doc.getIndex('container-annotation-anchors')
+    let anchorIndex = doc.getIndex('container-annotations')
     let layout = this.getParent()
     let layoutEl = layout.el
     let brackets = {}
@@ -59,34 +61,38 @@ class Brackets extends Component {
     // Collects all events for the sweep algorithm
     let events = []
 
-    forEach(anchorIndex.byId, (anchor, nodeId) => {
-      if (!anchor._startAnchor || !anchor._endAnchor) {
+    forEach(anchorIndex.annosById.body, (anchor, nodeId) => {
+      if (!anchor.start || !anchor.end) {
         console.warn("FIXME: Could not find anchors for node ", nodeId)
         return
       }
-      let startAnchorEl = layoutEl.find('*[data-id="'+nodeId+'"][class*="start-anchor"]')
-      let endAnchorEl = layoutEl.find('*[data-id="'+nodeId+'"][class*="end-anchor"]')
-      let startTop = startAnchorEl.el.offsetTop
-      let endTop = endAnchorEl.el.offsetTop + endAnchorEl.height
-      let height = endTop - startTop
+      let anchors = layoutEl.findAll('*[data-id="'+nodeId+'"]')
+      let startAnchorEl = anchors[0]
+      let endAnchorEl = anchors[anchors.length - 1]
+      if(startAnchorEl !== null) {
+        let startTop = startAnchorEl.el.offsetTop
+        let endTop = endAnchorEl.el.offsetTop + endAnchorEl.getOuterHeight()
+        let height = endTop - startTop
+        if(nodeId === 'subject-203') debugger 
 
-      // Add start and end events
-      events.push({
-        nodeId: nodeId,
-        pos: startTop,
-        type: "start"
-      })
+        // Add start and end events
+        events.push({
+          nodeId: nodeId,
+          pos: startTop,
+          type: "start"
+        })
 
-      events.push({
-        nodeId: nodeId,
-        pos: endTop,
-        type: "end"
-      })
+        events.push({
+          nodeId: nodeId,
+          pos: endTop,
+          type: "end"
+        })
 
-      brackets[nodeId] = {
-        top: startTop,
-        height: height,
-        slot: null
+        brackets[nodeId] = {
+          top: startTop,
+          height: height,
+          slot: null
+        }
       }
     })
 
