@@ -69,11 +69,10 @@ class Brackets extends Component {
       let anchors = layoutEl.findAll('*[data-id="'+nodeId+'"]')
       let startAnchorEl = anchors[0]
       let endAnchorEl = anchors[anchors.length - 1]
-      if(startAnchorEl !== null) {
+      if(startAnchorEl !== null && startAnchorEl !== undefined) {
         let startTop = startAnchorEl.el.offsetTop
         let endTop = endAnchorEl.el.offsetTop + endAnchorEl.getOuterHeight()
         let height = endTop - startTop
-        if(nodeId === 'subject-203') debugger 
 
         // Add start and end events
         events.push({
