@@ -4,8 +4,12 @@ var config = require('config')
 
 var DIST = 'dist/'
 
-function _substanceCSS(DEST) {
+function _substanceCSS() {
   b.make('substance', 'css')
+}
+
+function _substanceServer() {
+  b.make('substance', 'server')
 }
 
 function _buildServerArchivistJS(DEST) {
@@ -39,6 +43,7 @@ function _buildDist(DEST, dependency) {
   if(dependency) path = '../'
   // Bundle Substance and Archivist
   _substanceCSS(DEST+'substance')
+  if(dependency) _substanceServer()
   _buildServerArchivistJS(DEST)
   _buildBrowserArchivist(DEST)
   // Bundle CSS
