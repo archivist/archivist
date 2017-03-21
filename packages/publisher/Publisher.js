@@ -69,6 +69,7 @@ class Publisher extends ProseEditor {
     let Overlay = this.componentRegistry.get('overlay')
     let ContextMenu = this.componentRegistry.get('context-menu')
     let Dropzones = this.componentRegistry.get('dropzones')
+    let Brackets = this.componentRegistry.get('brackets')
 
     let contentPanel = $$(ScrollPane, {
       contextMenu: 'custom',
@@ -82,6 +83,7 @@ class Publisher extends ProseEditor {
     })
     
     layout.append(
+      $$(Brackets).ref('brackets'),
       $$(ContainerEditor, {
         disabled: this.props.disabled,
         editorSession: this.editorSession,
