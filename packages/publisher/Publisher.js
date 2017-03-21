@@ -1,4 +1,4 @@
-import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane } from 'substance'
+import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane, Toolbar } from 'substance'
 import { forEach, map } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
@@ -51,6 +51,16 @@ class Publisher extends ProseEditor {
     return mainSection
   }
 
+  _renderToolbar($$) {
+    let commandStates = this.commandManager.getCommandStates()
+    return $$('div').addClass('se-toolbar-wrapper').append(
+      $$(Toolbar, {
+        toolGroups: ['text', 'document', 'annotations', 'references', 'default'],
+        commandStates: commandStates
+      }).ref('toolbar')
+    )
+  }
+
   _renderContentPanel($$) {
     const doc = this.props.editorSession.getDocument()
     const configurator = this.props.configurator
@@ -58,7 +68,7 @@ class Publisher extends ProseEditor {
     let ScrollPane = this.componentRegistry.get('scroll-pane')
     let Overlay = this.componentRegistry.get('overlay')
     let ContextMenu = this.componentRegistry.get('context-menu')
-    //let DropTeaser = this.componentRegistry.get('drop-teaser')
+    let Dropzones = this.componentRegistry.get('dropzones')
 
     let contentPanel = $$(ScrollPane, {
       contextMenu: 'custom',
@@ -80,8 +90,8 @@ class Publisher extends ProseEditor {
         textTypes: configurator.getTextTypes()
       }).ref('body'),
       $$(Overlay),
-      $$(ContextMenu)
-      //$$(DropTeaser)
+      $$(ContextMenu),
+      $$(Dropzones)
     )
 
     contentPanel.append(layout)
