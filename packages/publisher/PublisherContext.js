@@ -14,6 +14,40 @@ class PublisherContext extends Component {
       this.addContext(context, this.getComponent(context))
     }.bind(this))
 
+    this.handleActions({
+      'switchTab': this._switchTab
+    })
+  }
+
+  didMount() {
+    // TODO: loop through config
+    if(this.props.time) {
+      this.extendState({
+        contextId: 'source'
+      })
+    }
+
+    if(this.props.entityId) {
+      this.extendState({
+        contextId: 'resources'
+      })
+    }
+
+    if(this.props.topic) {
+      this.extendState({
+        contextId: 'subjects'
+      })
+    }
+  }
+
+  openResource(refId) {
+    let mode = 'edit'
+    console.log('Open resource', refId, ',', mode, 'mode')
+  }
+
+  toggleBracket(node, active) {
+    let mode = active ? 'edit' : 'list'
+    console.log('Open container resource', node.id, ',', mode, 'mode,', node.reference)
   }
 
   addContext(contextName, ContextClass) {
@@ -26,7 +60,7 @@ class PublisherContext extends Component {
   }
 
   getContextName() {
-    let context = undefined
+    let context = this.state.contextId
     return context || this.getDefaultContext()
   }
 
@@ -46,17 +80,18 @@ class PublisherContext extends Component {
   }
 
   render($$) {
-    let TabbedPane = this.getComponent('tabbed-pane')
-    let el = $$('div').addClass('sc-context-panel')
     let currentContextName = this.getContextName()
+    let TabbedContext = this.getComponent('tabbed-context')
+
+    let el = $$('div').addClass('sc-context-panel')
     let tabs = []
 
     forEach(this.contexts, function(context, contextId) {
-      tabs.push({id: contextId, name: context.title})
+      tabs.push({id: contextId, name: contextId})
     })
 
     el.append(
-      $$(TabbedPane, {
+      $$(TabbedContext, {
         tabs: tabs,
         activeTab: currentContextName
       }).ref('tabbedPane').append(
@@ -64,25 +99,13 @@ class PublisherContext extends Component {
       )
     )
 
-
-
-    // let toggleItems = $$('div').addClass('se-toggle-context')
-    // forEach(this.contexts, function(context, contextName) {
-    //   let item = $$('div').addClass('se-toggle-item').append(
-    //     $$(Icon, {icon: context.icon}),
-    //     $$('span').addClass('se-toggle-title').append(context.title)
-    //   )
-
-    //   if(contextName === currentContextName) item.addClass('se-active')
-    //   toggleItems.append(item)
-    // })
-
-    // el.append(
-    //   toggleItems,
-    //   this.renderContext($$)
-    // )
-
     return el
+  }
+
+  _switchTab(contextId) {
+    this.extendState({
+      contextId: contextId
+    })
   }
 
 }

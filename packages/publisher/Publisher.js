@@ -9,16 +9,19 @@ class Publisher extends ProseEditor {
     let doc = this.editorSession.getDocument()
     this.contentHighlights = new Highlights(doc)
 
-    this.editorSession.onRender('selection', this._onSelectionChanged, this)
+    this.handleActions({
+      'toggleBracket': this._toggleBracket
+    })
   }
 
   didMount() {
-    this.editorSession.onRender('selection', this._onSelectionChanged, this)
+    super.didMount()
+    this.getEditorSession().onUpdate(this._onSessionUpdate, this)
   }
 
   dispose() {
-    this.editorSession.off(this)
-    this._dispose()
+    super.dispose()
+    this.getEditorSession().off(this)
   }
 
   render($$) {
@@ -36,14 +39,13 @@ class Publisher extends ProseEditor {
     return $$('div').addClass('se-context-section').append(
       $$(PublisherContext, {
         configurator: this.props.configurator
-      })
+      }).ref('contextPanel')
     )
   }
 
   _renderMainSection($$) {
     let mainSection = $$('div').addClass('se-main-section')
     let splitPane = $$(SplitPane, {splitType: 'horizontal'}).append(
-      // inherited from  ProseEditor
       this._renderToolbar($$),
       this._renderContentPanel($$)
     )
@@ -83,7 +85,7 @@ class Publisher extends ProseEditor {
     })
     
     layout.append(
-      $$(Brackets).ref('brackets'),
+      $$(Brackets, {editor: true}).ref('brackets'),
       $$(ContainerEditor, {
         disabled: this.props.disabled,
         editorSession: this.editorSession,
@@ -100,20 +102,22 @@ class Publisher extends ProseEditor {
     return contentPanel
   }
 
-  _onSelectionChanged() {
-    let editorSession = this.editorSession
+  _onSessionUpdate(editorSession) {
+    if (!editorSession.hasChanged('document') && !editorSession.hasChanged('selection')) return
+
     let doc = editorSession.getDocument()
+    let contextPanel = this.refs.contextPanel
+
     let entityIndex = doc.getIndex('entities')
     let schema = doc.getSchema()
     let nodes = schema.nodeRegistry.entries
     let highlights = {}
     forEach(nodes, node => {
-      if(node.schema.hasOwnProperty('reference') && node.schema.hasOwnProperty('path')) {
+      if(node.prototype.isResourceReference) {
         highlights[node.type] = []
       }
     })
 
-    let sel = editorSession.getSelection()
     let selectionState = editorSession.getSelectionState()
     forEach(highlights, (h, annoType) => {
       let annos = selectionState.getAnnotationsForType(annoType)
@@ -121,20 +125,21 @@ class Publisher extends ProseEditor {
       if(highlights[annoType].length === 1) {
         let refId = highlights[annoType][0]
         let refs = entityIndex.get(refId)
-        highlights[annoType] = map(refs, a => {return a.id});
+        highlights[annoType] = map(refs, a => {return a.id})
+        contextPanel.openResource(refId)
       }
     })
 
-    // let xrefs = selectionState.getAnnotationsForType('xref')
-    // let highlights = {
-    //   'fig': [],
-    //   'bibr': []
-    // }
+    this.contentHighlights.set(highlights)
+  }
 
-    // if (xrefs.length === 1 && xrefs[0].getSelection().equals(sel) ) {
-    //   let xref = xrefs[0]
-    //   highlights[xref.referenceType] = xref.targets.concat([xref.id])
-    // }
+  _toggleBracket(node, active) {
+    let contextPanel = this.refs.contextPanel
+    contextPanel.toggleBracket(node, active)
+
+    let highlights = {}
+    let highlighted = active ? [active] : []
+    highlights[node.type] = highlighted
 
     this.contentHighlights.set(highlights)
   }
