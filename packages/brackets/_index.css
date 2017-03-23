@@ -26,6 +26,10 @@
   right: 45px;
 }
 
+.sc-brackets .se-bracket.sm-active {
+  border-width: 3px;
+}
+
 .sc-reader .sc-brackets .se-bracket {
   border-top: none;
   border-width: 1px;
@@ -36,4 +40,5 @@
 
 .sc-reader .sc-brackets .se-bracket.sm-active {
   display: block;
+  border-width: 1px;
 }
