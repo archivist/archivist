@@ -16,6 +16,13 @@ export { default as AbstractEntityPage } from './packages/common/AbstractEntityP
 export { default as EntityIndex } from './packages/common/EntityIndex'
 export { default as Loader } from './packages/common/Loader'
 
+
+// Publisher
+export { default as PublisherPackage } from './packages/publisher/package'
+export { default as Publisher } from './packages/publisher/Publisher'
+export { default as PublisherContext } from './packages/publisher/PublisherContext'
+export { default as PublisherLayout } from './packages/publisher/PublisherLayout'
+
 // Other packages
 export { default as BracketsPackage } from './packages/brackets/package'
 export { default as CommentPackage } from './packages/comment/package'
@@ -24,7 +31,8 @@ export { default as FormsPackage } from './packages/forms/package'
 export { default as HeaderPackage } from './packages/header/package'
 export { default as MarkPackage } from './packages/mark/package'
 export { default as PagerPackage } from './packages/pager/package'
-export { default as PublisherPackage } from './packages/publisher/package'
+export { default as ResourcesPackage } from './packages/resources/package'
+export { default as SpinnerPackage } from './packages/spinner/package'
 export { default as TimecodePackage } from './packages/timecode/package'
 export { default as ToolboxPackage } from './packages/toolbox/package'
 export { default as TabbedContextPackage } from './packages/tabbed-context/package'
