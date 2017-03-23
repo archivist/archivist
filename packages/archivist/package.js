@@ -1,24 +1,15 @@
-import DocumentPackage from '../document/package'
-import EntityEditor from '../entity-editor/package'
-import HeaderPackage from '../header/package'
-import PagerPackage from '../pager/package'
-import ToolboxPackage from '../toolbox/package'
-import WelcomePackage from '../welcome/package'
+import { DocumentPackage, EntityEditorPackage, HeaderPackage, PagerPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
 
 export default {
   name: 'archivist',
   configure: function(config) {
+    // Default packages
     config.import(DocumentPackage)
-
-    // config.import(Note);
-    // config.import(Dashboard);
-    config.import(EntityEditor)
+    config.import(EntityEditorPackage)
     config.import(HeaderPackage)
     config.import(PagerPackage)
+    config.import(SpinnerPackage)
     config.import(ToolboxPackage)
-    // //config.import(LoaderPackage);
-    // config.import(NotificationPackage);
-    // config.import(CollaboratorsPackage);
     config.import(WelcomePackage)
 
 

@@ -14,6 +14,10 @@ class ArchivistRouter extends Router {
     })
   }
 
+  openResource(entityId) {
+    return '/resources/' + entityId
+  }
+
   openEntity(page, entityId) {
     return '#' + Router.objectToRouteString({
       page: page,
