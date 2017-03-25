@@ -11,6 +11,7 @@ class ArchivistSubConfigurator extends Configurator {
     // Extend config
     this.config.contexts = []
     this.config.contextRenderers = []
+    this.config.contextMapping = {}
   }
 
   addContext(contextName, component, defaultContext) {
@@ -39,6 +40,17 @@ class ArchivistSubConfigurator extends Configurator {
   getContextItem(rendererName) {
     let name = rendererName + '-context-item'
     return this.config.components[name]
+  }
+
+  getContextMapping() {
+    return this.config.contextMapping
+  }
+
+  /*
+    Map entity types to context classes
+  */
+  setContextMapping(map) {
+    this.config.contextMapping = map
   }
 
 }
