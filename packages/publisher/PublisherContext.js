@@ -7,8 +7,11 @@ class PublisherContext extends Component {
 
     this.contexts = {}
     
-    let configurator = this.props.configurator
-    let contexts = configurator.getContexts()
+    const configurator = this.props.configurator
+    const contexts = configurator.getContexts()
+    const contextMapping = configurator.getContextMapping()
+
+    this.contextMap = contextMapping
 
     forEach(contexts, function(context) {
       this.addContext(context, this.getComponent(context))
@@ -21,32 +24,46 @@ class PublisherContext extends Component {
 
   didMount() {
     // TODO: loop through config
-    if(this.props.time) {
-      this.extendState({
-        contextId: 'source'
-      })
-    }
+    // if(this.props.time) {
+    //   this.extendState({
+    //     contextId: 'source'
+    //   })
+    // }
 
-    if(this.props.entityId) {
-      this.extendState({
-        contextId: 'resources'
-      })
-    }
+    // if(this.props.entityId) {
+    //   this.extendState({
+    //     contextId: 'resources'
+    //   })
+    // }
 
-    if(this.props.topic) {
-      this.extendState({
-        contextId: 'subjects'
-      })
-    }
+    // if(this.props.topic) {
+    //   this.extendState({
+    //     contextId: 'subjects'
+    //   })
+    // }
   }
 
-  openResource(refId) {
+  openResource(node) {
     let mode = 'edit'
-    console.log('Open resource', refId, ',', mode, 'mode')
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node.id
+    }
+    this.extendState(state)
+    console.log('Open inline resource', node.id, ',', mode, 'mode')
   }
 
   toggleBracket(node, active) {
     let mode = active ? 'edit' : 'list'
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode
+    }
+    if(mode === 'edit') state.item = node.id
+    this.extendState(state)
     console.log('Open container resource', node.id, ',', mode, 'mode,', node.reference)
   }
 
@@ -68,8 +85,17 @@ class PublisherContext extends Component {
     return this.contexts[contextName]
   }
 
+  getContextByEntityType(entityType) {
+    let contextName = this.contextMap[entityType]
+    return this.contexts[contextName]
+  }
+
   getContextProps() {
-    let props = {configurator: this.props.configurator}
+    let props = {
+      configurator: this.props.configurator,
+      mode: this.state.mode,
+      item: this.state.item
+    }
     return props
   }
 
@@ -104,7 +130,8 @@ class PublisherContext extends Component {
 
   _switchTab(contextId) {
     this.extendState({
-      contextId: contextId
+      contextId: contextId,
+      mode: 'list'
     })
   }
 

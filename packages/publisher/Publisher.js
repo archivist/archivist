@@ -27,7 +27,7 @@ class Publisher extends ProseEditor {
   render($$) {
     let el = $$('div').addClass('sc-publisher')
     el.append(
-      $$(SplitPane, {splitType: 'vertical', sizeB: '400px'}).append(
+      $$(SplitPane, {splitType: 'vertical', sizeB: '450px'}).append(
         this._renderMainSection($$),
         this._renderContextSection($$)
       )
@@ -108,7 +108,7 @@ class Publisher extends ProseEditor {
     let doc = editorSession.getDocument()
     let contextPanel = this.refs.contextPanel
 
-    let entityIndex = doc.getIndex('entities')
+    //let entityIndex = doc.getIndex('entities')
     let schema = doc.getSchema()
     let nodes = schema.nodeRegistry.entries
     let highlights = {}
@@ -121,13 +121,20 @@ class Publisher extends ProseEditor {
     let selectionState = editorSession.getSelectionState()
     forEach(highlights, (h, annoType) => {
       let annos = selectionState.getAnnotationsForType(annoType)
-      highlights[annoType] = annos.map(a => {return a.reference})
-      if(highlights[annoType].length === 1) {
-        let refId = highlights[annoType][0]
-        let refs = entityIndex.get(refId)
-        highlights[annoType] = map(refs, a => {return a.id})
-        contextPanel.openResource(refId)
+      // This will work if inline annotations can't overlap each other
+      // we should check for one node
+      if(annos.length === 1) {
+        let node = annos[0]
+        highlights[annoType] = [node.id]
+        contextPanel.openResource(node)
       }
+      // highlights[annoType] = annos.map(a => {return a.reference})
+      // if(highlights[annoType].length === 1) {
+      //   let refId = highlights[annoType][0]
+      //   let refs = entityIndex.get(refId)
+      //   highlights[annoType] = map(refs, a => {return a.id})
+      //   contextPanel.openResource(annos[0])
+      // }
     })
 
     this.contentHighlights.set(highlights)
