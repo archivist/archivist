@@ -10,5 +10,6 @@
 @import './packages/header/_index.css';
 @import './packages/documents/_index.css';
 @import './packages/publisher/_index.css';
+@import './packages/resources/_index.css';
 @import './packages/users/_index.css';
 @import './packages/welcome/_index.css';

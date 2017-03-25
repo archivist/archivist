@@ -1,5 +1,5 @@
 import { Component } from 'substance'
-import { filter } from 'lodash-es'
+import { find, sortBy } from 'lodash-es'
 
 class ResourcesContext extends Component {
 
@@ -13,12 +13,18 @@ class ResourcesContext extends Component {
   //   tocProvider.off(this)
   // }
 
-  getEntries(entityType) {
+  getEntries() {
     let editorSession = this.context.editorSession
     let resources = editorSession.resources
-    let entries = filter(resources, {entityType: entityType})
-    
+    let entries = sortBy(resources, ['entityType', 'name'])
     return entries
+  }
+
+  getEntry(refId) {
+    let editorSession = this.context.editorSession
+    let resources = editorSession.resources
+    let entry = find(resources, r => {return r.entityId === refId})
+    return entry
   }
 
   getEntityRender(entityType) {
@@ -27,41 +33,54 @@ class ResourcesContext extends Component {
   }
 
   render($$) {
-    // let tocProvider = this.context.tocProvider
-    // let activeEntry = tocProvider.activeEntry
+    let mode = this.props.mode
+    if(mode === 'list' || mode === 'view') {
+      return this.renderList($$)
+    } else {
+      return this.renderItem($$)
+    }
+  }
+
+  renderItem($$) {
+    let item = this.props.item
+    let doc = this.context.doc
+    
+    let el = $$('div').addClass('sc-entity-panel')
+    
+    let node = doc.get(item)
+    let refId = node.reference
+    let entry = this.getEntry(refId)
+    let EntityComp = this.getEntityRender(entry.entityType)
+
+    if(EntityComp) {
+      el.append(
+        $$(EntityComp, entry).ref(entry.entityId)
+      )
+    }
+
+    return el
+  }
+
+  renderList($$) {
+    console.log(this.props)
     let ScrollPane = this.getComponent('scroll-pane')
 
     let entityEntries = $$("div")
       .addClass("se-entity-entries")
       .ref('entityEntries')
 
-    let entries = this.getEntries('person')
+    let entries = this.getEntries()
 
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i]
-
+      
       let EntityComp = this.getEntityRender(entry.entityType)
 
-      entityEntries.append(
-        $$(EntityComp, entry).ref(entry.entityId)
-      )
-
-      // let entityEntryEl = $$('a')
-      //   .addClass('se-entity-entry')
-      //   .attr({
-      //     href: "#",
-      //     "data-id": entry.id,
-      //   })
-      //   .ref(entry.id)
-      //   .on('click', this.handleClick)
-      //   .append(
-      //     $$(Icon, {icon: 'fa-caret-right'}),
-      //     entry.name
-      //   );
-      // if (activeEntry === entry.id) {
-      //   tocEntryEl.addClass("sm-active")
-      // }
-      // tocEntries.append(tocEntryEl)
+      if(EntityComp) {
+        entityEntries.append(
+          $$(EntityComp, entry).ref(entry.entityId)
+        )
+      }
     }
 
     let el = $$('div').addClass('sc-entity-panel').append(
@@ -71,21 +90,6 @@ class ResourcesContext extends Component {
     )
     return el
   }
-
-  getDocument() {
-    return this.context.doc
-  }
-
-  onTOCUpdated() {
-    this.rerender()
-  }
-
-  handleClick(e) {
-    let nodeId = e.currentTarget.dataset.id
-    e.preventDefault()
-    this.send('tocEntrySelected', nodeId)
-  }
-
 }
 
 export default ResourcesContext

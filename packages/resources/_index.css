@@ -1,0 +1,32 @@
+.se-entity-entries .sc-entity-entry {
+  position: relative;
+  min-height: 100px;
+  padding: 20px;
+  border-bottom: 1px solid var(--border-color);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+}
+
+.se-entity-entries .sc-entity-entry.se-active {
+  background: white;
+  border-left: 2px solid #0b9dd9;
+}
+
+.se-entity-entries .sc-entity-entry:hover {
+  border-left: 2px solid rgba(11, 157, 217, 0.3);
+}
+
+.se-entity-entries .sc-entity-entry .se-title {
+  margin-bottom: 10px;
+}
+
+.se-entity-entries .sc-entity-entry .se-description {
+  font-size: 12px;
+  margin-right: 50px;
+}
+
+.se-entity-entries .sc-entity-entry .se-resource-external-link {
+  position: absolute;
+  font-size: 20px;
+  color: #999;
+}
