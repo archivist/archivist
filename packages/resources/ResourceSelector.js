@@ -66,6 +66,13 @@ class ResourcesSelector extends Component {
     let el = $$('div').addClass('sc-resource-selector')
     let ScrollPane = this.getComponent('scroll-pane')
 
+    let header = $$('div').addClass('sc-panel-header').append(
+      $$('div').addClass('sc-goback-action').append(
+        this.context.iconProvider.renderIcon($$, 'goBackToList'),
+        this.getLabel('goBackToResources')
+      ).on('click', this._goBack)
+    )
+
     let searchInput = $$(Input, {
       type: 'search', 
       placeholder: this.getLabel('searchPlaceholder'),
@@ -81,6 +88,7 @@ class ResourcesSelector extends Component {
     )
 
     el.append(
+      header,
       search,
       $$(ScrollPane).addClass('se-search-results').append(
         this.renderList($$)
@@ -104,7 +112,7 @@ class ResourcesSelector extends Component {
         let EntityComp = this.getEntityRender(item.entityType)
         if(EntityComp) {
           let entry = $$(EntityComp, {
-            data: item, 
+            data: item,
             entityId: item.entityId
           }).ref(item.entityId).on('click', this._setReference.bind(this, item.entityId))
           entityEntries.append(entry)
@@ -228,6 +236,15 @@ class ResourcesSelector extends Component {
       pagination: true
     })
     this.searchData()
+  }
+
+  _goBack() {
+    let node = this.props.node
+    if(node) {
+      this.send('viewItem', node)
+    } else {
+      this.send('showList')
+    }
   }
 
   _onKeyUp() {
