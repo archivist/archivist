@@ -37,7 +37,7 @@
 }
 
 .sc-publisher .se-main-section .sc-container-editor > * { margin-bottom: 20px; }
-.sc-publisher .se-toolbar-wrapper { border-bottom: 1px solid #E0E4E4; }
+.sc-publisher .se-toolbar-wrapper { height: 40px; border-bottom: 1px solid #E0E4E4; }
 .sc-publisher .se-toolbar-wrapper .sc-toolbar {
   max-width: 960px;
   margin: 0 auto;
