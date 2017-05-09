@@ -87,9 +87,14 @@ class ArchivistDocumentEngine extends DocumentEngine {
     })
   }
 
-  updateDocumentFullText(documentId, text, version) {
+  updateDocumentIndexData(documentId, text, annos, refs, version) {
     return new Promise(function(resolve, reject) {
-      this.documentStore.updateDocument(documentId, {'fullText': text, indexedVersion: version}, function(err) {
+      this.documentStore.updateDocument(documentId, {
+        'fullText': text, 
+        annotations: annos, 
+        references: refs, 
+        'indexedVersion': version
+      }, function(err) {
         if(err) return reject(err)
 
         resolve()
