@@ -69,7 +69,8 @@ class PublisherLayout extends Loader {
       )
     } else if (this.state.session) {
       let fileClient = this.context.fileClient
-      main = $$(Publisher, {
+      let EditorClass = this._getEditorClass()
+      main = $$(EditorClass, {
         configurator: this.props.configurator,
         editorSession: this.state.session,
         onUploadFile: fileClient.uploadFile.bind(fileClient)
@@ -84,6 +85,10 @@ class PublisherLayout extends Loader {
     )
 
     return el
+  }
+
+  _getEditorClass() {
+    return Publisher
   }
 
   _onCollabClientDisconnected() {
