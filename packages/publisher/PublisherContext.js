@@ -44,7 +44,7 @@ class PublisherContext extends Component {
   }
 
   openResource(node) {
-    let mode = 'edit'
+    let mode = 'view'
     let context = this.contextMap[node.type]
     let state = {
       contextId: context,
@@ -53,6 +53,18 @@ class PublisherContext extends Component {
     }
     this.extendState(state)
     console.log('Open inline resource', node.id, ',', mode, 'mode')
+  }
+
+  editResource(node) {
+    let mode = 'edit'
+    let context = node ? this.contextMap[node.type] : 'resources'
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node ? node.id : undefined
+    }
+    this.extendState(state)
+    console.log('Edit inline resource', node.id, ',', mode, 'mode')
   }
 
   toggleBracket(node, active) {
@@ -65,6 +77,17 @@ class PublisherContext extends Component {
     if(mode === 'edit') state.item = node.id
     this.extendState(state)
     console.log('Open container resource', node.id, ',', mode, 'mode,', node.reference)
+  }
+
+  openDefaultTab() {
+    let defaultContext = this.getDefaultContext()
+    if(this.getDefaultContext() !== this.getContextName()) {
+      let state = {
+        contextId: defaultContext,
+        mode: 'list'
+      }
+      this.extendState(state)
+    }
   }
 
   addContext(contextName, ContextClass) {
