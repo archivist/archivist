@@ -64,7 +64,11 @@ class PublisherContext extends Component {
       item: node ? node.id : undefined
     }
     this.extendState(state)
-    console.log('Edit inline resource', node.id, ',', mode, 'mode')
+    if(node) {
+      console.log('Edit inline resource', node.id, ',', mode, 'mode')
+    } else {
+      console.log('Create inline resource', ',', mode, 'mode')
+    }
   }
 
   toggleBracket(node, active) {
@@ -116,7 +120,7 @@ class PublisherContext extends Component {
   getContextProps() {
     let props = {
       configurator: this.props.configurator,
-      mode: this.state.mode,
+      mode: this.state.mode || 'list',
       item: this.state.item
     }
     return props
