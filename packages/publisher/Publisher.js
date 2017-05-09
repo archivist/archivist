@@ -1,5 +1,5 @@
 import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane, Toolbar } from 'substance'
-import { forEach, map } from 'lodash-es'
+import { forEach } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
 class Publisher extends ProseEditor {
@@ -16,7 +16,9 @@ class Publisher extends ProseEditor {
 
   didMount() {
     super.didMount()
-    this.getEditorSession().onUpdate(this._onSessionUpdate, this)
+    let editorSession = this.getEditorSession()
+    editorSession.onUpdate(this._onSessionUpdate, this)
+    editorSession.on('createEntityReference', this._createEntityReference, this)
   }
 
   dispose() {
@@ -105,6 +107,31 @@ class Publisher extends ProseEditor {
   _onSessionUpdate(editorSession) {
     if (!editorSession.hasChanged('document') && !editorSession.hasChanged('selection')) return
 
+    let change = editorSession.getChange()
+    if(change) {
+      let changeInfo = editorSession.getChangeInfo()
+      // Fetch resource after remote update
+      if(changeInfo.remote) {
+        Object.keys(change.created).forEach(id => {
+          let node = change.created[id]
+          let reference = node.reference
+
+          let resources = editorSession.resources
+          let entity = find(resources, item => { return item.entityId === reference })
+          if(!entity) {
+            let resourceClient = this.context.resourceClient
+            resourceClient.getEntity(reference, (err, entity) => {
+              if (err) {
+                console.error(err)
+              } else {
+                resources.push(entity)
+              }
+            })
+          }
+        })
+      }
+    }
+
     let doc = editorSession.getDocument()
     let contextPanel = this.refs.contextPanel
 
@@ -118,6 +145,8 @@ class Publisher extends ProseEditor {
       }
     })
 
+    let overlapsAnno = false
+
     let selectionState = editorSession.getSelectionState()
     forEach(highlights, (h, annoType) => {
       let annos = selectionState.getAnnotationsForType(annoType)
@@ -126,7 +155,14 @@ class Publisher extends ProseEditor {
       if(annos.length === 1) {
         let node = annos[0]
         highlights[annoType] = [node.id]
-        contextPanel.openResource(node)
+        if(node.reference) {
+          contextPanel.openResource(node)
+          overlapsAnno = true
+        }
+      }
+
+      if(!overlapsAnno) {
+        contextPanel.openDefaultTab()
       }
       // highlights[annoType] = annos.map(a => {return a.reference})
       // if(highlights[annoType].length === 1) {
@@ -149,6 +185,11 @@ class Publisher extends ProseEditor {
     highlights[node.type] = highlighted
 
     this.contentHighlights.set(highlights)
+  }
+
+  _createEntityReference() {
+    let contextPanel = this.refs.contextPanel
+    contextPanel.editResource()
   }
 
 }
