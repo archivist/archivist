@@ -1,5 +1,6 @@
 import { Component } from 'substance'
 import { find, sortBy } from 'lodash-es'
+import ResourceSelector from './ResourceSelector'
 
 class ResourcesContext extends Component {
 
@@ -34,8 +35,10 @@ class ResourcesContext extends Component {
 
   render($$) {
     let mode = this.props.mode
-    if(mode === 'list' || mode === 'view') {
+    if(mode === 'list') {
       return this.renderList($$)
+    } else if (mode === 'edit') {
+      return this.renderResourceSelector($$)
     } else {
       return this.renderItem($$)
     }
@@ -47,6 +50,25 @@ class ResourcesContext extends Component {
     
     let el = $$('div').addClass('sc-entity-panel')
     
+    let header = $$('div').addClass('sc-panel-header').append(
+      $$('div').addClass('sc-goback-action').append(
+        this.context.iconProvider.renderIcon($$, 'goBack'),
+        this.getLabel('goBack')
+      ).on('click', this._showList),
+      $$('div').addClass('sc-actions').append(
+        $$('div').addClass('sc-edit-action').append(
+          this.context.iconProvider.renderIcon($$, 'editReference'),
+          this.getLabel('editReference')
+        ).on('click', this._editReference),
+        $$('div').addClass('sc-remove-action').append(
+          this.context.iconProvider.renderIcon($$, 'removeReference'),
+          this.getLabel('removeReference')
+        ).on('click', this._removeReference)
+      )
+    )
+
+    el.append(header)
+
     let node = doc.get(item)
     let refId = node.reference
     let entry = this.getEntry(refId)
@@ -54,15 +76,25 @@ class ResourcesContext extends Component {
 
     if(EntityComp) {
       el.append(
-        $$(EntityComp, entry).ref(entry.entityId)
+        $$(EntityComp, entry).addClass('se-reference-item')
+          .ref(entry.entityId)
       )
     }
 
     return el
   }
 
+  renderResourceSelector($$) {
+    let el = $$('div').addClass('sc-entity-panel')
+    
+    el.append(
+      $$(ResourceSelector, {configurator: this.props.configurator, node: this.props.item})
+    )
+
+    return el
+  }
+
   renderList($$) {
-    console.log(this.props)
     let ScrollPane = this.getComponent('scroll-pane')
 
     let entityEntries = $$("div")
@@ -89,6 +121,34 @@ class ResourcesContext extends Component {
       )
     )
     return el
+  }
+
+  _showList() {
+    this.extendProps({
+      mode: 'list',
+      item: undefined
+    })
+  }
+
+  _editReference() {
+    let item = this.props.item
+    this.extendProps({
+      mode: 'edit',
+      item: item
+    })
+  }
+
+  _removeReference() {
+    let item = this.props.item
+    let editorSession = this.context.editorSession
+    editorSession.transaction(function(tx, args) {
+      tx.delete(item)
+      return args
+    })
+    this.extendProps({
+      mode: 'list',
+      item: undefined
+    })
   }
 }
 

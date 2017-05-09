@@ -1,3 +1,35 @@
+.sc-entity-panel .sc-panel-header {
+  font-size: 12px;
+  line-height: 40px;
+  font-weight: 600;
+  overflow: hidden;
+  height: 40px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sc-entity-panel .sc-panel-header .fa {
+  margin-right: 5px;
+}
+
+.sc-entity-panel .sc-panel-header .sc-goback-action {
+  padding: 0px 20px;
+  float: left;
+  cursor: pointer;
+}
+
+.sc-entity-panel .sc-panel-header .sc-actions {
+  overflow: hidden;
+  float: right;
+}
+
+.sc-entity-panel .sc-panel-header .sc-actions > div {
+  display: block;
+  float: left;
+  padding: 0px 4px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
 .se-entity-entries .sc-entity-entry {
   position: relative;
   min-height: 100px;
@@ -29,4 +61,58 @@
   position: absolute;
   font-size: 20px;
   color: #999;
+}
+
+.se-reference-item {
+  border-bottom: none!important;
+}
+
+.se-reference-item .se-title {
+  margin-bottom: 10px;
+}
+
+.se-reference-item .se-description {
+  font-size: 12px;
+  margin-right: 50px;
+}
+
+.sc-resource-selector .se-search {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: block;
+  position: relative;
+  height: 40px;
+  background: white;
+  border-bottom: 1px solid #E0E4E4;
+}
+
+.sc-resource-selector .se-search i {
+  position: absolute;
+  color: #E0E4E4;
+  font-size: 18px;
+  left: 12px;
+  top: 10px;
+}
+
+.sc-resource-selector .se-search input {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  font-size: 18px;
+  width: 100%;
+  height: 100%;
+  padding: 0 24px 0 40px;
+  border: none;
+  background: transparent;
+  line-height: 22px;
+}
+
+.sc-resource-selector .se-search-results {
+  top: 40px;
+}
+
+.sc-resource-selector .se-search-results .sc-entity-entry.se-focused,
+.sc-resource-selector .se-search-results .sc-entity-entry:hover {
+  background: #fff;
 }
