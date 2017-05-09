@@ -1,4 +1,4 @@
-import { EditorSession, JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
+import { CollabSession, JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
 import Loader from '../common/Loader'
 import Publisher from './Publisher'
 
@@ -133,6 +133,7 @@ class PublisherLayout extends Loader {
   */
   _loadDocument(documentId) {
     let configurator = this.props.configurator
+    let collabClient = this.collabClient
     let documentClient = this.context.documentClient
 
     documentClient.getDocument(documentId, (err, docRecord) => {
@@ -144,8 +145,11 @@ class PublisherLayout extends Loader {
       let document = configurator.createArticle()
       let doc = converter.importDocument(document, docRecord.data)
 
-      let session = new EditorSession(doc, {
-        configurator: configurator
+      let session = new CollabSession(doc, {
+        configurator: configurator,
+        documentId: documentId,
+        version: docRecord.version,
+        collabClient: collabClient
       })
 
       if (substanceGlobals.DEBUG_RENDERING) {
