@@ -4,6 +4,7 @@
   font-weight: 600;
   overflow: hidden;
   height: 40px;
+  background: #fff;
   border-bottom: 1px solid #ddd;
 }
 
@@ -109,7 +110,7 @@
 }
 
 .sc-resource-selector .se-search-results {
-  top: 40px;
+  top: 80px;
 }
 
 .sc-resource-selector .se-search-results .sc-entity-entry.se-focused,

@@ -7,14 +7,14 @@ export default {
     config.import(PagerPackage)
     config.addContext('resources', ResourcesContext, false)
     config.addIcon('resources', {'fontawesome': 'fa-bullseye'})
-    config.addIcon('goBack', {'fontawesome': 'fa-arrow-left'})
+    config.addIcon('goBackToList', {'fontawesome': 'fa-arrow-left'})
     config.addIcon('editReference', {'fontawesome': 'fa-pencil'})
     config.addIcon('removeReference', {'fontawesome': 'fa-trash'})
     config.addLabel('resources', {
       en: 'Resources',
       ru: 'Сущности'
     })
-    config.addLabel('goBack', {
+    config.addLabel('goBackToResources', {
       en: 'Resources',
       ru: 'К списку'
     })
