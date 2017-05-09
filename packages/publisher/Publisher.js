@@ -18,7 +18,7 @@ class Publisher extends ProseEditor {
     super.didMount()
     let editorSession = this.getEditorSession()
     editorSession.onUpdate(this._onSessionUpdate, this)
-    editorSession.on('createEntityReference', this._createEntityReference, this)
+    editorSession.on('createInlineEntityReference', this._createEntityReference, this)
   }
 
   dispose() {
@@ -59,7 +59,7 @@ class Publisher extends ProseEditor {
     let commandStates = this.commandManager.getCommandStates()
     return $$('div').addClass('se-toolbar-wrapper').append(
       $$(Toolbar, {
-        toolGroups: ['text', 'document', 'annotations', 'references', 'default'],
+        toolGroups: ['text', 'document', 'annotations', 'default'],
         commandStates: commandStates
       }).ref('toolbar')
     )
