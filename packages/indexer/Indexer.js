@@ -4,7 +4,7 @@ import Args from 'args-js'
 import Promise from 'bluebird'
 
 let converter = new JSONConverter()
-
+let Where = require('../node_modules/massive/lib/where')
 //import { EventEmitter, SubstanceError as Err } from 'substance'
 
 class Indexer extends EventEmitter {
@@ -58,13 +58,23 @@ class Indexer extends EventEmitter {
             let fullText = ''
             let t0 = new Date()
 
+            // Calculate annotations data
+            // TODO: Do it immediately on update or read requests
+            let entitiesIndex = doc.getIndex('entities')
+            let annotations = []
+            let references = {}
+            each(entitiesIndex.byReference, (refs, key) => {
+              annotations.push(key)
+              references[key] = Object.keys(refs).length
+            })
+
             return Promise.map(body.nodes, function(nodeId, index) {
               fullText += '\r\n' + doc.get(nodeId).content
               let prevId = body.nodes[index - 1] || null
               let nextId = body.nodes[index + 1] || null
               return this._processNode(nodeId, doc, documentId, prevId, nextId)
             }.bind(this), {concurrency: 10}).then(function() {
-              return this._saveFullText(documentId, fullText, docEntry.version)
+              return this._saveIndexData(documentId, fullText, annotations, references, docEntry.version)
             }.bind(this)).then(function() {
               let t1 = new Date()
               console.log('finish fragment generation, takes', t1-t0, 'ms')
@@ -115,7 +125,7 @@ class Indexer extends EventEmitter {
       delete filters.query
       delete filters.language
 
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where. able(args.conditions)
 
       let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
@@ -132,7 +142,7 @@ ts_rank_cd(documents.tsv, q) AS rank FROM documents, plainto_tsquery(${language}
 ORDER BY rank DESC limit ${limit} offset ${offset}`
 
     } else {
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
 
       let whereQuery = where.where
@@ -208,7 +218,7 @@ ORDER BY count DESC limit ${limit} offset ${offset}`
       delete filters.query
       delete filters.language
 
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
 
       let whereQuery = where.where ? where.where + ' \nAND (tsv @@ q)' : '\nWHERE (tsv @@ q)'
@@ -221,7 +231,7 @@ plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}
 ORDER BY SUBSTRING("fragmentId", '([0-9]+)')::int ASC limit ${limit} offset ${offset}`
 
     } else {
-      args = ArgTypes.findArgs(arguments, this)
+      args = this._getWhere(arguments)
       where = isEmpty(args.conditions) ? {} : Where.forTable(args.conditions)
 
       let whereQuery = where.where
@@ -266,10 +276,10 @@ ORDER BY SUBSTRING("fragmentId", '([0-9]+)')::int ASC limit ${limit} offset ${of
       countQuery = `SELECT COUNT(*) FROM entities, plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery}`
 
       query = `SELECT 
-"entityId", name, description, synonyms, created, edited, "updatedBy", "userId", (SELECT COUNT(*) from documents WHERE "entityId"=ANY(documents.annotations)) AS count, ts_rank_cd(entities.tsv, q) AS rank
+"entityId", "entityType", name, description, synonyms, created, edited, "updatedBy", "userId", (SELECT COUNT(*) from documents WHERE "references" ? "entityId") AS count, ts_rank_cd(entities.tsv, q) AS rank
 FROM entities,
 plainto_tsquery(${language}, ${searchQuery}) AS q ${whereQuery} 
-ORDER BY rank DESC limit ${limit} offset ${offset}`
+ORDER BY rank DESC, created DESC limit ${limit} offset ${offset}`
 
     } else {
       args = this._getWhere(arguments)
@@ -280,7 +290,7 @@ ORDER BY rank DESC limit ${limit} offset ${offset}`
       countQuery = `SELECT COUNT(*) FROM entities ${whereQuery}`
 
       query = `SELECT 
-"entityId", name, description, synonyms, created, edited, "updatedBy", "userId", (SELECT COUNT(*) from documents WHERE "entityId"=ANY(documents.annotations)) AS count
+"entityId", name, description, synonyms, created, edited, "updatedBy", "userId", (SELECT COUNT(*) from documents WHERE "references" ? "entityId") AS count
 FROM entities ${whereQuery} 
 ORDER BY created DESC limit ${limit} offset ${offset}`
     }
@@ -358,8 +368,8 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
     return this._saveFragment(record)
   }
 
-  _saveFullText(documentId, text, version) {
-    return this.documentEngine.updateDocumentFullText(documentId, text, version)
+  _saveIndexData(documentId, text, annos, refs, version) {
+    return this.documentEngine.updateDocumentIndexData(documentId, text, annos, refs, version)
   }
 
   _saveFragment(record) {
