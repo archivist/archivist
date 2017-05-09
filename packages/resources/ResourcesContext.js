@@ -4,15 +4,14 @@ import ResourceSelector from './ResourceSelector'
 
 class ResourcesContext extends Component {
 
-  // didMount() {
-  //   let tocProvider = this.context.tocProvider
-  //   tocProvider.on('toc:updated', this.onTOCUpdated, this)
-  // }
+  constructor(...args) {
+    super(...args)
 
-  // dispose() {
-  //   let tocProvider = this.context.tocProvider
-  //   tocProvider.off(this)
-  // }
+    this.handleActions({
+      'viewItem': this._viewItem,
+      'showList': this._showList
+    })
+  }
 
   getEntries() {
     let editorSession = this.context.editorSession
@@ -52,8 +51,8 @@ class ResourcesContext extends Component {
     
     let header = $$('div').addClass('sc-panel-header').append(
       $$('div').addClass('sc-goback-action').append(
-        this.context.iconProvider.renderIcon($$, 'goBack'),
-        this.getLabel('goBack')
+        this.context.iconProvider.renderIcon($$, 'goBackToList'),
+        this.getLabel('goBackToResources')
       ).on('click', this._showList),
       $$('div').addClass('sc-actions').append(
         $$('div').addClass('sc-edit-action').append(
@@ -127,6 +126,13 @@ class ResourcesContext extends Component {
     this.extendProps({
       mode: 'list',
       item: undefined
+    })
+  }
+
+  _viewItem(item) {
+    this.extendProps({
+      mode: 'view',
+      item: item
     })
   }
 
