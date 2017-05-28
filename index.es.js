@@ -26,6 +26,7 @@ export { default as PublisherLayout } from './packages/publisher/PublisherLayout
 // Other packages
 export { default as BracketsPackage } from './packages/brackets/package'
 export { default as CommentPackage } from './packages/comment/package'
+export { default as CommentsPackage } from './packages/comments/package'
 export { default as EntityEditorPackage } from './packages/entity-editor/package'
 export { default as FormsPackage } from './packages/forms/package'
 export { default as HeaderPackage } from './packages/header/package'
