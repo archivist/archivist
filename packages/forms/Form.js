@@ -23,12 +23,11 @@ class Form extends Component {
 
 
   prepare($$) {
-    let self = this;
-    each(this.schema, function(prop, id) {
-      if(prop.field) {
-        let config = prop.field
-        let value = self.node[id]
-        self.fields[id] = self.createField($$, id, config, value)
+    each(this.schema, (prop, id) => {
+      if(prop.definition.field) {
+        let config = prop.definition.field
+        let value = this.node[id]
+        this.fields[id] = this.createField($$, id, config, value)
       }
     })
   }
