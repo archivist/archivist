@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -43,22 +43,27 @@ class DocumentsPage extends Component {
   render($$) {
     let documentItems = this.state.items
     let el = $$('div').addClass('sc-documents')
+    let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
-    el.append(header)
 
     let toolbox = this.renderToolbox($$)
-    el.append(toolbox)
+    main.append(toolbox)
 
-    if (!documentItems) {
-      return el
+    if (documentItems) {
+      if (documentItems.length > 0) {
+        main.append(this.renderFull($$))
+      } else {
+        main.append(this.renderEmpty($$))
+      }
     }
 
-    if (documentItems.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
-    }
+    el.append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        main
+      )
+    )
     return el
   }
 

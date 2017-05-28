@@ -78,7 +78,7 @@ class PublisherLayout extends Loader {
     }
 
     el.append(
-      $$(SplitPane, {splitType: 'horizontal'}).append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
         header,
         main
       ).ref('splitPane')

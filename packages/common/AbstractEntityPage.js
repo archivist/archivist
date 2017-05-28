@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -51,16 +51,16 @@ class AbstractEntityPage extends Component {
   render($$) {
     let items = this.state.items
     let el = $$('div').addClass('sc-entity-page')
+    let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
-    el.append(header)
 
     let toolbox = this.renderToolbox($$)
-    el.append(toolbox)
+    main.append(toolbox)
 
     if (this.props.entityId || this.state.dialog) {
       let EntityEditor = this.getComponent('entity-editor')
-      el.append(
+      main.append(
         $$(Modal, {
           width: 'medium'
         }).append(
@@ -69,15 +69,20 @@ class AbstractEntityPage extends Component {
       )
     }
 
-    if (!items) {
-      return el
+    if (items) {
+      if (items.length > 0) {
+        main.append(this.renderFull($$))
+      } else {
+        main.append(this.renderEmpty($$))
+      }
     }
 
-    if (items.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
-    }
+    el.append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        main
+      )
+    )
 
     return el
   }
