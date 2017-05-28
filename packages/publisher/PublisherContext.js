@@ -71,6 +71,30 @@ class PublisherContext extends Component {
     }
   }
 
+  openComment(node) {
+    let mode = 'view'
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node.id
+    }
+    this.extendState(state)
+    console.log('View comment', node.id, ',', mode, 'mode')
+  }
+
+  editComment(node) {
+    let mode = 'edit'
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node.id
+    }
+    this.extendState(state)
+    console.log('Edit comment', node.id, ',', mode, 'mode')
+  }
+
   toggleBracket(node, active) {
     let mode = active ? 'edit' : 'list'
     let context = this.contextMap[node.type]
