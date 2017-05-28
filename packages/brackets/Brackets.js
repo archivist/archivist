@@ -29,6 +29,8 @@ class Brackets extends Component {
       .addClass('sc-brackets')
 
     forEach(anchorIndex.annosById.body, (anchor, nodeId) => {
+      if(!anchor.isBracketReference) return
+
       let reference = anchor.reference
       let bracket = $$('div').addClass('se-bracket')
         .attr({'data-id': nodeId + '-bracket'})
@@ -72,6 +74,8 @@ class Brackets extends Component {
     let events = []
 
     forEach(anchorIndex.annosById.body, (anchor, nodeId) => {
+      if(!anchor.isBracketReference) return
+
       if (!anchor.start || !anchor.end) {
         console.warn("FIXME: Could not find anchors for node ", nodeId)
         return
