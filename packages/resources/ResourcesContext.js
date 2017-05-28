@@ -1,5 +1,5 @@
-import { Component } from 'substance'
-import { find, sortBy } from 'lodash-es'
+import { Component, Modal } from 'substance'
+import { find, findIndex, sortBy } from 'lodash-es'
 import ResourceSelector from './ResourceSelector'
 
 class ResourcesContext extends Component {
@@ -9,7 +9,11 @@ class ResourcesContext extends Component {
 
     this.handleActions({
       'viewItem': this._viewItem,
-      'showList': this._showList
+      'showList': this._showList,
+      'focusEntity': this._focusEntity,
+      'editEntity': this._editEntity,
+      'updateEntity': this._updateEntity,
+      'closeModal': this._doneEditing
     })
   }
 
@@ -68,6 +72,17 @@ class ResourcesContext extends Component {
 
     el.append(header)
 
+    if (this.state.entityId) {
+      let EntityEditor = this.getComponent('entity-editor')
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(EntityEditor, {entityId: this.state.entityId})
+        )
+      )
+    }
+
     let node = doc.get(item)
     let refId = node.reference
     let entry = this.getEntry(refId)
@@ -108,17 +123,35 @@ class ResourcesContext extends Component {
       let EntityComp = this.getEntityRender(entry.entityType)
 
       if(EntityComp) {
-        entityEntries.append(
-          $$(EntityComp, entry).ref(entry.entityId)
-        )
+
+        let item = $$(EntityComp, entry).ref(entry.entityId)
+        if(entry.entityId === this.state.item) {
+          item.addClass('se-active')
+        }
+
+        entityEntries.append(item)
       }
     }
 
-    let el = $$('div').addClass('sc-entity-panel').append(
+    let el = $$('div').addClass('sc-entity-panel')
+
+    if (this.state.entityId) {
+      let EntityEditor = this.getComponent('entity-editor')
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(EntityEditor, {entityId: this.state.entityId})
+        )
+      )
+    }
+
+    el.append(
       $$(ScrollPane).ref('panelEl').append(
         entityEntries
       )
     )
+
     return el
   }
 
@@ -132,6 +165,13 @@ class ResourcesContext extends Component {
   _viewItem(item) {
     this.extendProps({
       mode: 'view',
+      item: item
+    })
+  }
+
+  _focusEntity(item) {
+    this.setState({
+      mode: 'list',
       item: item
     })
   }
@@ -155,6 +195,31 @@ class ResourcesContext extends Component {
       mode: 'list',
       item: undefined
     })
+  }
+
+  _editEntity(entityId) {
+    this.extendState({entityId: entityId})
+  }
+
+  /*
+    Update entity data in session resources
+  */
+  _updateEntity(entity) {
+    let editorSession = this.context.editorSession
+    let items = editorSession.resources
+    let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
+    
+    if(changedItem > -1) {
+      items[changedItem] = entity
+    }
+    this.refs[entity.entityId].extendProps(entity)
+  }
+
+  /*
+    Close modal
+  */
+  _doneEditing() {
+    this.extendState({entityId: undefined})
   }
 }
 

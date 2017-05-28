@@ -58,6 +58,24 @@
   margin-right: 50px;
 }
 
+.se-entity-entries .sc-entity-entry .se-type,
+.se-reference-item .se-type {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 12px;
+  color: #fff;
+  padding: 0px 2px;
+}
+
+.se-entity-entries .sc-entity-entry .se-edit-entity,
+.se-reference-item .se-edit-entity {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  color: #505050;
+}
+
 .se-entity-entries .sc-entity-entry .se-resource-external-link {
   position: absolute;
   font-size: 20px;
@@ -75,6 +93,10 @@
 .se-reference-item .se-description {
   font-size: 12px;
   margin-right: 50px;
+}
+
+.sc-resource-selector .sc-actions > div {
+  margin-right: 0px!important;
 }
 
 .sc-resource-selector .se-search {

@@ -1,5 +1,5 @@
-import { Component, documentHelpers, FontAwesomeIcon as Icon, Input, SubstanceError as Err } from 'substance'
-import { concat, debounce, find, findIndex, isEmpty } from 'lodash-es'
+import { Component, documentHelpers, FontAwesomeIcon as Icon, Input, Modal, SubstanceError as Err } from 'substance'
+import { concat, debounce, find, findIndex, forEach, isEmpty } from 'lodash-es'
 
 class ResourcesSelector extends Component {
 
@@ -7,7 +7,9 @@ class ResourcesSelector extends Component {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadMore': this._loadMore,
+      'updateEntity': this._updateEntity,
+      'closeModal': this._doneEditing
     })
   }
 
@@ -51,6 +53,7 @@ class ResourcesSelector extends Component {
     let sel = this.context.editorSession.getSelection()
 
     return {
+      entityTypes: entityTypes,
       filters: {entityType: entityTypes},
       search: sel ? documentHelpers.getTextForSelection(doc, sel) : '',
       perPage: 30,
@@ -66,12 +69,36 @@ class ResourcesSelector extends Component {
     let el = $$('div').addClass('sc-resource-selector')
     let ScrollPane = this.getComponent('scroll-pane')
 
+    if (this.state.entityId) {
+      let EntityEditor = this.getComponent('entity-editor')
+      el.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(EntityEditor, {entityId: this.state.entityId})
+        )
+      )
+    }
+
     let header = $$('div').addClass('sc-panel-header').append(
       $$('div').addClass('sc-goback-action').append(
         this.context.iconProvider.renderIcon($$, 'goBackToList'),
         this.getLabel('goBackToResources')
       ).on('click', this._goBack)
     )
+
+    let actions = $$('div').addClass('sc-actions')
+
+    forEach(this.state.entityTypes, type => {
+      actions.append(
+        $$('div').addClass('sc-add-' + type + '-action').append(
+          '+ ',
+          this.context.iconProvider.renderIcon($$, type)
+        ).on('click', this._createEntity.bind(this, type))
+      )
+    })
+
+    header.append(actions)
 
     let searchInput = $$(Input, {
       type: 'search', 
@@ -360,12 +387,54 @@ class ResourcesSelector extends Component {
     }
   }
 
-  isSearchEventSupported() {
-    let element = document.createElement('input')
-    let eventName = 'onsearch'
-    let isSupported = (eventName in element)
+  /*
+    Create a new entity 
+  */
+  _createEntity(entityType) {
+    let resources = this.context.editorSession.resources
+    let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
+    let resourceClient = this.context.resourceClient
+    let entityData = {
+      name: 'Unknown ' + entityType,
+      synonyms: [],
+      description: '',
+      entityType: entityType,
+      userId: user.userId,
+      updatedBy: user.userId,
+      data: {}
+    }
+
+    resourceClient.createEntity(entityData, (err, entity) => {
+      if(err) {
+        console.error(err)
+        return
+      }
+
+      resources.push(entity)
+      this.extendState({entityId: entity.entityId})
+    })
+  }
+
+  /*
+    Update entity data in session resources
+  */
+  _updateEntity(entity) {
+    let editorSession = this.context.editorSession
+    let items = editorSession.resources
+    let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
     
-    return isSupported
+    if(changedItem > -1) {
+      items[changedItem] = entity
+    }
+  }
+
+  /*
+    Close modal
+  */
+  _doneEditing() {
+    this._setReference(this.state.entityId)
+    this.extendState({entityId: undefined})
   }
 }
 
