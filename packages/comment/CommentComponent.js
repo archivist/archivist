@@ -1,40 +1,32 @@
-import { Component, TextProperty, Icon } from 'substance'
-import moment from 'moment'
-
+import { Component } from 'substance'
 
 class CommentComponent extends Component {
-
-  render($$) {
-    let author = this.props.node.author;
-    let date = moment(this.props.createdAt).fromNow();
-    let authored = '<strong>' + author + '</strong> ' + date;
-
-    return $$('div')
-      .addClass('sc-comment')
-      .attr("data-id", this.props.node.id)
-      .append(
-        $$('div')
-          .addClass('se-comment-symbol')
-          .attr({contenteditable: false}).append(
-            $$(Icon, {icon: "fa-comment"})
-          ),
-        $$('div')
-          .addClass('se-authored')
-          .attr('contenteditable', false)
-          .html(authored),
-        $$('div').addClass('se-body').append(
-          $$(TextProperty, {
-            doc: this.props.node.getDocument(),
-            path: [ this.props.node.id, "content"],
-          })
-        )
-      )
+  didMount() {
+    let node = this.props.node
+    node.anno.on('highlighted', this.onHighlightedChanged, this)
   }
 
-  getDate() {
-    let date = this.props.node.createdAt
-    let result = this.timeSince(new Date(date)) + ' ago'
-    return result
+  render($$) {
+    let fragment = this.props.node
+    let el = $$('span')
+      .attr("data-id", fragment.id)
+      .addClass('sc-'+fragment.anno.type)
+
+    if (this.props.node.anno.highlighted) {
+      el.addClass('sm-highlighted')
+    }
+
+    el.append(this.props.children)
+
+    return el
+  }
+
+  onHighlightedChanged() {
+    if (this.props.node.anno.highlighted) {
+      this.el.addClass('sm-highlighted')
+    } else {
+      this.el.removeClass('sm-highlighted')
+    }
   }
 }
 
