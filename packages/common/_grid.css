@@ -3,7 +3,6 @@
   height: 100%;
   width: 100%;
   position: relative;
-  padding-bottom: 100px; 
 }
 
 .se-row {
@@ -29,7 +28,7 @@
 .sc-grid .se-row .se-title a {
   font-size: 20px;
   line-height: 21px;
-  color: var(--default-text-color);
+  color: rgba(0,0,0,0.75);
 }
 
 .sc-grid .se-row .se-additional {

@@ -1,7 +1,8 @@
 .sc-toolbox {
   height: 50px;
   background: #f7fbf7;
-  border-bottom: 1px solid #e7f3ec;
+  -webkit-box-shadow: 0 1px 4px rgba(0,0,0,.2);
+  box-shadow: 0 1px 4px rgba(0,0,0,.2);
   overflow: visible;
 }
 

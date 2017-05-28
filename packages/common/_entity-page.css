@@ -1,4 +1,6 @@
-.sc-entity-page > .sc-grid > .se-entity-meta {
+.sc-entity-page .se-entity-layout {
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .sc-entity-page .se-entity-description {
@@ -16,7 +18,7 @@
   line-height: 23px;
 }
 
-.sc-entity-page  .se-document-reference .se-badge {
+.sc-entity-page .se-document-reference .se-badge {
   background: #fafafa;
   text-align: center;
 }
