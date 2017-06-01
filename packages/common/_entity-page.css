@@ -31,3 +31,7 @@
   content: none;
   display: table;
 }
+
+.sc-entity-page .se-entity-layout .sc-modal {
+  z-index: 99;
+}
