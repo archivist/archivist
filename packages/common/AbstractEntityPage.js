@@ -147,18 +147,8 @@ class AbstractEntityPage extends Component {
         $$('p').html('Sorry, no entities matches your query')
       )
     } else {
-      layout.append(
-        $$('div').addClass('se-spinner').append(
-          $$('div').addClass('se-rect1'),
-          $$('div').addClass('se-rect2'),
-          $$('div').addClass('se-rect3'),
-          $$('div').addClass('se-rect4'),
-          $$('div').addClass('se-rect5')
-        ),
-        $$('h2').html(
-          'Loading...'
-        )
-      )
+      let Spinner = this.getComponent('spinner')
+      layout.append($$(Spinner, {message: 'spinner-loading'}))
     }
 
     return layout

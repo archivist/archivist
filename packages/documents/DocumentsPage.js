@@ -107,17 +107,17 @@ class DocumentsPage extends Component {
   }
 
   renderStatusBar($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var StatusBar = componentRegistry.get('status-bar');
+    let componentRegistry = this.context.componentRegistry
+    let StatusBar = componentRegistry.get('status-bar')
 
-    return $$(StatusBar);
+    return $$(StatusBar)
   }
 
   renderEmpty($$) {
-    var layout = $$(Layout, {
+    let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
-    });
+    })
 
     if(this.state.total === 0) {
       layout.append(
@@ -125,23 +125,13 @@ class DocumentsPage extends Component {
           'No results'
         ),
         $$('p').html('Sorry, no entities matches your query')
-      );
+      )
     } else {
-      layout.append(
-        $$('div').addClass('se-spinner').append(
-          $$('div').addClass('se-rect1'),
-          $$('div').addClass('se-rect2'),
-          $$('div').addClass('se-rect3'),
-          $$('div').addClass('se-rect4'),
-          $$('div').addClass('se-rect5')
-        ),
-        $$('h2').html(
-          'Loading...'
-        )
-      );
+      let Spinner = this.getComponent('spinner')
+      layout.append($$(Spinner, {message: 'spinner-loading'}))
     }
 
-    return layout;
+    return layout
   }
 
   renderAdditionalMenu($$, actions) {
