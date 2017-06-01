@@ -1,6 +1,6 @@
 import { Component } from 'substance'
 import { forEach } from 'lodash-es'
-import Forms from '../sforms/Forms'
+import Forms from '../forms/Forms'
 import moment from 'moment'
 
 class CommentContext extends Component {
