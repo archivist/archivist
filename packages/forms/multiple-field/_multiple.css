@@ -1,0 +1,73 @@
+.sc-field-multiple .se-toggle-dialog {
+  float: left;
+  padding: 9px 14px 4px 0px;
+  cursor: pointer;
+}
+
+.sc-field-multiple .se-options {
+  cursor: auto;
+  position: absolute;
+  outline: 0;
+  top: 100%;
+  min-width: -webkit-max-content;
+  min-width: -moz-max-content;
+  min-width: max-content;
+  margin: 0;
+  padding: 0 0;
+  background: #fff;
+  text-shadow: none;
+  text-align: left;
+  box-shadow: 0 2px 3px 0 rgba(34,36,38,.15);
+  border: 1px solid rgba(34,36,38,.15);
+  border-radius: 5px;
+  -webkit-transition: opacity .1s ease;
+  transition: opacity .1s ease;
+  z-index: 10;
+}
+
+.sc-field-multiple .se-options .se-item {
+  position: relative;
+  cursor: pointer;
+  display: block;
+  border: none;
+  height: auto;
+  text-align: left;
+  border-top: none;
+  line-height: 1em;
+  padding: 5px 10px;
+  font-size: 12px;
+  text-transform: none;
+  font-weight: 400;
+  box-shadow: none;
+}
+
+.sc-field-multiple .se-options .se-item:hover {
+  background: rgba(0,0,0,.05);
+  color: rgba(0,0,0,.95);
+  z-index: 13;
+}
+
+.sc-field-multiple .se-tag .se-value {
+  display: block;
+  float: left;
+  background-color: rgba(193, 193, 193, 0.5);
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin-right: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+}
+      
+.sc-field-multiple .se-tag .se-value.se-hihglight-remove {
+  background-color: red;
+  color: #fff;
+}
+        
+.sc-field-multiple .se-tag .se-value.se-hihglight-remove:after {
+  content: "×";
+  margin-left: 5px;
+}

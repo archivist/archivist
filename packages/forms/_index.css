@@ -1,0 +1,56 @@
+/* Substance-forms specific styles */
+@import './minimal-switch-text-type/_minimal-switch-text-type.css';
+@import './multiple-field/_multiple.css';
+@import './tags-field/_tags.css';
+@import './toggle-field/_toggle.css';
+@import './xref/_xref.css';
+
+.sc-overlay {
+  font-family: -apple-system, ".SFNSText-Regular", "San Francisco", "Roboto", "Segoe UI", "Helvetica Neue", "Arial", sans-serif;
+}
+
+.sc-rich-text-area {
+  border: 1px solid #E0E4E4;
+  border-radius: 3px;
+  padding: 10px;
+}
+
+.sc-rich-text-area-editor .sc-container-editor > * {
+  margin-bottom: 20px;
+}
+
+.sc-form {
+  max-width: 500px;
+  max-height: 600px;
+  margin: 10px auto;
+  overflow: auto;
+}
+
+.sc-form .sc-field {
+  padding-bottom: 15px;
+}
+
+.sc-form .sc-field .sc-input {
+  padding: 6px;
+}
+
+.sc-form .sc-field .sc-input:focus {
+  background: #fff;
+  border-color: rgb(198, 224, 243);
+}
+
+.sc-form .sc-field .sc-textarea {
+  padding: 6px;
+  width: 100%;
+}
+      
+.sc-form .sc-field .sc-textarea:focus {
+  background: #fff;
+  border-color: rgb(198, 224, 243);
+}
+  
+.sc-form .sc-field .help {
+  font-size: 12px;
+  line-height: 25px;
+  clear: both;
+}
