@@ -4,7 +4,8 @@ import Args from 'args-js'
 import Promise from 'bluebird'
 
 let converter = new JSONConverter()
-let Where = require('../node_modules/massive/lib/where')
+let massivePath = require.resolve('massive')
+let Where = require(massivePath + '/../lib/where')
 //import { EventEmitter, SubstanceError as Err } from 'substance'
 
 class Indexer extends EventEmitter {
