@@ -9,6 +9,10 @@
   width: 100%;
 }
 
+.sc-entity-page .se-entity-description .se-description {
+  padding: 0px 10px 10px;
+}
+
 .sc-entity-page .se-document-reference {
   display: table;
   width: 100%;
