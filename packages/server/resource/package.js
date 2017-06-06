@@ -6,9 +6,11 @@ export default {
     let server = config.getServerApp()
     let resourceEngine = config.getEngine('resource')
     let indexer = config.getEngine('indexer')
+    let inspector = config.getEngine('inspector')
 
     let resourceServer = new ResourceServer({
       indexer: indexer,
+      inspector: inspector,
       resourceEngine: resourceEngine,
       path: '/api'
     })

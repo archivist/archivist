@@ -7,6 +7,7 @@ class ResourceServer {
   constructor(config) {
     this.engine = config.resourceEngine
     this.indexer = config.indexer
+    this.inspector = config.inspector
     this.path = config.path
   }
 
@@ -17,7 +18,9 @@ class ResourceServer {
     app.get(this.path + '/entities/document/:id', this._getDocumentResources.bind(this))
     //app.get(this.path + '/entities/tree/:type', this._getResourcesTree.bind(this))
     app.get(this.path + '/entities/search', this._searchEntities.bind(this))
+    app.post(this.path + '/entities/merge', this._mergeEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
+    app.delete(this.path + '/entities/:id', this._removeEntity.bind(this))
     app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
   }
 
@@ -56,6 +59,42 @@ class ResourceServer {
     }).catch(function(err) {
       return next(err)
     })
+  }
+
+  /*
+    Remove Entity
+  */
+  _removeEntity(req, res, next) {
+    let entityId = req.params.id
+    this.inspector.removeResource(entityId)
+      .then(() => {
+        return this.engine.removeEntity(entityId)
+      })
+      .then((result) => {
+        res.json(result)
+      })
+      .catch((err) => {
+        return next(err)
+      })
+  }
+
+  /*
+    Merge entities
+  */
+  _mergeEntity(req, res, next) {
+    let entityData = req.body
+    let entityId = entityData.mergeEntity
+    let targetId = entityData.targetEntity
+    this.inspector.replaceResource(entityId, targetId)
+      .then(() => {
+        return this.engine.removeEntity(entityId)
+      })
+      .then((result) => {
+        res.json(result)
+      })
+      .catch((err) => {
+        return next(err)
+      })
   }
 
   /*
