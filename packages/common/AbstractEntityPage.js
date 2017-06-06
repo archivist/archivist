@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -12,7 +12,9 @@ class AbstractEntityPage extends Component {
     this.handleActions({
       'loadMore': this._loadMore,
       'updateEntity': this._updateEntity,
+      'deleteEntity': this._removeFromList,
       'closeModal': this._doneEditing,
+      'closeResourceOperator': this._closeResourceOperator,
       'newEntity': this._newEntity
     })
   }
@@ -23,6 +25,15 @@ class AbstractEntityPage extends Component {
 
   get entityType() {
     return this.constructor.entityType
+  }
+
+  getChildContext() {
+    // TODO: we only keeping this to avoid
+    // ScrollPane dispose errors
+    return {
+      editorSession: new EventEmitter(),
+      dragManager: new EventEmitter()
+    }
   }
 
   getInitialState() {
@@ -65,6 +76,18 @@ class AbstractEntityPage extends Component {
           width: 'medium'
         }).append(
           $$(EntityEditor, {entityId: this.props.entityId})
+        )
+      )
+    }
+
+    if(this.state.entityId && this.state.mode) {
+      let ResourceOperator = this.getComponent('resource-operator')
+      let index = findIndex(items, (i) => { return i.entityId === this.state.entityId })
+      main.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(ResourceOperator, {entityId: this.state.entityId, item: items[index], mode: this.state.mode})
         )
       )
     }
@@ -189,11 +212,12 @@ class AbstractEntityPage extends Component {
 
         let additionalActions = [
           {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
+          {label: 'Merge', action: this._mergeItem.bind(this, item.entityId)}
         ]
 
         let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
-          $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
-          $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
+          //$$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
+          $$(Grid.Cell, {columns: 6}).addClass('se-title').append(name),
           $$(Grid.Cell, {columns: 3}).append(edited),
           $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
           $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
@@ -340,7 +364,27 @@ class AbstractEntityPage extends Component {
   }
 
   _removeItem(id) {
-    console.log(id)
+    this.extendState({entityId: id, mode: 'delete'})
+  }
+
+  _removeFromList(id) {
+    let items = this.state.items
+    let deletedItem = findIndex(items, function(i) { return i.entityId === id })
+    if(deletedItem > -1) {
+      items.splice(deletedItem, 1)
+      this.extendState({items: items, entityId: undefined, mode: undefined})
+    }
+  }
+
+  _mergeItem(id) {
+    this.extendState({entityId: id, mode: 'merge'})
+  }
+
+  /*
+    Close Resource Operator modal
+  */
+  _closeResourceOperator() {
+    this.extendState({entityId: undefined, mode: undefined})
   }
 
   /*
