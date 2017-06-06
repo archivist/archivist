@@ -142,7 +142,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
   }
 
   listResourceDocuments(resourceId, published, cb) {
-    let publishedProviso
+    let publishedProviso = ''
     if(published) publishedProviso = "AND meta->>'state' = 'published'"
     let query = `
       SELECT "documentId", title, meta, "references"->>$1 AS count
