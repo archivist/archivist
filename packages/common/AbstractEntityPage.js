@@ -88,7 +88,7 @@ class AbstractEntityPage extends Component {
           width: 'medium'
         }).append(
           $$(ResourceOperator, {entityId: this.state.entityId, item: items[index], mode: this.state.mode})
-        )
+        ).ref('modal')
       )
     }
 
@@ -393,6 +393,7 @@ class AbstractEntityPage extends Component {
   _doneEditing() {
     // TODO: form editor isn't disposing, we shouldn't do it manually
     this.refs.modal.triggerDispose()
+    this.extendState({entityId: undefined, mode: undefined})
     this.send('navigate', {page: this.pageName})
   }
 
