@@ -27,8 +27,11 @@ class ResourcesOperator extends Component {
   }
 
   getInitialState() {
+    let configurator = this.context.configurator
+    let entityTypes = configurator.getDefaultResourceTypes()
+
     return {
-      filters: {},
+      filters: {entityType: entityTypes},
       search: '',
       perPage: 30,
       order: 'created',

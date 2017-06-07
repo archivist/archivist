@@ -156,6 +156,14 @@ class ArchivistConfigurator extends Configurator {
     return this.config.menu
   }
 
+  setDefaultResourceTypes(resourceTypes) {
+    this.config.resourceTypes = resourceTypes
+  }
+
+  getDefaultResourceTypes() {
+    return this.config.resourceTypes
+  }
+
 }
 
 export default ArchivistConfigurator
