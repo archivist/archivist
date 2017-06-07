@@ -76,7 +76,7 @@ class AbstractEntityPage extends Component {
           width: 'medium'
         }).append(
           $$(EntityEditor, {entityId: this.props.entityId})
-        )
+        ).ref('modal')
       )
     }
 
@@ -391,6 +391,8 @@ class AbstractEntityPage extends Component {
     Close modal and change url
   */
   _doneEditing() {
+    // TODO: form editor isn't disposing, we shouldn't do it manually
+    this.refs.modal.triggerDispose()
     this.send('navigate', {page: this.pageName})
   }
 

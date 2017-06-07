@@ -14,6 +14,8 @@ class EntityEditor extends Component {
     let session = this.state.session
     if(session) {
       session.off(this)
+      // TODO: Deatach drag listners in more convient way
+      session.dragManager.el.removeAllEventListeners()
     }
   }
 
