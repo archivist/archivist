@@ -1,5 +1,5 @@
 import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane, Toolbar } from 'substance'
-import { forEach, map, orderBy, uniq } from 'lodash-es'
+import { findIndex, forEach, map, orderBy, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
 class Publisher extends ProseEditor {
@@ -8,6 +8,7 @@ class Publisher extends ProseEditor {
 
     let doc = this.editorSession.getDocument()
     this.contentHighlights = new Highlights(doc)
+    this.updatingResorces = false
 
     this.handleActions({
       'showReferences': this._showReferences,
@@ -21,6 +22,8 @@ class Publisher extends ProseEditor {
     editorSession.onUpdate(this._onSessionUpdate, this)
     editorSession.on('createInlineEntityReference', this._createEntityReference, this)
     editorSession.on('createComment', this._createComment, this)
+    editorSession.on('resource:add', this._fetchResource, this)
+    editorSession.on('resource:delete', this._deleteResource, this)
   }
 
   dispose() {
@@ -163,33 +166,6 @@ class Publisher extends ProseEditor {
   _onSessionUpdate(editorSession) {
     if (!editorSession.hasChanged('document') && !editorSession.hasChanged('selection')) return
 
-    let change = editorSession.getChange()
-    if(change) {
-      let changeInfo = editorSession.getChangeInfo()
-      // Fetch resource after remote update
-      if(changeInfo.remote) {
-        // Look for updated references with new resources
-        Object.keys(change.updated).forEach(prop => {
-          let index = prop.indexOf('reference')
-          if(index > -1) {
-            let doc = editorSession.getDocument()
-            let nodeId = prop.slice(0, index - 1)
-            let node = doc.get(nodeId)
-            let reference = node.reference
-
-            this._addResource(editorSession, reference)
-          }
-        })
-        // Look for a new references with new resources
-        Object.keys(change.created).forEach(id => {
-          let node = change.created[id]
-          let reference = node.reference
-
-          this._addResource(editorSession, reference)
-        })
-      }
-    }
-
     let doc = editorSession.getDocument()
     let contextPanel = this.refs.contextPanel
 
@@ -234,8 +210,21 @@ class Publisher extends ProseEditor {
     this.contentHighlights.set(highlights)
   }
 
+  _fetchResource(resourceId) {
+    let editorSession = this.getEditorSession()
+    this._addResource(editorSession, resourceId)
+  }
+
+  _deleteResource(resourceId) {
+    let editorSession = this.getEditorSession()
+    let index = findIndex(editorSession.resources, item => { return item.entityId === resourceId })
+
+    editorSession.resources.splice(index, 1)
+  }
+
   _addResource(editorSession, reference) {
-    if(reference) {
+    if(reference && !this.updatingResorces) {
+      this.updatingResorces = true
       let resources = editorSession.resources
       let entity = find(resources, item => { return item.entityId === reference })
       if(!entity) {
@@ -246,6 +235,7 @@ class Publisher extends ProseEditor {
           } else {
             resources.push(entity)
           }
+          this.updatingResorces = false
         })
       }
     }
