@@ -1,6 +1,7 @@
 let CollabServer = require('substance').CollabServer
 let DocumentChange = require('substance').DocumentChange
 let Err = require('substance').SubstanceError
+let forEach = require('lodash/forEach')
 
 /*
   DocumentServer module. Can be bound to an express instance
@@ -73,6 +74,29 @@ class ArchivistCollabServer extends CollabServer {
       req.setEnhanced()
       this.next(req, res)
     }
+  }
+
+  resourceSync(req, res) {
+    let args = req.message
+    let documentId = args.documentId
+    let collaborators = this.collabEngine.getCollaborators(documentId, args.collaboratorId)
+    
+    res.send({
+      scope: this.scope,
+      type: 'resourceSyncDone',
+      documentId: documentId
+    })
+
+    forEach(collaborators, (collaborator) => {
+      this.send(collaborator.collaboratorId, {
+        scope: this.scope,
+        type: 'resourceUpdate',
+        documentId: documentId,
+        resourceId: args.resourceId,
+        mode: args.mode
+      })
+    })
+    this.next(req, res)
   }
 
 }
