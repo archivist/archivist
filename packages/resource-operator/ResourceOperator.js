@@ -17,7 +17,9 @@ class ResourcesOperator extends Component {
       this._loadData()
     }
 
-    this.refs.searchInput.el.focus()
+    if(this.refs.searchInput) {
+      this.refs.searchInput.el.focus()
+    }
   }
 
   didUpdate(oldProps, oldState) {
@@ -106,20 +108,25 @@ class ResourcesOperator extends Component {
     let el = $$('div').addClass('se-merge-dialog')
     let state = this.state.opState
     let resource = this.renderResorceItem($$)
+    let mergeEntity = this.state.mergeEntity || this.props.mergeItem
+    let mergeResource = this.renderResorceItem($$, mergeEntity)
     let resourceSelector = this.renderResorceSelector($$)
     let msg = $$('div').addClass('se-message')
 
-    if (!state && this.state.mergeEntity) {
+    if(!state && mergeEntity) {
       msg.addClass('se-warning').append(
         $$(Icon, {icon: 'fa-warning'}).addClass('se-icon'),
         $$('div').addClass('se-content').append(this.getLabel('merge-confirmation-msg'))
       )
 
+      if(this.state.mergeEntity) {
+        mergeResource.on('click', this._unsetMergeEntity)
+      }
+
       el.append(
         resource,
         $$('div').addClass('se-merge-divider').append(this.getLabel('merge-divider')),
-        this.renderResorceItem($$, this.state.mergeEntity)
-          .on('click', this._unsetMergeEntity),
+        mergeResource,
         msg,
         $$('div').addClass('se-actions').append(
           $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
@@ -256,12 +263,15 @@ class ResourcesOperator extends Component {
   }
 
   _onMerge() {
-    let entityId = this.props.item.entityId
-    let mergeEntityId = this.state.mergeEntity.entityId
+    let entityId = this.props.item.entityId || this.props.entityId
+    let mergeEntity = this.state.mergeEntity || this.props.mergeItem
+    let mergeEntityId = mergeEntity.entityId || this.props.mergeEntityId
+
     if(entityId !== mergeEntityId) {
       let resourceClient = this.context.resourceClient
+      let type = mergeEntity.entityType
       this.extendState({opState: 'wait'})
-      resourceClient.mergeEntity(entityId, mergeEntityId, (err) => {
+      resourceClient.mergeEntity(entityId, mergeEntityId, type, (err) => {
         this.extendState({opState: 'finish'})
         setTimeout(() => {
           this.send('deleteEntity', entityId)
