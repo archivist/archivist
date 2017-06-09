@@ -85,7 +85,8 @@ class ResourceServer {
     let entityData = req.body
     let entityId = entityData.mergeEntity
     let targetId = entityData.targetEntity
-    this.inspector.replaceResource(entityId, targetId)
+    let type = entityData.type
+    this.inspector.replaceResource(entityId, targetId, type)
       .then(() => {
         return this.engine.removeEntity(entityId)
       })
