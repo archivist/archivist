@@ -17,7 +17,7 @@ class Inspector extends EventEmitter {
     }.bind(this), 1000)
   }
 
-  replaceResource(oldResourceId, newResourceId) {
+  replaceResource(oldResourceId, newResourceId, type) {
     return this._getResourceDocuments(oldResourceId)
       .then(docs => {
         return Promise.map(docs, doc => {
@@ -28,15 +28,60 @@ class Inspector extends EventEmitter {
               let references = entityIndex.byReference[oldResourceId]
 
               if(references) {
+                // Notify collaborators about resource changes
+                session._send({
+                  scope: "substance/collab", 
+                  type: "resourceSync", 
+                  documentId: session.documentId, 
+                  resourceId: oldResourceId, 
+                  mode: 'remove'
+                })
+
+                session._send({
+                  scope: "substance/collab", 
+                  type: "resourceSync", 
+                  documentId: session.documentId, 
+                  resourceId: newResourceId, 
+                  mode: 'add'
+                })
+
                 session.transaction((tx, args) => {
                   each(references, (node, id) => {
                     if(node.isResourceReference()) {
-                      tx.set([id, 'reference'], newResourceId)
+                      if(type) {
+                        // Recreate annotation in case of entity type changing
+                        let annoData = {
+                          type: type,
+                          reference: newResourceId,
+                          start: node.start.toJSON(),
+                          end: node.end.toJSON()
+                        }
+                        tx.delete(id)
+                        tx.create(annoData)
+                      } else {
+                        tx.set([id, 'reference'], newResourceId)
+                      }
                     } else if (node.isResourceMultipleReference()) {
                       let reference = node.reference
-                      let index = reference.indexOf(oldResourceId)
-                      reference[index] = newResourceId
-                      tx.set([id, 'reference'], reference)
+
+                      if(reference.indexOf(newResourceId) === -1) {
+                        let index = reference.indexOf(oldResourceId)
+                        reference[index] = newResourceId
+
+                        if(type) {
+                          // Recreate annotation in case of entity type changing
+                          let annoData = {
+                            type: type,
+                            reference: reference,
+                            start: node.start.toJSON(),
+                            end: node.end.toJSON()
+                          }
+                          tx.delete(id)
+                          tx.create(annoData)
+                        } else {
+                          tx.set([id, 'reference'], reference)
+                        }
+                      }
                     }
                   })
                   return args
@@ -60,6 +105,15 @@ class Inspector extends EventEmitter {
               let references = entityIndex.byReference[resourceId]
 
               if(references) {
+                // Notify collaborators about resource changes
+                session._send({
+                  scope: "substance/collab", 
+                  type: "resourceSync", 
+                  documentId: session.documentId, 
+                  resourceId: resourceId, 
+                  mode: 'remove'
+                })
+
                 session.transaction((tx, args) => {
                   each(references, (node, id) => {
                     if(node.isResourceReference()) {
@@ -136,11 +190,13 @@ class Inspector extends EventEmitter {
   }
 
   _closeSession(session) {
+    // TODO: disconnect after transactions finish
+    // otherwise we will send duplicate transaction 
     return new Promise((resolve) => {
       setTimeout(function() {
         session.dispose()
         resolve()
-      }, 100)
+      }, 1000)
     })
   }
 }
