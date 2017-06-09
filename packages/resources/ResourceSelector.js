@@ -347,12 +347,20 @@ class ResourcesSelector extends Component {
         reference: entityId
       }
 
+      editorSession._send({
+        scope: "substance/collab", 
+        type: "resourceSync", 
+        documentId: editorSession.documentId, 
+        resourceId: entityId, 
+        mode: 'add'
+      })
+
       if(this.state.node) {
         let doc = this.context.doc
         let node = doc.get(this.state.node)
         if(node.type === annoData.type) {
           editorSession.transaction((tx) => {
-            tx.set([this.state.node, 'type'], annoData.type)
+            //tx.set([this.state.node, 'type'], annoData.type)
             tx.set([this.state.node, 'reference'], annoData.reference)
           })
         } else {
