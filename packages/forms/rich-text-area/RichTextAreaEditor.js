@@ -39,8 +39,11 @@ class RichTextAreaEditor extends ProseEditor {
   }
 
   dispose() {
-    this.overlay.remove()
-    this.dropzones.remove()
+    // TODO: Dispose shouldn't be called before render
+    if(this.overlay && this.dropzones) {
+      this.overlay.remove()
+      this.dropzones.remove()
+    }
   }
 
   render($$) {
