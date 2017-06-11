@@ -79,7 +79,7 @@ class ResourcesContext extends Component {
           width: 'medium'
         }).append(
           $$(EntityEditor, {entityId: this.state.entityId})
-        )
+        ).ref('modal')
       )
     }
 
@@ -90,7 +90,7 @@ class ResourcesContext extends Component {
 
     if(EntityComp) {
       el.append(
-        $$(EntityComp, entry).addClass('se-reference-item')
+        $$(EntityComp, Object.assign({}, entry, {mode: this.state.mode})).addClass('se-reference-item')
           .ref(entry.entityId)
       )
     }
@@ -142,7 +142,7 @@ class ResourcesContext extends Component {
           width: 'medium'
         }).append(
           $$(EntityEditor, {entityId: this.state.entityId})
-        )
+        ).ref('modal')
       )
     }
 

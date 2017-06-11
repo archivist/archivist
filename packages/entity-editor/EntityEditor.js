@@ -22,8 +22,13 @@ class EntityEditor extends Component {
   render($$) {
     let doc = this.state.doc
     let entity = this.state.entity
-    let Form = this.getComponent('form')
 
+    // We should get form component from archivist component registry
+    // this way we could get overrided forms
+    let configurator = this.context.configurator
+    let componentRegistry = configurator.getComponentRegistry()
+    let Form = componentRegistry.get('form')
+    
     let el = $$('div').addClass('sc-entity-editor')
 
     if(entity && doc) {
