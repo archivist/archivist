@@ -10,6 +10,7 @@ class ArchivistCollabServer extends CollabServer {
   constructor(config) {
     super(config)
     this.authEngine = config.authEngine
+    this.indexer = config.indexer
     this.documentStore = config.documentStore
   }
 
@@ -44,7 +45,7 @@ class ArchivistCollabServer extends CollabServer {
         if (message.change) {
           // Update the title if necessary
           let change = DocumentChange.fromJSON(message.change)
-          change.ops.forEach(function(op) {
+          change.ops.forEach((op) => {
             if(op.path[0] === 'meta' && op.path[1] === 'title') {
               title = op.diff.apply(title)
             }
@@ -76,6 +77,36 @@ class ArchivistCollabServer extends CollabServer {
     }
   }
 
+  enhanceResponse(req, res) {
+    let message = req.message
+    if (message.type === 'sync') {
+      // We fetch the document record to get the old title
+      if (message.change) {
+        // Update the title if necessary
+        let change = DocumentChange.fromJSON(message.change)
+        change.ops.forEach((op) => {
+
+          // Reindex document references on each change of annotation with reference
+          // TODO: reindex references only when new resource added or removed
+          if(op.path[1] === 'reference') {
+            this.indexer.reindexDocumentReferences(message.documentId)
+          } else if (op.val !== null && typeof op.val === 'object') {
+            if(op.val.reference) {
+              this.indexer.reindexDocumentReferences(message.documentId)
+            }
+          }
+        })
+      }
+
+      res.setEnhanced()
+      this.next(req, res)
+    } else {
+      // Just continue for everything that is not handled
+      res.setEnhanced()
+      this.next(req, res)
+    }
+  }
+
   resourceSync(req, res) {
     let args = req.message
     let documentId = args.documentId
@@ -96,6 +127,7 @@ class ArchivistCollabServer extends CollabServer {
         mode: args.mode
       })
     })
+
     this.next(req, res)
   }
 

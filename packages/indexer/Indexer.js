@@ -115,7 +115,6 @@ class Indexer extends EventEmitter {
   }
 
   reindexDocumentReferences(documentId) {
-    console.log('reindex annotations for document', documentId)
     return new Promise(function(resolve, reject) {
       this.documentEngine.getDocument(documentId, function(err, docEntry) {
         if(err) {
