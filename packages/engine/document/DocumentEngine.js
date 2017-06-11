@@ -102,6 +102,19 @@ class ArchivistDocumentEngine extends DocumentEngine {
     }.bind(this))
   }
 
+  updateReferencesData(documentId, annos, refs) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.updateDocument(documentId, {
+        annotations: annos, 
+        references: refs
+      }, function(err) {
+        if(err) return reject(err)
+
+        resolve()
+      })
+    }.bind(this))
+  }
+
   getOutdatedDocuments(cb) {
     this.db.run('SELECT "documentId" from documents WHERE version > "indexedVersion"', function(err, docs) {
       if (err) {

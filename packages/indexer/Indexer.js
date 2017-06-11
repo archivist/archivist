@@ -114,6 +114,31 @@ class Indexer extends EventEmitter {
     }.bind(this))
   }
 
+  reindexDocumentReferences(documentId) {
+    console.log('reindex annotations for document', documentId)
+    return new Promise(function(resolve, reject) {
+      this.documentEngine.getDocument(documentId, function(err, docEntry) {
+        if(err) {
+          return reject(new Err('Indexer.IndexError', {
+            cause: err
+          }))
+        }
+        let emptyDoc = this.configurator.createArticle()
+        let doc = converter.importDocument(emptyDoc, docEntry.data)
+
+        let entitiesIndex = doc.getIndex('entities')
+        let annotations = []
+        let references = {}
+        each(entitiesIndex.byReference, (refs, key) => {
+          annotations.push(key)
+          references[key] = Object.keys(refs).length
+        })
+
+        return this._saveReferencesData(documentId, annotations, references)
+      }.bind(this))
+    }.bind(this))
+  }
+
   searchDocuments(filters, options) {
     let isTextSearch = filters.query ? true : false
     let limit = options.limit || 100
@@ -371,6 +396,10 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
 
   _saveIndexData(documentId, text, annos, refs, version) {
     return this.documentEngine.updateDocumentIndexData(documentId, text, annos, refs, version)
+  }
+
+  _saveReferencesData(documentId, annos, refs) {
+    return this.documentEngine.updateReferencesData(documentId, annos, refs)
   }
 
   _saveFragment(record) {
