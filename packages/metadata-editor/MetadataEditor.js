@@ -60,7 +60,7 @@ class MetadataEditor extends Component {
       case 'group': {
         editorEl.append(
           $$('div').addClass('se-group-name').append(field.name)
-        )
+        ).addClass('se-field-group')
         if(field.fields) {
           forEach(field.fields, (item, itemId) => {
             let subEl = this.renderItem($$, item, itemId)
@@ -149,7 +149,7 @@ class MetadataEditor extends Component {
             path: ['meta', id],
             options: field.options
           })
-        )
+        ).addClass('se-checkboxes-editor')
         break
       }
       case 'logical': {
@@ -159,7 +159,7 @@ class MetadataEditor extends Component {
             path: ['meta', id],
             label: field.label
           })
-        )
+        ).addClass('se-checkboxes-editor')
         break
       }
       default:
