@@ -53,7 +53,8 @@ class ArchivistCollabServer extends CollabServer {
 
           message.change.info = {
             userId: req.session.userId,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            title: title
           }
         }
 

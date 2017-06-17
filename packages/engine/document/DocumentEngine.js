@@ -187,7 +187,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
       this.documentStore.updateDocument(documentId, {
         version: newVersion,
         // Store custom documentInfo
-        // info: args.documentInfo
+        info: change.info
       }, err => {
         if (err) return cb(err)
         this.requestSnapshot(documentId, newVersion, () => {
