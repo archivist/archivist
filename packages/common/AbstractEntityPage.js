@@ -1,9 +1,7 @@
 import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
-
-// Sample data for debugging
-// import DataSample from '../../data/docs'
+import AbstractEntityRow from './AbstractEntityRow'
 
 class AbstractEntityPage extends Component {
   constructor(...args) {
@@ -11,8 +9,11 @@ class AbstractEntityPage extends Component {
 
     this.handleActions({
       'loadMore': this._loadMore,
+      'loadReferences': this._loadReferences,
       'updateEntity': this._updateEntity,
       'deleteEntity': this._removeFromList,
+      'mergeItem': this._mergeItem,
+      'removeItem': this._removeItem,
       'closeModal': this._doneEditing,
       'closeResourceOperator': this._closeResourceOperator,
       'newEntity': this._newEntity
@@ -197,57 +198,17 @@ class AbstractEntityPage extends Component {
   }
 
   renderFull($$) {
-    let urlHelper = this.context.urlHelper
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
+    let RowComponent = this.getRowClass()
     let grid = $$(Grid)
 
     if(items) {
-      items.forEach((item, index) => {
-        let url = urlHelper.openEntity(this.pageName, item.entityId)
-        let entityIcon = this.renderEntityIcon($$)
-        let name = $$('a').attr({href: url}).append(item.name)
-        let edited = ['Updated', moment(item.edited).fromNow(), 'by', item.updatedBy].join(' ')
-
-        let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
-          {label: 'Merge', action: this._mergeItem.bind(this, item.entityId)}
-        ]
-
-        let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
-          //$$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
-          $$(Grid.Cell, {columns: 6}).addClass('se-title').append(name),
-          $$(Grid.Cell, {columns: 3}).append(edited),
-          $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
-          $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
-            this.renderAdditionalMenu($$, additionalActions)
-          ).on('click', function(e) {
-            e.stopPropagation()
-          })
-        ).on('click', this._loadReferences.bind(this, item.entityId, index))
-
-        if(item.description) {
-          row.append(
-            $$(Grid.Row).addClass('se-entity-description').append(
-              $$('div').addClass('se-cell se-description').setInnerHTML(item.description)
-            )
-          )
-        }
-
-        grid.append(row)
-
-        if(this.state.details === index && item.references) {
-          item.references.forEach(function(reference) {
-            let referenceIcon = $$(Icon, {icon: 'fa-file-text-o'})
-            grid.append(
-              $$(Grid.Row).addClass('se-document-reference').ref(reference.documentId).append(
-                $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(referenceIcon),
-                $$(Grid.Cell, {columns: 11}).addClass('se-reference').append(reference.title)
-              )
-            )
-          })
-        }
+      items.forEach((item) => {
+        grid.append(
+          $$(RowComponent, {pageName: this.pageName, item: item}).ref(item.entityId)
+        )
       })
     }
 
@@ -261,6 +222,10 @@ class AbstractEntityPage extends Component {
     }
 
     return grid
+  }
+
+  getRowClass() {
+    return AbstractEntityRow
   }
 
   /*
@@ -401,11 +366,13 @@ class AbstractEntityPage extends Component {
     Update grid data
   */
   _updateEntity(entity) {
-    let items = this.state.items
-    let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
-    if(changedItem > -1) {
-      items[changedItem] = entity
-      this.extendState({items: items})
+    let item = this.refs[entity.entityId]
+    let index = findIndex(this.state.items, (i) => { return i.entityId === entity.entityId })
+    if(item) {
+      item.extendProps({item: entity})
+    }
+    if(index > -1) {
+      this.state.items[index] = entity
     }
   }
 
@@ -451,38 +418,34 @@ class AbstractEntityPage extends Component {
     })
   }
 
-
-  _loadReferences(entityId, index) {
+  _loadReferences(entityId) {
     let filters = {}
     let options = {
       columns: ['"documentId"', 'title'],
       order: '"updatedAt" DESC'
     }
     let documentClient = this.context.documentClient
-    let items = this.state.items
-
-    if(!items[index].references) {
-      documentClient.getReferences(entityId, filters, options, function(err, references) {
-        if (err) {
-          this.setState({
-            error: new Err('EntitiesPage.GetReferencesError', {
-              message: 'Search results could not be loaded.',
-              cause: err
+    let item = this.refs[entityId]
+    if(item) {
+      if(!item.props.references) {
+        documentClient.getReferences(entityId, filters, options, function(err, references) {
+          if (err) {
+            this.setState({
+              error: new Err('EntitiesPage.GetReferencesError', {
+                message: 'Search results could not be loaded.',
+                cause: err
+              })
             })
-          })
-          console.error('ERROR', err)
-          return
-        }
+            console.error('ERROR', err)
+            return
+          }
 
-        items[index].references = references.records
-
-        this.extendState({
-          items: items,
-          details: index 
-        })
-      }.bind(this))
-    } else {
-      this.extendState({details: index})
+          item.extendProps({references: references})
+          item._toggleDetails()
+        }.bind(this))
+      } else {
+        item._toggleDetails()
+      } 
     }
   }
 

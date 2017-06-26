@@ -148,3 +148,24 @@ Eye candy
   background-color: #f5f5f5;
   cursor: pointer;
 }
+
+.se-sub-grid {
+  height: auto;
+}
+
+.se-sub-grid .se-row {
+  border-top: 1px solid #e6e6e6;
+  border-bottom: 0px;
+}
+
+.se-row:hover .se-sub-grid .se-row {
+  background: #fff;
+}
+
+.se-row .se-sub-grid .se-row:hover {
+  background: #fafafa;
+}
+
+.se-row .se-sub-grid .se-row:hover > .se-badge {
+  background: #fff;
+}
