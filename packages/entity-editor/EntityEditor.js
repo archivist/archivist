@@ -31,6 +31,12 @@ class EntityEditor extends Component {
     
     let el = $$('div').addClass('sc-entity-editor')
 
+    el.append(
+      $$('div').addClass('se-close-modal').append(
+        $$('i').addClass('fa fa-close')
+      ).on('click', this._closeEditor)
+    )
+
     if(entity && doc) {
       let entityData = doc.get(entity.entityType)
       let form = $$(Form, {node: entityData, session: this.state.session})
@@ -116,6 +122,10 @@ class EntityEditor extends Component {
     let synonyms = entityData.getSynonyms()
     let description = entityData.getDescription()
     this._updateEntity(entityData, name, synonyms, description)
+  }
+
+  _closeEditor() {
+    this.send('closeModal')
   }
 }
 
