@@ -106,7 +106,8 @@ class ResourcesSelector extends Component {
       value: this.state.search
     }).ref('searchInput')
 
-    searchInput.on('keyup', debounce(this._onKeyUp, 300))
+    searchInput.on('search', this._onSearch)
+    searchInput.on('keyup', debounce(this._onSearch, 300))
     searchInput.on('keydown', this._onKeyDown)
 
     let search = $$('div').addClass('se-search').append(
@@ -274,7 +275,7 @@ class ResourcesSelector extends Component {
     }
   }
 
-  _onKeyUp() {
+  _onSearch() {
     let searchValue = this.refs['searchInput'].val()
     if(searchValue !== this.state.search) {
       this.extendState({
