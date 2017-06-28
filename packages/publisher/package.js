@@ -8,5 +8,6 @@ export default {
     config.import(TabbedContextPackage)
     config.addComponent('editor', PublisherLayout)
     config.addToolGroup('references')
+    config.addToolGroup('utils')
   }
 }
