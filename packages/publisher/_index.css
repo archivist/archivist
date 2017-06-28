@@ -45,7 +45,8 @@
 
 .sc-publisher .sm-target-document,
 .sc-publisher .sm-target-annotations,
-.sc-publisher .sm-target-references {
+.sc-publisher .sm-target-references,
+.sc-publisher .sm-target-utils {
   padding-right: 5px;
   border-right: 1px solid #E0E4E4;
 }
