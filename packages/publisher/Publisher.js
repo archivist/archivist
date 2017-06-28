@@ -64,7 +64,7 @@ class Publisher extends ProseEditor {
     let commandStates = this.commandManager.getCommandStates()
     return $$('div').addClass('se-toolbar-wrapper').append(
       $$(Toolbar, {
-        toolGroups: ['text', 'document', 'annotations', 'utils', 'default', 'references'],
+        toolGroups: ['text', 'document', 'annotations', 'utils', 'references', 'default'],
         commandStates: commandStates
       }).ref('toolbar')
     )
