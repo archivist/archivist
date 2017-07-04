@@ -131,6 +131,12 @@
   line-height: 22px;
 }
 
+.sc-resource-selector .se-entity-type-filter {
+  position: absolute;
+  right: 50px;
+  top: 51px;
+}
+
 .sc-resource-selector .se-search-results {
   top: 80px;
 }

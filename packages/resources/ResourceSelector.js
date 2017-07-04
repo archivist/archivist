@@ -24,7 +24,9 @@ class ResourcesSelector extends Component {
   }
 
   didUpdate(oldProps, oldState) {
-    if(oldState.search !== this.state.search) {
+    let entityType = this.state.filters.entityType
+    let oldEntityType = oldState.filters.entityType
+    if(oldState.search !== this.state.search || oldEntityType !== entityType) {
       this.searchData()
     }
   }
@@ -87,6 +89,12 @@ class ResourcesSelector extends Component {
       ).on('click', this._goBack)
     )
 
+    let currentEntityType = this.state.filters.entityType
+    let entityTypeFilter = $$('select').addClass('se-entity-type-filter')
+      .ref('entityTypeFilter')
+      .on('change', this._onSearch)
+      .append($$('option').attr('value', 'all').append('select type'))
+
     let actions = $$('div').addClass('sc-actions')
 
     forEach(this.state.entityTypes, type => {
@@ -96,6 +104,11 @@ class ResourcesSelector extends Component {
           this.context.iconProvider.renderIcon($$, type)
         ).on('click', this._createEntity.bind(this, type))
       )
+
+      let option = $$('option').attr('value', type).append(type)
+      if(type === currentEntityType) option.attr('selected', 'selected')
+
+      entityTypeFilter.append(option)
     })
 
     header.append(actions)
@@ -118,6 +131,7 @@ class ResourcesSelector extends Component {
     el.append(
       header,
       search,
+      entityTypeFilter,
       $$(ScrollPane).addClass('se-search-results').append(
         this.renderList($$)
       ).ref('listResults')
@@ -275,11 +289,17 @@ class ResourcesSelector extends Component {
     }
   }
 
-  _onSearch() {
+  _onSearch(e) {
     let searchValue = this.refs['searchInput'].val()
-    if(searchValue !== this.state.search) {
+    let entityTypeValue = this.refs['entityTypeFilter'].val()
+    let entityTypes = this.state.entityTypes
+    let currentEntityTypes = this.state.filters.entityType
+    if(searchValue !== this.state.search || entityTypeValue !== currentEntityTypes) {
+      let filters = {entityType: entityTypeValue}
+      if(entityTypeValue === 'all' || e.type === 'search') filters.entityType = entityTypes
       this.extendState({
         search: searchValue,
+        filters: filters,
         focused: undefined,
         pagination: false
       })
