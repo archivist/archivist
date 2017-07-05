@@ -22,7 +22,6 @@
 
 .sc-toolbox .se-content {
   padding: 10px;
-  float: left;
 }
 
 .sc-toolbox .se-content input {
@@ -35,6 +34,8 @@
 
 .sc-toolbox .se-content .se-search {
   position: relative;
+  width: 280px;
+  float: left;
 }
 
 .sc-toolbox .se-content .se-search input {
@@ -51,4 +52,40 @@
   left: 5px;
   top: 5px;
   color: #e8e8e8;
+}
+
+.sc-toolbox .se-content .se-select {
+  position: relative;
+  display: block;
+  float: right;
+}
+
+.sc-toolbox .se-content .se-select select {
+  width: 100%;
+  margin: 0;
+  outline: none;
+  padding: 6px 10px;
+  background: transparent;
+  border: 1px solid #E0E4E4;
+  border-radius: 3px;
+  box-sizing: border-box;
+  font-size: 14px;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.sc-toolbox .se-content .se-select::after {
+  content: " ";
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  z-index: 2;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 7px solid #666;
+  margin-top: -3px;
 }
