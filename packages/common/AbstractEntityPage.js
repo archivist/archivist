@@ -1,5 +1,5 @@
 import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
-import { concat, each, findIndex, isEmpty } from 'lodash-es'
+import { concat, forEach, findIndex, isEmpty, isEqual } from 'lodash-es'
 import moment from 'moment'
 import AbstractEntityRow from './AbstractEntityRow'
 
@@ -41,6 +41,7 @@ class AbstractEntityPage extends Component {
     return {
       active: {},
       filters: {entityType: this.entityType},
+      dataFilters: {},
       search: '',
       perPage: 30,
       order: 'created',
@@ -55,7 +56,7 @@ class AbstractEntityPage extends Component {
   }
 
   didUpdate(oldProps, oldState) {
-    if(oldState.search !== this.state.search) {
+    if(oldState.search !== this.state.search || !isEqual(oldState.dataFilters, this.state.dataFilters)) {
       this.searchData()
     }
   }
@@ -185,7 +186,7 @@ class AbstractEntityPage extends Component {
   renderAdditionalMenu($$, actions) {
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
-    each(actions, action => {
+    forEach(actions, action => {
       actionsList.append(
         $$('li').addClass('se-more-item').append(
           $$(Button, {label: action.label}).on('click', action.action)
@@ -239,7 +240,9 @@ class AbstractEntityPage extends Component {
     }
 
     let language = 'russian'
-    let filters = this.state.filters
+    let initialState = this.getInitialState()
+    let filters = initialState.filters
+    let dataFilters = this.state.dataFilters
     let perPage = this.state.perPage
     let order = this.state.order
     let direction = this.state.direction
@@ -251,6 +254,11 @@ class AbstractEntityPage extends Component {
       order: order + ' ' + direction
     }
     let resourceClient = this.context.resourceClient
+
+    forEach(dataFilters, (value, prop) => {
+      let selector = "data->>'" + prop + "'"
+      filters[selector] = value
+    })
 
     resourceClient.searchEntities(searchValue, language, filters, options, function(err, res) {
       if (err) {
@@ -309,6 +317,7 @@ class AbstractEntityPage extends Component {
       updatedBy: user.userId,
       data: {}
     }
+
     resourceClient.createEntity(entityData, (err, entity) => {
       if (err) {
         this.setState({
@@ -381,7 +390,9 @@ class AbstractEntityPage extends Component {
   */
   _loadData() {
     let resourceClient = this.context.resourceClient
-    let filters = this.state.filters
+    let initialState = this.getInitialState()
+    let filters = initialState.filters
+    let dataFilters = this.state.dataFilters
     let perPage = this.state.perPage
     let order = this.state.order
     let direction = this.state.direction
@@ -392,6 +403,11 @@ class AbstractEntityPage extends Component {
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
+
+    forEach(dataFilters, (value, prop) => {
+      let selector = "data->>'" + prop + "'"
+      filters[selector] = value
+    })
 
     resourceClient.listEntities(filters, options, (err, res) => {
       if (err) {
