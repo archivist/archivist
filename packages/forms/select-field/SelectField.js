@@ -10,8 +10,10 @@ class SelectField extends Component {
       .ref('input')
       .on('change', this._onChange)
 
-    let option = $$('option').attr({value: null, selected: "selected"}).append('unknown')
-    select.append(option)
+    if(config.nullable) {
+      let option = $$('option').attr({value: null, selected: "selected"}).append('unknown')
+      select.append(option)
+    }
 
     config.options.forEach(opt => {
       let option = $$('option').attr({value: opt}).append(opt)
