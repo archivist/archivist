@@ -35,6 +35,7 @@ class DocumentStore {
     if (!props.documentId) {
       // We generate a documentId ourselves
       props.documentId = uuid()
+      props.updatedAt = new Date()
     } 
 
     if(props.info) {
