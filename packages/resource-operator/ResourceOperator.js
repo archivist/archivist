@@ -91,6 +91,12 @@ class ResourcesOperator extends Component {
         $$('div').addClass('se-content').append(this.getLabel('delete-finish-msg'))
       )
       el.append(msg)
+    } else if(state === 'error') {
+      msg.addClass('se-warning').append(
+        $$(Icon, {icon: 'fa-thumbs-o-down'}).addClass('se-icon'),
+        $$('div').addClass('se-content').append(this.getLabel('resop-error-msg'))
+      )
+      el.append(msg)
     } else {
       msg.addClass('se-warning').append(
         $$(Icon, {icon: 'fa-warning'}).addClass('se-icon'),
@@ -152,6 +158,12 @@ class ResourcesOperator extends Component {
       msg.addClass('se-success').append(
         $$(Icon, {icon: 'fa-thumbs-o-up'}).addClass('se-icon'),
         $$('div').addClass('se-content').append(this.getLabel('merge-finish-msg'))
+      )
+      el.append(msg)
+    } else if(state === 'error') {
+      msg.addClass('se-warning').append(
+        $$(Icon, {icon: 'fa-thumbs-o-down'}).addClass('se-icon'),
+        $$('div').addClass('se-content').append(this.getLabel('resop-error-msg'))
       )
       el.append(msg)
     } else {
@@ -262,11 +274,18 @@ class ResourcesOperator extends Component {
     let resourceClient = this.context.resourceClient
     this.extendState({opState: 'wait'})
     resourceClient.deleteEntity(entityId, (err) => {
-      if(err) console.error(err)
-      this.extendState({opState: 'finish'})
-      setTimeout(() => {
-        this.send('deleteEntity', entityId)
-      }, 1000)
+      if(err) {
+        console.error(err)
+        this.extendState({opState: 'error'})
+        setTimeout(() => {
+          this.send('closeResourceOperator')
+        }, 1000)
+      } else {
+        this.extendState({opState: 'finish'})
+        setTimeout(() => {
+          this.send('deleteEntity', entityId)
+        }, 1000)
+      }
     })
   }
 
@@ -280,11 +299,18 @@ class ResourcesOperator extends Component {
       let type = mergeEntity.entityType
       this.extendState({opState: 'wait'})
       resourceClient.mergeEntity(entityId, mergeEntityId, type, (err) => {
-        if(err) console.error(err)
-        this.extendState({opState: 'finish'})
-        setTimeout(() => {
-          this.send('deleteEntity', entityId)
-        }, 1000)
+        if(err) {
+          console.error(err)
+          this.extendState({opState: 'error'})
+          setTimeout(() => {
+            this.send('closeResourceOperator')
+          }, 1000)
+        } else {
+          this.extendState({opState: 'finish'})
+          setTimeout(() => {
+            this.send('deleteEntity', entityId)
+          }, 1000)
+        }
       })
     }
   }

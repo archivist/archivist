@@ -37,6 +37,10 @@ export default {
       en: 'Merge',
       ru: 'Слить'
     })
+    config.addLabel('resop-error-msg', {
+      en: 'Sorry, something went wrong...',
+      ru: 'Ой, что-то пошло не так...'
+    })
     config.addLabel('search-merge-placeholder', {
       en: 'Type to search...',
       ru: 'Искать сущность...'
