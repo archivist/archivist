@@ -51,11 +51,11 @@ class TagsField extends Component {
   _onKeyUp(e) {
     let key = e.keyCode || e.which
     let value
-    if (key === 13 || key === 188) {
+    if (key === 13 || e.key === ',') {
       value = this.refs.input.val().replace(',', '')
       this._addValue(value)
       return this.refs.input.val('')
-    } else if (key === 8) {
+    } else if (e.key === 8) {
       if (this.refs.value.val() === '') {
         value = this.refs.input.val().replace(',', '')
         return this._deleteValue(value)
