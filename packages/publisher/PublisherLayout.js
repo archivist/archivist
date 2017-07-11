@@ -20,12 +20,9 @@ class PublisherLayout extends Loader {
   }
 
   render($$) {
-    //let Notification = this.getComponent('notification')
-    //let Collaborators = this.getComponent('collaborators')
     let Header = this.getComponent('header')
     let Spinner = this.getComponent('spinner')
 
-    let notification = this.state.notification
     let el = $$('div').addClass('sc-edit-document')
     let main = $$(Layout, {
       width: 'medium',
@@ -61,12 +58,7 @@ class PublisherLayout extends Loader {
     // Display top-level errors. E.g. when a doc could not be loaded
     // we will display the notification on top level
     if (this.state.error) {
-      main = $$('div').append(
-        $$(Notification, {
-          type: 'error',
-          message: this.state.error.message
-        })
-      )
+      console.error(this.state.error.message)
     } else if (this.state.session) {
       let fileClient = this.context.fileClient
       let EditorClass = this._getEditorClass()
