@@ -31,8 +31,9 @@ class ResourcesOperator extends Component {
   getInitialState() {
     let configurator = this.context.configurator
     let entityTypes = configurator.getDefaultResourceTypes()
+    let mode = this.props.mode
 
-    return {
+    let initState = {
       filters: {entityType: entityTypes},
       search: '',
       perPage: 30,
@@ -41,6 +42,12 @@ class ResourcesOperator extends Component {
       pagination: false,
       items: []
     }
+
+    if(mode === 'merge') {
+      initState.filters['entityId !'] = this.props.item.entityId
+    }
+
+    return initState
   }
 
   shouldRerender(newProps, newState) {
