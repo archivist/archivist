@@ -166,7 +166,7 @@ class DocumentsPage extends Component {
         let className = item.summary ? 'se-expanded' : ''
 
         let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
+          {label: 'Delete', action: this._removeItem.bind(this, item.documentId)},
         ]
 
         let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(
@@ -221,7 +221,7 @@ class DocumentsPage extends Component {
     let authClient = this.context.authenticationClient
     let documentClient = this.context.documentClient
     let user = authClient.getUser()
-    
+
     documentClient.createDocument({
       schemaName: 'archivist-interview',
       schemaVersion: '1.0.0',
@@ -238,7 +238,11 @@ class DocumentsPage extends Component {
   }
 
   _removeItem(id) {
-    console.log(id)
+    let documentClient = this.context.documentClient
+    documentClient.deleteDocument(id, err => {
+      if(err) console.error(err)
+      this._loadData()
+    })
   }
 
   /*
