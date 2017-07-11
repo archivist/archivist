@@ -262,6 +262,7 @@ class ResourcesOperator extends Component {
     let resourceClient = this.context.resourceClient
     this.extendState({opState: 'wait'})
     resourceClient.deleteEntity(entityId, (err) => {
+      if(err) console.error(err)
       this.extendState({opState: 'finish'})
       setTimeout(() => {
         this.send('deleteEntity', entityId)
@@ -279,6 +280,7 @@ class ResourcesOperator extends Component {
       let type = mergeEntity.entityType
       this.extendState({opState: 'wait'})
       resourceClient.mergeEntity(entityId, mergeEntityId, type, (err) => {
+        if(err) console.error(err)
         this.extendState({opState: 'finish'})
         setTimeout(() => {
           this.send('deleteEntity', entityId)
