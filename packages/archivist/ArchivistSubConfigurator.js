@@ -53,6 +53,14 @@ class ArchivistSubConfigurator extends Configurator {
     this.config.contextMapping = map
   }
 
+  setDefaultLanguage(lang) {
+    this.config.defaultLanguage = lang
+  }
+
+  getDefaultLanguage() {
+    return this.config.defaultLanguage
+  }
+
 }
 
 export default ArchivistSubConfigurator
