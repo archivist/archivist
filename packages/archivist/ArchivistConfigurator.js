@@ -128,8 +128,9 @@ class ArchivistConfigurator extends Configurator {
     Provision of sub configurators (e.g. editor, viewer etc
     receive their own configurator)
   */
-  addConfigurator(name, configurator) {
+  addConfigurator(name, configurator, isDefault) {
     this.config.configurators[name] = configurator
+    if(isDefault) this.config.defaultConfigurator = name
   }
 
   /*
@@ -137,6 +138,18 @@ class ArchivistConfigurator extends Configurator {
   */
   getConfigurator(name) {
     return this.config.configurators[name]
+  }
+
+  /*
+    Get default sub configurator
+  */
+  getDefaultConfigurator() {
+    let defaultConfigurator = this.config.defaultConfigurator
+    if(defaultConfigurator) {
+      return this.getConfigurator(defaultConfigurator)
+    } else {
+      throw new Error('There is no default configurator exists')
+    }
   }
 
   addPage(pageName, component) {
