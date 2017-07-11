@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err, uuid } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -10,7 +10,8 @@ class DocumentsPage extends Component {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadMore': this._loadMore,
+      'newDocument': this._createDocument
     })
   }
 
@@ -29,7 +30,7 @@ class DocumentsPage extends Component {
       filters: {},
       search: '',
       perPage: 30,
-      order: 'created',
+      order: '"updatedAt"',
       direction: 'desc',
       pagination: false,
       items: []
@@ -216,6 +217,26 @@ class DocumentsPage extends Component {
     return grid
   }
 
+  _createDocument() {
+    let authClient = this.context.authenticationClient
+    let documentClient = this.context.documentClient
+    let user = authClient.getUser()
+    
+    documentClient.createDocument({
+      schemaName: 'archivist-interview',
+      schemaVersion: '1.0.0',
+      info: {
+        title: 'Untitled',
+        userId: user.userId
+      }
+    }, (err, result) => {
+      this.send('navigate', {
+        page: 'documents',
+        documentId: result.documentId
+      })
+    })
+  }
+
   _removeItem(id) {
     console.log(id)
   }
@@ -285,17 +306,12 @@ class DocumentsPage extends Component {
     Loads documents
   */
   _loadData() {
-    // Sample data for debugging
-
-    // this.extendState({
-    //   items: DataSample,
-    //   total: DataSample.length
-    // });
     let pagination = this.state.pagination
     let perPage = this.state.perPage
     let options = {
       limit: perPage, 
-      offset: pagination ? this.state.items.length : 0
+      offset: pagination ? this.state.items.length : 0,
+      order: this.state.order + ' ' + this.state.direction
     }
     let items = []
 
