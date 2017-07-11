@@ -8,6 +8,7 @@ let union = require('lodash/union')
 class ResourceServer {
   constructor(config) {
     this.engine = config.resourceEngine
+    this.authEngine = config.authEngine
     this.indexer = config.indexer
     this.inspector = config.inspector
     this.path = config.path
@@ -15,15 +16,15 @@ class ResourceServer {
 
   bind(app) {
     // search
-    app.post(this.path + '/entities', this._createEntity.bind(this))
+    app.post(this.path + '/entities', this.authEngine.hasAccess.bind(this.authEngine), this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/document/:id', this._getDocumentResources.bind(this))
     //app.get(this.path + '/entities/tree/:type', this._getResourcesTree.bind(this))
     app.get(this.path + '/entities/search', this._searchEntities.bind(this))
-    app.post(this.path + '/entities/merge', this._mergeEntity.bind(this))
+    app.post(this.path + '/entities/merge', this.authEngine.hasSuperAccess.bind(this.authEngine), this._mergeEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
-    app.delete(this.path + '/entities/:id', this._removeEntity.bind(this))
-    app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+    app.delete(this.path + '/entities/:id', this.authEngine.hasSuperAccess.bind(this.authEngine), this._removeEntity.bind(this))
+    app.put(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateEntity.bind(this))
   }
 
   /*

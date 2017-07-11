@@ -12,11 +12,10 @@ class ArchivistDocumentServer extends DocumentServer {
   }
 
   bind(app) {
+    app.post(this.path, this.authEngine.hasAccess.bind(this.authEngine), this._createDocument.bind(this))
+    app.get(this.path + '/:id', this._getDocument.bind(this))
     app.get(this.path + '/search', this._searchDocuments.bind(this))
     app.delete(this.path + '/:id', this.authEngine.hasSuperAccess.bind(this.authEngine), this._deleteDocument.bind(this))
-
-    // bind default document server routes
-    super.bind(app)
 
     // search
     app.get(this.path + '/resource/:id', this._listResourceDocuments.bind(this))
@@ -24,8 +23,8 @@ class ArchivistDocumentServer extends DocumentServer {
     app.get(this.path + '/:id/search', this._searchFragments.bind(this))
 
     // debug
-    app.get(this.path + '/reindex/all', this._reindexDocuments.bind(this))
-    app.get(this.path + '/:id/index', this._indexDocument.bind(this))
+    // app.get(this.path + '/reindex/all', this._reindexDocuments.bind(this))
+    // app.get(this.path + '/:id/index', this._indexDocument.bind(this))
   }
 
   _createDocument(req, res, next) {
