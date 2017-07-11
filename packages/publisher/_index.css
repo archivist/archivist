@@ -2,7 +2,8 @@
   padding: 20px 60px 20px 20px;
 }
 
-.sc-publisher .se-context-section { 
+.sc-publisher .se-context-section {
+  min-width: 450px;
   background: #fafafa;
   border-left: 1px solid #E0E4E4;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);

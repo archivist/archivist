@@ -34,7 +34,7 @@ class Publisher extends ProseEditor {
   render($$) {
     let el = $$('div').addClass('sc-publisher')
     el.append(
-      $$(SplitPane, {splitType: 'vertical', sizeB: '450px'}).append(
+      $$(SplitPane, {splitType: 'vertical', sizeB: '30%'}).append(
         this._renderMainSection($$),
         this._renderContextSection($$)
       )
