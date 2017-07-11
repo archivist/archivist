@@ -90,7 +90,7 @@ class ArchivistConfigurator extends Configurator {
     Get Document Client instance
   */
   getDocumentClient(config) {
-    let DocumentClientClass = this.config.DocumentClientClass;
+    let DocumentClientClass = this.config.DocumentClientClass
     return new DocumentClientClass({authClient: config.authClient, httpUrl: this.config.documentServerUrl})
   }
 
@@ -119,9 +119,9 @@ class ArchivistConfigurator extends Configurator {
   /*
     Get Resource Client instance
   */
-  getResourceClient() {
+  getResourceClient(config) {
     let ResourceClientClass = this.config.resourceClient
-    return new ResourceClientClass({httpUrl: this.config.resourceServerUrl})
+    return new ResourceClientClass({authClient: config.authClient, httpUrl: this.config.resourceServerUrl})
   }
 
   /*

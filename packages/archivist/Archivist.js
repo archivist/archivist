@@ -19,7 +19,7 @@ class Archivist extends AbstractApplication {
     this.authenticationClient = this.configurator.getAuthenticationClient()
     this.documentClient = this.configurator.getDocumentClient({authClient: this.authenticationClient})
     this.fileClient = this.configurator.getFileClient()
-    this.resourceClient = this.configurator.getResourceClient()
+    this.resourceClient = this.configurator.getResourceClient({authClient: this.authenticationClient})
     this.componentRegistry = this.configurator.getComponentRegistry()
     this.iconProvider = this.configurator.getIconProvider()
     this.labelProvider = this.configurator.getLabelProvider()
