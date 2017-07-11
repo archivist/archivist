@@ -25,6 +25,14 @@ class ArchivistDocumentServer extends DocumentServer {
     app.get(this.path + '/:id/index', this._indexDocument.bind(this))
   }
 
+  _createDocument(req, res, next) {
+    const doc = req.body
+    this.engine.createDocument(doc, function(err, version) {
+      if (err) return next(err)
+      res.json(version)
+    })
+  }
+
   /*
     Get a document with given document id
   */

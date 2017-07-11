@@ -1,4 +1,4 @@
-import { DocumentEngine, SubstanceError as Err } from 'substance'
+import { DocumentEngine, documentHelpers, SubstanceError as Err } from 'substance'
 import { isEmpty } from 'lodash-es'
 import Promise from 'bluebird'
 
@@ -10,7 +10,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
     super(config)
 
     this.documentStore = config.documentStore
-    this.configurator = config
+    this.configurator = config.configurator
     this.db = config.db
   }
 
@@ -23,9 +23,34 @@ class ArchivistDocumentEngine extends DocumentEngine {
     }
     let seed = this.configurator.getSeed()
     let doc = this.configurator.createArticle(seed)
-    args.info.updatedAt = new Date()
+    let change = documentHelpers.getChangeFromDocument(doc)
+
     args.info.title = doc.get(['meta', 'title'])
-    super.createDocument(args, cb)
+    
+    this.documentStore.createDocument({
+      schemaName: schema.name,
+      schemaVersion: schema.version,
+      language: this.configurator.getDefaultLanguage(),
+      version: 0,
+      indexedVersion: 0,
+      info: args.info
+    }, (err, docRecord) => {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.CreateError', {
+          cause: err
+        }))
+      }
+
+      this.addChange(docRecord.documentId, change, err => {
+        if (err) {
+          return cb(new Err('ArchivistDocumentEngine.CreateError', {
+            cause: err
+          }))
+        }
+
+        cb(null, {documentId: docRecord.documentId})
+      })
+    })
   }
 
   getDocument(documentId, cb) {
