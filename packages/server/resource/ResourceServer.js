@@ -1,4 +1,6 @@
+let extend = require('lodash/extend')
 let isEmpty = require('lodash/isEmpty')
+let union = require('lodash/union')
 
 /*
   ResourceServer module. Can be bound to an express instance
@@ -86,7 +88,21 @@ class ResourceServer {
     let entityId = entityData.mergeEntity
     let targetId = entityData.targetEntity
     let type = entityData.type
-    this.inspector.replaceResource(entityId, targetId, type)
+    let mergeEntity, targetEntity
+
+    this.engine.getEntity(entityId)
+      .then(entity => {
+        mergeEntity = entity
+        return this.engine.getEntity(targetId)
+      })
+      .then((entity) => {
+        targetEntity = entity
+        let synonyms = union(mergeEntity.synonyms, targetEntity.synonyms)
+        return this.engine.updateEntity(targetId, {synonyms: synonyms, data: extend(targetEntity.data, {synonyms: synonyms})})
+      })
+      .then(() => {
+        return this.inspector.replaceResource(entityId, targetId, type)
+      })
       .then(() => {
         return this.engine.removeEntity(entityId)
       })
