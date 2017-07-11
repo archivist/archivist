@@ -74,6 +74,29 @@ class ArchivistDocumentEngine extends DocumentEngine {
     })
   }
 
+  /*
+    Delete document by documentId
+  */
+  deleteDocument(documentId, cb) {
+    this.changeStore.deleteChanges(documentId, err => {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.DeleteError', {
+          cause: err
+        }))
+      }
+
+      this.documentStore.deleteDocument(documentId, err => {
+        if (err) {
+          return cb(new Err('ArchivistDocumentEngine.DeleteError', {
+            cause: err
+          }))
+        }
+
+        cb()
+      })
+    })
+  }
+
   queryDocumentMetaData(documentId, cb) {
     let query = 'SELECT \
       d."documentId", \
