@@ -43,6 +43,7 @@ class AbstractEntityPage extends Component {
       filters: {entityType: this.entityType},
       dataFilters: {},
       search: '',
+      fts: false,
       perPage: 30,
       order: 'created',
       direction: 'desc',
@@ -125,7 +126,17 @@ class AbstractEntityPage extends Component {
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)
     }
-    search.append(searchInput)
+
+    let FTSSwitcher = $$('span').addClass('se-fts-switch')
+      .append('fts')
+      .on('click', this._switchFTS)
+
+    if(this.state.fts) FTSSwitcher.addClass('se-active')
+
+    search.append(
+      searchInput,
+      FTSSwitcher
+    )
 
     filters.push(search)
 
@@ -235,7 +246,7 @@ class AbstractEntityPage extends Component {
   searchData() {
     let searchValue = this.state.search
 
-    if(isEmpty(searchValue)) {
+    if(isEmpty(searchValue) || !this.state.fts) {
       return this._loadData()
     }
 
@@ -409,6 +420,14 @@ class AbstractEntityPage extends Component {
       filters[selector] = value
     })
 
+    let searchValue = this.state.search
+    if(searchValue) {
+      filters['or'] = [
+        {'name ~*': searchValue},
+        {'synonyms::text ~*': searchValue}
+      ]
+    }
+
     resourceClient.listEntities(filters, options, (err, res) => {
       if (err) {
         this.setState({
@@ -483,6 +502,11 @@ class AbstractEntityPage extends Component {
       search: searchValue,
       pagination: false
     })
+  }
+
+  _switchFTS() {
+    let currentValue = this.state.fts
+    this.extendState({fts: !currentValue})
   }
 
   isSearchEventSupported() {
