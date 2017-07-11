@@ -40,6 +40,7 @@ class DocumentStore {
 
     if(props.info) {
       if(props.info.title) props.title = props.info.title
+      if(props.info.meta) props.meta = props.info.meta
       if(props.info.userId) {
         props.updatedBy = props.info.userId
         props.userId = props.info.userId
@@ -141,6 +142,7 @@ class DocumentStore {
   updateDocument(documentId, props, cb) {
     if(props.info) {
       if(props.info.title) props.title = props.info.title
+      if(props.info.meta) props.meta = props.info.meta
       if(props.info.userId) props.updatedBy = props.info.userId
       if(props.info.updatedAt) props.updatedAt = props.info.updatedAt
     }

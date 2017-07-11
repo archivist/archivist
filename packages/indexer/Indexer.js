@@ -138,6 +138,24 @@ class Indexer extends EventEmitter {
     }.bind(this))
   }
 
+  reindexDocumentMetadata(documentId) {
+    return new Promise(function(resolve, reject) {
+      this.documentEngine.getDocument(documentId, function(err, docEntry) {
+        if(err) {
+          return reject(new Err('Indexer.IndexError', {
+            cause: err
+          }))
+        }
+        let emptyDoc = this.configurator.createArticle()
+        let doc = converter.importDocument(emptyDoc, docEntry.data)
+
+        let meta = doc.get('meta')
+
+        return this._saveMetadata(documentId, meta)
+      }.bind(this))
+    }.bind(this))
+  }
+
   searchDocuments(filters, options) {
     let isTextSearch = filters.query ? true : false
     let limit = options.limit || 100
@@ -399,6 +417,10 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
 
   _saveReferencesData(documentId, annos, refs) {
     return this.documentEngine.updateReferencesData(documentId, annos, refs)
+  }
+
+  _saveMetadata(documentId, metadata) {
+    return this.documentEngine.updateMetadata(documentId, metadata)
   }
 
   _saveFragment(record) {

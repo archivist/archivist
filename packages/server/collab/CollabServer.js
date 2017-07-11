@@ -96,6 +96,10 @@ class ArchivistCollabServer extends CollabServer {
               this.indexer.reindexDocumentReferences(message.documentId)
             }
           }
+
+          if(op.path[0] === 'meta') {
+            this.indexer.reindexDocumentMetadata(message.documentId)
+          }
         })
       }
 

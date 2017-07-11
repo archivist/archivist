@@ -26,6 +26,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
     let change = documentHelpers.getChangeFromDocument(doc)
 
     args.info.title = doc.get(['meta', 'title'])
+    args.info.meta = doc.get('meta')
     
     this.documentStore.createDocument({
       schemaName: schema.name,
@@ -132,6 +133,18 @@ class ArchivistDocumentEngine extends DocumentEngine {
       this.documentStore.updateDocument(documentId, {
         annotations: annos, 
         references: refs
+      }, function(err) {
+        if(err) return reject(err)
+
+        resolve()
+      })
+    }.bind(this))
+  }
+
+  updateMetadata(documentId, metadata) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.updateDocument(documentId, {
+        meta: metadata, 
       }, function(err) {
         if(err) return reject(err)
 
