@@ -42,7 +42,7 @@ export default {
       ru: 'Искать сущность...'
     })
     config.addLabel('merge-divider', {
-      en: 'Merge with...',
+      en: 'Merge to...',
       ru: 'Слить с...'
     })
   }
