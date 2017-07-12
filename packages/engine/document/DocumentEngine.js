@@ -193,7 +193,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
     let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}  
     let results = {}
     
-    if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '"updatedBy"', '"userId"']
+    if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '(SELECT name FROM users WHERE "userId" = "updatedBy") AS "updatedBy"', '"userId"']
 
     this.documentStore.countDocuments(filters, function(err, count) {
       if(err) {

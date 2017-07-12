@@ -33,7 +33,7 @@ class ResourceEngine {
 
     // TODO: avoid sql here
     // last element is sql expression for geting total number of backreferences
-    if(!options.columns) options.columns = ['"entityId"', '"entityType"', "name", "description", "synonyms", 'created', 'edited', '"updatedBy"', '"userId"', '(SELECT COUNT(*) FROM documents WHERE "references" ? "entityId") AS count']
+    if(!options.columns) options.columns = ['"entityId"', '"entityType"', "name", "description", "synonyms", 'created', 'edited', '(SELECT name FROM users WHERE "userId" = "updatedBy") AS "updatedBy"', '"userId"', '(SELECT COUNT(*) FROM documents WHERE "references" ? "entityId") AS count']
     if(options.mode === 'full') options.columns.push('data')
 
     return this.entityStore.countEntities(filters) 
