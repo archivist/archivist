@@ -41,6 +41,10 @@
 .sc-toolbox .se-content .se-search input {
   width: 100%;
   padding-left: 25px;
+  padding-right: 5px;
+}
+
+.sc-toolbox .se-content .se-search input.se-with-option {
   padding-right: 43px;
 }
 

@@ -119,6 +119,7 @@ class AbstractEntityPage extends Component {
       $$(Icon, {icon: 'fa-search'})
     )
     let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+      .addClass('se-with-option')
       .ref('searchInput')
 
     if(this.isSearchEventSupported) {
