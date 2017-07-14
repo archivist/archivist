@@ -14,7 +14,8 @@ class AbstractEntityPage extends Component {
       'deleteEntity': this._removeFromList,
       'mergeItem': this._mergeItem,
       'removeItem': this._removeItem,
-      'closeModal': this._doneEditing,
+      //'closeModal': this._doneEditing,
+      'finishEditing': this._doneEditing,
       'closeResourceOperator': this._closeResourceOperator,
       'newEntity': this._newEntity
     })

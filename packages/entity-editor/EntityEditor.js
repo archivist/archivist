@@ -141,7 +141,7 @@ class EntityEditor extends Component {
   }
 
   _closeEditor() {
-    this.send('closeModal')
+    this.send('finishEditing')
   }
 }
 
