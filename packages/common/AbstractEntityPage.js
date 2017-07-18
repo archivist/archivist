@@ -123,7 +123,7 @@ class AbstractEntityPage extends Component {
       .addClass('se-with-option')
       .ref('searchInput')
 
-    if(this.isSearchEventSupported) {
+    if(this.isSearchEventSupported()) {
       searchInput.on('search', this._onSearch)
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)

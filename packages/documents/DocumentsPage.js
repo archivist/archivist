@@ -76,7 +76,7 @@ class DocumentsPage extends Component {
     let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
       .ref('searchInput')
 
-    if(this.isSearchEventSupported) {
+    if(this.isSearchEventSupported()) {
       searchInput.on('search', this._onSearch)
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)
