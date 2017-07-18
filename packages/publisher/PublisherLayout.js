@@ -22,7 +22,9 @@ class PublisherLayout extends Loader {
   render($$) {
     let Header = this.getComponent('header')
     let Spinner = this.getComponent('spinner')
+    let Notification = this.getComponent('notification')
 
+    let notification = this.state.notification
     let el = $$('div').addClass('sc-edit-document')
     let main = $$(Layout, {
       width: 'medium',
@@ -40,11 +42,12 @@ class PublisherLayout extends Loader {
     })
 
     // Notification overrules collaborators
-    // if (notification) {
-    //   header.outlet('content').append(
-    //     $$(Notification, notification)
-    //   )
-    // } else if (this.state.session) {
+    if (notification) {
+      el.append(
+        $$(Notification, notification)
+      )
+    } 
+    // else if (this.state.session) {
     //   header.outlet('content').append(
     //     $$(Collaborators, {
     //       session: this.state.session
@@ -59,6 +62,12 @@ class PublisherLayout extends Loader {
     // we will display the notification on top level
     if (this.state.error) {
       console.error(this.state.error.message)
+      main = $$('div').append(
+        $$(Notification, {
+          type: 'error',
+          message: this.state.error.message
+        })
+      )
     } else if (this.state.session) {
       let fileClient = this.context.fileClient
       let EditorClass = this._getEditorClass()
