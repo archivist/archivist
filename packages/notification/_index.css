@@ -1,0 +1,25 @@
+.sc-notification {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 40px;
+  min-width: 450px;
+  bottom: 0;
+  right: 0;
+  z-index: 20;
+  background: rgba(255, 255, 255, 0.8);
+  align-items: center;
+  padding: 10px 10px 10px 50px;
+}
+
+.sc-notification .se-message {
+  flex: 1;
+}
+
+.sc-notification .se-icon {
+  flex: 0 0 20px;
+}
+
+.sc-notification.se-type-error {
+  color: #ff6363;
+}

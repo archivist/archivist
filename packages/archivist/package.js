@@ -1,4 +1,4 @@
-import { DocumentPackage, EntityEditorPackage, HeaderPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
+import { DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
 
 export default {
   name: 'archivist',
@@ -7,6 +7,7 @@ export default {
     config.import(DocumentPackage)
     config.import(EntityEditorPackage)
     config.import(HeaderPackage)
+    config.import(NotificationPackage)
     config.import(PagerPackage)
     config.import(ResourceOperatorPackage)
     config.import(SpinnerPackage)
