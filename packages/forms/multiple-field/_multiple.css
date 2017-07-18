@@ -1,3 +1,7 @@
+.sc-field-multiple {
+  position: relative;
+}
+
 .sc-field-multiple .se-toggle-dialog {
   float: left;
   padding: 9px 14px 4px 0px;
