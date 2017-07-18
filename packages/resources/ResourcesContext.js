@@ -13,7 +13,7 @@ class ResourcesContext extends Component {
       'focusEntity': this._focusEntity,
       'editEntity': this._editEntity,
       'updateEntity': this._updateEntity,
-      'closeModal': this._doneEditing
+      'finishEditing': this._doneEditing
     })
   }
 

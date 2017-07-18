@@ -9,7 +9,7 @@ class ResourcesSelector extends Component {
     this.handleActions({
       'loadMore': this._loadMore,
       'updateEntity': this._updateEntity,
-      'closeModal': this._doneEditing
+      'finishEditing': this._doneEditing
     })
   }
 
