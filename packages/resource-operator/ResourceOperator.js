@@ -170,7 +170,14 @@ class ResourcesOperator extends Component {
       el.append(
         resource,
         $$('div').addClass('se-merge-divider').append(this.getLabel('merge-divider')),
-        resourceSelector
+        resourceSelector,
+        $$('div').addClass('se-actions').append(
+          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+            .on('click', this._onCancel),
+          $$(Button, {label: 'merge-confirmation-submit', style: 'outline'})
+            .addClass('sm-disabled')
+            .attr({disabled: 'disabled'})
+        )
       )
     }
 
