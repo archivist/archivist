@@ -1,4 +1,4 @@
-import { Component } from 'substance'
+import { Component, FontAwesomeIcon } from 'substance'
 import { forEach } from 'lodash-es'
 import LoginStatus from './LoginStatus'
 
@@ -14,9 +14,10 @@ class Header extends Component {
     let MenuItems = configurator.getMenuItems()
     forEach(MenuItems, function(item) {
       actionEls.push(
-        $$('button').addClass('se-action')
-          .append(item.label)
+        $$('a').addClass('se-action')
+          .attr({title: item.label})
           .on('click', this.send.bind(this, 'navigate', {page: item.action}))
+          .append($$(FontAwesomeIcon, {icon: item.icon}))
       )
     }.bind(this))
 

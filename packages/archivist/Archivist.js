@@ -17,9 +17,9 @@ class Archivist extends AbstractApplication {
     this.configurator = props.configurator
     this.config = this.configurator.getAppConfig()
     this.authenticationClient = this.configurator.getAuthenticationClient()
-    this.documentClient = this.configurator.getDocumentClient()
+    this.documentClient = this.configurator.getDocumentClient({authClient: this.authenticationClient})
     this.fileClient = this.configurator.getFileClient()
-    this.resourceClient = this.configurator.getResourceClient()
+    this.resourceClient = this.configurator.getResourceClient({authClient: this.authenticationClient})
     this.componentRegistry = this.configurator.getComponentRegistry()
     this.iconProvider = this.configurator.getIconProvider()
     this.labelProvider = this.configurator.getLabelProvider()
@@ -31,9 +31,7 @@ class Archivist extends AbstractApplication {
 
     this.handleActions({
       'navigate': this.navigate,
-      'home': this._home,
-      'addDocument': this._addDocument,
-      'removeDocument': this._removeDocument
+      'home': this._home
     })
   }
 
@@ -79,27 +77,6 @@ class Archivist extends AbstractApplication {
       page: this.getDefaultPage()
     })
   }
-
-  /*
-    Create a new document
-  */
-  _addDocument(schemaName) {
-    this.documentClient.createDocument(schemaName, function(err, result) {
-      this.navigate({
-        page: 'document',
-        documentId: result.documentId
-      })
-    }.bind(this))
-  }
-
-  _removeDocument(documentId) {
-    this.documentClient.deleteDocument(documentId, function(/*err, result*/) {
-      this.navigate({
-        page: 'dashboard'
-      })
-    }.bind(this))
-  }
-
 }
 
 export default Archivist

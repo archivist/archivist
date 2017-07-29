@@ -1,10 +1,16 @@
-.sc-entity-page > .sc-grid > .se-entity-meta {
+.sc-entity-page .se-entity-layout {
+  display: flex;
+  flex-flow: column nowrap;
 }
 
 .sc-entity-page .se-entity-description {
   border: none;
   float: left;
   width: 100%;
+}
+
+.sc-entity-page .se-entity-description .se-description {
+  padding: 0px 10px 10px;
 }
 
 .sc-entity-page .se-document-reference {
@@ -16,7 +22,7 @@
   line-height: 23px;
 }
 
-.sc-entity-page  .se-document-reference .se-badge {
+.sc-entity-page .se-document-reference .se-badge {
   background: #fafafa;
   text-align: center;
 }
@@ -28,4 +34,8 @@
 .sc-entity-page .sc-grid > .se-document-referencet:before, .sc-documents .sc-grid > .se-document-reference:after {
   content: none;
   display: table;
+}
+
+.sc-entity-page .se-entity-layout .sc-modal {
+  z-index: 99;
 }

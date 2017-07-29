@@ -1,6 +1,8 @@
-import { SplitPane } from 'substance'
+import { CollabSession, JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
 import Loader from '../common/Loader'
 import Publisher from './Publisher'
+
+let converter = new JSONConverter()
 
 class PublisherLayout extends Loader {
 
@@ -18,13 +20,16 @@ class PublisherLayout extends Loader {
   }
 
   render($$) {
-    //let Notification = this.getComponent('notification')
-    //let Collaborators = this.getComponent('collaborators')
     let Header = this.getComponent('header')
+    let Spinner = this.getComponent('spinner')
+    let Notification = this.getComponent('notification')
 
     let notification = this.state.notification
     let el = $$('div').addClass('sc-edit-document')
-    let main = $$('div')
+    let main = $$(Layout, {
+      width: 'medium',
+      textAlign: 'center'
+    }).append($$(Spinner, {message: 'spinner-loading'}))
     let header
 
     this._updateLayout()
@@ -37,11 +42,12 @@ class PublisherLayout extends Loader {
     })
 
     // Notification overrules collaborators
-    // if (notification) {
-    //   header.outlet('content').append(
-    //     $$(Notification, notification)
-    //   )
-    // } else if (this.state.session) {
+    if (notification) {
+      el.append(
+        $$(Notification, notification)
+      )
+    } 
+    // else if (this.state.session) {
     //   header.outlet('content').append(
     //     $$(Collaborators, {
     //       session: this.state.session
@@ -55,6 +61,7 @@ class PublisherLayout extends Loader {
     // Display top-level errors. E.g. when a doc could not be loaded
     // we will display the notification on top level
     if (this.state.error) {
+      console.error(this.state.error.message)
       main = $$('div').append(
         $$(Notification, {
           type: 'error',
@@ -63,7 +70,8 @@ class PublisherLayout extends Loader {
       )
     } else if (this.state.session) {
       let fileClient = this.context.fileClient
-      main = $$(Publisher, {
+      let EditorClass = this._getEditorClass()
+      main = $$(EditorClass, {
         configurator: this.props.configurator,
         editorSession: this.state.session,
         onUploadFile: fileClient.uploadFile.bind(fileClient)
@@ -71,13 +79,17 @@ class PublisherLayout extends Loader {
     }
 
     el.append(
-      $$(SplitPane, {splitType: 'horizontal'}).append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
         header,
         main
       ).ref('splitPane')
     )
 
     return el
+  }
+
+  _getEditorClass() {
+    return Publisher
   }
 
   _onCollabClientDisconnected() {
@@ -120,6 +132,62 @@ class PublisherLayout extends Loader {
         notification: null
       })
     }
+  }
+
+  /*
+    Loads a document and initializes a Document Session
+  */
+  _loadDocument(documentId) {
+    let configurator = this.props.configurator
+    let collabClient = this.collabClient
+    let documentClient = this.context.documentClient
+
+    documentClient.getDocument(documentId, (err, docRecord) => {
+      if (err) {
+        this._onError(err)
+        return
+      }
+      //let docRecord = SampleDoc
+      let document = configurator.createArticle()
+      let doc = converter.importDocument(document, docRecord.data)
+
+      let session = new CollabSession(doc, {
+        configurator: configurator,
+        documentId: documentId,
+        version: docRecord.version,
+        collabClient: collabClient
+      })
+
+      if (substanceGlobals.DEBUG_RENDERING) {
+        window.doc = doc
+        window.session = session
+      }
+
+      series([
+        this._loadResources(documentId, session),
+      ], () => {
+        this.setState({
+          session: session
+        })
+      })
+    })
+  }
+
+  _loadResources(documentId, session) {
+    return function(cb) {
+      this._loadDocumentResources(documentId, (err, resources) => {
+        session.resources = resources
+        cb()
+      })
+    }.bind(this)
+  }
+
+  /*
+    Loads document resources
+  */
+  _loadDocumentResources(documentId, cb) {
+    let resourceClient = this.context.resourceClient
+    resourceClient.getDocumentResources(documentId, cb)
   }
 }
 

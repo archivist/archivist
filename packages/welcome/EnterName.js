@@ -1,4 +1,4 @@
-import { Component, Input, Button, Layout } from 'substance'
+import { Component, Input, Button, Layout, SplitPane } from 'substance'
 import Notification from './Notification'
 
 class EnterName extends Component {
@@ -59,9 +59,12 @@ class EnterName extends Component {
     )
 
     el.append(
-      header,
-      form
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        form
+      )
     )
+
     return el
   }
 

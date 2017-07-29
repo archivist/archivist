@@ -1,7 +1,12 @@
+.sc-users-page .se-entity-layout {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 .sc-users-page .sc-grid .se-checkbox .se-label {
   float: left;
   font-size: 13px;
-  margin-right: 10px;
+  margin-right: 8px;
 }
 
 .sc-users-page .sc-grid .se-reset {

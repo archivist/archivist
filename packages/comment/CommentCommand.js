@@ -1,60 +1,26 @@
-import { Command } from 'substance'
+import { ContainerAnnotationCommand } from 'substance'
 
-class CommentCommand extends Command {
+class CommentCommand extends ContainerAnnotationCommand {
 
-  getCommandState(props, context) {
-    let surface = props.surface
-    let sel = props.selection
-    let disabled = !surface || sel.isNull() || !sel.isPropertySelection()
-    let targetType = this.getTargetType(props, context)
-
+  executeCreate(params) {
+    let annos = this._getAnnotationsForSelection(params)
+    this._checkPrecondition(params, annos, this.canCreate)
+    let editorSession = this._getEditorSession(params)
+    let annoData = this.getAnnotationData()
+    annoData.type = this.getAnnotationType()
+    annoData.author = params.user
+    annoData.createdAt = new Date().toISOString()
+    let anno
+    editorSession.transaction((tx) => {
+      anno = tx.annotate(annoData)
+    })
+    editorSession.emit('createComment', anno)
     return {
-      targetType: targetType,
-      active: targetType !== 'comment',
-      disabled: disabled
+      mode: 'create',
+      anno: anno
     }
   }
 
-  execute(props, context) {
-    let sel = props.selection
-    if (!sel.isPropertySelection()) return
-    let surface = props.surface
-    let targetType = this.getTargetType(props, context)
-    let authenticationClient = context.authenticationClient
-    let user = authenticationClient.getUser()
-
-    if (targetType) {
-      // A Surface transaction performs a sequence of document operations
-      // and also considers the active selection.
-      surface.transaction(function(tx, args) {
-        args.data = {
-          type: targetType,
-          createdAt: new Date().toISOString(),
-          author: user.name
-        }
-        return surface.switchType(tx, args)
-      });
-      return {status: 'ok'}
-    }
-  }
-
-  getTargetType(props, context) {
-    let sel = props.selection
-    if (sel.isNull() || !sel.isPropertySelection()) return null
-    let doc = context.doc
-    let path = sel.getPath()
-    let node = doc.get(path[0])
-    // HACK: We should make sure the getCommandState is not called for
-    // an invalid selection.
-    if (!node) return 'paragraph'
-    let nodeType = node.type
-
-    if (nodeType === 'comment') {
-      return 'paragraph'
-    } else {
-      return 'comment'
-    }
-  }
 }
 
 export default CommentCommand

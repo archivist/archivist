@@ -28,11 +28,14 @@ class Brackets extends Component {
     let el = $$('div')
       .addClass('sc-brackets')
 
-    forEach(anchorIndex.annosById.body, function(anchor, nodeId) {
+    forEach(anchorIndex.annosById.body, (anchor, nodeId) => {
+      if(!anchor.isBracketReference) return
+
       let reference = anchor.reference
       let bracket = $$('div').addClass('se-bracket')
         .attr({'data-id': nodeId + '-bracket'})
         .ref(nodeId)
+
       if(topics) {
         let intersection = reference.filter(function(r) {
           return topics.indexOf(r) !== -1
@@ -42,6 +45,15 @@ class Brackets extends Component {
           bracket.addClass('sm-active')
         }
       }
+
+      if(this.state.active === nodeId) {
+        bracket.addClass('sm-active')
+      }
+
+      if(this.props.editor) {
+        bracket.on('click', this.toggleBracket.bind(this, anchor))
+      }
+
       el.append(bracket)
     })
 
@@ -62,6 +74,8 @@ class Brackets extends Component {
     let events = []
 
     forEach(anchorIndex.annosById.body, (anchor, nodeId) => {
+      if(!anchor.isBracketReference) return
+
       if (!anchor.start || !anchor.end) {
         console.warn("FIXME: Could not find anchors for node ", nodeId)
         return
@@ -155,6 +169,12 @@ class Brackets extends Component {
     this.extendState({
       topics: topics
     })
+  }
+
+  toggleBracket(node) {
+    let active = this.state.active === node.id ? null : node.id
+    this.send('toggleBracket', node, active)
+    this.extendState({active: active})
   }
 }
 

@@ -89,9 +89,9 @@ class ArchivistConfigurator extends Configurator {
   /*
     Get Document Client instance
   */
-  getDocumentClient() {
-    let DocumentClientClass = this.config.DocumentClientClass;
-    return new DocumentClientClass({httpUrl: this.config.documentServerUrl})
+  getDocumentClient(config) {
+    let DocumentClientClass = this.config.DocumentClientClass
+    return new DocumentClientClass({authClient: config.authClient, httpUrl: this.config.documentServerUrl})
   }
 
   /*
@@ -119,17 +119,18 @@ class ArchivistConfigurator extends Configurator {
   /*
     Get Resource Client instance
   */
-  getResourceClient() {
+  getResourceClient(config) {
     let ResourceClientClass = this.config.resourceClient
-    return new ResourceClientClass({httpUrl: this.config.resourceServerUrl})
+    return new ResourceClientClass({authClient: config.authClient, httpUrl: this.config.resourceServerUrl})
   }
 
   /*
     Provision of sub configurators (e.g. editor, viewer etc
     receive their own configurator)
   */
-  addConfigurator(name, configurator) {
+  addConfigurator(name, configurator, isDefault) {
     this.config.configurators[name] = configurator
+    if(isDefault) this.config.defaultConfigurator = name
   }
 
   /*
@@ -137,6 +138,18 @@ class ArchivistConfigurator extends Configurator {
   */
   getConfigurator(name) {
     return this.config.configurators[name]
+  }
+
+  /*
+    Get default sub configurator
+  */
+  getDefaultConfigurator() {
+    let defaultConfigurator = this.config.defaultConfigurator
+    if(defaultConfigurator) {
+      return this.getConfigurator(defaultConfigurator)
+    } else {
+      throw new Error('There is no default configurator exists')
+    }
   }
 
   addPage(pageName, component) {
@@ -154,6 +167,14 @@ class ArchivistConfigurator extends Configurator {
 
   getMenuItems() {
     return this.config.menu
+  }
+
+  setDefaultResourceTypes(resourceTypes) {
+    this.config.resourceTypes = resourceTypes
+  }
+
+  getDefaultResourceTypes() {
+    return this.config.resourceTypes
   }
 
 }

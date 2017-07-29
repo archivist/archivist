@@ -1,0 +1,52 @@
+.sc-metadata-editor .se-field-editor {
+}
+
+.sc-metadata-editor .se-field-group {
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sc-metadata-editor .se-field-group .se-group-name {
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.sc-metadata-editor .se-field-editor .se-collapsible-label {
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  color: #777;
+  margin-bottom: 5px;
+}
+
+.sc-metadata-editor .se-field-editor .se-collapsible-label .fa {
+  width: 12px;
+}
+
+.sc-metadata-editor .se-field-editor.se-checkboxes-editor {
+  margin: 10px 0px;
+  font-size: 14px;
+}
+
+.sc-metadata-editor .se-field-editor.se-checkboxes-editor input {
+  min-height: inherit;
+}
+
+.sc-metadata-editor .se-field-editor .sc-select-editor select {
+  width: 100%;
+}
+
+.sc-metadata-editor .se-field-editor .se-editor {
+  font-size: 14px;
+  border: 1px solid #ddd;
+  padding: 6px;
+  background: #fff;
+}
+
+.sc-metadata-editor .se-field-editor .se-description {
+  font-size: 12px;
+  line-height: 25px;
+  clear: both;
+}

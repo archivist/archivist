@@ -15,7 +15,7 @@
     "nodemailer": "^2.7.0",
     "password-generator": "^2.1.0",
     "plyr": "^2.0.11",
-    "substance": "substance/substance#5dd96de2170c56f9b7535bab27dc4dc80bc032c1",
+    "substance": "substance/substance#d0f842bdf54ee982394fab2a93e0aa40fbc78b93",
     "ws": "^1.1.1"
   },
   "devDependencies": {
@@ -34,5 +34,9 @@
     "test": "gulp test"
   },
   "license": "GPL-3.0",
-  "version": "2.0.0-alpha.1"
+  "version": "2.0.0-alpha.1",
+  "optionalDependencies": {
+    "bufferutil": "^3.0.1",
+    "utf-8-validate": "^3.0.2"
+  }
 }

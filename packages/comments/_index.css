@@ -1,0 +1,76 @@
+.sc-comment-panel .sc-panel-header {
+  font-size: 12px;
+  line-height: 40px;
+  font-weight: 600;
+  overflow: hidden;
+  height: 40px;
+  background: #fff;
+  border-bottom: 1px solid #ddd;
+}
+
+.sc-comment-panel .sc-panel-header .fa {
+  margin-right: 5px;
+}
+
+.sc-comment-panel .sc-panel-header .sc-goback-action {
+  padding: 0px 20px;
+  float: left;
+  cursor: pointer;
+}
+
+.sc-comment-panel .sc-panel-header .sc-actions {
+  overflow: hidden;
+  float: right;
+}
+
+.sc-comment-panel .sc-panel-header .sc-actions > div {
+  display: block;
+  float: left;
+  padding: 0px 4px;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
+.sc-comment-panel .se-edit-comment {
+  top: 40px;
+}
+
+.sc-comment-panel .se-comment-item {
+  overflow: hidden;
+  background: white;
+  padding: 5px 20px 20px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.se-comment-entries .se-comment-entry {
+  position: relative;
+  min-height: 100px;
+  padding: 20px;
+  border-bottom: 1px solid #E0E4E4;
+  border-left: 2px solid transparent;
+  cursor: pointer;
+}
+
+.se-comment-meta {
+  font-size: 14px;
+  margin: 10px 0px;
+}
+
+.se-comment-meta .se-created-date {
+  float: right;
+}
+
+.se-comment-entries .se-comment-body > *,
+.se-comment-item .se-comment > * {
+  margin-bottom: 20px;
+}
+
+.se-comment-entries .se-source {
+  margin-bottom: 10px;
+}
+
+.se-comment-entries .se-source .se-highlighted {
+  color: #777;
+  font-size: 12px;
+  background: rgba(255, 255, 100, 0.2);
+}

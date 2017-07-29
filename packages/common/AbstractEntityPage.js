@@ -1,9 +1,7 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
-import { concat, each, findIndex, isEmpty } from 'lodash-es'
+import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { concat, forEach, findIndex, isEmpty, isEqual } from 'lodash-es'
 import moment from 'moment'
-
-// Sample data for debugging
-// import DataSample from '../../data/docs'
+import AbstractEntityRow from './AbstractEntityRow'
 
 class AbstractEntityPage extends Component {
   constructor(...args) {
@@ -11,8 +9,14 @@ class AbstractEntityPage extends Component {
 
     this.handleActions({
       'loadMore': this._loadMore,
+      'loadReferences': this._loadReferences,
       'updateEntity': this._updateEntity,
-      'closeModal': this._doneEditing,
+      'deleteEntity': this._removeFromList,
+      'mergeItem': this._mergeItem,
+      'removeItem': this._removeItem,
+      //'closeModal': this._doneEditing,
+      'finishEditing': this._doneEditing,
+      'closeResourceOperator': this._closeResourceOperator,
       'newEntity': this._newEntity
     })
   }
@@ -25,11 +29,22 @@ class AbstractEntityPage extends Component {
     return this.constructor.entityType
   }
 
+  getChildContext() {
+    // TODO: we only keeping this to avoid
+    // ScrollPane dispose errors
+    return {
+      editorSession: new EventEmitter(),
+      dragManager: new EventEmitter()
+    }
+  }
+
   getInitialState() {
     return {
       active: {},
       filters: {entityType: this.entityType},
+      dataFilters: {},
       search: '',
+      fts: false,
       perPage: 30,
       order: 'created',
       direction: 'desc',
@@ -43,7 +58,7 @@ class AbstractEntityPage extends Component {
   }
 
   didUpdate(oldProps, oldState) {
-    if(oldState.search !== this.state.search) {
+    if(oldState.search !== this.state.search || !isEqual(oldState.dataFilters, this.state.dataFilters)) {
       this.searchData()
     }
   }
@@ -51,33 +66,50 @@ class AbstractEntityPage extends Component {
   render($$) {
     let items = this.state.items
     let el = $$('div').addClass('sc-entity-page')
+    let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
-    el.append(header)
 
     let toolbox = this.renderToolbox($$)
-    el.append(toolbox)
+    main.append(toolbox)
 
     if (this.props.entityId || this.state.dialog) {
       let EntityEditor = this.getComponent('entity-editor')
-      el.append(
+      main.append(
         $$(Modal, {
           width: 'medium'
         }).append(
           $$(EntityEditor, {entityId: this.props.entityId})
-        )
+        ).ref('modal')
       )
     }
 
-    if (!items) {
-      return el
+    if(this.state.entityId && this.state.mode) {
+      let ResourceOperator = this.getComponent('resource-operator')
+      let index = findIndex(items, (i) => { return i.entityId === this.state.entityId })
+      main.append(
+        $$(Modal, {
+          width: 'medium'
+        }).append(
+          $$(ResourceOperator, {entityId: this.state.entityId, item: items[index], mode: this.state.mode})
+        ).ref('modal')
+      )
     }
 
-    if (items.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
+    if (items) {
+      if (items.length > 0) {
+        main.append(this.renderFull($$))
+      } else {
+        main.append(this.renderEmpty($$))
+      }
     }
+
+    el.append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        main
+      )
+    )
 
     return el
   }
@@ -88,14 +120,25 @@ class AbstractEntityPage extends Component {
       $$(Icon, {icon: 'fa-search'})
     )
     let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+      .addClass('se-with-option')
       .ref('searchInput')
 
-    if(this.isSearchEventSupported) {
+    if(this.isSearchEventSupported()) {
       searchInput.on('search', this._onSearch)
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)
     }
-    search.append(searchInput)
+
+    let FTSSwitcher = $$('span').addClass('se-fts-switch')
+      .append('fts')
+      .on('click', this._switchFTS)
+
+    if(this.state.fts) FTSSwitcher.addClass('se-active')
+
+    search.append(
+      searchInput,
+      FTSSwitcher
+    )
 
     filters.push(search)
 
@@ -142,18 +185,8 @@ class AbstractEntityPage extends Component {
         $$('p').html('Sorry, no entities matches your query')
       )
     } else {
-      layout.append(
-        $$('div').addClass('se-spinner').append(
-          $$('div').addClass('se-rect1'),
-          $$('div').addClass('se-rect2'),
-          $$('div').addClass('se-rect3'),
-          $$('div').addClass('se-rect4'),
-          $$('div').addClass('se-rect5')
-        ),
-        $$('h2').html(
-          'Loading...'
-        )
-      )
+      let Spinner = this.getComponent('spinner')
+      layout.append($$(Spinner, {message: 'spinner-loading'}))
     }
 
     return layout
@@ -166,7 +199,7 @@ class AbstractEntityPage extends Component {
   renderAdditionalMenu($$, actions) {
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
-    each(actions, action => {
+    forEach(actions, action => {
       actionsList.append(
         $$('li').addClass('se-more-item').append(
           $$(Button, {label: action.label}).on('click', action.action)
@@ -179,56 +212,17 @@ class AbstractEntityPage extends Component {
   }
 
   renderFull($$) {
-    let urlHelper = this.context.urlHelper
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
+    let RowComponent = this.getRowClass()
     let grid = $$(Grid)
 
     if(items) {
-      items.forEach((item, index) => {
-        let url = urlHelper.openEntity(this.pageName, item.entityId)
-        let entityIcon = this.renderEntityIcon($$)
-        let name = $$('a').attr({href: url}).append(item.name)
-        let edited = ['Updated', moment(item.edited).fromNow(), 'by', item.updatedBy].join(' ')
-
-        let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
-        ]
-
-        let row = $$(Grid.Row).addClass('se-entity-meta').ref(item.entityId).append(
-          $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
-          $$(Grid.Cell, {columns: 5}).addClass('se-title').append(name),
-          $$(Grid.Cell, {columns: 3}).append(edited),
-          $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
-          $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
-            this.renderAdditionalMenu($$, additionalActions)
-          ).on('click', function(e) {
-            e.stopPropagation()
-          })
-        ).on('click', this._loadReferences.bind(this, item.entityId, index))
-
-        if(item.description) {
-          row.append(
-            $$(Grid.Row).addClass('se-entity-description').append(
-              $$('div').addClass('se-cell se-description').setInnerHTML(item.description)
-            )
-          )
-        }
-
-        grid.append(row)
-
-        if(this.state.details === index && item.references) {
-          item.references.forEach(function(reference) {
-            let referenceIcon = $$(Icon, {icon: 'fa-file-text-o'})
-            grid.append(
-              $$(Grid.Row).addClass('se-document-reference').ref(reference.documentId).append(
-                $$(Grid.Cell, {columns: 1}).addClass('se-badge').append(referenceIcon),
-                $$(Grid.Cell, {columns: 11}).addClass('se-reference').append(reference.title)
-              )
-            )
-          })
-        }
+      items.forEach((item) => {
+        grid.append(
+          $$(RowComponent, {pageName: this.pageName, item: item}).ref(item.entityId)
+        )
       })
     }
 
@@ -244,18 +238,24 @@ class AbstractEntityPage extends Component {
     return grid
   }
 
+  getRowClass() {
+    return AbstractEntityRow
+  }
+
   /*
     Search entities
   */
   searchData() {
     let searchValue = this.state.search
 
-    if(isEmpty(searchValue)) {
+    if(isEmpty(searchValue) || !this.state.fts) {
       return this._loadData()
     }
 
     let language = 'russian'
-    let filters = this.state.filters
+    let initialState = this.getInitialState()
+    let filters = initialState.filters
+    let dataFilters = this.state.dataFilters
     let perPage = this.state.perPage
     let order = this.state.order
     let direction = this.state.direction
@@ -267,6 +267,11 @@ class AbstractEntityPage extends Component {
       order: order + ' ' + direction
     }
     let resourceClient = this.context.resourceClient
+
+    forEach(dataFilters, (value, prop) => {
+      let selector = "data->>'" + prop + "'"
+      filters[selector] = value
+    })
 
     resourceClient.searchEntities(searchValue, language, filters, options, function(err, res) {
       if (err) {
@@ -325,6 +330,7 @@ class AbstractEntityPage extends Component {
       updatedBy: user.userId,
       data: {}
     }
+
     resourceClient.createEntity(entityData, (err, entity) => {
       if (err) {
         this.setState({
@@ -345,13 +351,36 @@ class AbstractEntityPage extends Component {
   }
 
   _removeItem(id) {
-    console.log(id)
+    this.extendState({entityId: id, mode: 'delete'})
+  }
+
+  _removeFromList(id) {
+    let items = this.state.items
+    let deletedItem = findIndex(items, function(i) { return i.entityId === id })
+    if(deletedItem > -1) {
+      items.splice(deletedItem, 1)
+      this.extendState({items: items, entityId: undefined, mode: undefined})
+    }
+  }
+
+  _mergeItem(id) {
+    this.extendState({entityId: id, mode: 'merge'})
+  }
+
+  /*
+    Close Resource Operator modal
+  */
+  _closeResourceOperator() {
+    this.extendState({entityId: undefined, mode: undefined})
   }
 
   /*
     Close modal and change url
   */
   _doneEditing() {
+    // TODO: form editor isn't disposing, we shouldn't do it manually
+    this.refs.modal.triggerDispose()
+    this.extendState({entityId: undefined, mode: undefined})
     this.send('navigate', {page: this.pageName})
   }
 
@@ -359,11 +388,13 @@ class AbstractEntityPage extends Component {
     Update grid data
   */
   _updateEntity(entity) {
-    let items = this.state.items
-    let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
-    if(changedItem > -1) {
-      items[changedItem] = entity
-      this.extendState({items: items})
+    let item = this.refs[entity.entityId]
+    let index = findIndex(this.state.items, (i) => { return i.entityId === entity.entityId })
+    if(item) {
+      item.extendProps({item: entity})
+    }
+    if(index > -1) {
+      this.state.items[index] = entity
     }
   }
 
@@ -372,7 +403,9 @@ class AbstractEntityPage extends Component {
   */
   _loadData() {
     let resourceClient = this.context.resourceClient
-    let filters = this.state.filters
+    let initialState = this.getInitialState()
+    let filters = initialState.filters
+    let dataFilters = this.state.dataFilters
     let perPage = this.state.perPage
     let order = this.state.order
     let direction = this.state.direction
@@ -382,6 +415,19 @@ class AbstractEntityPage extends Component {
       limit: perPage, 
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
+    }
+
+    forEach(dataFilters, (value, prop) => {
+      let selector = "data->>'" + prop + "'"
+      filters[selector] = value
+    })
+
+    let searchValue = this.state.search
+    if(searchValue) {
+      filters['or'] = [
+        {'name ~*': searchValue},
+        {'synonyms::text ~*': searchValue}
+      ]
     }
 
     resourceClient.listEntities(filters, options, (err, res) => {
@@ -409,38 +455,34 @@ class AbstractEntityPage extends Component {
     })
   }
 
-
-  _loadReferences(entityId, index) {
+  _loadReferences(entityId) {
     let filters = {}
     let options = {
       columns: ['"documentId"', 'title'],
       order: '"updatedAt" DESC'
     }
     let documentClient = this.context.documentClient
-    let items = this.state.items
-
-    if(!items[index].references) {
-      documentClient.getReferences(entityId, filters, options, function(err, references) {
-        if (err) {
-          this.setState({
-            error: new Err('EntitiesPage.GetReferencesError', {
-              message: 'Search results could not be loaded.',
-              cause: err
+    let item = this.refs[entityId]
+    if(item) {
+      if(!item.props.references) {
+        documentClient.getReferences(entityId, filters, options, function(err, references) {
+          if (err) {
+            this.setState({
+              error: new Err('EntitiesPage.GetReferencesError', {
+                message: 'Search results could not be loaded.',
+                cause: err
+              })
             })
-          })
-          console.error('ERROR', err)
-          return
-        }
+            console.error('ERROR', err)
+            return
+          }
 
-        items[index].references = references.records
-
-        this.extendState({
-          items: items,
-          details: index 
-        })
-      }.bind(this))
-    } else {
-      this.extendState({details: index})
+          item.extendProps({references: references})
+          item._toggleDetails()
+        }.bind(this))
+      } else {
+        item._toggleDetails()
+      } 
     }
   }
 
@@ -462,6 +504,11 @@ class AbstractEntityPage extends Component {
       search: searchValue,
       pagination: false
     })
+  }
+
+  _switchFTS() {
+    let currentValue = this.state.fts
+    this.extendState({fts: !currentValue})
   }
 
   isSearchEventSupported() {
