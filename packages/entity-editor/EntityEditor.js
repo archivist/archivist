@@ -1,5 +1,5 @@
-import { Component, EditorSession } from 'substance'
-import { extend } from 'lodash-es'
+import { Button, Component, EditorSession } from 'substance'
+import { clone, extend } from 'lodash-es'
 
 /*
   Entity Editor
@@ -14,23 +14,38 @@ class EntityEditor extends Component {
     let session = this.state.session
     if(session) {
       session.off(this)
+      // TODO: Deatach drag listners in more convient way
+      session.dragManager.el.removeAllEventListeners()
     }
   }
 
   render($$) {
     let doc = this.state.doc
     let entity = this.state.entity
-    let Form = this.getComponent('form')
 
+    // We should get form component from archivist component registry
+    // this way we could get overrided forms
+    let configurator = this.context.configurator
+    let componentRegistry = configurator.getComponentRegistry()
+    let Form = componentRegistry.get('form')
+    
     let el = $$('div').addClass('sc-entity-editor')
 
     if(entity && doc) {
       let entityData = doc.get(entity.entityType)
       let form = $$(Form, {node: entityData, session: this.state.session})
 
-      el.append(form)
+      el.append(
+        form,
+        $$('div').addClass('se-controls').append(
+          $$(Button, {style: 'outline', label: 'entity-editor-cancel'}).addClass('se-cancel')
+            .on('click', this._revertEntity),
+          $$(Button, {style: 'outline', label: 'entity-editor-ok'}).addClass('se-ok')
+            .on('click', this._closeEditor)
+        )
+      )
     } else {
-      el.append('There is no editor for this entity class, sorry')
+      el.append('There is no editor for this entity type, sorry')
     }
 
     return el
@@ -66,9 +81,12 @@ class EntityEditor extends Component {
         let session = new EditorSession(container, {configurator: configurator})
         session.onUpdate('document', this._onDocumentChange, this)
 
+        const source = clone(entity)
+
         this.setState({
           doc: container,
           session: session,
+          source: source,
           entity: entity
         })
       }
@@ -79,7 +97,7 @@ class EntityEditor extends Component {
     let entityId = this.props.entityId
     let resourceClient = this.context.resourceClient
     let entityData = {
-      data: data.toJSON(),
+      data: data,
       name: name,
       synonyms: synonyms,
       description: description
@@ -105,10 +123,25 @@ class EntityEditor extends Component {
     let doc = this.state.doc
     let entity = this.state.entity
     let entityData = doc.get(entity.entityType)
+    let entityDataJSON = entityData.toJSON()
     let name = entityData.getName()
     let synonyms = entityData.getSynonyms()
     let description = entityData.getDescription()
+    this._updateEntity(entityDataJSON, name, synonyms, description)
+  }
+
+  _revertEntity() {
+    let entity = this.state.source
+    let entityData = entity.data
+    let name = entity.name
+    let synonyms = entity.synonyms
+    let description = entity.description
     this._updateEntity(entityData, name, synonyms, description)
+    this._closeEditor()
+  }
+
+  _closeEditor() {
+    this.send('finishEditing')
   }
 }
 

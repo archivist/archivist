@@ -1,4 +1,4 @@
-import { Component, Button, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SubstanceError as Err } from 'substance'
+import { Component, Button, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, findIndex, isEqual } from 'lodash-es'
 import moment from 'moment'
 import UserForm from './UserForm'
@@ -42,15 +42,15 @@ class UsersList extends Component {
   render($$) {
     let items = this.state.items
     let el = $$('div').addClass('sc-users-page')
+    let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
-    el.append(header)
 
     let toolbox = this.renderToolbox($$)
-    el.append(toolbox)
+    main.append(toolbox)
 
     if (this.state.dialog) {
-      el.append(
+      main.append(
         $$(Modal, {
           width: 'middle'
         }).addClass('se-user-form-modal').append(
@@ -59,15 +59,21 @@ class UsersList extends Component {
       )
     }
 
-    if (!items) {
-      return el
+    if (items) {
+      if (items.length > 0) {
+        main.append(this.renderFull($$))
+      } else {
+        main.append(this.renderEmpty($$))
+      }
     }
 
-    if (items.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
-    }
+    el.append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        main
+      )
+    )
+
     return el
   }
 
@@ -124,18 +130,8 @@ class UsersList extends Component {
         $$('p').html('Sorry, no users matches your query')
       )
     } else {
-      layout.append(
-        $$('div').addClass('se-spinner').append(
-          $$('div').addClass('se-rect1'),
-          $$('div').addClass('se-rect2'),
-          $$('div').addClass('se-rect3'),
-          $$('div').addClass('se-rect4'),
-          $$('div').addClass('se-rect5')
-        ),
-        $$('h2').html(
-          'Loading...'
-        )
-      )
+      let Spinner = this.getComponent('spinner')
+      layout.append($$(Spinner, {message: 'spinner-loading'}))
     }
 
     return layout

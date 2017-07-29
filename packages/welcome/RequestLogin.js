@@ -14,6 +14,7 @@ class RequestLogin extends Component {
           placeholder: this.getLabel('enter-email-placeholder'),
           centered: true
         }).ref('email')
+        .on('keyup', this._onKeyUp)
       ),
       $$('div').addClass('se-password').append(
         $$(Input, {
@@ -21,6 +22,7 @@ class RequestLogin extends Component {
           placeholder: this.getLabel('enter-password-placeholder'),
           centered: true
         }).ref('password')
+        .on('keyup', this._onKeyUp)
       )
     )
 
@@ -99,6 +101,12 @@ class RequestLogin extends Component {
         this.send('loginRequested');
       }
     }.bind(this))
+  }
+
+  _onKeyUp(e) {
+    if(e.keyCode === 13) {
+      this._login()
+    }
   }
 }
 

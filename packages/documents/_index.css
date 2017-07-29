@@ -1,3 +1,8 @@
+.sc-documents .se-entity-layout {
+  display: flex;
+  flex-flow: column nowrap;
+}
+
 .sc-documents .sc-grid .sc-grid {
   overflow: inherit;
 }

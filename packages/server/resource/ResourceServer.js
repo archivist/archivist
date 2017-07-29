@@ -1,4 +1,6 @@
+let extend = require('lodash/extend')
 let isEmpty = require('lodash/isEmpty')
+let union = require('lodash/union')
 
 /*
   ResourceServer module. Can be bound to an express instance
@@ -6,19 +8,23 @@ let isEmpty = require('lodash/isEmpty')
 class ResourceServer {
   constructor(config) {
     this.engine = config.resourceEngine
+    this.authEngine = config.authEngine
     this.indexer = config.indexer
+    this.inspector = config.inspector
     this.path = config.path
   }
 
   bind(app) {
     // search
-    app.post(this.path + '/entities', this._createEntity.bind(this))
+    app.post(this.path + '/entities', this.authEngine.hasAccess.bind(this.authEngine), this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/document/:id', this._getDocumentResources.bind(this))
     //app.get(this.path + '/entities/tree/:type', this._getResourcesTree.bind(this))
     app.get(this.path + '/entities/search', this._searchEntities.bind(this))
+    app.post(this.path + '/entities/merge', this.authEngine.hasSuperAccess.bind(this.authEngine), this._mergeEntity.bind(this))
     app.get(this.path + '/entities/:id', this._getEntity.bind(this))
-    app.put(this.path + '/entities/:id', this._updateEntity.bind(this))
+    app.delete(this.path + '/entities/:id', this.authEngine.hasSuperAccess.bind(this.authEngine), this._removeEntity.bind(this))
+    app.put(this.path + '/entities/:id', this.authEngine.hasAccess.bind(this.authEngine), this._updateEntity.bind(this))
   }
 
   /*
@@ -56,6 +62,57 @@ class ResourceServer {
     }).catch(function(err) {
       return next(err)
     })
+  }
+
+  /*
+    Remove Entity
+  */
+  _removeEntity(req, res, next) {
+    let entityId = req.params.id
+    this.inspector.removeResource(entityId)
+      .then(() => {
+        return this.engine.removeEntity(entityId)
+      })
+      .then((result) => {
+        res.json(result)
+      })
+      .catch((err) => {
+        return next(err)
+      })
+  }
+
+  /*
+    Merge entities
+  */
+  _mergeEntity(req, res, next) {
+    let entityData = req.body
+    let entityId = entityData.mergeEntity
+    let targetId = entityData.targetEntity
+    let type = entityData.type
+    let mergeEntity, targetEntity
+
+    this.engine.getEntity(entityId)
+      .then(entity => {
+        mergeEntity = entity
+        return this.engine.getEntity(targetId)
+      })
+      .then((entity) => {
+        targetEntity = entity
+        let synonyms = union(mergeEntity.synonyms, targetEntity.synonyms)
+        return this.engine.updateEntity(targetId, {synonyms: synonyms, data: extend(targetEntity.data, {synonyms: synonyms})})
+      })
+      .then(() => {
+        return this.inspector.replaceResource(entityId, targetId, type)
+      })
+      .then(() => {
+        return this.engine.removeEntity(entityId)
+      })
+      .then((result) => {
+        res.json(result)
+      })
+      .catch((err) => {
+        return next(err)
+      })
   }
 
   /*

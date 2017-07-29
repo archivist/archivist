@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SubstanceError as Err } from 'substance'
+import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err, uuid } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -10,7 +10,8 @@ class DocumentsPage extends Component {
     super(...args)
 
     this.handleActions({
-      'loadMore': this._loadMore
+      'loadMore': this._loadMore,
+      'newDocument': this._createDocument
     })
   }
 
@@ -29,7 +30,7 @@ class DocumentsPage extends Component {
       filters: {},
       search: '',
       perPage: 30,
-      order: 'created',
+      order: '"updatedAt"',
       direction: 'desc',
       pagination: false,
       items: []
@@ -43,22 +44,27 @@ class DocumentsPage extends Component {
   render($$) {
     let documentItems = this.state.items
     let el = $$('div').addClass('sc-documents')
+    let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
-    el.append(header)
 
     let toolbox = this.renderToolbox($$)
-    el.append(toolbox)
+    main.append(toolbox)
 
-    if (!documentItems) {
-      return el
+    if (documentItems) {
+      if (documentItems.length > 0) {
+        main.append(this.renderFull($$))
+      } else {
+        main.append(this.renderEmpty($$))
+      }
     }
 
-    if (documentItems.length > 0) {
-      el.append(this.renderFull($$))
-    } else {
-      el.append(this.renderEmpty($$))
-    }
+    el.append(
+      $$(SplitPane, {splitType: 'vertical', sizeA: '40px'}).append(
+        header,
+        main
+      )
+    )
     return el
   }
 
@@ -70,7 +76,7 @@ class DocumentsPage extends Component {
     let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
       .ref('searchInput')
 
-    if(this.isSearchEventSupported) {
+    if(this.isSearchEventSupported()) {
       searchInput.on('search', this._onSearch)
     } else {
       searchInput.on('keypress', this._onSearchKeyPress)
@@ -102,17 +108,17 @@ class DocumentsPage extends Component {
   }
 
   renderStatusBar($$) {
-    var componentRegistry = this.context.componentRegistry;
-    var StatusBar = componentRegistry.get('status-bar');
+    let componentRegistry = this.context.componentRegistry
+    let StatusBar = componentRegistry.get('status-bar')
 
-    return $$(StatusBar);
+    return $$(StatusBar)
   }
 
   renderEmpty($$) {
-    var layout = $$(Layout, {
+    let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
-    });
+    })
 
     if(this.state.total === 0) {
       layout.append(
@@ -120,23 +126,13 @@ class DocumentsPage extends Component {
           'No results'
         ),
         $$('p').html('Sorry, no entities matches your query')
-      );
+      )
     } else {
-      layout.append(
-        $$('div').addClass('se-spinner').append(
-          $$('div').addClass('se-rect1'),
-          $$('div').addClass('se-rect2'),
-          $$('div').addClass('se-rect3'),
-          $$('div').addClass('se-rect4'),
-          $$('div').addClass('se-rect5')
-        ),
-        $$('h2').html(
-          'Loading...'
-        )
-      );
+      let Spinner = this.getComponent('spinner')
+      layout.append($$(Spinner, {message: 'spinner-loading'}))
     }
 
-    return layout;
+    return layout
   }
 
   renderAdditionalMenu($$, actions) {
@@ -170,7 +166,7 @@ class DocumentsPage extends Component {
         let className = item.summary ? 'se-expanded' : ''
 
         let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
+          {label: 'Delete', action: this._removeItem.bind(this, item.documentId)},
         ]
 
         let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(
@@ -221,8 +217,32 @@ class DocumentsPage extends Component {
     return grid
   }
 
+  _createDocument() {
+    let authClient = this.context.authenticationClient
+    let documentClient = this.context.documentClient
+    let user = authClient.getUser()
+
+    documentClient.createDocument({
+      schemaName: 'archivist-interview',
+      schemaVersion: '1.0.0',
+      info: {
+        title: 'Untitled',
+        userId: user.userId
+      }
+    }, (err, result) => {
+      this.send('navigate', {
+        page: 'documents',
+        documentId: result.documentId
+      })
+    })
+  }
+
   _removeItem(id) {
-    console.log(id)
+    let documentClient = this.context.documentClient
+    documentClient.deleteDocument(id, err => {
+      if(err) console.error(err)
+      this._loadData()
+    })
   }
 
   /*
@@ -290,17 +310,12 @@ class DocumentsPage extends Component {
     Loads documents
   */
   _loadData() {
-    // Sample data for debugging
-
-    // this.extendState({
-    //   items: DataSample,
-    //   total: DataSample.length
-    // });
     let pagination = this.state.pagination
     let perPage = this.state.perPage
     let options = {
       limit: perPage, 
-      offset: pagination ? this.state.items.length : 0
+      offset: pagination ? this.state.items.length : 0,
+      order: this.state.order + ' ' + this.state.direction
     }
     let items = []
 

@@ -1,12 +1,18 @@
-import { TextBlock } from 'substance'
+import { ContainerAnnotation } from 'substance'
 
-class Comment extends TextBlock {}
+/**
+  Comment Node.
+  Used for keeping comment annotations.
+*/
+
+class Comment extends ContainerAnnotation {}
 
 Comment.define({
   type: 'comment',
-  content: 'text',
-  author: { type: 'string', default: '' },
-  createdAt: { type: 'string', default: new Date().toISOString() }
+  content: { type: 'string', default: '' },
+  author: { type: 'string', default: 'Anonymous' },
+  createdAt: { type: 'string', default: new Date().toISOString() },
+  replies: {type: ["string"], default: []}
 })
 
 export default Comment

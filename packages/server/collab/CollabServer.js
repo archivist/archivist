@@ -1,6 +1,7 @@
 let CollabServer = require('substance').CollabServer
 let DocumentChange = require('substance').DocumentChange
 let Err = require('substance').SubstanceError
+let forEach = require('lodash/forEach')
 
 /*
   DocumentServer module. Can be bound to an express instance
@@ -9,6 +10,7 @@ class ArchivistCollabServer extends CollabServer {
   constructor(config) {
     super(config)
     this.authEngine = config.authEngine
+    this.indexer = config.indexer
     this.documentStore = config.documentStore
   }
 
@@ -43,7 +45,7 @@ class ArchivistCollabServer extends CollabServer {
         if (message.change) {
           // Update the title if necessary
           let change = DocumentChange.fromJSON(message.change)
-          change.ops.forEach(function(op) {
+          change.ops.forEach((op) => {
             if(op.path[0] === 'meta' && op.path[1] === 'title') {
               title = op.diff.apply(title)
             }
@@ -51,7 +53,8 @@ class ArchivistCollabServer extends CollabServer {
 
           message.change.info = {
             userId: req.session.userId,
-            updatedAt: updatedAt
+            updatedAt: updatedAt,
+            title: title
           }
         }
 
@@ -73,6 +76,64 @@ class ArchivistCollabServer extends CollabServer {
       req.setEnhanced()
       this.next(req, res)
     }
+  }
+
+  enhanceResponse(req, res) {
+    let message = req.message
+    if (message.type === 'sync') {
+      // We fetch the document record to get the old title
+      if (message.change) {
+        // Update the title if necessary
+        let change = DocumentChange.fromJSON(message.change)
+        change.ops.forEach((op) => {
+
+          // Reindex document references on each change of annotation with reference
+          // TODO: reindex references only when new resource added or removed
+          if(op.path[1] === 'reference') {
+            this.indexer.reindexDocumentReferences(message.documentId)
+          } else if (op.val !== null && typeof op.val === 'object') {
+            if(op.val.reference) {
+              this.indexer.reindexDocumentReferences(message.documentId)
+            }
+          }
+
+          if(op.path[0] === 'meta') {
+            this.indexer.reindexDocumentMetadata(message.documentId)
+          }
+        })
+      }
+
+      res.setEnhanced()
+      this.next(req, res)
+    } else {
+      // Just continue for everything that is not handled
+      res.setEnhanced()
+      this.next(req, res)
+    }
+  }
+
+  resourceSync(req, res) {
+    let args = req.message
+    let documentId = args.documentId
+    let collaborators = this.collabEngine.getCollaborators(documentId, args.collaboratorId)
+    
+    res.send({
+      scope: this.scope,
+      type: 'resourceSyncDone',
+      documentId: documentId
+    })
+
+    forEach(collaborators, (collaborator) => {
+      this.send(collaborator.collaboratorId, {
+        scope: this.scope,
+        type: 'resourceUpdate',
+        documentId: documentId,
+        resourceId: args.resourceId,
+        mode: args.mode
+      })
+    })
+
+    this.next(req, res)
   }
 
 }

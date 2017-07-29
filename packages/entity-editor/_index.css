@@ -1,0 +1,12 @@
+.sc-entity-editor .se-controls {
+  display: flex;
+  max-width: 500px;
+  margin: 10px auto;
+  justify-content: space-between;
+}
+
+.sc-entity-editor .se-controls .sc-button {
+  font-weight: 400;
+  display: inline-block;
+  border-radius: 3px;
+}

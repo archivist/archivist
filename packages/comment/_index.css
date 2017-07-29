@@ -1,0 +1,8 @@
+.sc-text-property .sc-comment {
+  background: rgba(255, 235, 59, 0.2);
+}
+
+.sc-text-property .sc-comment.sm-highlighted {
+  background: rgba(45, 187, 4, 0.2);
+  border-bottom: 1px solid rgba(45, 187, 4, 0.4);
+}

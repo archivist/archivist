@@ -33,6 +33,7 @@ class Loader extends Component {
 
     this.collabClient.on('disconnected', this._onCollabClientDisconnected, this)
     this.collabClient.on('connected', this._onCollabClientConnected, this)
+    this.collabClient.on('message', this._onMessage, this)
   }
 
   getInitialState() {
@@ -68,6 +69,21 @@ class Loader extends Component {
     }
     this.collabClient.off(this)
     this.collabClient.dispose()
+  }
+
+  _onMessage(msg) {
+    if(msg.type === 'resourceUpdate') {
+      let resourceId = msg.resourceId
+      let mode = msg.mode
+      let session = this.state.session
+      if(session) {
+        if(mode === 'add') {
+          session.emit('resource:add', resourceId)
+        } else if (mode === 'remove') {
+          session.emit('resource:delete', resourceId)
+        }
+      }
+    }
   }
 
   _onError(err) {

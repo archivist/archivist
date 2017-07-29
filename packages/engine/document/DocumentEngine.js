@@ -1,4 +1,4 @@
-import { DocumentEngine, SubstanceError as Err } from 'substance'
+import { DocumentEngine, documentHelpers, SubstanceError as Err } from 'substance'
 import { isEmpty } from 'lodash-es'
 import Promise from 'bluebird'
 
@@ -10,7 +10,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
     super(config)
 
     this.documentStore = config.documentStore
-    this.configurator = config
+    this.configurator = config.configurator
     this.db = config.db
   }
 
@@ -23,9 +23,35 @@ class ArchivistDocumentEngine extends DocumentEngine {
     }
     let seed = this.configurator.getSeed()
     let doc = this.configurator.createArticle(seed)
-    args.info.updatedAt = new Date()
+    let change = documentHelpers.getChangeFromDocument(doc)
+
     args.info.title = doc.get(['meta', 'title'])
-    super.createDocument(args, cb)
+    args.info.meta = doc.get('meta')
+    
+    this.documentStore.createDocument({
+      schemaName: schema.name,
+      schemaVersion: schema.version,
+      language: this.configurator.getDefaultLanguage(),
+      version: 0,
+      indexedVersion: 0,
+      info: args.info
+    }, (err, docRecord) => {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.CreateError', {
+          cause: err
+        }))
+      }
+
+      this.addChange(docRecord.documentId, change, err => {
+        if (err) {
+          return cb(new Err('ArchivistDocumentEngine.CreateError', {
+            cause: err
+          }))
+        }
+
+        cb(null, {documentId: docRecord.documentId})
+      })
+    })
   }
 
   getDocument(documentId, cb) {
@@ -44,6 +70,29 @@ class ArchivistDocumentEngine extends DocumentEngine {
         }
         docEntry.data = snapshot.data ? snapshot.data : snapshot
         cb(null, docEntry)
+      })
+    })
+  }
+
+  /*
+    Delete document by documentId
+  */
+  deleteDocument(documentId, cb) {
+    this.changeStore.deleteChanges(documentId, err => {
+      if (err) {
+        return cb(new Err('ArchivistDocumentEngine.DeleteError', {
+          cause: err
+        }))
+      }
+
+      this.documentStore.deleteDocument(documentId, err => {
+        if (err) {
+          return cb(new Err('ArchivistDocumentEngine.DeleteError', {
+            cause: err
+          }))
+        }
+
+        cb()
       })
     })
   }
@@ -87,9 +136,39 @@ class ArchivistDocumentEngine extends DocumentEngine {
     })
   }
 
-  updateDocumentFullText(documentId, text, version) {
+  updateDocumentIndexData(documentId, text, annos, refs, version) {
     return new Promise(function(resolve, reject) {
-      this.documentStore.updateDocument(documentId, {'fullText': text, indexedVersion: version}, function(err) {
+      this.documentStore.updateDocument(documentId, {
+        'fullText': text, 
+        annotations: annos, 
+        references: refs, 
+        'indexedVersion': version
+      }, function(err) {
+        if(err) return reject(err)
+
+        resolve()
+      })
+    }.bind(this))
+  }
+
+  updateReferencesData(documentId, annos, refs) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.updateDocument(documentId, {
+        annotations: annos, 
+        references: refs
+      }, function(err) {
+        if(err) return reject(err)
+
+        resolve()
+      })
+    }.bind(this))
+  }
+
+  updateMetadata(documentId, metadata) {
+    return new Promise(function(resolve, reject) {
+      this.documentStore.updateDocument(documentId, {
+        meta: metadata, 
+      }, function(err) {
         if(err) return reject(err)
 
         resolve()
@@ -114,7 +193,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
     let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}  
     let results = {}
     
-    if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '"updatedBy"', '"userId"']
+    if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '(SELECT name FROM users WHERE "userId" = "updatedBy") AS "updatedBy"', '"userId"']
 
     this.documentStore.countDocuments(filters, function(err, count) {
       if(err) {
@@ -136,12 +215,14 @@ class ArchivistDocumentEngine extends DocumentEngine {
     }.bind(this))
   }
 
-  listResourceDocuments(resourceId, cb) {
+  listResourceDocuments(resourceId, published, cb) {
+    let publishedProviso = ''
+    if(published) publishedProviso = "AND meta->>'state' = 'published'"
     let query = `
       SELECT "documentId", title, meta, "references"->>$1 AS count
       FROM documents
-      WHERE "references" ? $1
-      ORDER BY meta->>'published_on' DESC;
+      WHERE "references" ? $1 ${publishedProviso}
+      ORDER BY count DESC;
     `
 
     this.db.run(query, [resourceId], function(err, docs) {
@@ -167,7 +248,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
       this.documentStore.updateDocument(documentId, {
         version: newVersion,
         // Store custom documentInfo
-        // info: args.documentInfo
+        info: change.info
       }, err => {
         if (err) return cb(err)
         this.requestSnapshot(documentId, newVersion, () => {

@@ -1,6 +1,3 @@
-let Err = require('substance').SubstanceError
-let isEmpty = require('lodash/isEmpty')
-
 /*
   UserServer module. Can be bound to an express instance
 */

@@ -1,19 +1,13 @@
-import { BasePackage, PersistencePackage } from 'substance'
-import InterviewPackage from '../interview/package'
-import EntityPackage from '../entity/package'
 import PublisherLayout from './PublisherLayout'
+import { BracketsPackage, TabbedContextPackage } from 'archivist'
 
 export default {
   name: 'archivist-publisher',
   configure: function(config) {
-    // Now import base packages
-    config.import(BasePackage)
-    config.import(PersistencePackage)
-
-    config.import(InterviewPackage)
-
-    config.import(EntityPackage)
-
+    config.import(BracketsPackage)
+    config.import(TabbedContextPackage)
     config.addComponent('editor', PublisherLayout)
+    config.addToolGroup('references')
+    config.addToolGroup('utils')
   }
 }

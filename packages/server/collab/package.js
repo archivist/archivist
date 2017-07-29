@@ -5,6 +5,7 @@ export default {
   configure: function(config) {
     let socketServer = config.getWebSocketServer()
     let authEngine = config.getEngine('auth')
+    let indexer = config.getEngine('indexer')
     let documentEngine = config.getEngine('document')
     let documentStore = config.getStore('document')
 
@@ -14,6 +15,7 @@ export default {
       configurator: config,
       heartbeat: 30000,
       authEngine: authEngine,
+      indexer: indexer,
       documentEngine: documentEngine,
       documentStore: documentStore
     })

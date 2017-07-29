@@ -9,13 +9,14 @@ class ArchivistSubConfigurator extends Configurator {
   constructor(...args) {
     super(...args)
     // Extend config
-    this.config.context = []
+    this.config.contexts = []
     this.config.contextRenderers = []
+    this.config.contextMapping = {}
   }
 
   addContext(contextName, component, defaultContext) {
     this.addComponent(contextName, component)
-    this.config.context.push(contextName)
+    this.config.contexts.push(contextName)
     if(defaultContext) this.config.defaultContext = contextName
   }
 
@@ -29,7 +30,7 @@ class ArchivistSubConfigurator extends Configurator {
   }
 
   getContexts() {
-    return this.config.context
+    return this.config.contexts
   }
 
   addContextItem(rendererName, contextRenderer) {
@@ -39,6 +40,25 @@ class ArchivistSubConfigurator extends Configurator {
   getContextItem(rendererName) {
     let name = rendererName + '-context-item'
     return this.config.components[name]
+  }
+
+  getContextMapping() {
+    return this.config.contextMapping
+  }
+
+  /*
+    Map entity types to context classes
+  */
+  setContextMapping(map) {
+    this.config.contextMapping = map
+  }
+
+  setDefaultLanguage(lang) {
+    this.config.defaultLanguage = lang
+  }
+
+  getDefaultLanguage() {
+    return this.config.defaultLanguage
   }
 
 }

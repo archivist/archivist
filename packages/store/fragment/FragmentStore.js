@@ -153,7 +153,9 @@ class FragmentStore {
       prev: fragmentData.prev,
       next: fragmentData.next,
       content: fragmentData.content,
-      annotations: fragmentData.annotations
+      time: fragmentData.time,
+      annotations: fragmentData.annotations,
+      references: fragmentData.references
     }
 
     return new Promise(function(resolve, reject) {

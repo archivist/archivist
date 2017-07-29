@@ -2,6 +2,9 @@
 export { default as Indexer } from './packages/indexer/Indexer'
 export { default as IndexerPackage } from './packages/indexer/package'
 
+//Inspector
+export { default as InspectorPackage } from './packages/inspector/package'
+
 // Common components
 //export { default as Database } from './packages/common/Database'
 export { default as EntityIndex } from './packages/common/EntityIndex'
