@@ -1,6 +1,8 @@
-import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane, Toolbar } from 'substance'
+import { ContainerEditor, Highlights, Layout, ProseEditorPackage, Toolbar, WorkflowPane } from 'substance'
 import { findIndex, forEach, map, orderBy, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
+
+const { ProseEditor } = ProseEditorPackage
 
 class Publisher extends ProseEditor {
   constructor(...args) {
@@ -32,6 +34,7 @@ class Publisher extends ProseEditor {
   }
 
   render($$) {
+    let SplitPane = this.componentRegistry.get('split-pane')
     let el = $$('div').addClass('sc-publisher')
     el.append(
       $$(SplitPane, {splitType: 'vertical', sizeB: '30%'}).append(
@@ -51,27 +54,35 @@ class Publisher extends ProseEditor {
   }
 
   _renderMainSection($$) {
+    let configurator = this.getConfigurator()
+    let SplitPane = this.componentRegistry.get('split-pane')
     let mainSection = $$('div').addClass('se-main-section')
+    let toolbar = this._renderToolbar($$)
+    let contentPanel = this._renderContentPanel($$)
     let splitPane = $$(SplitPane, {splitType: 'horizontal'}).append(
-      this._renderToolbar($$),
-      this._renderContentPanel($$)
+      toolbar,
+      $$(SplitPane, {splitType: 'horizontal', sizeB: 'inherit'}).append(
+        contentPanel,
+        $$(WorkflowPane, {
+          toolPanel: configurator.getToolPanel('workflow')
+        })
+      )
     )
     mainSection.append(splitPane)
     return mainSection
   }
 
-  _renderToolbar($$) {
-    let commandStates = this.commandManager.getCommandStates()
-    return $$('div').addClass('se-toolbar-wrapper').append(
-      $$(Toolbar, {
-        toolGroups: ['text', 'document', 'annotations', 'utils', 'references', 'default'],
-        commandStates: commandStates
-      }).ref('toolbar')
-    )
+  _renderEditor($$) {
+    let configurator = this.getConfigurator()
+    return $$(ContainerEditor, {
+      disabled: this.props.disabled,
+      editorSession: this.editorSession,
+      node: this.doc.get('body'),
+      commands: configurator.getSurfaceCommandNames()
+    }).ref('body')
   }
 
   _renderContentPanel($$) {
-    const doc = this.props.editorSession.getDocument()
     const configurator = this.props.configurator
 
     let ScrollPane = this.componentRegistry.get('scroll-pane')
@@ -80,8 +91,10 @@ class Publisher extends ProseEditor {
     let Dropzones = this.componentRegistry.get('dropzones')
     let Brackets = this.componentRegistry.get('brackets')
 
+    let editor = this._renderEditor($$)
+
     let contentPanel = $$(ScrollPane, {
-      contextMenu: 'custom',
+      contextMenu: this.props.contextMenu || 'native',
       scrollbarType: 'substance',
       scrollbarPosition: 'left',
       highlights: this.contentHighlights
@@ -93,14 +106,11 @@ class Publisher extends ProseEditor {
     
     layout.append(
       $$(Brackets, {editor: true}).ref('brackets'),
-      $$(ContainerEditor, {
-        disabled: this.props.disabled,
-        editorSession: this.editorSession,
-        node: doc.get('body'),
-        commands: configurator.getSurfaceCommandNames(),
-        textTypes: configurator.getTextTypes()
-      }).ref('body'),
-      $$(Overlay),
+      editor,
+      $$(Overlay, {
+        toolPanel: configurator.getToolPanel('main-overlay'),
+        theme: 'dark'
+      }),
       $$(ContextMenu),
       $$(Dropzones)
     )
