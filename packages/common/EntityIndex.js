@@ -18,6 +18,10 @@ class EntityIndex extends DocumentIndex {
     this._initialize(data)
   }
 
+  clear() {
+    this.byReference.clear()
+  }
+
   get(refId) {
     let annotations = this.byReference[refId]
     return annotations
