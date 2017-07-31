@@ -9,7 +9,6 @@ export { default as InspectorPackage } from './packages/inspector/package'
 //export { default as Database } from './packages/common/Database'
 export { default as EntityIndex } from './packages/common/EntityIndex'
 export { default as CommentPackage } from './packages/comment/package'
-export { default as MarkPackage } from './packages/mark/package'
 export { default as TimecodePackage } from './packages/timecode/package'
 export { default as ServerConfigurator } from './packages/common/ServerConfigurator'
 
