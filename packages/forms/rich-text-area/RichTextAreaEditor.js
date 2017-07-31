@@ -1,4 +1,6 @@
-import { ProseEditor, ContainerEditor } from 'substance'
+import { ContainerEditor, ProseEditorPackage } from 'substance'
+
+const { ProseEditor } = ProseEditorPackage
 
 /**
   Configurable ProseEditor component

@@ -1,10 +1,12 @@
-import { DefaultDOMElement, EventEmitter, BodyScrollPane } from 'substance'
+import { DefaultDOMElement, EventEmitter, BodyScrollPanePackage } from 'substance'
 import MultipleField from './multiple-field/MultipleField'
 import RichTextArea from './rich-text-area/RichTextArea'
 import SelectField from './select-field/SelectField'
 import TagsField from './tags-field/TagsField'
 import TextField from './text-field/TextField'
 import ToggleField from './toggle-field/ToggleField'
+
+const { BodyScrollPane } = BodyScrollPanePackage
 
 export default class Forms extends EventEmitter {
   constructor(...args) {
