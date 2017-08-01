@@ -1,8 +1,11 @@
-import { ContainerAnnotationCommand } from 'substance'
+import { ContainerAnnotationPackage } from 'substance'
+
+const { ContainerAnnotationCommand } = ContainerAnnotationPackage
 
 class CommentCommand extends ContainerAnnotationCommand {
 
   executeCreate(params) {
+    debugger
     let annos = this._getAnnotationsForSelection(params)
     this._checkPrecondition(params, annos, this.canCreate)
     let editorSession = this._getEditorSession(params)

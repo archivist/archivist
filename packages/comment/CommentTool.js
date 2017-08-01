@@ -1,6 +1,6 @@
-import { AnnotationTool } from 'substance'
+import { ToggleTool } from 'substance'
 
-class CommentTool extends AnnotationTool {
+class CommentTool extends ToggleTool {
   executeCommand(props) {
     let authClient = this.context.authenticationClient
     let user = authClient.getUser()
