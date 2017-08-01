@@ -1,9 +1,11 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid } from 'substance'
+import { Component, FontAwesomeIcon as Icon } from 'substance'
 import moment from 'moment'
 
 class AbstractEntityRow extends Component {
 
   render($$) {
+    const Grid = this.getComponent('grid')
+
     let urlHelper = this.context.urlHelper
     let item = this.props.item
     let references = this.props.references
@@ -58,6 +60,8 @@ class AbstractEntityRow extends Component {
   }
 
   renderAdditionalMenu($$, actions) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
     actions.forEach(action => {

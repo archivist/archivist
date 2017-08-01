@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err, uuid } from 'substance'
+import { Component, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -69,6 +69,7 @@ class DocumentsPage extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
@@ -115,6 +116,7 @@ class DocumentsPage extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -136,6 +138,7 @@ class DocumentsPage extends Component {
   }
 
   renderAdditionalMenu($$, actions) {
+    const Button = this.getComponent('button')
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
     each(actions, action => {
@@ -155,6 +158,7 @@ class DocumentsPage extends Component {
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
+    let Grid = this.getComponent('grid')
     let grid = $$(Grid)
 
     if (items) {

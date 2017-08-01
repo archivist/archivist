@@ -1,8 +1,16 @@
+import { ButtonPackage, GridPackage, InputPackage, LayoutPackage, ModalPackage } from 'substance'
 import { DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
 
 export default {
   name: 'archivist',
   configure: function(config) {
+    // Substance UI packages
+    config.import(ButtonPackage)
+    config.import(GridPackage)
+    config.import(InputPackage)
+    config.import(LayoutPackage)
+    config.import(ModalPackage)
+
     // Default packages
     config.import(DocumentPackage)
     config.import(EntityEditorPackage)

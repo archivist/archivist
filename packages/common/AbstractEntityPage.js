@@ -1,6 +1,5 @@
-import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { Component, EventEmitter, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, forEach, findIndex, isEmpty, isEqual } from 'lodash-es'
-import moment from 'moment'
 import AbstractEntityRow from './AbstractEntityRow'
 
 class AbstractEntityPage extends Component {
@@ -64,6 +63,8 @@ class AbstractEntityPage extends Component {
   }
 
   render($$) {
+    const Modal = this.getComponent('modal')
+
     let items = this.state.items
     let el = $$('div').addClass('sc-entity-page')
     let main = $$('div').addClass('se-entity-layout')
@@ -115,6 +116,8 @@ class AbstractEntityPage extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
+
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
@@ -172,6 +175,8 @@ class AbstractEntityPage extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
+
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -212,6 +217,8 @@ class AbstractEntityPage extends Component {
   }
 
   renderFull($$) {
+    const Grid = this.getComponent('grid')
+
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
