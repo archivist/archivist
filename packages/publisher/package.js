@@ -1,6 +1,6 @@
 import PublisherLayout from './PublisherLayout'
 import { BracketsPackage, TabbedContextPackage } from 'archivist'
-import { FindAndReplacePackage } from 'substance'
+import { ContainerAnnotationPackage, FindAndReplacePackage } from 'substance'
 
 export default {
   name: 'archivist-publisher',
@@ -9,6 +9,7 @@ export default {
     config.import(TabbedContextPackage)
     config.addComponent('editor', PublisherLayout)
 
+    config.import(ContainerAnnotationPackage)
     config.import(FindAndReplacePackage, {
       targetSurfaces: ['body']
     })
