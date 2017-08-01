@@ -1,5 +1,7 @@
-import {TabbedPane} from 'substance'
+import { TabbedPanePackage } from 'substance'
 import { forEach } from 'lodash-es'
+
+const { TabbedPane } = TabbedPanePackage
 
 class TabbedContext extends TabbedPane {
   render($$) {
