@@ -1,4 +1,6 @@
-import { Component, Input } from 'substance'
+import { Component, InputPackage } from 'substance'
+
+const { Input } = InputPackage
 
 class TextField extends Component {
 

@@ -1,17 +1,13 @@
-import { ContainerEditor, ProseEditorPackage } from 'substance'
-
+import { ProseEditorPackage, ContainerEditor } from 'substance'
 const { ProseEditor } = ProseEditorPackage
 
 /**
   Configurable ProseEditor component
-
   @example
-
   ```js
   const cfg = new Configurator()
   cfg.import(ProseEditorPackage)
   cfg.import(SuperscriptPackage)
-
   window.onload = function() {
     let doc = configurator.createArticle(fixture)
     let editorSession = new EditorSession(doc, {
@@ -29,23 +25,21 @@ class RichTextAreaEditor extends ProseEditor {
 
   didMount() {
     // Register editor overlays
+    let configurator = this.getConfigurator()
     let scrollPane = this.context.scrollPane
     let Overlay = this.componentRegistry.get('overlay')
     let Dropzones = this.componentRegistry.get('dropzones')
 
     this.overlay = new Overlay(this, {
-      toolGroups: ['annotations', 'text', 'overlay']
+      toolPanel: configurator.getToolPanel('main-overlay')
     }).mount(scrollPane.el)
 
     this.dropzones = new Dropzones(this, {}).mount(scrollPane.el)
   }
 
   dispose() {
-    // TODO: Dispose shouldn't be called before render
-    if(this.overlay && this.dropzones) {
-      this.overlay.remove()
-      this.dropzones.remove()
-    }
+    this.overlay.remove()
+    this.dropzones.remove()
   }
 
   render($$) {
@@ -57,8 +51,7 @@ class RichTextAreaEditor extends ProseEditor {
         disabled: this.props.disabled,
         editorSession: this.editorSession,
         node: this.doc.get('body'),
-        commands: configurator.getSurfaceCommandNames(),
-        textTypes: configurator.getTextTypes()
+        commands: configurator.getSurfaceCommandNames()
       }).ref('body')
     )
     return el
