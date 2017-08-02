@@ -1,4 +1,4 @@
-import { ContainerEditor, Highlights, Layout, ProseEditorPackage, Toolbar, WorkflowPane } from 'substance'
+import { ContainerEditor, Highlights, Layout, ProseEditorPackage, WorkflowPane } from 'substance'
 import { findIndex, forEach, map, orderBy, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
@@ -153,24 +153,32 @@ class Publisher extends ProseEditor {
     this.contentHighlights.set(highlights)
   }
 
-  _showReferences(entityId, silent) {
+  _showReferences(entityId) {
     let container = this.refs.body.getContainer()
     let editorSession = this.editorSession
     let doc = editorSession.getDocument()
     let entityIndex = doc.getIndex('entities')
     let refs = entityIndex.get(entityId)
-    let ordered = orderBy(refs, ref => {
-      let p = ref.path[0]
-      return container.getPosition(p)
+    // We are sorting references by paregraph position
+    // if nodes annotations are in same paragraph 
+    // we will sort them by start offset
+    let refIds = Object.keys(refs)
+    let ordered = refIds.sort((a,b) => {
+      const refAPath = refs[a].getPath()
+      const refBPath = refs[b].getPath()
+
+      if (refAPath[0] !== refBPath[0]){
+        return (container.getPosition(refAPath[0]) - container.getPosition(refBPath[0]))
+      } else {
+        const refAOffset = refs[a].start.getOffset()
+        const refBOffset = refs[b].start.getOffset()
+
+        return (refAOffset - refBOffset)
+      }
     })
 
-    this.refs.contentPanel.scrollTo(ordered[0].id)
+    this.refs.contentPanel.scrollTo(`[data-id="${ordered[0]}"]`)
     this.highlightReferences([entityId])
-
-    // if(!silent) {
-    //   let urlHelper = this.context.urlHelper
-    //   urlHelper.focusResource(entityId)
-    // }
   }
 
   _onSessionUpdate(editorSession) {
