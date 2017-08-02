@@ -15,7 +15,8 @@ export default {
     config.addCommand('timecode', AnnotationCommand, { nodeType: 'timecode', commandGroup: 'annotations' })
     config.addIcon('timecode', { 'fontawesome': 'fa-clock-o' })
     config.addLabel('timecode', {
-      en: 'Timecode'
+      en: 'Timecode',
+      ru: 'Таймкод'
     })
   }
 }

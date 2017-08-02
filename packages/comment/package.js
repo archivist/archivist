@@ -11,5 +11,10 @@ export default {
     config.addCommand(Comment.type, CommentCommand, { nodeType: Comment.type, commandGroup: 'references' })
     config.addComponent(Comment.type, CommentComponent)
     config.addIcon(Comment.type, {'fontawesome': 'fa-comment'})
+
+    config.addLabel('comment', {
+      en: 'Comment',
+      ru: 'Комментарий'
+    })
   }
 }

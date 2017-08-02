@@ -5,5 +5,10 @@ export default {
   configure: function(config) {
     config.addCommand('indentation-cleaner', IndentationCommand, { commandGroup: 'utils' })
     config.addIcon('indentation-cleaner', {'fontawesome': 'fa-dedent'})
+
+    config.addLabel('indentation-cleaner', {
+      en: 'Clean indentation',
+      ru: 'Очитстить отступы'
+    })
   }
 }

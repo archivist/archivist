@@ -5,5 +5,10 @@ export default {
   configure: function(config) {
     config.addCommand('timecode-annotator', TimecodeAnnotatorCommand, { commandGroup: 'utils' })
     config.addIcon('timecode-annotator', {'fontawesome': 'fa-history'})
+
+    config.addLabel('timecode-annotator', {
+      en: 'Annotate timecodes',
+      ru: 'Выделить таймкоды'
+    })
   }
 }
