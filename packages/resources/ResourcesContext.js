@@ -1,4 +1,4 @@
-import { Component, Modal } from 'substance'
+import { Component } from 'substance'
 import { find, findIndex, sortBy } from 'lodash-es'
 import ResourceSelector from './ResourceSelector'
 
@@ -73,6 +73,7 @@ class ResourcesContext extends Component {
     el.append(header)
 
     if (this.state.entityId) {
+      let Modal = this.getComponent('modal')
       let EntityEditor = this.getComponent('entity-editor')
       el.append(
         $$(Modal, {
@@ -136,6 +137,7 @@ class ResourcesContext extends Component {
     let el = $$('div').addClass('sc-entity-panel')
 
     if (this.state.entityId) {
+      let Modal = this.getComponent('modal')
       let EntityEditor = this.getComponent('entity-editor')
       el.append(
         $$(Modal, {

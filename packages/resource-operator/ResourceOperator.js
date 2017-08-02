@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Input, ScrollPane, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, ScrollPane, SubstanceError as Err } from 'substance'
 import { concat, debounce, findIndex, isEmpty } from 'lodash-es'
 
 class ResourcesOperator extends Component {
@@ -74,6 +74,8 @@ class ResourcesOperator extends Component {
   }
 
   renderDeleteDialog($$) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-delete-dialog')
     let state = this.state.opState
     let resource = this.renderResorceItem($$)
@@ -118,6 +120,8 @@ class ResourcesOperator extends Component {
   }
 
   renderMergeDialog($$) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-merge-dialog')
     let state = this.state.opState
     let resource = this.renderResorceItem($$)
@@ -232,6 +236,8 @@ class ResourcesOperator extends Component {
   }
 
   renderResorceSelector($$) {
+    const Input = this.getComponent('input')
+    
     let el = $$('div').addClass('se-resource-item')
     let merge = this.state.mergeEntity
 
