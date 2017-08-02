@@ -1,9 +1,11 @@
-import { Button, Component } from 'substance'
+import { Component } from 'substance'
 import { forEach } from 'lodash-es'
 
 class Toolbox extends Component {
 
   render($$) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('sc-toolbox')
     let actionEls = []
 
