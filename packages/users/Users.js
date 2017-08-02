@@ -1,4 +1,4 @@
-import { Component, Button, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, findIndex, isEqual } from 'lodash-es'
 import moment from 'moment'
 import UserForm from './UserForm'
@@ -40,6 +40,8 @@ class UsersList extends Component {
   }
 
   render($$) {
+    const Modal = this.getComponent('modal')
+
     let items = this.state.items
     let el = $$('div').addClass('sc-users-page')
     let main = $$('div').addClass('se-entity-layout')
@@ -78,6 +80,8 @@ class UsersList extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
+
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
@@ -117,6 +121,8 @@ class UsersList extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
+
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -138,6 +144,9 @@ class UsersList extends Component {
   }
 
   renderFull($$) {
+    const Button = this.getComponent('button')
+    const Grid = this.getComponent('grid')
+
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')

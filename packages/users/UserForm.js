@@ -1,8 +1,11 @@
-import { Component, Button, Input } from 'substance'
+import { Component } from 'substance'
 
 class UserForm extends Component {
 
   render($$) {
+    const Button = this.getComponent('button')
+    const Input = this.getComponent('input')
+
     let el = $$('div').addClass('sc-user-form')
 
     let emailInput = $$('div').addClass('se-email').append(
