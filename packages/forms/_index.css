@@ -1,5 +1,4 @@
 /* Substance-forms specific styles */
-@import './minimal-switch-text-type/_minimal-switch-text-type.css';
 @import './multiple-field/_multiple.css';
 @import './tags-field/_tags.css';
 @import './toggle-field/_toggle.css';
