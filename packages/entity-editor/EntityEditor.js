@@ -38,9 +38,9 @@ class EntityEditor extends Component {
       el.append(
         form,
         $$('div').addClass('se-controls').append(
-          $$(Button, {style: 'outline', label: 'entity-editor-cancel'}).addClass('se-cancel')
+          $$(Button, {theme: 'round', label: 'entity-editor-cancel'}).addClass('se-cancel')
             .on('click', this._revertEntity),
-          $$(Button, {style: 'outline', label: 'entity-editor-ok'}).addClass('se-ok')
+          $$(Button, {theme: 'round', label: 'entity-editor-ok'}).addClass('se-ok')
             .on('click', this._closeEditor)
         )
       )

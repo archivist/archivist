@@ -1,0 +1,34 @@
+.sc-button.sm-theme-round {
+  position: relative;
+  height: 40px;
+  min-width: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 25px;
+  border: 1px solid #E0E4E4;
+  padding-left: 7px;
+  padding-right: 7px;
+}
+
+.sc-button.sm-theme-round > .se-label {
+  font-weight: 600;
+  display: inline-block;
+  padding: 0px 5px;
+}
+
+.sc-button.sm-theme-round[disabled=true] {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.sc-button.sm-theme-round.sm-active {
+  background: #2E2E2E;
+  color: white;
+}
+
+.sc-button.sm-theme-round:hover:not(.sm-active):not([disabled]),
+.sc-button.sm-theme-round:focus {
+  background: #f3f3f3;
+}

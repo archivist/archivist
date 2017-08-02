@@ -108,9 +108,9 @@ class ResourcesOperator extends Component {
         resource,
         msg,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'delete-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-submit', theme: 'round'})
             .on('click', this._onDelete)
         )
       )
@@ -146,9 +146,9 @@ class ResourcesOperator extends Component {
         mergeResource,
         msg,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'merge-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'merge-confirmation-submit', theme: 'round'})
             .on('click', this._onMerge)
         )
       )
@@ -176,9 +176,9 @@ class ResourcesOperator extends Component {
         $$('div').addClass('se-merge-divider').append(this.getLabel('merge-divider')),
         resourceSelector,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'merge-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'merge-confirmation-submit', theme: 'round'})
             .addClass('sm-disabled')
             .attr({disabled: 'disabled'})
         )
