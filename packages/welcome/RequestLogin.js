@@ -1,9 +1,12 @@
-import { Component, Button, Input } from 'substance'
+import { Component } from 'substance'
 import Notification from './Notification'
 
 class RequestLogin extends Component {
 
   render($$) {
+    const Input = this.getComponent('input')
+    const Button = this.getComponent('button')
+    
     let el = $$('div').addClass('sc-request-login')
 
     el.append(

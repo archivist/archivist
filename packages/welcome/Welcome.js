@@ -1,4 +1,4 @@
-import { Component, Layout } from 'substance'
+import { Component } from 'substance'
 import RequestLogin from './RequestLogin'
 
 class Welcome extends Component {
@@ -11,6 +11,8 @@ class Welcome extends Component {
   }
 
   render($$) {
+    const Layout = this.getComponent('layout')
+
     let el = $$('div').addClass('sc-welcome')
 
     el.append(

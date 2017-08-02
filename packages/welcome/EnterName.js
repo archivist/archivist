@@ -1,9 +1,13 @@
-import { Component, Input, Button, Layout, SplitPane } from 'substance'
+import { Component, SplitPane } from 'substance'
 import Notification from './Notification'
 
 class EnterName extends Component {
 
   render($$) {
+    const Layout = this.getComponent('layout')
+    const Input = this.getComponent('input')
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('sc-enter-name')
     let authenticationClient = this.context.authenticationClient
     let userSession = authenticationClient.getSession()
