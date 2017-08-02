@@ -1,4 +1,4 @@
-import { Component, Input } from 'substance'
+import { Component } from 'substance'
 
 class InputEditor extends Component {
 
@@ -16,6 +16,8 @@ class InputEditor extends Component {
   }
 
   render($$) {
+    const Input = this.getComponent('input')
+
     let dataType = this.props.dataType
     let el = $$('div').addClass('sc-input-editor')
 
@@ -44,6 +46,7 @@ class InputEditor extends Component {
     let editorSession = this.context.editorSession
     let path = this.getPath()
     let value = this.getValue()
+    if(this.props.dataType === 'number') value = parseInt(value, 10)
     editorSession.transaction(tx => {
       tx.set(path, value)
     })
