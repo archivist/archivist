@@ -14,7 +14,7 @@
 }
 
 .sc-tabbed-pane .se-tabs .se-tab {
-  padding: 0px 14px;
+  padding: 0px 14px!important;
 }
 
 .sc-tabbed-pane .se-tab-content {
@@ -31,9 +31,9 @@
   height: 32px;
 }
 
-.sc-tabbed-pane .sc-tabbed-pane .se-tab {
+.sc-tabbed-pane .sc-tabbed-pane .se-tabs .se-tab {
   display: block;
-  padding: 6px 14px;
+  padding: 6px 14px!important;
   color: rgba(0, 0, 0, 0.4);
   line-height: 18px;
   height: 32px;
