@@ -33,7 +33,7 @@ class TimecodeAnnotator {
 
         tx.setSelection({
           type: 'property',
-          path: match.path,
+          path: match.start.path,
           startOffset: 0,
           endOffset: 0
         })
@@ -42,8 +42,8 @@ class TimecodeAnnotator {
           this.timecodesMap[path[0]] = [];
         }
         this.timecodesMap[path[0]].push({
-          startOffset: match.startOffset,
-          endOffset: match.endOffset
+          startOffset: match.start.offset,
+          endOffset: match.end.offset
         })
       })
       matches = this.detectTimecodes(tx, path)
@@ -62,9 +62,14 @@ class TimecodeAnnotator {
       if(!exists) {
         let timecode = {
           type: 'timecode',
-          startOffset: match.index,
-          endOffset: matcher.lastIndex,
-          path: path,
+          start: {
+            path: path,
+            offset: match.index
+          },
+          end: {
+            path: path,
+            offset: matcher.lastIndex,
+          },
           id: uuid('timecode')
         }
 
@@ -77,20 +82,21 @@ class TimecodeAnnotator {
 
   _createExistingTimecodesMap(tx) {
     let annotationsIndex = tx.getIndex('annotations')
-    let timecodes = annotationsIndex.byType['timecode']
+    let timecodes = annotationsIndex.byType.timecode
+    if(timecodes) {
+      forEach(timecodes, tc => {
+        let path = tc.getPath()
 
-    forEach(timecodes, tc => {
-      let path = tc.getPath()
+        if(!this.timecodesMap[path[0]]) {
+          this.timecodesMap[path[0]] = []
+        }
 
-      if(!this.timecodesMap[path[0]]) {
-        this.timecodesMap[path[0]] = []
-      }
-
-      this.timecodesMap[path[0]].push({
-        startOffset: tc.startOffset,
-        endOffset: tc.endOffset
+        this.timecodesMap[path[0]].push({
+          startOffset: tc.start.offset,
+          endOffset: tc.end.offset
+        })
       })
-    })
+    }
   }
 
   _checkForExistingTimecode(path, startOffset) {
