@@ -7,6 +7,7 @@ export { default as InspectorPackage } from './packages/inspector/package'
 
 // Common components
 //export { default as Database } from './packages/common/Database'
+export { default as ArchivistSubConfigurator } from './packages/archivist/ArchivistSubConfigurator'
 export { default as EntityIndex } from './packages/common/EntityIndex'
 export { default as CommentPackage } from './packages/comment/package'
 export { default as TimecodePackage } from './packages/timecode/package'
