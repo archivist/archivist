@@ -22,6 +22,7 @@ export { default as PublisherPackage } from './packages/publisher/package'
 export { default as Publisher } from './packages/publisher/Publisher'
 export { default as PublisherContext } from './packages/publisher/PublisherContext'
 export { default as PublisherLayout } from './packages/publisher/PublisherLayout'
+export { default as PublisherSession } from './packages/publisher/PublisherSession'
 
 // Other packages
 export { default as BracketsPackage } from './packages/brackets/package'
