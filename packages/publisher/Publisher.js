@@ -1,5 +1,5 @@
 import { ContainerEditor, Highlights, Layout, ProseEditorPackage, WorkflowPane } from 'substance'
-import { findIndex, forEach, map, orderBy, uniq } from 'lodash-es'
+import { findIndex, forEach, map, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
 const { ProseEditor } = ProseEditorPackage
@@ -10,7 +10,7 @@ class Publisher extends ProseEditor {
 
     let doc = this.editorSession.getDocument()
     this.contentHighlights = new Highlights(doc)
-    this.updatingResorces = false
+    this.updatingResources = false
 
     this.handleActions({
       'showReferences': this._showReferences,
@@ -216,13 +216,6 @@ class Publisher extends ProseEditor {
       if(!overlapsAnno) {
         contextPanel.openDefaultTab()
       }
-      // highlights[annoType] = annos.map(a => {return a.reference})
-      // if(highlights[annoType].length === 1) {
-      //   let refId = highlights[annoType][0]
-      //   let refs = entityIndex.get(refId)
-      //   highlights[annoType] = map(refs, a => {return a.id})
-      //   contextPanel.openResource(annos[0])
-      // }
     })
 
     this.contentHighlights.set(highlights)
@@ -241,8 +234,8 @@ class Publisher extends ProseEditor {
   }
 
   _addResource(editorSession, reference) {
-    if(reference && !this.updatingResorces) {
-      this.updatingResorces = true
+    if(reference && !this.updatingResources) {
+      this.updatingResources = true
       let resources = editorSession.resources
       let entity = find(resources, item => { return item.entityId === reference })
       if(!entity) {
@@ -253,7 +246,7 @@ class Publisher extends ProseEditor {
           } else {
             resources.push(entity)
           }
-          this.updatingResorces = false
+          this.updatingResources = false
         })
       }
     }

@@ -18,7 +18,8 @@ class PublisherContext extends Component {
     }.bind(this))
 
     this.handleActions({
-      'switchTab': this._switchTab
+      'switchTab': this._switchTab,
+      'switchContext': this._switchContext
     })
   }
 
@@ -150,6 +151,10 @@ class PublisherContext extends Component {
     return props
   }
 
+  getContextState() {
+    return this.state
+  }
+
   renderContext($$) {
     let contextName = this.getContextName()
     let Context = this.getContext(contextName)
@@ -184,6 +189,10 @@ class PublisherContext extends Component {
       contextId: contextId,
       mode: 'list'
     })
+  }
+
+  _switchContext(context) {
+    this.extendState(context)
   }
 
 }

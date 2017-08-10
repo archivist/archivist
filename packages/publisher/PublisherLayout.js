@@ -1,4 +1,5 @@
-import { CollabSession, JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
+import { JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
+import PublisherSession from './PublisherSession'
 import Loader from '../common/Loader'
 import Publisher from './Publisher'
 
@@ -148,10 +149,10 @@ class PublisherLayout extends Loader {
         return
       }
       //let docRecord = SampleDoc
-      let document = configurator.createArticle()
+      let document = configurator.createDocument()
       let doc = converter.importDocument(document, docRecord.data)
 
-      let session = new CollabSession(doc, {
+      let session = new PublisherSession(doc, {
         configurator: configurator,
         documentId: documentId,
         version: docRecord.version,
