@@ -174,7 +174,11 @@ class Brackets extends Component {
   toggleBracket(node) {
     let active = this.state.active === node.id ? null : node.id
     this.send('toggleBracket', node, active)
-    this.extendState({active: active})
+    this.extendState({active: active, topics: undefined})
+  }
+
+  resetBrackets() {
+    this.extendState({active: null, topics: undefined})
   }
 }
 
