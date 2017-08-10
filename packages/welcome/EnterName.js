@@ -57,7 +57,7 @@ class EnterName extends Component {
       $$(Button, {
         disabled: Boolean(this.state.loading), // disable button when in loading state
         label: 'continue',
-        style: 'outline'
+        theme: 'round'
       }).addClass('se-change-name')
       .on('click', this._updateUserName)
     )

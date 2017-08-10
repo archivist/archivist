@@ -32,7 +32,7 @@ class RequestLogin extends Component {
     el.append(
       $$(Button, {
         disabled: Boolean(this.state.loading),
-        style: 'outline',
+        theme: 'round',
         label: 'login'
       }).on('click', this._login)
     )
