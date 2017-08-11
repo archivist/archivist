@@ -70,6 +70,28 @@ class ResourceEngine {
     })
   }
 
+  getDocumentCollaborators(documentId) {
+    let query = `
+      SELECT "userId", name 
+      FROM users
+      WHERE "userId" IN (
+        SELECT unnest(collaborators)
+        FROM documents
+        WHERE "documentId" = $1 
+      )
+    `
+    return new Promise((resolve, reject) => {
+      this.db.run(query, [documentId], (err, collaborators) => {
+        if (err) {
+          return reject(new Err('ResourceEngine.ReadDocumentCollaborators', {
+            cause: err
+          }))
+        }
+        
+        resolve(collaborators)
+      })
+    })
+  }
 }
 
 export default ResourceEngine
