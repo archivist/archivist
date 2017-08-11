@@ -104,9 +104,12 @@ class ArchivistDocumentEngine extends DocumentEngine {
       d.version, \
       d."schemaName", \
       d."schemaVersion", \
-      (SELECT string_agg(name, \',\') \
-        FROM (SELECT DISTINCT u.name FROM changes c INNER JOIN users u ON c."userId" = u."userId" WHERE c."documentId" = d."documentId" AND c."userId" != d."userId") AS authors \
-      ) AS collaborators, \
+      d.collaborators, \
+      (SELECT string_agg(name, \',\') FROM (SELECT name FROM users WHERE "userId" IN ( \
+        SELECT unnest(d.collaborators) \
+        WHERE "userId" != d."userId" \
+      )) AS authors \
+      ) AS collabnames, \
       (SELECT "createdAt" FROM changes c WHERE c."documentId"=d."documentId" ORDER BY "createdAt" ASC LIMIT 1) AS "createdAt", \
       u.name AS author, \
       f.name AS "updatedBy" \
@@ -136,12 +139,13 @@ class ArchivistDocumentEngine extends DocumentEngine {
     })
   }
 
-  updateDocumentIndexData(documentId, text, annos, refs, version) {
+  updateDocumentIndexData(documentId, text, annos, refs, collabs, version) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
         'fullText': text, 
         annotations: annos, 
-        references: refs, 
+        references: refs,
+        collaborators: collabs,
         'indexedVersion': version
       }, function(err) {
         if(err) return reject(err)
@@ -255,6 +259,23 @@ class ArchivistDocumentEngine extends DocumentEngine {
           // no matter if snaphot creation errored or not we will confirm change
           cb(null, newVersion)
         })
+      })
+    })
+  }
+
+  /*
+    Get document collaborators based on changes.
+  */
+  getChangesAuthors(documentId) {
+    return new Promise((resolve, reject) => {
+      this.db.run('SELECT DISTINCT "userId" FROM changes WHERE "documentId" = $1', [documentId], (err, collaborators) => {
+        if (err) {
+          return reject(new Err('ArchivistDocumentEngine.GetChangesAuthors', {
+            cause: err
+          }))
+        }
+
+        resolve(collaborators.map(c => { return c.userId }))
       })
     })
   }

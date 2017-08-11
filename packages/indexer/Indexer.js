@@ -1,5 +1,5 @@
 import { EventEmitter, JSONConverter, SubstanceError as Err } from 'substance'
-import { findIndex, forEach, isEmpty } from 'lodash-es'
+import { findIndex, forEach, isEmpty, map } from 'lodash-es'
 import Args from 'args-js'
 import Promise from 'bluebird'
 
@@ -59,10 +59,14 @@ class Indexer extends EventEmitter {
             let t0 = new Date()
 
             let counters = {}
+            let collaborators = []
 
             this._countEntityReferences(doc)
               .then(cnt => {
                 counters = cnt
+                return this._indexCollaborators(doc, docEntry.collaborators, docEntry.documentId)
+              }).then(collabs => {
+                collaborators = collabs
                 return Promise.map(body.nodes, (nodeId, index) => {
                   fullText += '\r\n' + doc.get(nodeId).content
                   let prevId = body.nodes[index - 1] || null
@@ -70,7 +74,7 @@ class Indexer extends EventEmitter {
                   return this._processNode(nodeId, doc, documentId, prevId, nextId)
                 }, {concurrency: 10})
               }).then(() => {
-                return this._saveIndexData(documentId, fullText, counters.annotations, counters.references, docEntry.version)
+                return this._saveIndexData(documentId, fullText, counters.annotations, counters.references, collaborators, docEntry.version)
               }).then(function() {
                 let t1 = new Date()
                 console.info('finish fragment generation, takes', t1-t0, 'ms')
@@ -406,8 +410,8 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
     return this._saveFragment(record)
   }
 
-  _saveIndexData(documentId, text, annos, refs, version) {
-    return this.documentEngine.updateDocumentIndexData(documentId, text, annos, refs, version)
+  _saveIndexData(documentId, text, annos, refs, collabs, version) {
+    return this.documentEngine.updateDocumentIndexData(documentId, text, annos, refs, collabs, version)
   }
 
   _saveReferencesData(documentId, annos, refs) {
@@ -436,6 +440,27 @@ ORDER BY created DESC limit ${limit} offset ${offset}`
         annotations: annotations,
         references: references
       })
+    })
+  }
+
+  _indexCollaborators(doc, collaborators, docId) {
+    return new Promise((resolve) => {
+      let collaboratorsList = collaborators || []
+      let typeIndex = doc.getIndex('type')
+      let commentIndex = typeIndex.get('comment')
+      if(commentIndex) {
+        let authors = map(commentIndex, comment => {
+          return comment.author 
+        })
+        collaboratorsList = collaboratorsList.concat(authors)
+      }
+
+      return this.documentEngine.getChangesAuthors(docId)
+        .then(authors => {
+          collaboratorsList = new Set(collaboratorsList.concat(authors))
+          collaboratorsList.delete(null)
+          resolve([...collaboratorsList])
+        })
     })
   }
 }
