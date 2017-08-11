@@ -128,7 +128,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             dataType: field.dataType
-          })
+          }).ref(id)
         )
         break
       }
@@ -138,7 +138,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             options: field.options
-          })
+          }).ref(id)
         )
         break
       }
@@ -148,7 +148,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             options: field.options
-          })
+          }).ref(id)
         ).addClass('se-checkboxes-editor')
         break
       }
@@ -158,7 +158,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             label: field.label
-          })
+          }).ref(id)
         ).addClass('se-checkboxes-editor')
         break
       }
