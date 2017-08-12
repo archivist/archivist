@@ -166,7 +166,7 @@ class UsersList extends Component {
           $$(Icon, {icon: superCheckboxIcon})
         ).on('click', this._toggleAccess.bind(this, item.userId, 'super'))
 
-        let resetPwd = $$(Button, {label: 'Reset password', style: 'outline'})
+        let resetPwd = $$(Button, {label: 'Reset password', theme: 'round'})
           .on('click', this._resetPwd.bind(this, item.userId))
 
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
