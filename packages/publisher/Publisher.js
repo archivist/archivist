@@ -1,5 +1,5 @@
 import { ContainerEditor, Highlights, Layout, ProseEditorPackage, WorkflowPane } from 'substance'
-import { findIndex, forEach, map, uniq } from 'lodash-es'
+import { find, findIndex, forEach, map, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
 const { ProseEditor } = ProseEditorPackage
@@ -14,7 +14,8 @@ class Publisher extends ProseEditor {
 
     this.handleActions({
       'showReferences': this._showReferences,
-      'toggleBracket': this._toggleBracket
+      'toggleBracket': this._toggleBracket,
+      'showComment': this._showComment
     })
   }
 
@@ -24,7 +25,7 @@ class Publisher extends ProseEditor {
     editorSession.onUpdate(this._onSessionUpdate, this)
     editorSession.on('createInlineEntityReference', this._createEntityReference, this)
     editorSession.on('createComment', this._createComment, this)
-    editorSession.on('resource:add', this._fetchResource, this)
+    editorSession.on('resource:add', this._addResource, this)
     editorSession.on('resource:delete', this._deleteResource, this)
   }
 
@@ -181,8 +182,18 @@ class Publisher extends ProseEditor {
     this.highlightReferences([entityId])
   }
 
+  _showComment(commentId) {
+    this.refs.contentPanel.scrollTo(`[data-id="${commentId}"]`)
+  }
+
   _onSessionUpdate(editorSession) {
     if (!editorSession.hasChanged('document') && !editorSession.hasChanged('selection')) return
+
+    let change = editorSession.getChange()
+    if(change) {
+      let author = change.info.userId
+      if(author) this._addCollaborator(author)
+    }
 
     let doc = editorSession.getDocument()
     let contextPanel = this.refs.contextPanel
@@ -221,9 +232,9 @@ class Publisher extends ProseEditor {
     this.contentHighlights.set(highlights)
   }
 
-  _fetchResource(resourceId) {
+  _addResource(resourceId) {
     let editorSession = this.getEditorSession()
-    this._addResource(editorSession, resourceId)
+    this._fetchResource(editorSession, resourceId)
   }
 
   _deleteResource(resourceId) {
@@ -233,7 +244,7 @@ class Publisher extends ProseEditor {
     editorSession.resources.splice(index, 1)
   }
 
-  _addResource(editorSession, reference) {
+  _fetchResource(editorSession, reference) {
     if(reference && !this.updatingResources) {
       this.updatingResources = true
       let resources = editorSession.resources
@@ -250,6 +261,24 @@ class Publisher extends ProseEditor {
         })
       }
     }
+  }
+
+  _addCollaborator(userId) {
+    let editorSession = this.getEditorSession()
+    let collaborators = editorSession.collaborators
+    if(!collaborators[userId]) this._fetchCollaborator(editorSession, userId)
+  }
+
+  _fetchCollaborator(editorSession, userId) {
+    let resourceClient = this.context.resourceClient
+    let collaborators = editorSession.collaborators
+    resourceClient.getCollaborator(userId, (err, collaborator) => {
+      if (err) {
+        console.error(err)
+      } else {
+        collaborators[userId] = collaborator
+      }
+    })
   }
 
   _toggleBracket(node, active) {

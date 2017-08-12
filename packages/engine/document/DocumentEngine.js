@@ -130,10 +130,10 @@ class ArchivistDocumentEngine extends DocumentEngine {
           message: 'No document found for documentId ' + documentId,
         }))
       }
-      if(!doc.collaborators) {
-        doc.collaborators = []
+      if(!doc.collabnames) {
+        doc.collabnames = []
       } else {
-        doc.collaborators = doc.collaborators.split(',')
+        doc.collabnames = doc.collabnames.split(',')
       }
       cb(null, doc)
     })

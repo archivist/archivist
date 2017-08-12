@@ -166,6 +166,7 @@ class PublisherLayout extends Loader {
 
       series([
         this._loadResources(documentId, session),
+        this._loadCollaborators(documentId, session)
       ], () => {
         this.setState({
           session: session
@@ -183,12 +184,43 @@ class PublisherLayout extends Loader {
     }.bind(this)
   }
 
+  _loadCollaborators(documentId, session) {
+    let authClient = this.context.authenticationClient
+    let user = authClient.getUser()
+    return function(cb) {
+      this._loadDocumentCollaborators(documentId, (err, collaborators) => {
+        let collaboratorsIndex = {}
+        collaborators.forEach(collab => {
+          collaboratorsIndex[collab.userId] = collab
+        })
+
+        if(!collaboratorsIndex[user.userId]) {
+          collaboratorsIndex[user.userId] = {
+            userId: user.userId,
+            name: user.name
+          }
+        }
+
+        session.collaborators = collaboratorsIndex
+        cb()
+      })
+    }.bind(this)
+  }
+
   /*
     Loads document resources
   */
   _loadDocumentResources(documentId, cb) {
     let resourceClient = this.context.resourceClient
     resourceClient.getDocumentResources(documentId, cb)
+  }
+
+  /*
+    Loads document collaborators
+  */
+  _loadDocumentCollaborators(documentId, cb) {
+    let resourceClient = this.context.resourceClient
+    resourceClient.getDocumentCollaborators(documentId, cb)
   }
 }
 
