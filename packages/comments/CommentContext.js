@@ -53,7 +53,9 @@ class CommentContext extends Component {
     forEach(entries, (entry, id) => {
       let item = $$('div').addClass('se-comment-entry').append(
         $$('div').addClass('se-comment-meta').append(
-          $$('span').addClass('se-author').append(entry.author),
+          $$('span').addClass('se-author').append(
+            this._getAuthorName(entry.author)
+          ),
           $$('span').addClass('se-created-date').append(moment(entry.createdAt, moment.ISO_8601).format('DD.MM.YYYY HH:mm'))
         ),
         $$('div').addClass('se-source').append(
@@ -108,7 +110,7 @@ class CommentContext extends Component {
       $$(ScrollPane).addClass('se-edit-comment').ref('panelEl').append(
         $$('div').addClass('se-comment-item').append(
           $$('div').addClass('se-comment-meta').append(
-            $$('span').addClass('se-author').append(entry.author),
+            $$('span').addClass('se-author').append(this._getAuthorName(entry.author)),
             $$('span').addClass('se-created-date').append(moment(entry.createdAt).format('DD.MM.YYYY HH:mm'))
           ),
           $$('div').addClass('se-comment-editor')
@@ -145,12 +147,11 @@ class CommentContext extends Component {
       )
     )
 
-
     el.append(
       header,
       $$('div').addClass('se-comment-item').append(
         $$('div').addClass('se-comment-meta').append(
-          $$('span').addClass('se-author').append(entry.author),
+          $$('span').addClass('se-author').append(this._getAuthorName(entry.author)),
           $$('span').addClass('se-created-date').append(moment(entry.createdAt).format('DD.MM.YYYY HH:mm'))
         ),
         $$('div').addClass('se-comment').setInnerHTML(entry.content)
@@ -180,6 +181,7 @@ class CommentContext extends Component {
   }
 
   _viewComment(id) {
+    this.send('showComment', id)
     this.extendProps({mode: 'view', item: id})
   }
 
@@ -214,6 +216,14 @@ class CommentContext extends Component {
       mode: 'list',
       item: undefined
     })
+  }
+
+  _getAuthorName(userId) {
+    let editorSession = this.context.editorSession
+    let collaborators = editorSession.collaborators
+    let user = collaborators[userId]
+    if(user) return user.name
+    return 'Anonymous'
   }
   
 }
