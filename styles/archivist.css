@@ -1,5 +1,6 @@
 @import '../packages/common/_index.css';
 @import '../packages/brackets/_index.css';
+@import '../packages/collaborators/_index.css';
 @import '../packages/comment/_index.css';
 @import '../packages/comments/_index.css';
 @import '../packages/tabbed-context/_index.css';

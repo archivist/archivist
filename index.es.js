@@ -26,6 +26,7 @@ export { default as PublisherSession } from './packages/publisher/PublisherSessi
 
 // Other packages
 export { default as BracketsPackage } from './packages/brackets/package'
+export { default as CollaboratorsPackage } from './packages/collaborators/package'
 export { default as CommentPackage } from './packages/comment/package'
 export { default as CommentsPackage } from './packages/comments/package'
 export { default as EntityEditorPackage } from './packages/entity-editor/package'

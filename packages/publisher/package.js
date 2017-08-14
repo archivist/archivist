@@ -1,11 +1,12 @@
 import PublisherLayout from './PublisherLayout'
-import { BracketsPackage, TabbedContextPackage } from 'archivist'
+import { BracketsPackage, CollaboratorsPackage, TabbedContextPackage } from 'archivist'
 import { ContainerAnnotationPackage, FindAndReplacePackage } from 'substance'
 
 export default {
   name: 'archivist-publisher',
   configure: function(config) {
     config.import(BracketsPackage)
+    config.import(CollaboratorsPackage)
     config.import(TabbedContextPackage)
     config.addComponent('editor', PublisherLayout)
 

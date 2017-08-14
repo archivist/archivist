@@ -1,0 +1,20 @@
+.sc-collaborators {
+  position: absolute;
+  top: 0px;
+  right: 10px;
+  margin-right: 10px;
+}
+
+.sc-collaborators .se-collaborator {
+  margin: 6px 3px;
+  display: inline-block;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  line-height: 26px;
+  text-align: center;
+  font-size: 12px;
+  color: #42423E;
+  transition: all 0.5s ease;
+  background: #eee;
+}

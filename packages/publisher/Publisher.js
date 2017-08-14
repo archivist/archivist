@@ -1,4 +1,4 @@
-import { ContainerEditor, Highlights, Layout, ProseEditorPackage, WorkflowPane } from 'substance'
+import { ContainerEditor, Highlights, Layout, ProseEditorPackage, Toolbar, WorkflowPane } from 'substance'
 import { find, findIndex, forEach, map, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
 
@@ -27,6 +27,7 @@ class Publisher extends ProseEditor {
     editorSession.on('createComment', this._createComment, this)
     editorSession.on('resource:add', this._addResource, this)
     editorSession.on('resource:delete', this._deleteResource, this)
+    editorSession.on('collaborator:add', this._addCollaborator, this)
   }
 
   dispose() {
@@ -81,6 +82,17 @@ class Publisher extends ProseEditor {
       node: this.doc.get('body'),
       commands: configurator.getSurfaceCommandNames()
     }).ref('body')
+  }
+
+  _renderToolbar($$) {
+    let configurator = this.getConfigurator()
+    let Collaborators = this.getComponent('collaborators')
+    return $$('div').addClass('se-toolbar-wrapper').append(
+      $$(Toolbar, {
+        toolPanel: configurator.getToolPanel('toolbar')
+      }).ref('toolbar'),
+      $$(Collaborators)
+    )
   }
 
   _renderContentPanel($$) {
@@ -300,7 +312,6 @@ class Publisher extends ProseEditor {
     let contextPanel = this.refs.contextPanel
     contextPanel.editComment(anno)
   }
-
 }
 
 export default Publisher
