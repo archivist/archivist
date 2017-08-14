@@ -18,3 +18,15 @@
   transition: all 0.5s ease;
   background: #eee;
 }
+
+.sc-collaborators .se-collaborator .sc-tooltip {
+  display: none;
+  position: absolute;
+  top: 35px;
+  left: -10%;
+  transform: translate(-50%);
+}
+
+.sc-collaborators .se-collaborator:hover .sc-tooltip {
+  display: block;
+}
