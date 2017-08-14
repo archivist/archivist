@@ -17,6 +17,7 @@ export { default as ServerConfigurator } from './packages/common/ServerConfigura
 export { default as ArchivistEnginePackage } from './packages/engine/package'
 export { default as AuthEnginePackage } from './packages/engine/auth/package'
 export { default as AuthEngine } from './packages/engine/auth/AuthEngine'
+export { default as CollabEnginePackage } from './packages/engine/collab/package'
 export { default as DocumentEnginePackage } from './packages/engine/document/package'
 export { default as DocumentEngine } from './packages/engine/document/DocumentEngine'
 //export { default as MailerEnginePackage } from './packages/engine/mailer/package'

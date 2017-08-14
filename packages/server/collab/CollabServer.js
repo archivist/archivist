@@ -9,7 +9,9 @@ let forEach = require('lodash/forEach')
 class ArchivistCollabServer extends CollabServer {
   constructor(config) {
     super(config)
+
     this.authEngine = config.authEngine
+    this.collabEngine = new config.collabEngine(this.documentEngine)
     this.indexer = config.indexer
     this.documentStore = config.documentStore
   }
@@ -59,7 +61,8 @@ class ArchivistCollabServer extends CollabServer {
         }
 
         message.collaboratorInfo = {
-          name: req.session.user.name
+          name: req.session.user.name,
+          userId: req.session.userId
         }
 
         // commit and connect method take optional documentInfo argument
@@ -112,6 +115,48 @@ class ArchivistCollabServer extends CollabServer {
     }
   }
 
+  /*
+    Client initiates a sync
+  */
+  sync(req, res) {
+    let args = req.message
+
+    // Takes an optional argument collaboratorInfo
+    this.collabEngine.sync(args, (err, result) => {
+      // result: changes, version, change
+      if (err) {
+        this._error(req, res, err)
+        return
+      }
+
+      // Get enhanced collaborators (e.g. including some app-specific user-info)
+      let collaborators = this.collabEngine.getCollaborators(args.documentId, args.collaboratorId)
+
+      // Send the response
+      res.send({
+        scope: this.scope,
+        type: 'syncDone',
+        documentId: args.documentId,
+        version: result.version,
+        serverChange: result.serverChange,
+        collaborators: collaborators
+      })
+
+      // We need to broadcast a new change if there is one
+      forEach(collaborators, (collaborator) => {
+        this.send(collaborator.collaboratorId, {
+          scope: this.scope,
+          type: 'update',
+          documentId: args.documentId,
+          version: result.version,
+          change: result.change,
+          collaborators: this.collabEngine.getCollaborators(args.documentId, collaborator.collaboratorId)
+        })
+      })
+      this.next(req, res)
+    })
+  }
+
   resourceSync(req, res) {
     let args = req.message
     let documentId = args.documentId
@@ -134,6 +179,26 @@ class ArchivistCollabServer extends CollabServer {
     })
 
     this.next(req, res)
+  }
+
+  _disconnectDocument(collaboratorId, documentId) {
+    let collaboratorIds = this.collabEngine.getCollaboratorIds(documentId, collaboratorId)
+
+    let collaborators = {}
+    collaborators[collaboratorId] = null
+
+    this.broadCast(collaboratorIds, {
+      scope: this.scope,
+      type: 'update',
+      documentId: documentId,
+      // Removes the entry
+      collaborators: collaborators
+    })
+    // Exit from each document session
+    this.collabEngine.disconnect({
+      documentId: documentId,
+      collaboratorId: collaboratorId
+    })
   }
 
 }
