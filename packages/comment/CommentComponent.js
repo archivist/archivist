@@ -6,6 +6,12 @@ class CommentComponent extends Component {
     node.anno.on('highlighted', this.onHighlightedChanged, this)
   }
 
+  dispose() {
+    super.dispose()
+    let node = this.props.node
+    node.anno.off(this)
+  }
+
   render($$) {
     let fragment = this.props.node
     let el = $$('span')
