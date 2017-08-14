@@ -100,7 +100,8 @@ class MetadataEditor extends Component {
               $$(TextPropertyEditor, {
                 name: id,
                 path: ['meta', id],
-                multiLine: true
+                multiLine: true,
+                withoutBreak: false
               }).addClass('se-editor')
             )
 
