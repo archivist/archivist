@@ -15,7 +15,7 @@
     "nodemailer": "^2.7.0",
     "password-generator": "^2.1.0",
     "plyr": "^2.0.11",
-    "substance": "substance/substance#a0408fe15ed8f32ce9b865d00204abeef18f2927",
+    "substance": "substance/substance#8e210712637bd59c9e3da5d1de6bb46a82af6728",
     "ws": "^1.1.1"
   },
   "devDependencies": {
