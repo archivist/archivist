@@ -1,4 +1,4 @@
-import { Button, Component, EditorSession } from 'substance'
+import { Component, EditorSession } from 'substance'
 import { clone, extend } from 'lodash-es'
 
 /*
@@ -20,6 +20,8 @@ class EntityEditor extends Component {
   }
 
   render($$) {
+    const Button = this.getComponent('button')
+
     let doc = this.state.doc
     let entity = this.state.entity
 
@@ -67,7 +69,7 @@ class EntityEditor extends Component {
       }
 
       let entityType = entity.entityType
-      let container = configurator.createArticle()
+      let container = configurator.createDocument()
 
       if(container.schema.getNodeClass(entityType)) {
         let entityData = {

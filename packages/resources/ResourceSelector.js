@@ -1,4 +1,4 @@
-import { Component, documentHelpers, FontAwesomeIcon as Icon, Input, Modal, SubstanceError as Err } from 'substance'
+import { Component, documentHelpers, FontAwesomeIcon as Icon, SubstanceError as Err } from 'substance'
 import { concat, debounce, find, findIndex, forEach, isEmpty } from 'lodash-es'
 
 class ResourcesSelector extends Component {
@@ -69,6 +69,8 @@ class ResourcesSelector extends Component {
 
   render($$) {
     let el = $$('div').addClass('sc-resource-selector')
+    let Input = this.getComponent('input')
+    let Modal = this.getComponent('modal')
     let ScrollPane = this.getComponent('scroll-pane')
 
     if (this.state.entityId) {
@@ -155,7 +157,8 @@ class ResourcesSelector extends Component {
         if(EntityComp) {
           let entry = $$(EntityComp, {
             data: item,
-            entityId: item.entityId
+            entityId: item.entityId,
+            mode: 'view'
           }).ref(item.entityId).on('click', this._setReference.bind(this, item.entityId))
           entityEntries.append(entry)
         }
@@ -383,6 +386,7 @@ class ResourcesSelector extends Component {
           editorSession.transaction((tx) => {
             //tx.set([this.state.node, 'type'], annoData.type)
             tx.set([this.state.node, 'reference'], annoData.reference)
+            this._viewResource(this.state.node)
           })
         } else {
           // Recreate annotation in case of entity type changing
@@ -390,12 +394,14 @@ class ResourcesSelector extends Component {
           annoData.end = node.end
           editorSession.transaction((tx) => {
             tx.delete(this.state.node)
-            tx.create(annoData)
+            let anno = tx.create(annoData)
+            this._viewResource(anno.id)
           })
         }
       } else {
         editorSession.transaction((tx) => {
-          tx.annotate(annoData)
+          let anno = tx.annotate(annoData)
+          this._viewResource(anno.id)
         })
       }
     })
@@ -464,6 +470,12 @@ class ResourcesSelector extends Component {
   _doneEditing() {
     this._setReference(this.state.entityId)
     this.extendState({entityId: undefined})
+  }
+
+  _viewResource(resourceId) {
+    setTimeout(() => {
+      this.send('viewItem', resourceId)
+    }, 100)
   }
 }
 
