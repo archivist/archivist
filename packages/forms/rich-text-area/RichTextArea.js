@@ -53,6 +53,7 @@ class RichTextArea extends Component {
   }
 
   dispose() {
+    super.dispose()
     this.unregisterHandlers()
   }
 

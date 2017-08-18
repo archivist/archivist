@@ -39,6 +39,12 @@ class NodeForm extends Component {
     this.forms.on('commit', this._commit, this)
   }
 
+  dispose() {
+    super.dispose()
+    this.forms.off(this)
+    this.forms.dispose()
+  }
+
   prepare($$) {
     each(this.schema, (prop, id) => {
       if(prop.definition.field) {

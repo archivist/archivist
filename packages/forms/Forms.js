@@ -1,4 +1,5 @@
 import { DefaultDOMElement, EventEmitter, BodyScrollPanePackage } from 'substance'
+import { forEach } from 'lodash-es'
 import MultipleField from './multiple-field/MultipleField'
 import RichTextArea from './rich-text-area/RichTextArea'
 import SelectField from './select-field/SelectField'
@@ -18,6 +19,9 @@ export default class Forms extends EventEmitter {
 
   dispose() {
     this.bodyScrollPane.off(this)
+    forEach(this._editables, (editor, editorId) => {
+      this.removeRichTextArea(editorId)
+    })
   }
 
   addRichTextArea(editorId, el, config) {
@@ -57,6 +61,8 @@ export default class Forms extends EventEmitter {
 
   removeRichTextArea(editorId) {
     this._editables[editorId].off(this)
+    this._editables[editorId].dispose()
+    this._editables[editorId].remove()
   }
 
   getHTML(editorId) {

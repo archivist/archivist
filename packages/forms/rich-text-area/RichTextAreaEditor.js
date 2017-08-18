@@ -38,6 +38,7 @@ class RichTextAreaEditor extends ProseEditor {
   }
 
   dispose() {
+    super.dispose()
     this.overlay.remove()
     this.dropzones.remove()
   }

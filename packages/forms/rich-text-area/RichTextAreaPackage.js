@@ -11,6 +11,7 @@ export default {
     config.defineSchema({
       name: 'rich-text-area',
       DocumentClass: Document,
+      version: '1.0.0',
       defaultTextType: 'paragraph'
     })
 
