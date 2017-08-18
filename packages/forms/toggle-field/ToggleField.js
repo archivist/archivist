@@ -1,4 +1,4 @@
-import { Component, Input } from 'substance'
+import { Component } from 'substance'
 
 class ToggleField extends Component {
 
@@ -6,19 +6,6 @@ class ToggleField extends Component {
     let config = this.props.config
     let value = this.state.value
     let el = $$('div').addClass('sc-field-toggle sc-field-' + this.props.fieldId)
-
-    // let input = $$(Input, {type: config.dataType, placeholder: config.placeholder})
-    //   .ref('input')
-    //   .on('change', this._onChange)
-    
-    // el.append(
-    //   input,
-    //   $$('div').addClass('help').append(config.placeholder)
-    // )
-
-
-    // let el = $$('div').addClass('sc-field-toggle sc-field-' + this.props.name)
-
 
     let on = $$('div').addClass('se-on').append('Yes')
       .on('click', this._setOn)
