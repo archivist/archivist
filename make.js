@@ -1,4 +1,5 @@
 const b = require('substance-bundler')
+const substancePath = require.resolve('substance')
 const DIST = 'dist/'
 
 function _substance() {
@@ -63,5 +64,5 @@ function _buildLib(DEST, platform) {
 function _buildCSS(DEST) {
   b.css('./styles/archivist.css', DEST+'archivist.css')
   b.css('./styles/archivist-pagestyle.css', DEST+'archivist-pagestyle.css')
-  b.css('./node_modules/substance/substance-reset.css', DEST+'archivist-reset.css')
+  b.css(substancePath.replace('substance.cjs.js','') + 'substance-reset.css', DEST+'archivist-reset.css')
 }
