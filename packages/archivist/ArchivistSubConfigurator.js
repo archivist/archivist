@@ -1,4 +1,4 @@
-import { Configurator } from 'substance'
+import { Configurator, DefaultLabelProvider as LabelProvider } from 'substance'
 
 /*
   Archivist subconfigurator.
@@ -59,6 +59,11 @@ class ArchivistSubConfigurator extends Configurator {
 
   getDefaultLanguage() {
     return this.config.defaultLanguage
+  }
+
+  getLabelProvider(lang) {
+    lang = lang || this.getDefaultLanguage()
+    return new LabelProvider(this.config.labels, lang)
   }
 
 }

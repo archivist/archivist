@@ -7,8 +7,8 @@ export default {
     config.addIcon('timecode-annotator', {'fontawesome': 'fa-history'})
 
     config.addLabel('timecode-annotator', {
-      en: 'Annotate timecodes',
-      ru: 'Выделить таймкоды'
+      en: 'annotate timecodes',
+      ru: 'выделить таймкоды'
     })
   }
 }

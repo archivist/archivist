@@ -11,7 +11,7 @@ export default {
     config.addIcon('metadata', { 'fontawesome': 'fa-id-card-o' })
     config.addLabel('metadata', {
       en: 'Metadata',
-      ru: 'Метадата'
+      ru: 'Метаданные'
     })
   }
 }

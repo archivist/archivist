@@ -7,8 +7,8 @@ export default {
     config.addIcon('whitespace-cleaner', {'fontawesome': 'fa-eraser'})
 
     config.addLabel('whitespace-cleaner', {
-      en: 'Clean double whitespaces',
-      ru: 'Очистить двойные пробелы'
+      en: 'clean double whitespaces',
+      ru: 'очистить двойные пробелы'
     })
   }
 }

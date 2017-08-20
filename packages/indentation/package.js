@@ -7,8 +7,8 @@ export default {
     config.addIcon('indentation-cleaner', {'fontawesome': 'fa-dedent'})
 
     config.addLabel('indentation-cleaner', {
-      en: 'Clean indentation',
-      ru: 'Очитстить отступы'
+      en: 'clean indentation',
+      ru: 'очитстить отступы'
     })
   }
 }

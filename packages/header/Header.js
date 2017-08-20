@@ -12,14 +12,14 @@ class Header extends Component {
     let actionEls = []
 
     let MenuItems = configurator.getMenuItems()
-    forEach(MenuItems, function(item) {
+    forEach(MenuItems, (item) => {
       actionEls.push(
         $$('a').addClass('se-action')
-          .attr({title: item.label})
+          .attr({title: this.getLabel(item.label)})
           .on('click', this.send.bind(this, 'navigate', {page: item.action}))
           .append($$(FontAwesomeIcon, {icon: item.icon}))
       )
-    }.bind(this))
+    })
 
     let content = []
     if (this.props.content) {

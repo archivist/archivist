@@ -59,7 +59,7 @@ class MetadataEditor extends Component {
     switch (editor) {
       case 'group': {
         editorEl.append(
-          $$('div').addClass('se-group-name').append(field.name)
+          $$('div').addClass('se-group-name').append(this.getLabel(field.name))
         ).addClass('se-field-group')
         if(field.fields) {
           forEach(field.fields, (item, itemId) => {
@@ -86,13 +86,13 @@ class MetadataEditor extends Component {
           if(collapsed) {
             label.append(
               this.context.iconProvider.renderIcon($$, 'collapsed'),
-              field.collapse
+              this.getLabel(field.collapse)
             ).on('click', this._toogleCollapse.bind(this, id))
             editorEl.append(label)
           } else {
             label.append(
               this.context.iconProvider.renderIcon($$, 'expanded'),
-              field.collapse
+              this.getLabel(field.collapse)
             ).on('click', this._toogleCollapse.bind(this, id))
 
             editorEl.append(
@@ -108,7 +108,7 @@ class MetadataEditor extends Component {
             const description = field.description
             if(description) {
               editorEl.append(
-                $$('div').addClass('se-description').append(description)
+                $$('div').addClass('se-description').append(this.getLabel(description))
               )
             }
           }
@@ -170,7 +170,7 @@ class MetadataEditor extends Component {
     const description = field.description
     if(description && !field.collapse) {
       editorEl.append(
-        $$('div').addClass('se-description').append(description)
+        $$('div').addClass('se-description').append(this.getLabel(description))
       )
     }
 

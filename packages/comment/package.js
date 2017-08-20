@@ -13,8 +13,8 @@ export default {
     config.addIcon(Comment.type, {'fontawesome': 'fa-comment'})
 
     config.addLabel('comment', {
-      en: 'Comment',
-      ru: 'Комментарий'
+      en: 'comment',
+      ru: 'комментарий'
     })
   }
 }
