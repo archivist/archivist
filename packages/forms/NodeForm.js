@@ -6,7 +6,7 @@ class NodeForm extends Component {
   constructor(...args) {
     super(...args)
 
-    this.forms = new Forms()
+    this.forms = new Forms({configurator: this.context.configurator})
     this.node = this.getNode()
     this.schema = this.getSchema()
     this.fields = {}
@@ -14,6 +14,10 @@ class NodeForm extends Component {
 
   didMount() {
     each(this.fields, function(field, id) {
+      if(field.config.placeholder) {
+        field.config.placeholder = this.getLabel(field.config.placeholder)
+      }
+
       if(field.config.type === 'text') {
         this.forms.addTextField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)

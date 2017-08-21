@@ -10,8 +10,9 @@ import ToggleField from './toggle-field/ToggleField'
 const { BodyScrollPane } = BodyScrollPanePackage
 
 export default class Forms extends EventEmitter {
-  constructor(...args) {
-    super(...args)
+  constructor(config) {
+    super(config)
+    this.configurator = config.configurator
     this._editables = {}
     this.bodyScrollPane = BodyScrollPane.mount({}, document.body)
     this.bodyScrollPane.on('selection:positioned', this._onSelectionPositioned, this)
@@ -79,10 +80,12 @@ export default class Forms extends EventEmitter {
   addTextField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
 
     let field = TextField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -92,9 +95,12 @@ export default class Forms extends EventEmitter {
   addSelectField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = SelectField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -104,9 +110,12 @@ export default class Forms extends EventEmitter {
   addTagsField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = TagsField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -116,9 +125,12 @@ export default class Forms extends EventEmitter {
   addToggleField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = ToggleField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field

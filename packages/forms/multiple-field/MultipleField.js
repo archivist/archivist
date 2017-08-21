@@ -1,6 +1,11 @@
 import { Component, FontAwesomeIcon as Icon } from 'substance'
 
 class MultipleField extends Component {
+  constructor(...args) {
+    super(...args)
+    this.configurator = this.props.configurator
+    this.labelProvider = this.configurator.getLabelProvider()
+  }
 
   render($$) {
     let config = this.props.config
@@ -45,6 +50,10 @@ class MultipleField extends Component {
     if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
     
     return el
+  }
+
+  getLabel(name) {
+    return this.labelProvider.getLabel(name)
   }
 
   setValue(value) {

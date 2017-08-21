@@ -8,7 +8,7 @@ class CommentContext extends Component {
   constructor(...args) {
     super(...args)
 
-    this.forms = new Forms()
+    this.forms = new Forms({configurator: this.context.configurator})
 
     this.handleActions({
     })

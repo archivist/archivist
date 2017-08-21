@@ -159,7 +159,7 @@ class AbstractEntityPage extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'newEntity': '+ Add ' + this.entityType
+        'newEntity': this.getLabel('add-' + this.entityType)
       },
       content: filters
     })
@@ -185,9 +185,9 @@ class AbstractEntityPage extends Component {
     if(this.state.total === 0) {
       layout.append(
         $$('h1').html(
-          'No results'
+          this.getLabel('no-results')
         ),
-        $$('p').html('Sorry, no entities matches your query')
+        $$('p').html(this.getLabel('no-results-description'))
       )
     } else {
       let Spinner = this.getComponent('spinner')
@@ -202,12 +202,14 @@ class AbstractEntityPage extends Component {
   }
 
   renderAdditionalMenu($$, actions) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
     forEach(actions, action => {
       actionsList.append(
         $$('li').addClass('se-more-item').append(
-          $$(Button, {label: action.label}).on('click', action.action)
+          $$(Button, {label: this.getLabel(action.label)}).on('click', action.action)
         )
       )
     })

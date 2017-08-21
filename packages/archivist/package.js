@@ -1,5 +1,5 @@
 import { ButtonPackage, GridPackage, InputPackage, LayoutPackage, ModalPackage } from 'substance'
-import { DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
+import { CommonPackage, DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
 
 export default {
   name: 'archivist',
@@ -12,6 +12,7 @@ export default {
     config.import(ModalPackage)
 
     // Default packages
+    config.import(CommonPackage)
     config.import(DocumentPackage)
     config.import(EntityEditorPackage)
     config.import(HeaderPackage)

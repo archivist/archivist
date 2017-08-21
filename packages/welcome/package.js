@@ -13,28 +13,36 @@ export default {
     
 
     config.addLabel('welcome', {
-      en: 'Welcome'
+      en: 'Welcome',
+      ru: 'Добро пожаловать'
     })
     config.addLabel('enter-name', {
-      en: 'Please enter your name'
+      en: 'Please enter your name',
+      ru: 'Пожалуйста, укажите ваше имя'
     })
     config.addLabel('enter-name-placeholder', {
-      en: 'Enter your name'
+      en: 'Enter your name',
+      ru: 'Введите ваше имя'
     })
     config.addLabel('enter-name-help', {
       en: 'You can change your name any time via personal menu.',
+      ru: 'Вы всегда сможете изменить имя в личных настройках'
     })
     config.addLabel('continue', {
-      en: 'Continue ⟶'
+      en: 'Continue ⟶',
+      ru: 'Продолжить ⟶'
     })
     config.addLabel('enter-email-placeholder', {
-      en: 'Enter your email'
+      en: 'Enter your email',
+      ru: 'Введите ваш email'
     })
     config.addLabel('enter-password-placeholder', {
-      en: '...and password'
+      en: '...and password',
+      ru: '...и пароль'
     })
     config.addLabel('login', {
-      en: 'Login'
+      en: 'Login',
+      ru: 'Войти'
     })
   }
 }

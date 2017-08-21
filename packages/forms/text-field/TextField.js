@@ -3,6 +3,11 @@ import { Component, InputPackage } from 'substance'
 const { Input } = InputPackage
 
 class TextField extends Component {
+  constructor(...args) {
+    super(...args)
+    this.configurator = this.props.configurator
+    this.labelProvider = this.configurator.getLabelProvider()
+  }
 
   render($$) {
     let config = this.props.config
@@ -18,6 +23,10 @@ class TextField extends Component {
     )
     
     return el
+  }
+
+  getLabel(name) {
+    return this.labelProvider.getLabel(name)
   }
 
   setValue(value) {
