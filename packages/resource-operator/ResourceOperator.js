@@ -47,6 +47,10 @@ class ResourcesOperator extends Component {
       initState.filters['entityId !'] = this.props.item.entityId
     }
 
+    if(mode === 'search') {
+      initState.filters.entityType = this.props.entityType
+    }
+
     return initState
   }
 
@@ -66,6 +70,8 @@ class ResourcesOperator extends Component {
       el.append(this.renderDeleteDialog($$))
     } else if (mode === 'merge') {
       el.append(this.renderMergeDialog($$))
+    } else if (mode === 'search') {
+      el.append(this.renderSearchDialog($$))
     } else {
       el.append($$('div').append('Error: please pass correct mode'))
     }
@@ -184,6 +190,25 @@ class ResourcesOperator extends Component {
         )
       )
     }
+
+    return el
+  }
+
+  renderSearchDialog($$) {
+    const Button = this.getComponent('button')
+
+    let el = $$('div').addClass('se-search-dialog')
+    let resourceSelector = this.renderResorceSelector($$)
+
+    el.append(
+      resourceSelector,
+      $$('div').addClass('se-actions').append(
+        $$(Button, {label: 'search-confirmation-cancel', theme: 'round'})
+          .on('click', this._onCancel),
+        $$(Button, {label: 'search-confirmation-submit', theme: 'round'})
+          .on('click', this._onSearchSubmit)
+      )
+    )
 
     return el
   }
@@ -326,6 +351,12 @@ class ResourcesOperator extends Component {
         }
       })
     }
+  }
+
+  _onSearchSubmit() {
+    let entity = this.state.mergeEntity
+    if(entity) this.send('selectEntity', entity.entityId)
+    this.send('closeResourceOperator')
   }
 
   _onKeyUp() {
