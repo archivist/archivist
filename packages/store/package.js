@@ -16,8 +16,5 @@ export default {
     config.import(SessionStorePackage)
     config.import(SnapshotStorePackage)
     config.import(UserStorePackage)
-
-    // Not implemented yet
-    // config.import(require('./subject/package'));
   }
 }
