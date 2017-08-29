@@ -104,9 +104,9 @@ class ArchivistConfigurator extends Configurator {
   /*
     Get File Client instance
   */
-  getFileClient() {
+  getFileClient(config) {
     let FileClientClass = this.config.fileClient
-    return new FileClientClass({httpUrl: this.config.fileServerUrl})
+    return new FileClientClass({authClient: config.authClient, httpUrl: this.config.fileServerUrl})
   }
 
   /*
