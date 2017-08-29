@@ -4,6 +4,7 @@ import SelectEditor from './SelectEditor'
 import InputEditor from './InputEditor'
 import CheckboxEditor from './CheckboxEditor'
 import SingleCheckboxEditor from './SingleCheckboxEditor'
+import ReferenceEditor from './ReferenceEditor'
 
 class MetadataEditor extends Component {
 
@@ -161,6 +162,18 @@ class MetadataEditor extends Component {
             label: field.label
           }).ref(id)
         ).addClass('se-checkboxes-editor')
+        break
+      }
+      case 'reference': {
+        editorEl.append(
+          $$(ReferenceEditor, {
+            name: id,
+            path: ['meta', id],
+            label: field.label,
+            entityType: field.entityType,
+            multi: field.multi
+          }).ref(id)
+        ).addClass('se-reference-editor')
         break
       }
       default:

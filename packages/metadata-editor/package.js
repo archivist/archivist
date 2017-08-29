@@ -1,9 +1,11 @@
+import { ResourceOperatorPackage } from 'archivist'
 import MetaDataContext from './MetaDataContext'
 import MetadataEditor from './MetadataEditor'
 
 export default {
   name: 'archivist-metadata-editor',
   configure: function(config) {
+    config.import(ResourceOperatorPackage)
     config.addComponent('archivist-metadata-editor', MetadataEditor)
     config.addContext('metadata', MetaDataContext, false)
     config.addIcon('collapsed', { 'fontawesome': 'fa-caret-right' })
