@@ -68,10 +68,11 @@ class ResourcesSelector extends Component {
   }
 
   render($$) {
+    const Input = this.getComponent('input')
+    const Modal = this.getComponent('modal')
+    const ScrollPane = this.getComponent('scroll-pane')
+    
     let el = $$('div').addClass('sc-resource-selector')
-    let Input = this.getComponent('input')
-    let Modal = this.getComponent('modal')
-    let ScrollPane = this.getComponent('scroll-pane')
 
     if (this.state.entityId) {
       let EntityEditor = this.getComponent('entity-editor')
