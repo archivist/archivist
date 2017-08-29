@@ -22,7 +22,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
       }))
     }
     let seed = this.configurator.getSeed()
-    let doc = this.configurator.createArticle(seed)
+    let doc = this.configurator.createDocument(seed)
     let change = documentHelpers.getChangeFromDocument(doc)
 
     args.info.title = doc.get(['meta', 'title'])

@@ -122,7 +122,7 @@ class Loader extends Component {
         return
       }
       //let docRecord = SampleDoc
-      let document = configurator.createArticle()
+      let document = configurator.createDocument()
       let doc = converter.importDocument(document, docRecord.data)
 
       // For debugging

@@ -174,7 +174,7 @@ class Inspector extends EventEmitter {
           }))
         }
 
-        let emptyDoc = this.configurator.createArticle()
+        let emptyDoc = this.configurator.createDocument()
         let rawDoc = converter.importDocument(emptyDoc, docEntry.data)
 
         let session = new CollabSession(rawDoc, {

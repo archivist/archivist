@@ -9,7 +9,7 @@ const { ProseEditor } = ProseEditorPackage
   cfg.import(ProseEditorPackage)
   cfg.import(SuperscriptPackage)
   window.onload = function() {
-    let doc = configurator.createArticle(fixture)
+    let doc = configurator.createDocument(fixture)
     let editorSession = new EditorSession(doc, {
       configurator: configurator
     })

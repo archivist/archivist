@@ -447,7 +447,7 @@ function importDocuments() {
       }
     })
 
-    let article = configurator.createArticle();
+    let article = configurator.createDocument();
     let jsonDoc = converter.importDocument(article, documentData);
     let changeset = documentHelpers.getChangeFromDocument(jsonDoc);
 
