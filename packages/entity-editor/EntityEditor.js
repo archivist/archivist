@@ -95,7 +95,9 @@ class EntityEditor extends Component {
     })
   }
 
-  _updateEntity(data, name, synonyms, description) {
+  _updateEntity(data, name, synonyms, description, silent) {
+    let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
     let entityId = this.props.entityId
     let resourceClient = this.context.resourceClient
     let entityData = {
@@ -104,6 +106,12 @@ class EntityEditor extends Component {
       synonyms: synonyms,
       description: description
     }
+
+    if(!silent) {
+      entityData.updatedBy = user.userId
+      entityData.edited = new Date().toISOString()
+    }
+
     // Remove node props
     delete entityData.data.id
     delete entityData.data.type
@@ -138,7 +146,7 @@ class EntityEditor extends Component {
     let name = entity.name
     let synonyms = entity.synonyms
     let description = entity.description
-    this._updateEntity(entityData, name, synonyms, description)
+    this._updateEntity(entityData, name, synonyms, description, true)
     this._closeEditor()
   }
 
