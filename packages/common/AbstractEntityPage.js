@@ -122,7 +122,7 @@ class AbstractEntityPage extends Component {
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-placeholder')})
       .addClass('se-with-option')
       .ref('searchInput')
 

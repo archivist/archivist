@@ -86,7 +86,7 @@ class UsersList extends Component {
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search by email...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-email-placeholder')})
       .ref('searchInput')
 
     if(this.isSearchEventSupported) {
@@ -112,7 +112,7 @@ class UsersList extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'addUser': '+ New User'
+        'addUser': this.getLabel('add-user')
       },
       content: filters
     })
@@ -156,26 +156,27 @@ class UsersList extends Component {
       items.forEach(item => {
         let accessCheckboxIcon = item.access ? 'fa-check-square-o' : 'fa-square-o'
         let accessCheckbox = $$('div').addClass('se-checkbox').append(
-          $$('div').addClass('se-label').append('access'),
+          $$('div').addClass('se-label').append(this.getLabel('access-label')),
           $$(Icon, {icon: accessCheckboxIcon})
         ).on('click', this._toggleAccess.bind(this, item.userId, 'access'))
 
         let superCheckboxIcon = item.super ? 'fa-check-square-o' : 'fa-square-o'
         let superCheckbox = $$('div').addClass('se-checkbox').append(
-          $$('div').addClass('se-label').append('super access'),
+          $$('div').addClass('se-label').append(this.getLabel('super-access-label')),
           $$(Icon, {icon: superCheckboxIcon})
         ).on('click', this._toggleAccess.bind(this, item.userId, 'super'))
 
-        let resetPwd = $$(Button, {label: 'Reset password', theme: 'round'})
+        let resetPwd = $$(Button, {label: this.getLabel('reset-password'), theme: 'round'})
           .on('click', this._resetPwd.bind(this, item.userId))
 
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
+        let createdStr = this.getLabel('user-created-at') + ' ' + created
         
         grid.append(
           $$(Grid.Row, {user: item}).append(
             $$(Grid.Cell, {columns: 2}).append(item.email),
-            $$(Grid.Cell, {columns: 3}).append(item.name || 'Anonymous'),
-            $$(Grid.Cell, {columns: 2}).append('created at ' + created),
+            $$(Grid.Cell, {columns: 3}).append(item.name || this.getLabel('anonymous-user')),
+            $$(Grid.Cell, {columns: 2}).append(createdStr),
             $$(Grid.Cell, {columns: 1}).append(accessCheckbox),
             $$(Grid.Cell, {columns: 2}).append(superCheckbox),
             $$(Grid.Cell, {columns: 2}).addClass('se-reset').append(resetPwd)

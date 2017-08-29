@@ -14,18 +14,23 @@ class AbstractEntityRow extends Component {
     let url = urlHelper.openEntity(pageName, item.entityId)
     //let entityIcon = this.renderEntityIcon($$)
     let name = $$('a').attr({href: url}).append(item.name)
-    let edited = ['Updated', moment(item.edited).fromNow(), 'by', item.updatedBy].join(' ')
+    let updatedFromNow = moment(item.edited).fromNow()
+    let updatedDateTime = moment(item.edited).format('DD.MM.YYYY HH:mm')
+    let edited = this.getLabel('updated-info')
+      .replace('fromnow', updatedFromNow)
+      .replace('datetime', updatedDateTime)
+      .replace('username', item.updatedBy)
 
     let additionalActions = [
-      {label: 'Delete', action: this._removeItem.bind(this, item.entityId)},
-      {label: 'Merge', action: this._mergeItem.bind(this, item.entityId)}
+      {label: this.getLabel('delete-action'), action: this._removeItem.bind(this, item.entityId)},
+      {label: this.getLabel('merge-action'), action: this._mergeItem.bind(this, item.entityId)}
     ]
 
     let row = $$('div').addClass('se-row se-entity-meta').append(
       //$$(Grid.Cell, {columns: 1}).addClass('se-badge').append(entityIcon),
       $$(Grid.Cell, {columns: 6}).addClass('se-title').append(name),
       $$(Grid.Cell, {columns: 3}).append(edited),
-      $$(Grid.Cell, {columns: 2}).append(item.count ? item.count + ' documents' : '0 documents'),
+      $$(Grid.Cell, {columns: 2}).append(item.count ? this.getLabel('document-counter').replace('count', item.count) : this.getLabel('document-counter').replace('count', 0)),
       $$(Grid.Cell, {columns: 1}).addClass('se-additional').append(
         this.renderAdditionalMenu($$, additionalActions)
       ).on('click', function(e) {

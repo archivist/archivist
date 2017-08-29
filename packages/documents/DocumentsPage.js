@@ -74,7 +74,7 @@ class DocumentsPage extends Component {
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-placeholder')})
       .ref('searchInput')
 
     if(this.isSearchEventSupported()) {
@@ -100,7 +100,7 @@ class DocumentsPage extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'newDocument': '+ New Document'
+        'newDocument': this.getLabel('add-document')
       },
       content: filters
     })
@@ -166,11 +166,16 @@ class DocumentsPage extends Component {
         let url = urlHelper.openDocument(item.documentId)
         let documentIcon = $$(Icon, {icon: 'fa-file-text-o'})
         let title = $$('a').attr({href: url}).append(item.title)
-        let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
+        let updatedFromNow = moment(item.updatedAt).fromNow()
+        let updatedDateTime = moment(item.updatedAt).format('DD.MM.YYYY HH:mm')
+        let updatedAt = this.getLabel('updated-info')
+          .replace('fromnow', updatedFromNow)
+          .replace('datetime', updatedDateTime)
+          .replace('username', item.updatedBy)
         let className = item.summary ? 'se-expanded' : ''
 
         let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.documentId)},
+          {label: this.getLabel('delete-action'), action: this._removeItem.bind(this, item.documentId)},
         ]
 
         let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(

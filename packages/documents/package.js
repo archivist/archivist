@@ -8,5 +8,9 @@ export default {
       en: 'Documents',
       ru: 'Документы'
     })
+    config.addLabel('add-document', {
+      en: '+ New Document',
+      ru: '+ Добавить документ'
+    })
   }
 }
