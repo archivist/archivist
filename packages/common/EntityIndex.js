@@ -50,7 +50,10 @@ class EntityIndex extends DocumentIndex {
   }
 
   update(node, path, newValue, oldValue) {
-    // TODO
+    if (path[1] === "reference") {
+      this.delete(node)
+      this.create(node)
+    }
   }
 }
 
