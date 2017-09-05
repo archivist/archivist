@@ -49,5 +49,13 @@ export default {
       en: 'Merge to...',
       ru: 'Слить с...'
     })
+    config.addLabel('search-confirmation-cancel', {
+      en: 'Cancel',
+      ru: 'Отмена'
+    })
+    config.addLabel('search-confirmation-submit', {
+      en: 'Ok',
+      ru: 'Ok'
+    })
   }
 }
