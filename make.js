@@ -9,6 +9,7 @@ function _substance() {
 function _buildDist() {
   _substance()
   _buildLib(DIST, 'browser')
+  _buildLib(DIST, 'browser:legacy')
   _buildLib(DIST, 'nodejs')
   _buildCSS(DIST)
 }
@@ -38,6 +39,13 @@ function _buildLib(DEST, platform) {
       format: 'umd', moduleName: 'archivist', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist'
     })
   }
+  if (platform === 'browser:legacy' || platform === 'all') {
+    targets.push({
+      dest: DEST+'archivist.es5.js',
+      format: 'umd', moduleName: 'archivist', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist',
+      useStrict: false
+    })
+  }
   if (platform === 'nodejs' || platform === 'all') {
     source = './server.es.js'
     external = ['substance', 'moment', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js', 'ws']
@@ -52,13 +60,18 @@ function _buildLib(DEST, platform) {
       format: 'es'
     })
   }
-  b.js(source, {
+
+  let config = {
     targets,
     external: external,
     globals: {
       'substance': 'substance'
     }
-  })
+  }
+
+  if(platform === 'browser:legacy') config.buble = true
+  
+  b.js(source, config)
 }
 
 function _buildCSS(DEST) {
