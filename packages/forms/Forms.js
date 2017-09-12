@@ -140,9 +140,12 @@ export default class Forms extends EventEmitter {
   addMultipleField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+    
     let field = MultipleField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
