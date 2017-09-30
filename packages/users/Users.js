@@ -30,6 +30,7 @@ class UsersList extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel('users')
     this._loadData()
   }
 
@@ -103,7 +104,7 @@ class UsersList extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: 'users'})
   }
 
   renderToolbox($$) {
@@ -171,7 +172,7 @@ class UsersList extends Component {
 
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
         let createdStr = this.getLabel('user-created-at') + ' ' + created
-        
+
         grid.append(
           $$(Grid.Row, {user: item}).append(
             $$(Grid.Cell, {columns: 2}).append(item.email),
@@ -281,7 +282,7 @@ class UsersList extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -335,7 +336,7 @@ class UsersList extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

@@ -16,6 +16,7 @@ class DocumentsPage extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel('documents')
     this._loadData()
   }
 
@@ -91,7 +92,7 @@ class DocumentsPage extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: 'documents'})
   }
 
   renderToolbox($$) {
@@ -269,7 +270,7 @@ class DocumentsPage extends Component {
     let perPage = this.state.perPage
     let pagination = this.state.pagination
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0
     }
     let items = []
@@ -322,7 +323,7 @@ class DocumentsPage extends Component {
     let pagination = this.state.pagination
     let perPage = this.state.perPage
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: this.state.order + ' ' + this.state.direction
     }
@@ -385,7 +386,7 @@ class DocumentsPage extends Component {
 
         this.extendState({
           items: items,
-          details: index 
+          details: index
         })
       }.bind(this))
     } else {
@@ -417,7 +418,7 @@ class DocumentsPage extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

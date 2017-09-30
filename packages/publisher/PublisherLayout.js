@@ -39,6 +39,7 @@ class PublisherLayout extends Loader {
     // --------------
 
     header = $$(Header, {
+      page: 'documents',
       mobile: this.props.mobile
     })
 
@@ -47,7 +48,7 @@ class PublisherLayout extends Loader {
       el.append(
         $$(Notification, notification)
       )
-    } 
+    }
     // else if (this.state.session) {
     //   header.outlet('content').append(
     //     $$(Collaborators, {

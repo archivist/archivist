@@ -53,6 +53,7 @@ class AbstractEntityPage extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel(this.pageName)
     this._loadData()
   }
 
@@ -150,7 +151,7 @@ class AbstractEntityPage extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: this.pageName})
   }
 
   renderToolbox($$) {
@@ -271,7 +272,7 @@ class AbstractEntityPage extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -323,7 +324,7 @@ class AbstractEntityPage extends Component {
   }
 
   /*
-    Create a new entity 
+    Create a new entity
   */
   _newEntity() {
     let authenticationClient = this.context.authenticationClient
@@ -421,7 +422,7 @@ class AbstractEntityPage extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -491,7 +492,7 @@ class AbstractEntityPage extends Component {
         }.bind(this))
       } else {
         item._toggleDetails()
-      } 
+      }
     }
   }
 
@@ -524,7 +525,7 @@ class AbstractEntityPage extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

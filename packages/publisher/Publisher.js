@@ -28,6 +28,8 @@ class Publisher extends ProseEditor {
     editorSession.on('resource:add', this._addResource, this)
     editorSession.on('resource:delete', this._deleteResource, this)
     editorSession.on('collaborator:add', this._addCollaborator, this)
+    let meta = this.doc.get('meta')
+    document.title = this.getLabel(meta.title)
   }
 
   dispose() {
@@ -116,7 +118,7 @@ class Publisher extends ProseEditor {
     let layout = $$(Layout, {
       width: 'large'
     })
-    
+
     layout.append(
       $$(Brackets, {editor: true}).ref('brackets'),
       editor,
@@ -173,7 +175,7 @@ class Publisher extends ProseEditor {
     let entityIndex = doc.getIndex('entities')
     let refs = entityIndex.get(entityId)
     // We are sorting references by paregraph position
-    // if nodes annotations are in same paragraph 
+    // if nodes annotations are in same paragraph
     // we will sort them by start offset
     let refIds = Object.keys(refs)
     let ordered = refIds.sort((a,b) => {
