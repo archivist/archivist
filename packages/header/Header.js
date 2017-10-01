@@ -38,7 +38,8 @@ class Header extends Component {
       $$('div').addClass('se-actions').append(actionEls),
       $$('div').addClass('se-content').append(content),
       $$(LoginStatus, {
-        user: authenticationClient.getUser()
+        user: authenticationClient.getUser(),
+        page: page
       })
     )
     return el

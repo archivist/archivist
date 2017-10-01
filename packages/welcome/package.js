@@ -10,8 +10,12 @@ export default {
     config.addPage('entername', EnterName)
 
     config.addIcon('continue', { 'fontawesome': 'fa-long-arrow-right' });
-    
 
+
+    config.addLabel('user-settings', {
+      en: 'Settings',
+      ru: 'Настройки'
+    })
     config.addLabel('welcome', {
       en: 'Welcome',
       ru: 'Добро пожаловать'

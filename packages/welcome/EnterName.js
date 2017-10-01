@@ -74,7 +74,8 @@ class EnterName extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    let header = $$(Header, this.props)
+    let props = Object.assign({}, this.props, {page: 'user-settings'})
+    let header = $$(Header, props)
 
     return header
   }
