@@ -32,5 +32,9 @@ export default {
       en: 'Type to search...',
       ru: 'Поиск...'
     })
+    config.addLabel('selectEntityTypeFilter', {
+      en: 'Select type',
+      ru: 'Выберите тип'
+    })
   }
 }

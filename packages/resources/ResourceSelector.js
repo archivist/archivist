@@ -71,7 +71,7 @@ class ResourcesSelector extends Component {
     const Input = this.getComponent('input')
     const Modal = this.getComponent('modal')
     const ScrollPane = this.getComponent('scroll-pane')
-    
+
     let el = $$('div').addClass('sc-resource-selector')
 
     if (this.state.entityId) {
@@ -96,7 +96,11 @@ class ResourcesSelector extends Component {
     let entityTypeFilter = $$('select').addClass('se-entity-type-filter')
       .ref('entityTypeFilter')
       .on('change', this._onSearch)
-      .append($$('option').attr('value', 'all').append('select type'))
+      .append(
+        $$('option').attr('value', 'all').append(
+          this.getLabel('selectEntityTypeFilter')
+        )
+      )
 
     let actions = $$('div').addClass('sc-actions')
 
@@ -108,7 +112,9 @@ class ResourcesSelector extends Component {
         ).on('click', this._createEntity.bind(this, type))
       )
 
-      let option = $$('option').attr('value', type).append(type)
+      let option = $$('option').attr('value', type).append(
+        this.getLabel(type)
+      )
       if(type === currentEntityType) option.attr('selected', 'selected')
 
       entityTypeFilter.append(option)
@@ -117,7 +123,7 @@ class ResourcesSelector extends Component {
     header.append(actions)
 
     let searchInput = $$(Input, {
-      type: 'search', 
+      type: 'search',
       placeholder: this.getLabel('searchPlaceholder'),
       value: this.state.search
     }).ref('searchInput')
@@ -201,7 +207,7 @@ class ResourcesSelector extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -244,7 +250,7 @@ class ResourcesSelector extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -313,7 +319,7 @@ class ResourcesSelector extends Component {
   _onKeyDown(e) {
     if (e.which === 13 || e.keyCode === 13) {
       e.preventDefault()
-      console.log(this.state.focused, 'has been chosen')
+      console.info(this.state.focused, 'has been chosen')
       this._setReference(this.state.focused)
     } else if (e.which === 38 || e.keyCode === 38) {
       e.preventDefault()
@@ -373,10 +379,10 @@ class ResourcesSelector extends Component {
       }
 
       editorSession._send({
-        scope: "substance/collab", 
-        type: "resourceSync", 
-        documentId: editorSession.documentId, 
-        resourceId: entityId, 
+        scope: "substance/collab",
+        type: "resourceSync",
+        documentId: editorSession.documentId,
+        resourceId: entityId,
         mode: 'add'
       })
 
@@ -424,7 +430,7 @@ class ResourcesSelector extends Component {
   }
 
   /*
-    Create a new entity 
+    Create a new entity
   */
   _createEntity(entityType) {
     let resources = this.context.editorSession.resources
@@ -459,7 +465,7 @@ class ResourcesSelector extends Component {
     let editorSession = this.context.editorSession
     let items = editorSession.resources
     let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
-    
+
     if(changedItem > -1) {
       items[changedItem] = entity
     }
