@@ -92,7 +92,7 @@ class DocumentsPage extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header, {page: 'documents'})
+    return $$(Header, {page: 'archive'})
   }
 
   renderToolbox($$) {

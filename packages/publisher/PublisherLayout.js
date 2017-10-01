@@ -39,7 +39,7 @@ class PublisherLayout extends Loader {
     // --------------
 
     header = $$(Header, {
-      page: 'documents',
+      page: 'archive',
       mobile: this.props.mobile
     })
 
