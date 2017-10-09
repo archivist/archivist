@@ -22,8 +22,7 @@ class NodeForm extends Component {
         this.forms.addTextField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
       } else if(field.config.type === 'prose') {
-        field.value = field.value || '<p>' + field.config.placeholder + '</p>'
-        this.forms.addRichTextArea(id, this.refs[id].getNativeElement())
+        this.forms.addRichTextArea(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setHTML(id, field.value)
       } else if(field.config.type === 'select') {
         this.forms.addSelectField(id, this.refs[id].getNativeElement(), field.config)

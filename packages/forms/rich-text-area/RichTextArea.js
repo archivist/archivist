@@ -115,7 +115,8 @@ class RichTextArea extends Component {
     el.append(
       $$(RichTextAreaEditor, {
         editorSession: this.editorSession,
-        editorId: this.props.editorId
+        editorId: this.props.editorId,
+        placeholder: this.props.config.placeholder
       }).ref('editor')
     )
     return el

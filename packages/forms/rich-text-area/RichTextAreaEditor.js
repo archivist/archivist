@@ -52,7 +52,8 @@ class RichTextAreaEditor extends ProseEditor {
         disabled: this.props.disabled,
         editorSession: this.editorSession,
         node: this.doc.get('body'),
-        commands: configurator.getSurfaceCommandNames()
+        commands: configurator.getSurfaceCommandNames(),
+        placeholder: this.props.placeholder
       }).ref('body')
     )
     return el

@@ -141,7 +141,7 @@ export default class Forms extends EventEmitter {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
     let configurator = this.configurator
-    
+
     let field = MultipleField.mount({
       fieldId,
       config,
