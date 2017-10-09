@@ -22,9 +22,12 @@ class CommentContext extends Component {
   dispose() {
     super.dispose()
     this.getForms().off(this)
+    this.getForms().dispose()
   }
 
   didUpdate() {
+    this.getForms().off(this)
+    this.getForms().dispose()
     this._initEditor()
   }
 
@@ -102,8 +105,8 @@ class CommentContext extends Component {
         ).on('click', this._removeComment.bind(this, item))
       )
     )
-    
-    let content = entry.content || '<p>' + this.getLabel('defaultComment') + '</p>'
+
+    let content = entry.content || '<p></p>'
 
     el.append(
       header,
@@ -166,12 +169,13 @@ class CommentContext extends Component {
   }
 
   _initEditor() {
-    // TODO: find a way to use comment editor within other container 
+    // TODO: find a way to use comment editor within other container
     // to avoid problems with selection jumping and exiting editor after remote update
     let mode = this.props.mode
     if(mode === 'edit') {
       this.getForms().addRichTextArea('comment', this.refs.commentEl.getNativeElement(), {
-        enabledPackages: ['heading', 'strong', 'emphasis', 'link', 'list']
+        enabledPackages: ['heading', 'strong', 'emphasis', 'link', 'list'],
+        placeholder: this.getLabel('defaultComment')
       })
     }
   }
@@ -225,7 +229,7 @@ class CommentContext extends Component {
     if(user) return user.name
     return 'Anonymous'
   }
-  
+
 }
 
 export default CommentContext
