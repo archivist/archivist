@@ -438,7 +438,7 @@ class ResourcesSelector extends Component {
     let user = authenticationClient.getUser()
     let resourceClient = this.context.resourceClient
     let entityData = {
-      name: 'Unknown ' + entityType,
+      name: this.getLabel(entityType + '-default-name'),
       synonyms: [],
       description: '',
       entityType: entityType,

@@ -332,7 +332,7 @@ class AbstractEntityPage extends Component {
     let resourceClient = this.context.resourceClient
     let items = this.state.items
     let entityData = {
-      name: 'Unknown ' + this.entityType,
+      name: this.getLabel(this.entityType + '-default-name'),
       synonyms: [],
       description: '',
       entityType: this.entityType,
