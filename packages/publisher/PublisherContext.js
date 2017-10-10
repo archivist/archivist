@@ -6,7 +6,7 @@ class PublisherContext extends Component {
     super(...args)
 
     this.contexts = {}
-    
+
     const configurator = this.props.configurator
     const contexts = configurator.getContexts()
     const contextMapping = configurator.getContextMapping()
@@ -82,6 +82,18 @@ class PublisherContext extends Component {
     }
     this.extendState(state)
     console.log('View comment', node.id, ',', mode, 'mode')
+  }
+
+  createComment(node) {
+    let mode = 'create'
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node
+    }
+    this.extendState(state)
+    console.log('Create comment', node, ',', mode, 'mode')
   }
 
   editComment(node) {

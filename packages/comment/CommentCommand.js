@@ -12,14 +12,9 @@ class CommentCommand extends ContainerAnnotationCommand {
     annoData.type = this.getAnnotationType()
     annoData.author = params.user
     annoData.createdAt = new Date().toISOString()
-    let anno
-    editorSession.transaction((tx) => {
-      anno = tx.annotate(annoData)
-    })
-    editorSession.emit('createComment', anno)
+    editorSession.emit('createComment', annoData)
     return {
-      mode: 'create',
-      anno: anno
+      mode: 'create'
     }
   }
 

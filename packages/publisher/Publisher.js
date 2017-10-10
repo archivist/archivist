@@ -312,7 +312,7 @@ class Publisher extends ProseEditor {
 
   _createComment(anno) {
     let contextPanel = this.refs.contextPanel
-    contextPanel.editComment(anno)
+    contextPanel.createComment(anno)
   }
 }
 

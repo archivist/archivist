@@ -35,6 +35,8 @@ class CommentContext extends Component {
     let mode = this.props.mode
     if(mode === 'list') {
       return this.renderCommentList($$)
+    } else if (mode === 'create') {
+      return this.renderCommentCreator($$)
     } else if (mode === 'edit') {
       return this.renderCommentEditor($$)
     } else {
@@ -126,6 +128,49 @@ class CommentContext extends Component {
     return el
   }
 
+  renderCommentCreator($$) {
+    let ScrollPane = this.getComponent('scroll-pane')
+    let entry = this.props.item
+
+    let el = $$('div').addClass('sc-comment-panel')
+
+    let header = $$('div').addClass('sc-panel-header').append(
+      $$('div').addClass('sc-goback-action').append(
+        this.context.iconProvider.renderIcon($$, 'goBackToList'),
+        this.getLabel('goBackToComments')
+      ).on('click', this._showList),
+      $$('div').addClass('sc-actions').append(
+        $$('div').addClass('sc-edit-action').append(
+          this.context.iconProvider.renderIcon($$, 'saveChanges'),
+          this.getLabel('saveComment')
+        ).on('click', this._onCommentCreate.bind(this)),
+        $$('div').addClass('sc-remove-action').append(
+          this.context.iconProvider.renderIcon($$, 'removeReference'),
+          this.getLabel('removeReference')
+        ).on('click', this._showList.bind(this))
+      )
+    )
+
+    let content = entry.content || '<p></p>'
+
+    el.append(
+      header,
+      $$(ScrollPane).addClass('se-edit-comment').ref('panelEl').append(
+        $$('div').addClass('se-comment-item').append(
+          $$('div').addClass('se-comment-meta').append(
+            $$('span').addClass('se-author').append(this._getAuthorName(entry.author)),
+            $$('span').addClass('se-created-date').append(moment(entry.createdAt).format('DD.MM.YYYY HH:mm'))
+          ),
+          $$('div').addClass('se-comment-editor')
+            .ref('commentEl')
+            .setInnerHTML(content)
+        )
+      )
+    )
+
+    return el
+  }
+
   renderComment($$) {
     let doc = this.context.doc
     let item = this.props.item
@@ -142,11 +187,11 @@ class CommentContext extends Component {
         $$('div').addClass('sc-edit-action').append(
           this.context.iconProvider.renderIcon($$, 'editReference'),
           this.getLabel('editReference')
-        ).on('click', this._editComment.bind(this, item)),
+        ).on('click', this._editComment.bind(this)),
         $$('div').addClass('sc-remove-action').append(
           this.context.iconProvider.renderIcon($$, 'removeReference'),
           this.getLabel('removeReference')
-        ).on('click', this._removeComment.bind(this, item))
+        ).on('click', this._removeComment.bind(this))
       )
     )
 
@@ -172,7 +217,7 @@ class CommentContext extends Component {
     // TODO: find a way to use comment editor within other container
     // to avoid problems with selection jumping and exiting editor after remote update
     let mode = this.props.mode
-    if(mode === 'edit') {
+    if(mode === 'edit' || mode === 'create') {
       this.getForms().addRichTextArea('comment', this.refs.commentEl.getNativeElement(), {
         enabledPackages: ['heading', 'strong', 'emphasis', 'link', 'list'],
         placeholder: this.getLabel('defaultComment')
@@ -201,6 +246,20 @@ class CommentContext extends Component {
     let editorSession = this.context.editorSession
     editorSession.transaction(function(tx, args) {
       tx.delete(item)
+      return args
+    })
+    this.extendProps({
+      mode: 'list',
+      item: undefined
+    })
+  }
+
+  _onCommentCreate() {
+    let editorSession = this.context.editorSession
+    let annoData = this.props.item
+    annoData.content = this.getForms().getHTML('comment')
+    editorSession.transaction((tx, args) => {
+      tx.annotate(annoData)
       return args
     })
     this.extendProps({
