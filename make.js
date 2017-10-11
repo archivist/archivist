@@ -1,5 +1,6 @@
 const b = require('substance-bundler')
 const substancePath = require.resolve('substance')
+const momentPath = require.resolve('moment')
 const DIST = 'dist/'
 
 function _substance() {
@@ -65,7 +66,7 @@ function _buildLib(DEST, platform) {
     targets,
     commonjs: {
       include: [
-        'node_modules/moment/moment.js'
+        momentPath
       ]
     },
     external: external,
