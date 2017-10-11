@@ -12,6 +12,7 @@
     "express": "^4.14.0",
     "lodash-es": "^4.17.4",
     "massive": "^2.5.0",
+    "moment": "^2.15.0",
     "nodemailer": "^2.7.0",
     "password-generator": "^2.1.0",
     "plyr": "^2.0.11",
@@ -21,7 +22,6 @@
   "devDependencies": {
     "eslint": "^3.5.0",
     "font-awesome": "^4.6.3",
-    "moment": "^2.15.0",
     "substance-bundler": "^0.18.4",
     "tap-spec": "^4.1.1",
     "tape": "^4.6.0",
