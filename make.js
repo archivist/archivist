@@ -48,7 +48,7 @@ function _buildLib(DEST, platform) {
   }
   if (platform === 'nodejs' || platform === 'all') {
     source = './server.es.js'
-    external = ['substance', 'moment', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js', 'ws']
+    external = ['substance', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js', 'ws']
     targets.push({
       dest: DEST+'archivist.cjs.js',
       format: 'cjs'
@@ -63,6 +63,11 @@ function _buildLib(DEST, platform) {
 
   let config = {
     targets,
+    commonjs: {
+      include: [
+        'node_modules/moment/moment.js'
+      ]
+    },
     external: external,
     globals: {
       'substance': 'substance'
@@ -70,7 +75,7 @@ function _buildLib(DEST, platform) {
   }
 
   if(platform === 'browser:legacy') config.buble = true
-  
+
   b.js(source, config)
 }
 
