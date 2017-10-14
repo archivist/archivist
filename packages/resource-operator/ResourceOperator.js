@@ -49,6 +49,9 @@ class ResourcesOperator extends Component {
 
     if(mode === 'search') {
       initState.filters.entityType = this.props.entityType
+      if(this.props.parent) {
+        initState.filters["data->>'parent'"] = this.props.parent
+      }
     }
 
     return initState
@@ -262,7 +265,7 @@ class ResourcesOperator extends Component {
 
   renderResorceSelector($$) {
     const Input = this.getComponent('input')
-    
+
     let el = $$('div').addClass('se-resource-item')
     let merge = this.state.mergeEntity
 
@@ -273,7 +276,7 @@ class ResourcesOperator extends Component {
           .ref('searchInput')
           .on('keyup', debounce(this._onKeyUp, 300))
           .on('keydown', this._onKeyDown),
-        $$(ScrollPane).addClass('se-search-results').append(
+        $$('div').addClass('se-search-results').append(
           this.renderList($$)
         ).ref('listResults')
       )
@@ -453,7 +456,7 @@ class ResourcesOperator extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -497,7 +500,7 @@ class ResourcesOperator extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
