@@ -11,6 +11,7 @@ class AbstractEntityPage extends Component {
       'loadReferences': this._loadReferences,
       'updateEntity': this._updateEntity,
       'deleteEntity': this._removeFromList,
+      'editItem': this._editItem,
       'mergeItem': this._mergeItem,
       'removeItem': this._removeItem,
       //'closeModal': this._doneEditing,
@@ -358,6 +359,10 @@ class AbstractEntityPage extends Component {
 
       this.send('navigate', {page: this.pageName, entityId: entity.entityId})
     })
+  }
+
+  _editItem(id) {
+    this.extendProps({entityId: id})
   }
 
   _removeItem(id) {

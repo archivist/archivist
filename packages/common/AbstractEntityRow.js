@@ -22,6 +22,7 @@ class AbstractEntityRow extends Component {
       .replace('username', item.updatedBy)
 
     let additionalActions = [
+      {label: this.getLabel('edit-action'), action: this._editItem.bind(this, item.entityId)},
       {label: this.getLabel('delete-action'), action: this._removeItem.bind(this, item.entityId)},
       {label: this.getLabel('merge-action'), action: this._mergeItem.bind(this, item.entityId)}
     ]
@@ -84,6 +85,10 @@ class AbstractEntityRow extends Component {
   _toggleDetails() {
     let details = this.state.details
     this.extendState({details: !details})
+  }
+
+  _editItem(id) {
+    this.send('editItem', id)
   }
 
   _removeItem(id) {
