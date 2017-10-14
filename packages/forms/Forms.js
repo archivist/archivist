@@ -1,6 +1,7 @@
 import { DefaultDOMElement, EventEmitter, BodyScrollPanePackage } from 'substance'
 import { forEach } from 'lodash-es'
 import MultipleField from './multiple-field/MultipleField'
+import ReferenceField from './reference-field/ReferenceField'
 import RichTextArea from './rich-text-area/RichTextArea'
 import SelectField from './select-field/SelectField'
 import TagsField from './tags-field/TagsField'
@@ -143,6 +144,23 @@ export default class Forms extends EventEmitter {
     let configurator = this.configurator
 
     let field = MultipleField.mount({
+      fieldId,
+      config,
+      configurator
+    }, el)
+    field.on('commit', this._onCommit, this)
+    this._editables[fieldId] = field
+    return field
+  }
+
+  addReferenceField(fieldId, el, config) {
+    config = config || {}
+    let resourceClient = this.context.resourceClient
+    config.resourceClient = resourceClient
+    el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
+    let field = ReferenceField.mount({
       fieldId,
       config,
       configurator

@@ -33,6 +33,9 @@ class NodeForm extends Component {
       } else if(field.config.type === 'multiple') {
         this.forms.addMultipleField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
+      } else if(field.config.type === 'reference') {
+        this.forms.addReferenceField(id, this.refs[id].getNativeElement(), field.config)
+        this.forms.setValue(id, field.value)
       } else if(field.config.type === 'toggle') {
         this.forms.addToggleField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
