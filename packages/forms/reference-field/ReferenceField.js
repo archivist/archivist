@@ -45,9 +45,8 @@ class ReferenceField extends Component {
     let labels = this.state.labels
     let values = this.state.values || []
     if(!config.multi && values.constructor !== Array) {
-      values = [this.state.value]
+      values = [this.state.values]
     }
-
     if(values) {
       values.forEach(value => {
         let label = labels[value] || value
@@ -115,10 +114,15 @@ class ReferenceField extends Component {
   }
 
   _addValue(value, e) {
+    let config = this.props.config
     if(e) e.stopPropagation()
     let values = this.state.values
     if(values.indexOf(value) < 0) {
-      values.push(value)
+      if(config.multi) {
+        values.push(value)
+      } else {
+        values = value
+      }
       this.extendState({values: values})
       this._loadValue(value)
       this._commit()
