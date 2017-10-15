@@ -14,8 +14,8 @@ export default {
       ru: 'Неизвестно'
     })
     config.addLabel('select-unknown', {
-      en: 'Unknown',
-      ru: 'Неизвестно'
+      en: 'Not selected',
+      ru: 'Не выбрано'
     })
     config.addLabel('toggle-yes', {
       en: 'Yes',
