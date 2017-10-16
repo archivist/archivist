@@ -1,6 +1,5 @@
 import { Component } from 'substance'
 import { find, findIndex, sortBy } from 'lodash-es'
-import ResourceSelector from './ResourceSelector'
 
 class ResourcesContext extends Component {
 
@@ -50,9 +49,9 @@ class ResourcesContext extends Component {
   renderItem($$) {
     let item = this.props.item
     let doc = this.context.doc
-    
+
     let el = $$('div').addClass('sc-entity-panel')
-    
+
     let header = $$('div').addClass('sc-panel-header').append(
       $$('div').addClass('sc-goback-action').append(
         this.context.iconProvider.renderIcon($$, 'goBackToList'),
@@ -100,8 +99,9 @@ class ResourcesContext extends Component {
   }
 
   renderResourceSelector($$) {
+    let ResourceSelector = this.getComponent('resource-selector')
     let el = $$('div').addClass('sc-entity-panel')
-    
+
     el.append(
       $$(ResourceSelector, {configurator: this.props.configurator, node: this.props.item})
     )
@@ -120,7 +120,7 @@ class ResourcesContext extends Component {
 
     for (let i = 0; i < entries.length; i++) {
       let entry = entries[i]
-      
+
       let EntityComp = this.getEntityRender(entry.entityType)
 
       if(EntityComp) {
@@ -210,7 +210,7 @@ class ResourcesContext extends Component {
     let editorSession = this.context.editorSession
     let items = editorSession.resources
     let changedItem = findIndex(items, function(i) { return i.entityId === entity.entityId })
-    
+
     if(changedItem > -1) {
       items[changedItem] = entity
     }

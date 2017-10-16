@@ -1,4 +1,5 @@
 import ResourcesContext from './ResourcesContext'
+import ResourceSelector from './ResourceSelector'
 import { EntityEditorPackage, PagerPackage } from 'archivist'
 
 export default {
@@ -6,6 +7,7 @@ export default {
   configure: function(config) {
     config.import(PagerPackage)
     config.import(EntityEditorPackage)
+    config.addComponent('resource-selector', ResourceSelector)
     config.addContext('resources', ResourcesContext, false)
     config.addIcon('resources', {'fontawesome': 'fa-bullseye'})
     config.addIcon('editEntity', {'fontawesome': 'fa-edit'})

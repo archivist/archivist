@@ -365,6 +365,8 @@ class ResourcesSelector extends Component {
   }
 
   _setReference(entityId) {
+    if(!entityId) return false
+
     let editorSession = this.context.editorSession
 
     this._getAndStoreEntity(entityId, (err, entity) => {
