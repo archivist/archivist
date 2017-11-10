@@ -27,7 +27,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
 
     args.info.title = doc.get(['meta', 'title'])
     args.info.meta = doc.get('meta')
-    
+
     this.documentStore.createDocument({
       schemaName: schema.name,
       schemaVersion: schema.version,
@@ -142,8 +142,8 @@ class ArchivistDocumentEngine extends DocumentEngine {
   updateDocumentIndexData(documentId, text, annos, refs, collabs, version) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        'fullText': text, 
-        annotations: annos, 
+        'fullText': text,
+        annotations: annos,
         references: refs,
         collaborators: collabs,
         'indexedVersion': version
@@ -158,7 +158,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
   updateReferencesData(documentId, annos, refs) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        annotations: annos, 
+        annotations: annos,
         references: refs
       }, function(err) {
         if(err) return reject(err)
@@ -171,7 +171,8 @@ class ArchivistDocumentEngine extends DocumentEngine {
   updateMetadata(documentId, metadata) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        meta: metadata, 
+        meta: metadata,
+        title: metadata.title
       }, function(err) {
         if(err) return reject(err)
 
@@ -194,9 +195,9 @@ class ArchivistDocumentEngine extends DocumentEngine {
 
   listDocuments(args, cb) {
     let filters = !isEmpty(args.filters) ? JSON.parse(args.filters) : {}
-    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}  
+    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}
     let results = {}
-    
+
     if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '(SELECT name FROM users WHERE "userId" = "updatedBy") AS "updatedBy"', '"userId"']
 
     this.documentStore.countDocuments(filters, function(err, count) {
@@ -213,7 +214,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
           }))
         }
         results.records = docs
-        
+
         cb(null, results)
       })
     }.bind(this))

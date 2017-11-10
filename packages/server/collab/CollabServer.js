@@ -39,41 +39,27 @@ class ArchivistCollabServer extends CollabServer {
   enhanceRequest(req, res) {
     let message = req.message
     if (message.type === 'sync') {
-      // We fetch the document record to get the old title
-      this.documentStore.getDocument(message.documentId, function(err, docRecord) {
-        let updatedAt = new Date()
-        let title = docRecord.title
+      let updatedAt = new Date()
 
-        if (message.change) {
-          // Update the title if necessary
-          let change = DocumentChange.fromJSON(message.change)
-          change.ops.forEach((op) => {
-            if(op.path[0] === 'meta' && op.path[1] === 'title') {
-              title = op.diff.apply(title)
-            }
-          })
-
-          message.change.info = {
-            userId: req.session.userId,
-            updatedAt: updatedAt,
-            title: title
-          }
+      if (message.change) {
+        message.change.info = {
+          userId: req.session.userId,
+          updatedAt: updatedAt
         }
+      }
 
-        message.collaboratorInfo = {
-          name: req.session.user.name,
-          userId: req.session.userId
-        }
+      message.collaboratorInfo = {
+        name: req.session.user.name,
+        userId: req.session.userId
+      }
 
-        // commit and connect method take optional documentInfo argument
-        message.documentInfo = {
-          updatedAt: updatedAt,
-          updatedBy: req.session.userId,
-          title: title
-        }
-        req.setEnhanced()
-        this.next(req, res)
-      }.bind(this))
+      // commit and connect method take optional documentInfo argument
+      message.documentInfo = {
+        updatedAt: updatedAt,
+        updatedBy: req.session.userId
+      }
+      req.setEnhanced()
+      this.next(req, res)
     } else {
       // Just continue for everything that is not handled
       req.setEnhanced()
@@ -161,7 +147,7 @@ class ArchivistCollabServer extends CollabServer {
     let args = req.message
     let documentId = args.documentId
     let collaborators = this.collabEngine.getCollaborators(documentId, args.collaboratorId)
-    
+
     res.send({
       scope: this.scope,
       type: 'resourceSyncDone',
