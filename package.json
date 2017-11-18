@@ -1,5 +1,6 @@
 {
-  "name": "archivist",
+  "name": "archivist-js",
+  "version": "2.0.0-alpha.1",
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "main": "dist/archivist.cjs.js",
   "jsnext:main": "index.es.js",
@@ -33,8 +34,12 @@
     "start": "node server",
     "test": "gulp test"
   },
+  "author": "Daniel Beilinson <beilinson@gmail.com> (http://d4s.io/)",
   "license": "GPL-3.0",
-  "version": "2.0.0-alpha.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/archivist/archivist.git"
+  },
   "optionalDependencies": {
     "bufferutil": "^3.0.1",
     "utf-8-validate": "^3.0.2"
