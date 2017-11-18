@@ -29,6 +29,7 @@
     "uglify-js": "^2.7.3"
   },
   "scripts": {
+    "prepublish": "node make",
     "bundle": "node make",
     "dev": "node make -s -w & node server",
     "start": "node server",
