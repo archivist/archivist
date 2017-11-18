@@ -1,6 +1,6 @@
 import ResourcesContext from './ResourcesContext'
 import ResourceSelector from './ResourceSelector'
-import { EntityEditorPackage, PagerPackage } from 'archivist'
+import { EntityEditorPackage, PagerPackage } from 'archivist-js'
 
 export default {
   name: 'archivist-resources',

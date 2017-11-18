@@ -1,4 +1,4 @@
-import { ResourceOperatorPackage } from 'archivist'
+import { ResourceOperatorPackage } from 'archivist-js'
 import MetaDataContext from './MetaDataContext'
 import MetadataEditor from './MetadataEditor'
 

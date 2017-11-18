@@ -1,5 +1,5 @@
 import { ButtonPackage, GridPackage, InputPackage, LayoutPackage, ModalPackage } from 'substance'
-import { CommonPackage, DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist'
+import { CommonPackage, DocumentPackage, EntityEditorPackage, HeaderPackage, NotificationPackage, PagerPackage, ResourceOperatorPackage, SpinnerPackage, ToolboxPackage, WelcomePackage } from 'archivist-js'
 
 export default {
   name: 'archivist',

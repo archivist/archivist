@@ -37,13 +37,13 @@ function _buildLib(DEST, platform) {
   if (platform === 'browser' || platform === 'all') {
     targets.push({
       dest: DEST+'archivist.js',
-      format: 'umd', moduleName: 'archivist', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist'
+      format: 'umd', moduleName: 'archivist-js', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist-js'
     })
   }
   if (platform === 'browser:legacy' || platform === 'all') {
     targets.push({
       dest: DEST+'archivist.es5.js',
-      format: 'umd', moduleName: 'archivist', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist',
+      format: 'umd', moduleName: 'archivist-js', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist-js',
       useStrict: false
     })
   }
