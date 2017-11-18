@@ -4,7 +4,7 @@ const momentPath = require.resolve('moment')
 const DIST = 'dist/'
 
 function _substance() {
-  b.make('substance', 'lib')
+  b.copy('./node_modules/substance/dist', DIST+'substance')
 }
 
 function _buildDist() {
