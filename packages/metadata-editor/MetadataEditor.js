@@ -55,6 +55,13 @@ class MetadataEditor extends Component {
 
   renderItem($$, field, id) {
     let editorEl = $$('div').addClass('se-field-editor se-field-' + id)
+    
+    const description = field.description
+    if(description && !field.collapse) {
+      editorEl.append(
+        $$('div').addClass('se-description').append(this.getLabel(description))
+      )
+    }
 
     const editor = field.editor
     switch (editor) {
@@ -96,6 +103,13 @@ class MetadataEditor extends Component {
               this.getLabel(field.collapse)
             ).on('click', this._toogleCollapse.bind(this, id))
 
+            const description = field.description
+            if(description) {
+              editorEl.append(
+                $$('div').addClass('se-description').append(this.getLabel(description))
+              )
+            }
+
             editorEl.append(
               label,
               $$(TextPropertyEditor, {
@@ -105,13 +119,6 @@ class MetadataEditor extends Component {
                 withoutBreak: false
               }).addClass('se-editor')
             )
-
-            const description = field.description
-            if(description) {
-              editorEl.append(
-                $$('div').addClass('se-description').append(this.getLabel(description))
-              )
-            }
           }
         } else {
           editorEl.append(
@@ -180,12 +187,7 @@ class MetadataEditor extends Component {
         console.error('Invalid editor for meta property:', id)
     }
 
-    const description = field.description
-    if(description && !field.collapse) {
-      editorEl.append(
-        $$('div').addClass('se-description').append(this.getLabel(description))
-      )
-    }
+    
 
     return editorEl
   }
