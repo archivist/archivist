@@ -123,7 +123,7 @@ class ResourcesContext extends Component {
 
       let EntityComp = this.getEntityRender(entry.entityType)
 
-      if(EntityComp) {
+      if(EntityComp && entry.data) {
 
         let item = $$(EntityComp, entry).ref(entry.entityId)
         if(entry.entityId === this.state.item) {
