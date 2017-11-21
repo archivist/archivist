@@ -1,4 +1,5 @@
 .sc-metadata-editor .se-field-editor {
+  clear: both;
 }
 
 .sc-metadata-editor .se-field-group {
@@ -51,6 +52,10 @@
   clear: both;
 }
 
+.sc-metadata-editor .sc-reference-editor {
+  min-height: 40px;
+}
+
 .sc-metadata-editor .sc-reference-editor .se-toggle-dialog {
   float: left;
   padding: 9px 14px 4px 0px;
@@ -71,12 +76,12 @@
   text-overflow: ellipsis;
   font-size: 12px;
 }
-      
+
 .sc-metadata-editor .sc-reference-editor .se-tag .se-value.se-hihglight-remove {
   background-color: red;
   color: #fff;
 }
-        
+
 .sc-metadata-editor .sc-reference-editor .se-tag .se-value.se-hihglight-remove:after {
   content: "×";
   margin-left: 5px;
