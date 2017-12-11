@@ -1,6 +1,6 @@
 {
   "name": "archivist-js",
-  "version": "2.0.0-preview.3",
+  "version": "2.0.0-preview.5",
   "description": "A modern interface for tagging entities and subjects in digital archives",
   "main": "dist/archivist.cjs.js",
   "jsnext:main": "index.es.js",
