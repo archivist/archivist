@@ -225,8 +225,9 @@ class CommentContext extends Component {
     }
   }
 
-  _editComment(id) {
-    this.extendProps({mode: 'edit', item: id})
+  _editComment() {
+    let item = this.props.item
+    this.extendProps({mode: 'edit', item: item})
   }
 
   _viewComment(id) {
