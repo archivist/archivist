@@ -30,23 +30,25 @@ class Inspector extends EventEmitter {
               if(references) {
                 // Notify collaborators about resource changes
                 session._send({
-                  scope: "substance/collab", 
-                  type: "resourceSync", 
-                  documentId: session.documentId, 
-                  resourceId: oldResourceId, 
+                  scope: "substance/collab",
+                  type: "resourceSync",
+                  documentId: session.documentId,
+                  resourceId: oldResourceId,
                   mode: 'remove'
                 })
 
                 session._send({
-                  scope: "substance/collab", 
-                  type: "resourceSync", 
-                  documentId: session.documentId, 
-                  resourceId: newResourceId, 
+                  scope: "substance/collab",
+                  type: "resourceSync",
+                  documentId: session.documentId,
+                  resourceId: newResourceId,
                   mode: 'add'
                 })
 
                 session.transaction((tx, args) => {
-                  each(references, (node, id) => {
+                  let entities = tx.getIndex('entities')
+                  let referenceList = entities.byReference[oldResourceId]
+                  each(referenceList, (node, id) => {
                     if(node.isResourceReference()) {
                       if(type) {
                         // Recreate annotation in case of entity type changing
@@ -107,15 +109,17 @@ class Inspector extends EventEmitter {
               if(references) {
                 // Notify collaborators about resource changes
                 session._send({
-                  scope: "substance/collab", 
-                  type: "resourceSync", 
-                  documentId: session.documentId, 
-                  resourceId: resourceId, 
+                  scope: "substance/collab",
+                  type: "resourceSync",
+                  documentId: session.documentId,
+                  resourceId: resourceId,
                   mode: 'remove'
                 })
 
                 session.transaction((tx, args) => {
-                  each(references, (node, id) => {
+                  let entities = tx.getIndex('entities')
+                  let referenceList = entities.byReference[resourceId]
+                  each(referenceList, (node, id) => {
                     if(node.isResourceReference()) {
                       tx.delete(id)
                     } else if (node.isResourceMultipleReference()) {
@@ -191,7 +195,7 @@ class Inspector extends EventEmitter {
 
   _closeSession(session) {
     // TODO: disconnect after transactions finish
-    // otherwise we will send duplicate transaction 
+    // otherwise we will send duplicate transaction
     return new Promise((resolve) => {
       setTimeout(function() {
         session.dispose()
