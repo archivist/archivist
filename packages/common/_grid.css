@@ -22,7 +22,7 @@
 
 .sc-grid .se-row .se-badge {
   font-size: 23px;
-  color: rgba(0, 0, 0, 0.6); 
+  color: rgba(0, 0, 0, 0.6);
 }
 
 .sc-grid .se-row .se-title a {
@@ -32,7 +32,7 @@
 }
 
 .sc-grid .se-row .se-additional {
-  padding: 12px 10px;
+  padding: 14px 10px;
   position: relative;
   display: inline-block;
 }
@@ -99,7 +99,7 @@
 }
 
 /*
-Eye candy 
+Eye candy
 ( colors courtesy of https://kuler.adobe.com/try-color-theme-3350110 )
 */
 

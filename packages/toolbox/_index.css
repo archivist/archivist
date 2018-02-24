@@ -7,13 +7,13 @@
   z-index: 10;
 }
 
-.sc-toolbox .se-actions {
+.sc-toolbox > .se-actions {
   padding: 10px;
   float: right;
   margin-right: 4px;
 }
 
-.sc-toolbox .se-actions button {
+.sc-toolbox > .se-actions button {
   font-weight: 400;
   display: inline-block;
   border-radius: 3px;

@@ -21,7 +21,7 @@ class PublisherLayout extends Loader {
   }
 
   render($$) {
-    let Header = this.getComponent('header')
+    let Header = this._getHeaderClass()
     let Spinner = this.getComponent('spinner')
     let Notification = this.getComponent('notification')
 
@@ -92,6 +92,10 @@ class PublisherLayout extends Loader {
 
   _getEditorClass() {
     return Publisher
+  }
+
+  _getHeaderClass() {
+    return this.getComponent('header')
   }
 
   _onCollabClientDisconnected() {

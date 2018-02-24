@@ -68,7 +68,7 @@ class AbstractEntityPage extends Component {
     const Modal = this.getComponent('modal')
 
     let items = this.state.items
-    let el = $$('div').addClass('sc-entity-page')
+    let el = $$('div').addClass('sc-entity-page sm-entity-' + this.entityType)
     let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
