@@ -15,5 +15,9 @@ export default {
       en: 'Metadata',
       ru: 'Метаданные'
     })
+    config.addLabel('select-none', {
+      en: 'Not selected',
+      ru: 'Не выбрано'
+    })
   }
 }

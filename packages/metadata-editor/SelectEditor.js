@@ -23,6 +23,9 @@ class SelectEditor extends Component {
     let select = $$('select')
       .ref('input')
       .on('change', this._onChange)
+      .append(
+        $$('option').append(this.getLabel('select-none'))
+      )
 
     options.forEach(opt => {
       let label = this.getLabel('meta-' + name + '-' + opt)

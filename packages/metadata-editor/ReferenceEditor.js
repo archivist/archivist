@@ -23,10 +23,16 @@ class ReferenceEditor extends Component {
     if(!this.props.multi) {
       value = [value]
     }
-    this._loadResources(value, err => {
-      if(err) console.error(err)
+
+    if(value.length > 0) {
+      this._loadResources(value, err => {
+        if(err) console.error(err)
+        this.setValue(value)
+      })
+    } else {
       this.setValue(value)
-    })
+    }
+     
     this.context.editorSession.onRender('document', this._onDocumentChange, this)
   }
 
@@ -75,7 +81,7 @@ class ReferenceEditor extends Component {
       ).on('click', this._toggleDialog),
       tagsWidget
     )
-    
+
     return el
   }
 
@@ -136,10 +142,10 @@ class ReferenceEditor extends Component {
     let currentValue = this.getValue() || []
 
     editorSession._send({
-      scope: "substance/collab", 
-      type: "resourceSync", 
-      documentId: editorSession.documentId, 
-      resourceId: entityId, 
+      scope: "substance/collab",
+      type: "resourceSync",
+      documentId: editorSession.documentId,
+      resourceId: entityId,
       mode: 'add'
     })
 
@@ -175,7 +181,7 @@ class ReferenceEditor extends Component {
     let values = this.state.value
     if(this.props.multi) {
       let pos = values.indexOf(value)
-      values.splice(pos, 1) 
+      values.splice(pos, 1)
     } else {
       values = ''
     }
