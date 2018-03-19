@@ -15,6 +15,13 @@ class CheckboxEditor extends Component {
     this.context.editorSession.onRender('document', this._onDocumentChange, this)
   }
 
+  didUpdate() {
+    let doc = this.context.doc
+    let path = this.getPath()
+    let value = doc.get(path)
+    this.setValue(value)
+  }
+
   render($$) {
     let options = this.props.options
     let el = $$('div').addClass('sc-checkbox-editor').ref('input')
@@ -60,7 +67,7 @@ class CheckboxEditor extends Component {
 
   getPath() {
     return this.props.path
-  } 
+  }
 
   _onClick() {
     let editorSession = this.context.editorSession
