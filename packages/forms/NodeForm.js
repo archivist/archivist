@@ -6,7 +6,7 @@ class NodeForm extends Component {
   constructor(...args) {
     super(...args)
 
-    this.forms = new Forms()
+    this.forms = new Forms({configurator: this.context.configurator})
     this.node = this.getNode()
     this.schema = this.getSchema()
     this.fields = {}
@@ -14,12 +14,15 @@ class NodeForm extends Component {
 
   didMount() {
     each(this.fields, function(field, id) {
+      if(field.config.placeholder) {
+        field.config.placeholder = this.getLabel(field.config.placeholder)
+      }
+
       if(field.config.type === 'text') {
         this.forms.addTextField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
       } else if(field.config.type === 'prose') {
-        field.value = field.value || '<p>' + field.config.placeholder + '</p>'
-        this.forms.addRichTextArea(id, this.refs[id].getNativeElement())
+        this.forms.addRichTextArea(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setHTML(id, field.value)
       } else if(field.config.type === 'select') {
         this.forms.addSelectField(id, this.refs[id].getNativeElement(), field.config)
@@ -30,6 +33,9 @@ class NodeForm extends Component {
       } else if(field.config.type === 'multiple') {
         this.forms.addMultipleField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
+      } else if(field.config.type === 'reference') {
+        this.forms.addReferenceField(id, this.refs[id].getNativeElement(), field.config)
+        this.forms.setValue(id, field.value)
       } else if(field.config.type === 'toggle') {
         this.forms.addToggleField(id, this.refs[id].getNativeElement(), field.config)
         this.forms.setValue(id, field.value)
@@ -37,6 +43,12 @@ class NodeForm extends Component {
     }.bind(this))
 
     this.forms.on('commit', this._commit, this)
+  }
+
+  dispose() {
+    super.dispose()
+    this.forms.off(this)
+    this.forms.dispose()
   }
 
   prepare($$) {

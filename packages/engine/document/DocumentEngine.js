@@ -22,12 +22,12 @@ class ArchivistDocumentEngine extends DocumentEngine {
       }))
     }
     let seed = this.configurator.getSeed()
-    let doc = this.configurator.createArticle(seed)
+    let doc = this.configurator.createDocument(seed)
     let change = documentHelpers.getChangeFromDocument(doc)
 
     args.info.title = doc.get(['meta', 'title'])
     args.info.meta = doc.get('meta')
-    
+
     this.documentStore.createDocument({
       schemaName: schema.name,
       schemaVersion: schema.version,
@@ -104,9 +104,12 @@ class ArchivistDocumentEngine extends DocumentEngine {
       d.version, \
       d."schemaName", \
       d."schemaVersion", \
-      (SELECT string_agg(name, \',\') \
-        FROM (SELECT DISTINCT u.name FROM changes c INNER JOIN users u ON c."userId" = u."userId" WHERE c."documentId" = d."documentId" AND c."userId" != d."userId") AS authors \
-      ) AS collaborators, \
+      d.collaborators, \
+      (SELECT string_agg(name, \',\') FROM (SELECT name FROM users WHERE "userId" IN ( \
+        SELECT unnest(d.collaborators) \
+        WHERE "userId" != d."userId" \
+      )) AS authors \
+      ) AS collabnames, \
       (SELECT "createdAt" FROM changes c WHERE c."documentId"=d."documentId" ORDER BY "createdAt" ASC LIMIT 1) AS "createdAt", \
       u.name AS author, \
       f.name AS "updatedBy" \
@@ -127,21 +130,22 @@ class ArchivistDocumentEngine extends DocumentEngine {
           message: 'No document found for documentId ' + documentId,
         }))
       }
-      if(!doc.collaborators) {
-        doc.collaborators = []
+      if(!doc.collabnames) {
+        doc.collabnames = []
       } else {
-        doc.collaborators = doc.collaborators.split(',')
+        doc.collabnames = doc.collabnames.split(',')
       }
       cb(null, doc)
     })
   }
 
-  updateDocumentIndexData(documentId, text, annos, refs, version) {
+  updateDocumentIndexData(documentId, text, annos, refs, collabs, version) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        'fullText': text, 
-        annotations: annos, 
-        references: refs, 
+        'fullText': text,
+        annotations: annos,
+        references: refs,
+        collaborators: collabs,
         'indexedVersion': version
       }, function(err) {
         if(err) return reject(err)
@@ -154,7 +158,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
   updateReferencesData(documentId, annos, refs) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        annotations: annos, 
+        annotations: annos,
         references: refs
       }, function(err) {
         if(err) return reject(err)
@@ -167,7 +171,8 @@ class ArchivistDocumentEngine extends DocumentEngine {
   updateMetadata(documentId, metadata) {
     return new Promise(function(resolve, reject) {
       this.documentStore.updateDocument(documentId, {
-        meta: metadata, 
+        meta: metadata,
+        title: metadata.title
       }, function(err) {
         if(err) return reject(err)
 
@@ -190,9 +195,9 @@ class ArchivistDocumentEngine extends DocumentEngine {
 
   listDocuments(args, cb) {
     let filters = !isEmpty(args.filters) ? JSON.parse(args.filters) : {}
-    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}  
+    let options = !isEmpty(args.options) ? JSON.parse(args.options) : {}
     let results = {}
-    
+
     if(!options.columns) options.columns = ['"documentId"', '"schemaName"', '"schemaVersion"', "meta", "title", "language", '"updatedAt"', '(SELECT name FROM users WHERE "userId" = "updatedBy") AS "updatedBy"', '"userId"']
 
     this.documentStore.countDocuments(filters, function(err, count) {
@@ -209,7 +214,7 @@ class ArchivistDocumentEngine extends DocumentEngine {
           }))
         }
         results.records = docs
-        
+
         cb(null, results)
       })
     }.bind(this))
@@ -255,6 +260,23 @@ class ArchivistDocumentEngine extends DocumentEngine {
           // no matter if snaphot creation errored or not we will confirm change
           cb(null, newVersion)
         })
+      })
+    })
+  }
+
+  /*
+    Get document collaborators based on changes.
+  */
+  getChangesAuthors(documentId) {
+    return new Promise((resolve, reject) => {
+      this.db.run('SELECT DISTINCT "userId" FROM changes WHERE "documentId" = $1', [documentId], (err, collaborators) => {
+        if (err) {
+          return reject(new Err('ArchivistDocumentEngine.GetChangesAuthors', {
+            cause: err
+          }))
+        }
+
+        resolve(collaborators.map(c => { return c.userId }))
       })
     })
   }

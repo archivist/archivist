@@ -5,16 +5,23 @@ class LoginStatus extends Component {
   render($$) {
     let user = this.props.user
     let name = user.name || 'Anonymous'
+    let page = this.props.page
     let el = $$('div').addClass('sc-login-status')
     el.append(
       $$('span').addClass('se-username')
         .append(this._extractInitials(name))
     )
 
+    let settingsItem = $$('span').addClass('se-action')
+      .on('click', this._openUserSettings)
+      .append(this.context.iconProvider.renderIcon($$, 'user-settings'))
+
+    if(page === 'user-settings') {
+      settingsItem.addClass('se-active')
+    }
+
     el.append(
-      $$('span').addClass('se-action')
-        .on('click', this._openUserSettings)
-        .append(this.context.iconProvider.renderIcon($$, 'user-settings')),
+      settingsItem,
       $$('span').addClass('se-action')
         .on('click', this._logout)
         .append(this.context.iconProvider.renderIcon($$, 'logout'))
@@ -38,6 +45,7 @@ class LoginStatus extends Component {
 
   _openUserSettings() {
     this.send('navigate', {page: 'user-settings'})
+    document.title = this.getLabel('user-settings')
   }
 
 }

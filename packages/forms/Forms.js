@@ -1,14 +1,19 @@
-import { DefaultDOMElement, EventEmitter, BodyScrollPane } from 'substance'
+import { DefaultDOMElement, EventEmitter, BodyScrollPanePackage } from 'substance'
+import { forEach } from 'lodash-es'
 import MultipleField from './multiple-field/MultipleField'
+import ReferenceField from './reference-field/ReferenceField'
 import RichTextArea from './rich-text-area/RichTextArea'
 import SelectField from './select-field/SelectField'
 import TagsField from './tags-field/TagsField'
 import TextField from './text-field/TextField'
 import ToggleField from './toggle-field/ToggleField'
 
+const { BodyScrollPane } = BodyScrollPanePackage
+
 export default class Forms extends EventEmitter {
-  constructor(...args) {
-    super(...args)
+  constructor(config) {
+    super(config)
+    this.configurator = config.configurator
     this._editables = {}
     this.bodyScrollPane = BodyScrollPane.mount({}, document.body)
     this.bodyScrollPane.on('selection:positioned', this._onSelectionPositioned, this)
@@ -16,6 +21,9 @@ export default class Forms extends EventEmitter {
 
   dispose() {
     this.bodyScrollPane.off(this)
+    forEach(this._editables, (editor, editorId) => {
+      this.removeRichTextArea(editorId)
+    })
   }
 
   addRichTextArea(editorId, el, config) {
@@ -55,6 +63,8 @@ export default class Forms extends EventEmitter {
 
   removeRichTextArea(editorId) {
     this._editables[editorId].off(this)
+    this._editables[editorId].dispose()
+    this._editables[editorId].remove()
   }
 
   getHTML(editorId) {
@@ -71,10 +81,12 @@ export default class Forms extends EventEmitter {
   addTextField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
 
     let field = TextField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -84,9 +96,12 @@ export default class Forms extends EventEmitter {
   addSelectField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = SelectField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -96,9 +111,12 @@ export default class Forms extends EventEmitter {
   addTagsField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = TagsField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -108,9 +126,12 @@ export default class Forms extends EventEmitter {
   addToggleField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = ToggleField.mount({
       fieldId,
-      config
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field
@@ -120,9 +141,29 @@ export default class Forms extends EventEmitter {
   addMultipleField(fieldId, el, config) {
     config = config || {}
     el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
     let field = MultipleField.mount({
       fieldId,
-      config
+      config,
+      configurator
+    }, el)
+    field.on('commit', this._onCommit, this)
+    this._editables[fieldId] = field
+    return field
+  }
+
+  addReferenceField(fieldId, el, config) {
+    config = config || {}
+    let resourceClient = this.context.resourceClient
+    config.resourceClient = resourceClient
+    el = DefaultDOMElement.wrapNativeElement(el)
+    let configurator = this.configurator
+
+    let field = ReferenceField.mount({
+      fieldId,
+      config,
+      configurator
     }, el)
     field.on('commit', this._onCommit, this)
     this._editables[fieldId] = field

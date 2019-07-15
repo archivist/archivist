@@ -100,6 +100,8 @@ class SnapshotStore {
         }))
       }
 
+      if(snapshot) snapshot = snapshot.data
+
       cb(null, snapshot, version)
     })
   }

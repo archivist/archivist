@@ -1,6 +1,8 @@
-import { ContainerEditor, Highlights, Layout, ProseEditor, SplitPane, Toolbar } from 'substance'
-import { findIndex, forEach, map, orderBy, uniq } from 'lodash-es'
+import { ContainerEditor, Highlights, Layout, ProseEditorPackage, Toolbar, WorkflowPane } from 'substance'
+import { find, findIndex, forEach, map, uniq } from 'lodash-es'
 import PublisherContext from './PublisherContext'
+
+const { ProseEditor } = ProseEditorPackage
 
 class Publisher extends ProseEditor {
   constructor(...args) {
@@ -8,11 +10,12 @@ class Publisher extends ProseEditor {
 
     let doc = this.editorSession.getDocument()
     this.contentHighlights = new Highlights(doc)
-    this.updatingResorces = false
+    this.updatingResources = false
 
     this.handleActions({
       'showReferences': this._showReferences,
-      'toggleBracket': this._toggleBracket
+      'toggleBracket': this._toggleBracket,
+      'showComment': this._showComment
     })
   }
 
@@ -22,8 +25,11 @@ class Publisher extends ProseEditor {
     editorSession.onUpdate(this._onSessionUpdate, this)
     editorSession.on('createInlineEntityReference', this._createEntityReference, this)
     editorSession.on('createComment', this._createComment, this)
-    editorSession.on('resource:add', this._fetchResource, this)
+    editorSession.on('resource:add', this._addResource, this)
     editorSession.on('resource:delete', this._deleteResource, this)
+    editorSession.on('collaborator:add', this._addCollaborator, this)
+    let meta = this.doc.get('meta')
+    document.title = this.getLabel(meta.title)
   }
 
   dispose() {
@@ -32,6 +38,7 @@ class Publisher extends ProseEditor {
   }
 
   render($$) {
+    let SplitPane = this.componentRegistry.get('split-pane')
     let el = $$('div').addClass('sc-publisher')
     el.append(
       $$(SplitPane, {splitType: 'vertical', sizeB: '30%'}).append(
@@ -51,27 +58,46 @@ class Publisher extends ProseEditor {
   }
 
   _renderMainSection($$) {
+    let configurator = this.getConfigurator()
+    let SplitPane = this.componentRegistry.get('split-pane')
     let mainSection = $$('div').addClass('se-main-section')
+    let toolbar = this._renderToolbar($$)
+    let contentPanel = this._renderContentPanel($$)
     let splitPane = $$(SplitPane, {splitType: 'horizontal'}).append(
-      this._renderToolbar($$),
-      this._renderContentPanel($$)
+      toolbar,
+      $$(SplitPane, {splitType: 'horizontal', sizeB: 'inherit'}).append(
+        contentPanel,
+        $$(WorkflowPane, {
+          toolPanel: configurator.getToolPanel('workflow')
+        })
+      )
     )
     mainSection.append(splitPane)
     return mainSection
   }
 
+  _renderEditor($$) {
+    let configurator = this.getConfigurator()
+    return $$(ContainerEditor, {
+      disabled: this.props.disabled,
+      editorSession: this.editorSession,
+      node: this.doc.get('body'),
+      commands: configurator.getSurfaceCommandNames()
+    }).ref('body')
+  }
+
   _renderToolbar($$) {
-    let commandStates = this.commandManager.getCommandStates()
+    let configurator = this.getConfigurator()
+    let Collaborators = this.getComponent('collaborators')
     return $$('div').addClass('se-toolbar-wrapper').append(
       $$(Toolbar, {
-        toolGroups: ['text', 'document', 'annotations', 'utils', 'references', 'default'],
-        commandStates: commandStates
-      }).ref('toolbar')
+        toolPanel: configurator.getToolPanel('toolbar')
+      }).ref('toolbar'),
+      $$(Collaborators)
     )
   }
 
   _renderContentPanel($$) {
-    const doc = this.props.editorSession.getDocument()
     const configurator = this.props.configurator
 
     let ScrollPane = this.componentRegistry.get('scroll-pane')
@@ -80,8 +106,10 @@ class Publisher extends ProseEditor {
     let Dropzones = this.componentRegistry.get('dropzones')
     let Brackets = this.componentRegistry.get('brackets')
 
+    let editor = this._renderEditor($$)
+
     let contentPanel = $$(ScrollPane, {
-      contextMenu: 'custom',
+      contextMenu: this.props.contextMenu || 'native',
       scrollbarType: 'substance',
       scrollbarPosition: 'left',
       highlights: this.contentHighlights
@@ -90,17 +118,14 @@ class Publisher extends ProseEditor {
     let layout = $$(Layout, {
       width: 'large'
     })
-    
+
     layout.append(
       $$(Brackets, {editor: true}).ref('brackets'),
-      $$(ContainerEditor, {
-        disabled: this.props.disabled,
-        editorSession: this.editorSession,
-        node: doc.get('body'),
-        commands: configurator.getSurfaceCommandNames(),
-        textTypes: configurator.getTextTypes()
-      }).ref('body'),
-      $$(Overlay),
+      editor,
+      $$(Overlay, {
+        toolPanel: configurator.getToolPanel('main-overlay'),
+        theme: 'dark'
+      }),
       $$(ContextMenu),
       $$(Dropzones)
     )
@@ -143,28 +168,46 @@ class Publisher extends ProseEditor {
     this.contentHighlights.set(highlights)
   }
 
-  _showReferences(entityId, silent) {
+  _showReferences(entityId) {
     let container = this.refs.body.getContainer()
     let editorSession = this.editorSession
     let doc = editorSession.getDocument()
     let entityIndex = doc.getIndex('entities')
     let refs = entityIndex.get(entityId)
-    let ordered = orderBy(refs, ref => {
-      let p = ref.path[0]
-      return container.getPosition(p)
+    // We are sorting references by paregraph position
+    // if nodes annotations are in same paragraph
+    // we will sort them by start offset
+    let refIds = Object.keys(refs)
+    let ordered = refIds.sort((a,b) => {
+      const refAPath = refs[a].getPath()
+      const refBPath = refs[b].getPath()
+
+      if (refAPath[0] !== refBPath[0]){
+        return (container.getPosition(refAPath[0]) - container.getPosition(refBPath[0]))
+      } else {
+        const refAOffset = refs[a].start.getOffset()
+        const refBOffset = refs[b].start.getOffset()
+
+        return (refAOffset - refBOffset)
+      }
     })
 
-    this.refs.contentPanel.scrollTo(ordered[0].id)
+    this.refs.contentPanel.scrollTo(`[data-id="${ordered[0]}"]`)
     this.highlightReferences([entityId])
+  }
 
-    // if(!silent) {
-    //   let urlHelper = this.context.urlHelper
-    //   urlHelper.focusResource(entityId)
-    // }
+  _showComment(commentId) {
+    this.refs.contentPanel.scrollTo(`[data-id="${commentId}"]`)
   }
 
   _onSessionUpdate(editorSession) {
     if (!editorSession.hasChanged('document') && !editorSession.hasChanged('selection')) return
+
+    let change = editorSession.getChange()
+    if(change) {
+      let author = change.info.userId
+      if(author) this._addCollaborator(author)
+    }
 
     let doc = editorSession.getDocument()
     let contextPanel = this.refs.contextPanel
@@ -198,21 +241,14 @@ class Publisher extends ProseEditor {
       if(!overlapsAnno) {
         contextPanel.openDefaultTab()
       }
-      // highlights[annoType] = annos.map(a => {return a.reference})
-      // if(highlights[annoType].length === 1) {
-      //   let refId = highlights[annoType][0]
-      //   let refs = entityIndex.get(refId)
-      //   highlights[annoType] = map(refs, a => {return a.id})
-      //   contextPanel.openResource(annos[0])
-      // }
     })
 
     this.contentHighlights.set(highlights)
   }
 
-  _fetchResource(resourceId) {
+  _addResource(resourceId) {
     let editorSession = this.getEditorSession()
-    this._addResource(editorSession, resourceId)
+    this._fetchResource(editorSession, resourceId)
   }
 
   _deleteResource(resourceId) {
@@ -222,9 +258,9 @@ class Publisher extends ProseEditor {
     editorSession.resources.splice(index, 1)
   }
 
-  _addResource(editorSession, reference) {
-    if(reference && !this.updatingResorces) {
-      this.updatingResorces = true
+  _fetchResource(editorSession, reference) {
+    if(reference && !this.updatingResources) {
+      this.updatingResources = true
       let resources = editorSession.resources
       let entity = find(resources, item => { return item.entityId === reference })
       if(!entity) {
@@ -235,10 +271,28 @@ class Publisher extends ProseEditor {
           } else {
             resources.push(entity)
           }
-          this.updatingResorces = false
+          this.updatingResources = false
         })
       }
     }
+  }
+
+  _addCollaborator(userId) {
+    let editorSession = this.getEditorSession()
+    let collaborators = editorSession.collaborators
+    if(!collaborators[userId]) this._fetchCollaborator(editorSession, userId)
+  }
+
+  _fetchCollaborator(editorSession, userId) {
+    let resourceClient = this.context.resourceClient
+    let collaborators = editorSession.collaborators
+    resourceClient.getCollaborator(userId, (err, collaborator) => {
+      if (err) {
+        console.error(err)
+      } else {
+        collaborators[userId] = collaborator
+      }
+    })
   }
 
   _toggleBracket(node, active) {
@@ -258,9 +312,8 @@ class Publisher extends ProseEditor {
 
   _createComment(anno) {
     let contextPanel = this.refs.contextPanel
-    contextPanel.editComment(anno)
+    contextPanel.createComment(anno)
   }
-
 }
 
 export default Publisher

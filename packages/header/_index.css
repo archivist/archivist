@@ -26,6 +26,13 @@
   border-right: 1px solid #c1c1c1;
 }
 
+.sc-header .se-action.se-active {
+  -moz-box-shadow: inset 3px 0px 5px rgba(0, 0, 0, 0.8);
+  -webkit-box-shadow: inset 3px 0px 5px rgba(0, 0, 0, 0.8);
+  box-shadow: inset 3px 0px 5px rgba(0, 0, 0, 0.8);
+  border-bottom: none;
+}
+
 .sc-header .se-action:hover {
   color: rgba(0,0,0, 1);
   background: #ebebeb;

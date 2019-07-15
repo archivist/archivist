@@ -1,4 +1,5 @@
-import { CollabSession, JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
+import { JSONConverter, Layout, series, SplitPane, substanceGlobals } from 'substance'
+import PublisherSession from './PublisherSession'
 import Loader from '../common/Loader'
 import Publisher from './Publisher'
 
@@ -20,7 +21,7 @@ class PublisherLayout extends Loader {
   }
 
   render($$) {
-    let Header = this.getComponent('header')
+    let Header = this._getHeaderClass()
     let Spinner = this.getComponent('spinner')
     let Notification = this.getComponent('notification')
 
@@ -38,6 +39,7 @@ class PublisherLayout extends Loader {
     // --------------
 
     header = $$(Header, {
+      page: 'archive',
       mobile: this.props.mobile
     })
 
@@ -46,7 +48,7 @@ class PublisherLayout extends Loader {
       el.append(
         $$(Notification, notification)
       )
-    } 
+    }
     // else if (this.state.session) {
     //   header.outlet('content').append(
     //     $$(Collaborators, {
@@ -90,6 +92,10 @@ class PublisherLayout extends Loader {
 
   _getEditorClass() {
     return Publisher
+  }
+
+  _getHeaderClass() {
+    return this.getComponent('header')
   }
 
   _onCollabClientDisconnected() {
@@ -148,10 +154,10 @@ class PublisherLayout extends Loader {
         return
       }
       //let docRecord = SampleDoc
-      let document = configurator.createArticle()
+      let document = configurator.createDocument()
       let doc = converter.importDocument(document, docRecord.data)
 
-      let session = new CollabSession(doc, {
+      let session = new PublisherSession(doc, {
         configurator: configurator,
         documentId: documentId,
         version: docRecord.version,
@@ -165,6 +171,7 @@ class PublisherLayout extends Loader {
 
       series([
         this._loadResources(documentId, session),
+        this._loadCollaborators(documentId, session)
       ], () => {
         this.setState({
           session: session
@@ -182,12 +189,43 @@ class PublisherLayout extends Loader {
     }.bind(this)
   }
 
+  _loadCollaborators(documentId, session) {
+    let authClient = this.context.authenticationClient
+    let user = authClient.getUser()
+    return function(cb) {
+      this._loadDocumentCollaborators(documentId, (err, collaborators) => {
+        let collaboratorsIndex = {}
+        collaborators.forEach(collab => {
+          collaboratorsIndex[collab.userId] = collab
+        })
+
+        if(!collaboratorsIndex[user.userId]) {
+          collaboratorsIndex[user.userId] = {
+            userId: user.userId,
+            name: user.name
+          }
+        }
+
+        session.collaborators = collaboratorsIndex
+        cb()
+      })
+    }.bind(this)
+  }
+
   /*
     Loads document resources
   */
   _loadDocumentResources(documentId, cb) {
     let resourceClient = this.context.resourceClient
     resourceClient.getDocumentResources(documentId, cb)
+  }
+
+  /*
+    Loads document collaborators
+  */
+  _loadDocumentCollaborators(documentId, cb) {
+    let resourceClient = this.context.resourceClient
+    resourceClient.getDocumentCollaborators(documentId, cb)
   }
 }
 

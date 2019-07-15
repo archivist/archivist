@@ -7,9 +7,14 @@ export default {
   name: 'comment',
   configure: function(config) {
     config.addNode(Comment)
-    config.addTool(Comment.type, CommentTool, { toolGroup: 'references' })
-    config.addCommand(Comment.type, CommentCommand, { nodeType: Comment.type })
+    config.addTool(Comment.type, CommentTool)
+    config.addCommand(Comment.type, CommentCommand, { nodeType: Comment.type, commandGroup: 'references' })
     config.addComponent(Comment.type, CommentComponent)
     config.addIcon(Comment.type, {'fontawesome': 'fa-comment'})
+
+    config.addLabel('comment', {
+      en: 'comment',
+      ru: 'комментарий'
+    })
   }
 }

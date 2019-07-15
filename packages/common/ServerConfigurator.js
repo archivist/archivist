@@ -5,6 +5,7 @@ class ServerConfigurator extends Configurator {
     super(...args)
 
     // Extend config
+    this.config.configurators = {}
     this.config.stores = {}
     this.config.engines = {}
     this.config.styles = []
@@ -90,6 +91,22 @@ class ServerConfigurator extends Configurator {
 
   addContextItem(rendererName, contextRenderer) {
     this.addComponent(rendererName + '-context-item', contextRenderer)
+  }
+
+  /*
+    Provision of sub configurators (e.g. editor, viewer etc
+    receive their own configurator)
+  */
+  addConfigurator(name, configurator, isDefault) {
+    this.config.configurators[name] = configurator
+    if(isDefault) this.config.defaultConfigurator = name
+  }
+
+  /*
+    Get sub confgiurator
+  */
+  getConfigurator(name) {
+    return this.config.configurators[name]
   }
 
 }

@@ -7,9 +7,9 @@ export { default as InspectorPackage } from './packages/inspector/package'
 
 // Common components
 //export { default as Database } from './packages/common/Database'
+export { default as ArchivistSubConfigurator } from './packages/archivist/ArchivistSubConfigurator'
 export { default as EntityIndex } from './packages/common/EntityIndex'
 export { default as CommentPackage } from './packages/comment/package'
-export { default as MarkPackage } from './packages/mark/package'
 export { default as TimecodePackage } from './packages/timecode/package'
 export { default as ServerConfigurator } from './packages/common/ServerConfigurator'
 
@@ -17,6 +17,7 @@ export { default as ServerConfigurator } from './packages/common/ServerConfigura
 export { default as ArchivistEnginePackage } from './packages/engine/package'
 export { default as AuthEnginePackage } from './packages/engine/auth/package'
 export { default as AuthEngine } from './packages/engine/auth/AuthEngine'
+export { default as CollabEnginePackage } from './packages/engine/collab/package'
 export { default as DocumentEnginePackage } from './packages/engine/document/package'
 export { default as DocumentEngine } from './packages/engine/document/DocumentEngine'
 //export { default as MailerEnginePackage } from './packages/engine/mailer/package'

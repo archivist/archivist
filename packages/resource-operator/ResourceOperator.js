@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Input, ScrollPane, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, ScrollPane, SubstanceError as Err } from 'substance'
 import { concat, debounce, findIndex, isEmpty } from 'lodash-es'
 
 class ResourcesOperator extends Component {
@@ -47,6 +47,13 @@ class ResourcesOperator extends Component {
       initState.filters['entityId !'] = this.props.item.entityId
     }
 
+    if(mode === 'search') {
+      initState.filters.entityType = this.props.entityType
+      if(this.props.parent) {
+        initState.filters["data->>'parent'"] = this.props.parent
+      }
+    }
+
     return initState
   }
 
@@ -66,6 +73,8 @@ class ResourcesOperator extends Component {
       el.append(this.renderDeleteDialog($$))
     } else if (mode === 'merge') {
       el.append(this.renderMergeDialog($$))
+    } else if (mode === 'search') {
+      el.append(this.renderSearchDialog($$))
     } else {
       el.append($$('div').append('Error: please pass correct mode'))
     }
@@ -74,6 +83,8 @@ class ResourcesOperator extends Component {
   }
 
   renderDeleteDialog($$) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-delete-dialog')
     let state = this.state.opState
     let resource = this.renderResorceItem($$)
@@ -106,9 +117,9 @@ class ResourcesOperator extends Component {
         resource,
         msg,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'delete-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-submit', theme: 'round'})
             .on('click', this._onDelete)
         )
       )
@@ -118,6 +129,8 @@ class ResourcesOperator extends Component {
   }
 
   renderMergeDialog($$) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-merge-dialog')
     let state = this.state.opState
     let resource = this.renderResorceItem($$)
@@ -142,9 +155,9 @@ class ResourcesOperator extends Component {
         mergeResource,
         msg,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'merge-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'merge-confirmation-submit', theme: 'round'})
             .on('click', this._onMerge)
         )
       )
@@ -172,14 +185,33 @@ class ResourcesOperator extends Component {
         $$('div').addClass('se-merge-divider').append(this.getLabel('merge-divider')),
         resourceSelector,
         $$('div').addClass('se-actions').append(
-          $$(Button, {label: 'delete-confirmation-cancel', style: 'outline'})
+          $$(Button, {label: 'delete-confirmation-cancel', theme: 'round'})
             .on('click', this._onCancel),
-          $$(Button, {label: 'merge-confirmation-submit', style: 'outline'})
+          $$(Button, {label: 'merge-confirmation-submit', theme: 'round'})
             .addClass('sm-disabled')
             .attr({disabled: 'disabled'})
         )
       )
     }
+
+    return el
+  }
+
+  renderSearchDialog($$) {
+    const Button = this.getComponent('button')
+
+    let el = $$('div').addClass('se-search-dialog')
+    let resourceSelector = this.renderResorceSelector($$)
+
+    el.append(
+      resourceSelector,
+      $$('div').addClass('se-actions').append(
+        $$(Button, {label: 'search-confirmation-cancel', theme: 'round'})
+          .on('click', this._onCancel),
+        $$(Button, {label: 'search-confirmation-submit', theme: 'round'})
+          .on('click', this._onSearchSubmit)
+      )
+    )
 
     return el
   }
@@ -232,6 +264,8 @@ class ResourcesOperator extends Component {
   }
 
   renderResorceSelector($$) {
+    const Input = this.getComponent('input')
+
     let el = $$('div').addClass('se-resource-item')
     let merge = this.state.mergeEntity
 
@@ -242,7 +276,7 @@ class ResourcesOperator extends Component {
           .ref('searchInput')
           .on('keyup', debounce(this._onKeyUp, 300))
           .on('keydown', this._onKeyDown),
-        $$(ScrollPane).addClass('se-search-results').append(
+        $$('div').addClass('se-search-results').append(
           this.renderList($$)
         ).ref('listResults')
       )
@@ -320,6 +354,12 @@ class ResourcesOperator extends Component {
         }
       })
     }
+  }
+
+  _onSearchSubmit() {
+    let entity = this.state.mergeEntity
+    if(entity) this.send('selectEntity', entity.entityId)
+    this.send('closeResourceOperator')
   }
 
   _onKeyUp() {
@@ -416,7 +456,7 @@ class ResourcesOperator extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -460,7 +500,7 @@ class ResourcesOperator extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }

@@ -1,6 +1,5 @@
-import { Button, Component, EventEmitter, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { Component, EventEmitter, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, forEach, findIndex, isEmpty, isEqual } from 'lodash-es'
-import moment from 'moment'
 import AbstractEntityRow from './AbstractEntityRow'
 
 class AbstractEntityPage extends Component {
@@ -12,6 +11,7 @@ class AbstractEntityPage extends Component {
       'loadReferences': this._loadReferences,
       'updateEntity': this._updateEntity,
       'deleteEntity': this._removeFromList,
+      'editItem': this._editItem,
       'mergeItem': this._mergeItem,
       'removeItem': this._removeItem,
       //'closeModal': this._doneEditing,
@@ -54,6 +54,7 @@ class AbstractEntityPage extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel(this.pageName)
     this._loadData()
   }
 
@@ -64,8 +65,10 @@ class AbstractEntityPage extends Component {
   }
 
   render($$) {
+    const Modal = this.getComponent('modal')
+
     let items = this.state.items
-    let el = $$('div').addClass('sc-entity-page')
+    let el = $$('div').addClass('sc-entity-page sm-entity-' + this.entityType)
     let main = $$('div').addClass('se-entity-layout')
 
     let header = this.renderHeader($$)
@@ -115,11 +118,13 @@ class AbstractEntityPage extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
+
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-placeholder')})
       .addClass('se-with-option')
       .ref('searchInput')
 
@@ -147,7 +152,7 @@ class AbstractEntityPage extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: this.pageName})
   }
 
   renderToolbox($$) {
@@ -156,7 +161,7 @@ class AbstractEntityPage extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'newEntity': '+ Add ' + this.entityType
+        'newEntity': this.getLabel('add-' + this.entityType)
       },
       content: filters
     })
@@ -172,6 +177,8 @@ class AbstractEntityPage extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
+
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -180,9 +187,9 @@ class AbstractEntityPage extends Component {
     if(this.state.total === 0) {
       layout.append(
         $$('h1').html(
-          'No results'
+          this.getLabel('no-results')
         ),
-        $$('p').html('Sorry, no entities matches your query')
+        $$('p').html(this.getLabel('no-results-description'))
       )
     } else {
       let Spinner = this.getComponent('spinner')
@@ -197,12 +204,14 @@ class AbstractEntityPage extends Component {
   }
 
   renderAdditionalMenu($$, actions) {
+    const Button = this.getComponent('button')
+
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
     forEach(actions, action => {
       actionsList.append(
         $$('li').addClass('se-more-item').append(
-          $$(Button, {label: action.label}).on('click', action.action)
+          $$(Button, {label: this.getLabel(action.label)}).on('click', action.action)
         )
       )
     })
@@ -212,6 +221,8 @@ class AbstractEntityPage extends Component {
   }
 
   renderFull($$) {
+    const Grid = this.getComponent('grid')
+
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
@@ -262,7 +273,7 @@ class AbstractEntityPage extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -314,7 +325,7 @@ class AbstractEntityPage extends Component {
   }
 
   /*
-    Create a new entity 
+    Create a new entity
   */
   _newEntity() {
     let authenticationClient = this.context.authenticationClient
@@ -322,7 +333,7 @@ class AbstractEntityPage extends Component {
     let resourceClient = this.context.resourceClient
     let items = this.state.items
     let entityData = {
-      name: 'Unknown ' + this.entityType,
+      name: this.getLabel(this.entityType + '-default-name'),
       synonyms: [],
       description: '',
       entityType: this.entityType,
@@ -348,6 +359,10 @@ class AbstractEntityPage extends Component {
 
       this.send('navigate', {page: this.pageName, entityId: entity.entityId})
     })
+  }
+
+  _editItem(id) {
+    this.extendProps({entityId: id})
   }
 
   _removeItem(id) {
@@ -412,7 +427,7 @@ class AbstractEntityPage extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -482,7 +497,7 @@ class AbstractEntityPage extends Component {
         }.bind(this))
       } else {
         item._toggleDetails()
-      } 
+      }
     }
   }
 
@@ -515,7 +530,7 @@ class AbstractEntityPage extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

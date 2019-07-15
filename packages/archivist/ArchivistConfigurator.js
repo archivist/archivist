@@ -1,4 +1,4 @@
-import { Configurator } from 'substance'
+import { Configurator, DefaultLabelProvider as LabelProvider } from 'substance'
 
 /*
   Archivist configurator.
@@ -104,9 +104,9 @@ class ArchivistConfigurator extends Configurator {
   /*
     Get File Client instance
   */
-  getFileClient() {
+  getFileClient(config) {
     let FileClientClass = this.config.fileClient
-    return new FileClientClass({httpUrl: this.config.fileServerUrl})
+    return new FileClientClass({authClient: config.authClient, httpUrl: this.config.fileServerUrl})
   }
 
   /*
@@ -177,6 +177,10 @@ class ArchivistConfigurator extends Configurator {
     return this.config.resourceTypes
   }
 
+  getLabelProvider(lang) {
+    lang = lang || this.getDefaultLanguage()
+    return new LabelProvider(this.config.labels, lang)
+  }
 }
 
 export default ArchivistConfigurator

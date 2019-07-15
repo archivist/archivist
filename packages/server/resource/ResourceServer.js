@@ -19,6 +19,8 @@ class ResourceServer {
     app.post(this.path + '/entities', this.authEngine.hasAccess.bind(this.authEngine), this._createEntity.bind(this))
     app.get(this.path + '/entities', this._listEntities.bind(this))
     app.get(this.path + '/entities/document/:id', this._getDocumentResources.bind(this))
+    app.get(this.path + '/collaborators/document/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getDocumentCollaborators.bind(this))
+    app.get(this.path + '/collaborators/:id', this.authEngine.hasAccess.bind(this.authEngine), this._getCollaborator.bind(this))
     //app.get(this.path + '/entities/tree/:type', this._getResourcesTree.bind(this))
     app.get(this.path + '/entities/search', this._searchEntities.bind(this))
     app.post(this.path + '/entities/merge', this.authEngine.hasSuperAccess.bind(this.authEngine), this._mergeEntity.bind(this))
@@ -163,6 +165,33 @@ class ResourceServer {
     this.engine.getDocumentResources(documentId)
       .then(function(entities) {
         res.json(entities)
+      })
+      .catch(function(err) {
+        next(err)
+      })
+  }
+
+  /*
+    Get document collaborators
+  */
+  _getDocumentCollaborators(req, res, next) {
+    let documentId = req.params.id
+
+    this.engine.getDocumentCollaborators(documentId)
+      .then(function(collaborators) {
+        res.json(collaborators)
+      })
+      .catch(function(err) {
+        next(err)
+      })
+  }
+
+  _getCollaborator(req, res, next) {
+    let userId = req.params.id
+
+    this.engine.getCollaborator(userId)
+      .then(function(collaborator) {
+        res.json(collaborator)
       })
       .catch(function(err) {
         next(err)

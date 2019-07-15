@@ -64,6 +64,10 @@
   -webkit-box-sizing: border-box;
   position: absolute;
   top: 70px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  overflow: auto;
   margin: 10px;
   border-top: 1px solid #ccc;
 }
@@ -137,6 +141,6 @@
 }
 
 .sc-resource-operator .se-actions .sc-button.sm-disabled {
-  opacity: 0.65; 
+  opacity: 0.65;
   cursor: not-allowed;
 }

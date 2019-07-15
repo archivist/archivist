@@ -1,6 +1,6 @@
 /* Substance-forms specific styles */
-@import './minimal-switch-text-type/_minimal-switch-text-type.css';
 @import './multiple-field/_multiple.css';
+@import './reference-field/_reference.css';
 @import './tags-field/_tags.css';
 @import './toggle-field/_toggle.css';
 @import './xref/_xref.css';
@@ -21,9 +21,7 @@
 
 .sc-form {
   max-width: 500px;
-  max-height: 600px;
   margin: 10px auto;
-  overflow: auto;
 }
 
 .sc-form .sc-field {
@@ -43,12 +41,12 @@
   padding: 6px;
   width: 100%;
 }
-      
+
 .sc-form .sc-field .sc-textarea:focus {
   background: #fff;
   border-color: rgb(198, 224, 243);
 }
-  
+
 .sc-form .sc-field .help {
   font-size: 12px;
   line-height: 25px;

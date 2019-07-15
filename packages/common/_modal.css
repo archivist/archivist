@@ -1,0 +1,8 @@
+.sc-modal {
+  z-index: 99!important;
+  overflow: auto;
+}
+
+.sc-modal .se-body {
+  margin-bottom: 30px;
+}

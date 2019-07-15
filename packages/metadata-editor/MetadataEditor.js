@@ -1,9 +1,11 @@
 import { Component, TextPropertyEditor } from 'substance'
 import { forEach } from 'lodash-es'
+import PlainTextPropertyEditor from './PlainTextPropertyEditor'
 import SelectEditor from './SelectEditor'
 import InputEditor from './InputEditor'
 import CheckboxEditor from './CheckboxEditor'
 import SingleCheckboxEditor from './SingleCheckboxEditor'
+import ReferenceEditor from './ReferenceEditor'
 
 class MetadataEditor extends Component {
 
@@ -31,7 +33,7 @@ class MetadataEditor extends Component {
           fields[groupId].fields[id] = propSchema.field
         } else {
           fields[id] = propSchema.field
-        } 
+        }
       }
     })
 
@@ -45,7 +47,7 @@ class MetadataEditor extends Component {
 
     forEach(this.state.fields, (field, id) => {
       let editorEl = this.renderItem($$, field, id)
-      el.append(editorEl) 
+      el.append(editorEl)
     })
 
     return el
@@ -55,16 +57,23 @@ class MetadataEditor extends Component {
   renderItem($$, field, id) {
     let editorEl = $$('div').addClass('se-field-editor se-field-' + id)
 
+    const description = field.description
+    if(description && !field.collapse) {
+      editorEl.append(
+        $$('div').addClass('se-description').append(this.getLabel(description))
+      )
+    }
+
     const editor = field.editor
     switch (editor) {
       case 'group': {
         editorEl.append(
-          $$('div').addClass('se-group-name').append(field.name)
+          $$('div').addClass('se-group-name').append(this.getLabel(field.name))
         ).addClass('se-field-group')
         if(field.fields) {
           forEach(field.fields, (item, itemId) => {
             let subEl = this.renderItem($$, item, itemId)
-            editorEl.append(subEl) 
+            editorEl.append(subEl)
           })
         }
         break
@@ -86,34 +95,35 @@ class MetadataEditor extends Component {
           if(collapsed) {
             label.append(
               this.context.iconProvider.renderIcon($$, 'collapsed'),
-              field.collapse
+              this.getLabel(field.collapse)
             ).on('click', this._toogleCollapse.bind(this, id))
             editorEl.append(label)
           } else {
             label.append(
               this.context.iconProvider.renderIcon($$, 'expanded'),
-              field.collapse
+              this.getLabel(field.collapse)
             ).on('click', this._toogleCollapse.bind(this, id))
-
-            editorEl.append(
-              label,
-              $$(TextPropertyEditor, {
-                name: id,
-                path: ['meta', id],
-                multiLine: true
-              }).addClass('se-editor')
-            )
 
             const description = field.description
             if(description) {
               editorEl.append(
-                $$('div').addClass('se-description').append(description)
+                $$('div').addClass('se-description').append(this.getLabel(description))
               )
             }
+
+            editorEl.append(
+              label,
+              $$(PlainTextPropertyEditor, {
+                name: id,
+                path: ['meta', id],
+                multiLine: true,
+                withoutBreak: false
+              }).addClass('se-editor')
+            )
           }
         } else {
           editorEl.append(
-            $$(TextPropertyEditor, {
+            $$(PlainTextPropertyEditor, {
               name: id,
               path: ['meta', id],
               multiLine: true
@@ -128,7 +138,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             dataType: field.dataType
-          })
+          }).ref(id)
         )
         break
       }
@@ -138,7 +148,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             options: field.options
-          })
+          }).ref(id)
         )
         break
       }
@@ -148,7 +158,7 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             options: field.options
-          })
+          }).ref(id)
         ).addClass('se-checkboxes-editor')
         break
       }
@@ -158,27 +168,34 @@ class MetadataEditor extends Component {
             name: id,
             path: ['meta', id],
             label: field.label
-          })
+          }).ref(id)
         ).addClass('se-checkboxes-editor')
+        break
+      }
+      case 'reference': {
+        editorEl.append(
+          $$(ReferenceEditor, {
+            name: id,
+            path: ['meta', id],
+            label: field.label,
+            entityType: field.entityType,
+            multi: field.multi
+          }).ref(id)
+        ).addClass('se-reference-editor')
         break
       }
       default:
         console.error('Invalid editor for meta property:', id)
     }
 
-    const description = field.description
-    if(description && !field.collapse) {
-      editorEl.append(
-        $$('div').addClass('se-description').append(description)
-      )
-    }
+
 
     return editorEl
   }
 
   _toogleCollapse(id) {
     let fields = this.state.fields
-    
+
     if(fields[id]) {
       let val = fields[id].collapsed
       fields[id].collapsed = !val

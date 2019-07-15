@@ -1,11 +1,10 @@
 import {
   Component, Configurator, EditorSession, EmphasisPackage, StrongPackage,
-  LinkPackage, ListPackage, TablePackage, HeadingPackage
+  LinkPackage, ListPackage, TablePackage, HeadingPackage, TextAlignPackage
 } from 'substance'
 import RichTextAreaEditor from './RichTextAreaEditor'
 import RichTextAreaPackage from './RichTextAreaPackage'
 import XrefPackage from '../xref/XrefPackage'
-import MinimalSwitchTextTypePackage from '../minimal-switch-text-type/MinimalSwitchTextTypePackage'
 
 // Packages configuration
 const PACKAGES = {
@@ -16,27 +15,19 @@ const PACKAGES = {
   'table': TablePackage,
   'xref': XrefPackage,
   'heading': HeadingPackage,
+  'text-align': TextAlignPackage,
 }
 
-const DEFAULT_PACKAGES = ['heading', 'strong', 'emphasis', 'link', 'list', 'table']
+const DEFAULT_PACKAGES = ['heading', 'strong', 'emphasis', 'link', 'list']
 
 class RichTextArea extends Component {
   constructor(...args) {
     super(...args)
     this.cfg = new Configurator().import(RichTextAreaPackage)
     let enabledPackages = this.props.config.enabledPackages || DEFAULT_PACKAGES
-    let defaultOptions = {
-      disableCollapsedCursor: true,
-      toolGroup: 'annotations'
-    }
     enabledPackages.forEach((pkg) => {
-      this.cfg.import(PACKAGES[pkg], defaultOptions)
+      this.cfg.import(PACKAGES[pkg])
     })
-    // NOTE: We enable MinimalSwitchTextTypePackage as the last package
-    // as it overwrites some labels for heading / paragraphs.
-    if (enabledPackages.indexOf('heading') >= 0) {
-      this.cfg.import(MinimalSwitchTextTypePackage)
-    }
     this._initDoc(this.props)
   }
 
@@ -62,6 +53,7 @@ class RichTextArea extends Component {
   }
 
   dispose() {
+    super.dispose()
     this.unregisterHandlers()
   }
 
@@ -123,7 +115,8 @@ class RichTextArea extends Component {
     el.append(
       $$(RichTextAreaEditor, {
         editorSession: this.editorSession,
-        editorId: this.props.editorId
+        editorId: this.props.editorId,
+        placeholder: this.props.config.placeholder
       }).ref('editor')
     )
     return el

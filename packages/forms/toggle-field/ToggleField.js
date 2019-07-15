@@ -1,28 +1,20 @@
-import { Component, Input } from 'substance'
+import { Component } from 'substance'
 
 class ToggleField extends Component {
+  constructor(...args) {
+    super(...args)
+    this.configurator = this.props.configurator
+    this.labelProvider = this.configurator.getLabelProvider()
+  }
 
   render($$) {
     let config = this.props.config
     let value = this.state.value
     let el = $$('div').addClass('sc-field-toggle sc-field-' + this.props.fieldId)
 
-    // let input = $$(Input, {type: config.dataType, placeholder: config.placeholder})
-    //   .ref('input')
-    //   .on('change', this._onChange)
-    
-    // el.append(
-    //   input,
-    //   $$('div').addClass('help').append(config.placeholder)
-    // )
-
-
-    // let el = $$('div').addClass('sc-field-toggle sc-field-' + this.props.name)
-
-
-    let on = $$('div').addClass('se-on').append('Yes')
+    let on = $$('div').addClass('se-on').append(this.getLabel('toggle-yes'))
       .on('click', this._setOn)
-    let off = $$('div').addClass('se-off').append('No')
+    let off = $$('div').addClass('se-off').append(this.getLabel('toggle-no'))
       .on('click', this._setOff)
     let unknown = $$('div').addClass('se-unknown')
 
@@ -40,7 +32,7 @@ class ToggleField extends Component {
     )
 
     if(config.nullable !== false) {
-      unknown.append('Unknown')
+      unknown.append(this.getLabel('toggle-unknown'))
       unknown.on('click', this._setUnknown)
       item.append(unknown)
     } else {
@@ -52,6 +44,10 @@ class ToggleField extends Component {
     if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
     
     return el
+  }
+
+  getLabel(name) {
+    return this.labelProvider.getLabel(name)
   }
 
   setValue(value) {

@@ -7,17 +7,19 @@
   z-index: 10;
 }
 
-.sc-toolbox .se-actions {
+.sc-toolbox > .se-actions {
   padding: 10px;
   float: right;
   margin-right: 4px;
 }
 
-.sc-toolbox .se-actions button {
+.sc-toolbox > .se-actions button {
   font-weight: 400;
   display: inline-block;
   border-radius: 3px;
   margin-left: 10px;
+  height: 30px;
+  line-height: 30px;
 }
 
 .sc-toolbox .se-content {
@@ -94,7 +96,7 @@
   width: 100%;
   margin: 0;
   outline: none;
-  padding: 6px 10px;
+  padding: 6px 20px 6px 10px;
   background: transparent;
   border: 1px solid #E0E4E4;
   border-radius: 3px;

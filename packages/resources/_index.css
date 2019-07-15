@@ -138,7 +138,7 @@
 }
 
 .sc-resource-selector .se-search-results {
-  top: 80px;
+  top: 80px!important;
 }
 
 .sc-resource-selector .se-search-results .sc-entity-entry.se-focused,

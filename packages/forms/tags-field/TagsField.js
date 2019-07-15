@@ -1,6 +1,13 @@
-import { Component, Input } from 'substance'
+import { Component, InputPackage } from 'substance'
+
+const { Input } = InputPackage
 
 class TagsField extends Component {
+  constructor(...args) {
+    super(...args)
+    this.configurator = this.props.configurator
+    this.labelProvider = this.configurator.getLabelProvider()
+  }
 
   render($$) {
     let config = this.props.config
@@ -26,7 +33,7 @@ class TagsField extends Component {
 
     el.append(
       tagsWidget,
-      $$(Input, {type: 'text', placeholder: 'Add values'})
+      $$(Input, {type: 'text', placeholder: this.getLabel('tags-add-values')})
         .ref('input')
         .on('keyup', this._onKeyUp)
     )
@@ -34,6 +41,10 @@ class TagsField extends Component {
     if(config.placeholder) el.append($$('div').addClass('help').append(config.placeholder))
     
     return el
+  }
+
+  getLabel(name) {
+    return this.labelProvider.getLabel(name)
   }
 
   setValue(value) {

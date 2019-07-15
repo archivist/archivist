@@ -1,4 +1,4 @@
-import { Component, Button, FontAwesomeIcon as Icon, Grid, Input, Layout, Modal, SplitPane, SubstanceError as Err } from 'substance'
+import { Component, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, findIndex, isEqual } from 'lodash-es'
 import moment from 'moment'
 import UserForm from './UserForm'
@@ -30,6 +30,7 @@ class UsersList extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel('users')
     this._loadData()
   }
 
@@ -40,6 +41,8 @@ class UsersList extends Component {
   }
 
   render($$) {
+    const Modal = this.getComponent('modal')
+
     let items = this.state.items
     let el = $$('div').addClass('sc-users-page')
     let main = $$('div').addClass('se-entity-layout')
@@ -78,11 +81,13 @@ class UsersList extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
+
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search by email...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-email-placeholder')})
       .ref('searchInput')
 
     if(this.isSearchEventSupported) {
@@ -99,7 +104,7 @@ class UsersList extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: 'users'})
   }
 
   renderToolbox($$) {
@@ -108,7 +113,7 @@ class UsersList extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'addUser': '+ New User'
+        'addUser': this.getLabel('add-user')
       },
       content: filters
     })
@@ -117,6 +122,8 @@ class UsersList extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
+
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -138,6 +145,9 @@ class UsersList extends Component {
   }
 
   renderFull($$) {
+    const Button = this.getComponent('button')
+    const Grid = this.getComponent('grid')
+
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
@@ -147,26 +157,27 @@ class UsersList extends Component {
       items.forEach(item => {
         let accessCheckboxIcon = item.access ? 'fa-check-square-o' : 'fa-square-o'
         let accessCheckbox = $$('div').addClass('se-checkbox').append(
-          $$('div').addClass('se-label').append('access'),
+          $$('div').addClass('se-label').append(this.getLabel('access-label')),
           $$(Icon, {icon: accessCheckboxIcon})
         ).on('click', this._toggleAccess.bind(this, item.userId, 'access'))
 
         let superCheckboxIcon = item.super ? 'fa-check-square-o' : 'fa-square-o'
         let superCheckbox = $$('div').addClass('se-checkbox').append(
-          $$('div').addClass('se-label').append('super access'),
+          $$('div').addClass('se-label').append(this.getLabel('super-access-label')),
           $$(Icon, {icon: superCheckboxIcon})
         ).on('click', this._toggleAccess.bind(this, item.userId, 'super'))
 
-        let resetPwd = $$(Button, {label: 'Reset password', style: 'outline'})
+        let resetPwd = $$(Button, {label: this.getLabel('reset-password'), theme: 'round'})
           .on('click', this._resetPwd.bind(this, item.userId))
 
         let created = moment(item.created).format("DD.MM.YYYY HH:mm")
-        
+        let createdStr = this.getLabel('user-created-at') + ' ' + created
+
         grid.append(
           $$(Grid.Row, {user: item}).append(
             $$(Grid.Cell, {columns: 2}).append(item.email),
-            $$(Grid.Cell, {columns: 3}).append(item.name || 'Anonymous'),
-            $$(Grid.Cell, {columns: 2}).append('created at ' + created),
+            $$(Grid.Cell, {columns: 3}).append(item.name || this.getLabel('anonymous-user')),
+            $$(Grid.Cell, {columns: 2}).append(createdStr),
             $$(Grid.Cell, {columns: 1}).append(accessCheckbox),
             $$(Grid.Cell, {columns: 2}).append(superCheckbox),
             $$(Grid.Cell, {columns: 2}).addClass('se-reset').append(resetPwd)
@@ -271,7 +282,7 @@ class UsersList extends Component {
     let pagination = this.state.pagination
     let items = []
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: order + ' ' + direction
     }
@@ -325,7 +336,7 @@ class UsersList extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

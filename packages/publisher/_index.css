@@ -38,16 +38,21 @@
 }
 
 .sc-publisher .se-main-section .sc-container-editor > * { margin-bottom: 20px; }
-.sc-publisher .se-toolbar-wrapper { height: 40px; border-bottom: 1px solid #E0E4E4; }
+.sc-publisher .se-toolbar-wrapper { height: 40px; border-bottom: 1px solid #E0E4E4; padding: 0px 10px; }
 .sc-publisher .se-toolbar-wrapper .sc-toolbar {
   max-width: 960px;
   margin: 0 auto;
 }
 
-.sc-publisher .sm-target-document,
-.sc-publisher .sm-target-annotations,
-.sc-publisher .sm-target-references,
-.sc-publisher .sm-target-utils {
-  padding-right: 5px;
+.sc-publisher .se-toolbar-wrapper .sc-toolbar > .se-active-tools {
+  padding: 0px;
+}
+
+.sc-publisher .se-toolbar-wrapper .sc-toolbar .sc-tool-group {
+  padding: 6px;
   border-right: 1px solid #E0E4E4;
+}
+
+.sc-publisher .se-toolbar-wrapper .sc-toolbar .sc-tool-group .sc-tooltip {
+  z-index: 10;
 }

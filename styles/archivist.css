@@ -1,0 +1,22 @@
+@import '../packages/common/_index.css';
+@import '../packages/brackets/_index.css';
+@import '../packages/collaborators/_index.css';
+@import '../packages/comment/_index.css';
+@import '../packages/comments/_index.css';
+@import '../packages/tabbed-context/_index.css';
+@import '../packages/pager/_index.css';
+@import '../packages/spinner/_index.css';
+@import '../packages/toolbox/_index.css';
+@import '../packages/timecode/_index.css';
+
+@import '../packages/entity-editor/_index.css';
+@import '../packages/forms/_index.css';
+@import '../packages/header/_index.css';
+@import '../packages/notification/_index.css';
+@import '../packages/documents/_index.css';
+@import '../packages/metadata-editor/_index.css';
+@import '../packages/publisher/_index.css';
+@import '../packages/resources/_index.css';
+@import '../packages/resource-operator/_index.css';
+@import '../packages/users/_index.css';
+@import '../packages/welcome/_index.css';

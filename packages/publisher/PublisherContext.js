@@ -6,7 +6,7 @@ class PublisherContext extends Component {
     super(...args)
 
     this.contexts = {}
-    
+
     const configurator = this.props.configurator
     const contexts = configurator.getContexts()
     const contextMapping = configurator.getContextMapping()
@@ -18,7 +18,8 @@ class PublisherContext extends Component {
     }.bind(this))
 
     this.handleActions({
-      'switchTab': this._switchTab
+      'switchTab': this._switchTab,
+      'switchContext': this._switchContext
     })
   }
 
@@ -81,6 +82,18 @@ class PublisherContext extends Component {
     }
     this.extendState(state)
     console.log('View comment', node.id, ',', mode, 'mode')
+  }
+
+  createComment(node) {
+    let mode = 'create'
+    let context = this.contextMap[node.type]
+    let state = {
+      contextId: context,
+      mode: mode,
+      item: node
+    }
+    this.extendState(state)
+    console.log('Create comment', node, ',', mode, 'mode')
   }
 
   editComment(node) {
@@ -150,6 +163,10 @@ class PublisherContext extends Component {
     return props
   }
 
+  getContextState() {
+    return this.state
+  }
+
   renderContext($$) {
     let contextName = this.getContextName()
     let Context = this.getContext(contextName)
@@ -184,6 +201,10 @@ class PublisherContext extends Component {
       contextId: contextId,
       mode: 'list'
     })
+  }
+
+  _switchContext(context) {
+    this.extendState(context)
   }
 
 }

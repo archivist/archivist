@@ -1,65 +1,87 @@
-var b = require('substance-bundler');
-var fs = require('fs')
-var config = require('config')
+const b = require('substance-bundler')
+const substancePath = require.resolve('substance')
+const momentPath = require.resolve('moment')
+const DIST = 'dist/'
 
-var DIST = 'dist/'
-
-function _substanceCSS() {
-  b.make('substance', 'css')
+function _substance() {
+  b.copy('./node_modules/substance/dist', DIST+'substance')
 }
 
-function _substanceServer() {
-  b.make('substance', 'server')
+function _buildDist() {
+  _substance()
+  _buildLib(DIST, 'browser')
+  _buildLib(DIST, 'browser:legacy')
+  _buildLib(DIST, 'nodejs')
+  _buildCSS(DIST)
 }
 
-function _buildServerArchivistJS(DEST) {
-  b.js('./server.es.js', {
-    buble: true,
-    commonjs: true,
-    external: ['substance', 'moment', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js'],
-    targets: [{
-      dest: DEST + 'archivist.cjs.js',
-      format: 'cjs', 
-      sourceMapRoot: __dirname, 
-      sourceMapPrefix: 'archivist'
-    }]
-  })
-}
-
-function _buildBrowserArchivist(DEST) {
-  b.js('./index.es.js', {
-    buble: true,
-    external: ['substance'],
-    targets: [{
-      useStrict: false,
-      dest: DEST + 'archivist.js',
-      format: 'umd', moduleName: 'archivist', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist'
-    }]
-  })
-}
-
-function _buildDist(DEST, dependency) {
-  var path = './node_modules/'
-  if(dependency) path = '../'
-  // Bundle Substance and Archivist
-  _substanceCSS(DEST+'substance')
-  if(dependency) _substanceServer()
-  _buildServerArchivistJS(DEST)
-  _buildBrowserArchivist(DEST)
-  // Bundle CSS
-  b.css('archivist.css', DEST+'archivist.css', {variables: true})
-  b.css(path + 'substance/substance-pagestyle.css', DEST+'archivist-pagestyle.css', {variables: true})
-  b.css(path + 'substance/substance-reset.css', DEST+'archivist-reset.css', {variables: true})
-}
-
-b.task('build', function() {
+b.task('clean', function() {
   b.rm(DIST)
-  _buildDist(DIST, true)
 })
 
-b.task('dev', function() {
+b.task('lib', function() {
   b.rm(DIST)
-  _buildDist(DIST, false)
+  _buildDist()
 })
 
-b.task('default', ['dev'])
+b.task('default', ['clean', 'lib'])
+
+b.task('dev', ['default'])
+
+/* HELPERS */
+
+function _buildLib(DEST, platform) {
+  let source = './index.es.js'
+  let external = ['substance']
+  let targets = []
+  if (platform === 'browser' || platform === 'all') {
+    targets.push({
+      dest: DEST+'archivist.js',
+      format: 'umd', moduleName: 'archivist-js', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist-js'
+    })
+  }
+  if (platform === 'browser:legacy' || platform === 'all') {
+    targets.push({
+      dest: DEST+'archivist.es5.js',
+      format: 'umd', moduleName: 'archivist-js', sourceMapRoot: __dirname, sourceMapPrefix: 'archivist-js',
+      useStrict: false
+    })
+  }
+  if (platform === 'nodejs' || platform === 'all') {
+    source = './server.es.js'
+    external = ['substance', 'massive', 'bluebird', 'password-generator', 'bcryptjs', 'args-js', 'ws']
+    targets.push({
+      dest: DEST+'archivist.cjs.js',
+      format: 'cjs'
+    })
+  }
+  if (platform === 'es' || platform === 'all') {
+    targets.push({
+      dest: DEST+'archivist.es.js',
+      format: 'es'
+    })
+  }
+
+  let config = {
+    targets,
+    commonjs: {
+      include: [
+        momentPath
+      ]
+    },
+    external: external,
+    globals: {
+      'substance': 'substance'
+    }
+  }
+
+  if(platform === 'browser:legacy') config.buble = true
+
+  b.js(source, config)
+}
+
+function _buildCSS(DEST) {
+  b.css('./styles/archivist.css', DEST+'archivist.css')
+  b.css('./styles/archivist-pagestyle.css', DEST+'archivist-pagestyle.css')
+  b.css(substancePath.replace('substance.cjs.js','') + 'substance-reset.css', DEST+'archivist-reset.css')
+}

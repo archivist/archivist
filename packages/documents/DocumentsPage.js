@@ -1,4 +1,4 @@
-import { Button, Component, FontAwesomeIcon as Icon, Grid, Input, Layout, SplitPane, SubstanceError as Err, uuid } from 'substance'
+import { Component, FontAwesomeIcon as Icon, SplitPane, SubstanceError as Err } from 'substance'
 import { concat, each, findIndex, isEmpty } from 'lodash-es'
 import moment from 'moment'
 
@@ -16,6 +16,7 @@ class DocumentsPage extends Component {
   }
 
   didMount() {
+    document.title = this.getLabel('documents')
     this._loadData()
   }
 
@@ -69,11 +70,12 @@ class DocumentsPage extends Component {
   }
 
   renderFilters($$) {
+    const Input = this.getComponent('input')
     let filters = []
     let search = $$('div').addClass('se-search').append(
       $$(Icon, {icon: 'fa-search'})
     )
-    let searchInput = $$(Input, {type: 'search', placeholder: 'Search...'})
+    let searchInput = $$(Input, {type: 'search', placeholder: this.getLabel('search-placeholder')})
       .ref('searchInput')
 
     if(this.isSearchEventSupported()) {
@@ -90,7 +92,7 @@ class DocumentsPage extends Component {
 
   renderHeader($$) {
     let Header = this.getComponent('header')
-    return $$(Header)
+    return $$(Header, {page: 'archive'})
   }
 
   renderToolbox($$) {
@@ -99,7 +101,7 @@ class DocumentsPage extends Component {
 
     let toolbox = $$(Toolbox, {
       actions: {
-        'newDocument': '+ New Document'
+        'newDocument': this.getLabel('add-document')
       },
       content: filters
     })
@@ -115,6 +117,7 @@ class DocumentsPage extends Component {
   }
 
   renderEmpty($$) {
+    const Layout = this.getComponent('layout')
     let layout = $$(Layout, {
       width: 'medium',
       textAlign: 'center'
@@ -136,6 +139,7 @@ class DocumentsPage extends Component {
   }
 
   renderAdditionalMenu($$, actions) {
+    const Button = this.getComponent('button')
     let el = $$('div').addClass('se-more').attr({'tabindex': 0})
     let actionsList = $$('ul').addClass('se-more-content')
     each(actions, action => {
@@ -155,6 +159,7 @@ class DocumentsPage extends Component {
     let items = this.state.items
     let total = this.state.total
     let Pager = this.getComponent('pager')
+    let Grid = this.getComponent('grid')
     let grid = $$(Grid)
 
     if (items) {
@@ -162,11 +167,16 @@ class DocumentsPage extends Component {
         let url = urlHelper.openDocument(item.documentId)
         let documentIcon = $$(Icon, {icon: 'fa-file-text-o'})
         let title = $$('a').attr({href: url}).append(item.title)
-        let updatedAt = ['Updated', moment(item.updatedAt).fromNow(), 'by', item.updatedBy].join(' ')
+        let updatedFromNow = moment(item.updatedAt).fromNow()
+        let updatedDateTime = moment(item.updatedAt).format('DD.MM.YYYY HH:mm')
+        let updatedAt = this.getLabel('updated-info')
+          .replace('fromnow', updatedFromNow)
+          .replace('datetime', updatedDateTime)
+          .replace('username', item.updatedBy)
         let className = item.summary ? 'se-expanded' : ''
 
         let additionalActions = [
-          {label: 'Delete', action: this._removeItem.bind(this, item.documentId)},
+          {label: this.getLabel('delete-action'), action: this._removeItem.bind(this, item.documentId)},
         ]
 
         let row = $$(Grid.Row).addClass('se-document-meta ' + className).ref(item.documentId).append(
@@ -260,7 +270,7 @@ class DocumentsPage extends Component {
     let perPage = this.state.perPage
     let pagination = this.state.pagination
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0
     }
     let items = []
@@ -313,7 +323,7 @@ class DocumentsPage extends Component {
     let pagination = this.state.pagination
     let perPage = this.state.perPage
     let options = {
-      limit: perPage, 
+      limit: perPage,
       offset: pagination ? this.state.items.length : 0,
       order: this.state.order + ' ' + this.state.direction
     }
@@ -376,7 +386,7 @@ class DocumentsPage extends Component {
 
         this.extendState({
           items: items,
-          details: index 
+          details: index
         })
       }.bind(this))
     } else {
@@ -408,7 +418,7 @@ class DocumentsPage extends Component {
     let element = document.createElement('input')
     let eventName = 'onsearch'
     let isSupported = (eventName in element)
-    
+
     return isSupported
   }
 }

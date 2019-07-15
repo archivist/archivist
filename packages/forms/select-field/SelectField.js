@@ -1,6 +1,11 @@
 import { Component } from 'substance'
 
 class SelectField extends Component {
+  constructor(...args) {
+    super(...args)
+    this.configurator = this.props.configurator
+    this.labelProvider = this.configurator.getLabelProvider()
+  }
 
   render($$) {
     let config = this.props.config
@@ -11,7 +16,7 @@ class SelectField extends Component {
       .on('change', this._onChange)
 
     if(config.nullable) {
-      let option = $$('option').attr({value: null, selected: "selected"}).append('unknown')
+      let option = $$('option').attr({value: null, selected: "selected"}).append(this.getLabel('select-unknown'))
       select.append(option)
     }
 
@@ -27,6 +32,10 @@ class SelectField extends Component {
     )
 
     return el
+  }
+
+  getLabel(name) {
+    return this.labelProvider.getLabel(name)
   }
 
   setValue(value) {

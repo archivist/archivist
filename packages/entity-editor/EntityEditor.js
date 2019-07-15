@@ -1,4 +1,4 @@
-import { Button, Component, EditorSession } from 'substance'
+import { Component, EditorSession } from 'substance'
 import { clone, extend } from 'lodash-es'
 
 /*
@@ -20,6 +20,8 @@ class EntityEditor extends Component {
   }
 
   render($$) {
+    const Button = this.getComponent('button')
+
     let doc = this.state.doc
     let entity = this.state.entity
 
@@ -38,9 +40,9 @@ class EntityEditor extends Component {
       el.append(
         form,
         $$('div').addClass('se-controls').append(
-          $$(Button, {style: 'outline', label: 'entity-editor-cancel'}).addClass('se-cancel')
+          $$(Button, {theme: 'round', label: 'entity-editor-cancel'}).addClass('se-cancel')
             .on('click', this._revertEntity),
-          $$(Button, {style: 'outline', label: 'entity-editor-ok'}).addClass('se-ok')
+          $$(Button, {theme: 'round', label: 'entity-editor-ok'}).addClass('se-ok')
             .on('click', this._closeEditor)
         )
       )
@@ -67,7 +69,7 @@ class EntityEditor extends Component {
       }
 
       let entityType = entity.entityType
-      let container = configurator.createArticle()
+      let container = configurator.createDocument()
 
       if(container.schema.getNodeClass(entityType)) {
         let entityData = {
@@ -93,7 +95,9 @@ class EntityEditor extends Component {
     })
   }
 
-  _updateEntity(data, name, synonyms, description) {
+  _updateEntity(data, name, synonyms, description, silent) {
+    let authenticationClient = this.context.authenticationClient
+    let user = authenticationClient.getUser()
     let entityId = this.props.entityId
     let resourceClient = this.context.resourceClient
     let entityData = {
@@ -102,6 +106,12 @@ class EntityEditor extends Component {
       synonyms: synonyms,
       description: description
     }
+
+    if(!silent) {
+      entityData.updatedBy = user.userId
+      entityData.edited = new Date().toISOString()
+    }
+
     // Remove node props
     delete entityData.data.id
     delete entityData.data.type
@@ -136,7 +146,7 @@ class EntityEditor extends Component {
     let name = entity.name
     let synonyms = entity.synonyms
     let description = entity.description
-    this._updateEntity(entityData, name, synonyms, description)
+    this._updateEntity(entityData, name, synonyms, description, true)
     this._closeEditor()
   }
 

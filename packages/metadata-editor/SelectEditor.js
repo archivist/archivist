@@ -16,15 +16,22 @@ class SelectEditor extends Component {
   }
 
   render($$) {
+    let name = this.props.name
     let options = this.props.options
     let el = $$('div').addClass('sc-select-editor')
 
     let select = $$('select')
       .ref('input')
       .on('change', this._onChange)
+      .append(
+        $$('option').append(this.getLabel('select-none'))
+      )
 
     options.forEach(opt => {
-      let option = $$('option').attr({value: opt}).append(opt)
+      let label = this.getLabel('meta-' + name + '-' + opt)
+      if(label === 'meta-' + name + '-' + opt) label = opt
+
+      let option = $$('option').attr({value: opt}).append(label)
       select.append(option)
     })
 
@@ -43,7 +50,7 @@ class SelectEditor extends Component {
 
   getPath() {
     return this.props.path
-  } 
+  }
 
   _onChange() {
     let editorSession = this.context.editorSession

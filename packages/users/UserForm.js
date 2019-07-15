@@ -1,14 +1,17 @@
-import { Component, Button, Input } from 'substance'
+import { Component } from 'substance'
 
 class UserForm extends Component {
 
   render($$) {
+    const Button = this.getComponent('button')
+    const Input = this.getComponent('input')
+
     let el = $$('div').addClass('sc-user-form')
 
     let emailInput = $$('div').addClass('se-email').append(
       $$(Input, {
         type: 'email',
-        placeholder: 'Введите email',
+        placeholder: this.getLabel('enter-email'),
         centered: true
       }).ref('email')
     )
@@ -23,20 +26,20 @@ class UserForm extends Component {
       $$(Input, {
         type: 'checkbox'
       }).ref('access'),
-      $$('div').addClass('se-label').append('grant access')
+      $$('div').addClass('se-label').append(this.getLabel('grant-access'))
     )
 
     let superInput = $$('label').addClass('se-checkbox').append(
       $$(Input, {
         type: 'checkbox'
       }).ref('super'),
-      $$('div').addClass('se-label').append('grant super access')
+      $$('div').addClass('se-label').append(this.getLabel('grant-super-access'))
     )
 
     let actions = $$('div').addClass('se-actions').append(
-      $$(Button, {label: 'Invite', style: 'outline'}).addClass('se-invite-user')
+      $$(Button, {label: 'invite-label', theme: 'round'}).addClass('se-invite-user')
         .on('click', this._createUser),
-      $$(Button, {label: 'Cancel', style: 'outline'}).addClass('se-cancel')
+      $$(Button, {label: 'cancel-label', theme: 'round'}).addClass('se-cancel')
         .on('click', this.send.bind(this, 'closeModal'))
     )
 

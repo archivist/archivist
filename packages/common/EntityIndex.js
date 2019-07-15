@@ -18,6 +18,10 @@ class EntityIndex extends DocumentIndex {
     this._initialize(data)
   }
 
+  clear() {
+    this.byReference.clear()
+  }
+
   get(refId) {
     let annotations = this.byReference[refId]
     return annotations
@@ -46,7 +50,10 @@ class EntityIndex extends DocumentIndex {
   }
 
   update(node, path, newValue, oldValue) {
-    // TODO
+    if (path[1] === "reference") {
+      this.delete(node)
+      this.create(node)
+    }
   }
 }
 

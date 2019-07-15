@@ -1,5 +1,6 @@
 import ArchivistStorePackage from '../store/package'
 import AuthEnginePackage from './auth/package'
+import CollabEnginePackage from './collab/package'
 import DocumentEnginePackage from './document/package'
 //import MailerEnginePackage from './mailer/package'
 import ResourceEnginePackage from './resource/package'
@@ -11,6 +12,7 @@ export default {
     config.import(ArchivistStorePackage)
     //config.import(MailerEnginePackage)
     config.import(AuthEnginePackage)
+    config.import(CollabEnginePackage)
     config.import(SnapshotEnginePackage)
     config.import(DocumentEnginePackage)
     config.import(ResourceEnginePackage)

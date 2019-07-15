@@ -1,0 +1,23 @@
+.sc-field-reference .se-tag .se-value {
+  display: block;
+  float: left;
+  background-color: rgba(52, 152, 219, 0.5);
+  padding: 3px 5px;
+  border-radius: 3px;
+  margin-right: 5px;
+  margin-top: 5px;
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sc-field-reference .se-tag .se-value.se-hihglight-remove {
+  background-color: red;
+  color: #fff;
+}
+
+.sc-field-reference .se-tag .se-value.se-hihglight-remove:after {
+  content: "×";
+  margin-left: 5px;
+}

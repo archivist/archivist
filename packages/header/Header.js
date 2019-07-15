@@ -7,19 +7,26 @@ class Header extends Component {
   render($$) {
     let configurator = this.context.configurator
     let authenticationClient = this.context.authenticationClient
+    let page = this.props.page
 
     let el = $$('div').addClass('sc-header')
     let actionEls = []
 
     let MenuItems = configurator.getMenuItems()
-    forEach(MenuItems, function(item) {
+    forEach(MenuItems, (item) => {
+      let menuItem = $$('a').addClass('se-action')
+        .attr({title: this.getLabel(item.label)})
+        .on('click', this.send.bind(this, 'navigate', {page: item.action}))
+        .append($$(FontAwesomeIcon, {icon: item.icon}))
+
+      if(item.action === page) {
+        menuItem.addClass('se-active')
+      }
+
       actionEls.push(
-        $$('a').addClass('se-action')
-          .attr({title: item.label})
-          .on('click', this.send.bind(this, 'navigate', {page: item.action}))
-          .append($$(FontAwesomeIcon, {icon: item.icon}))
+        menuItem
       )
-    }.bind(this))
+    })
 
     let content = []
     if (this.props.content) {
@@ -31,7 +38,8 @@ class Header extends Component {
       $$('div').addClass('se-actions').append(actionEls),
       $$('div').addClass('se-content').append(content),
       $$(LoginStatus, {
-        user: authenticationClient.getUser()
+        user: authenticationClient.getUser(),
+        page: page
       })
     )
     return el

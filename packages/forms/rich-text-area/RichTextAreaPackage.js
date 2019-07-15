@@ -10,17 +10,40 @@ export default {
   configure: function(config) {
     config.defineSchema({
       name: 'rich-text-area',
-      ArticleClass: Document,
+      DocumentClass: Document,
+      version: '1.0.0',
       defaultTextType: 'paragraph'
     })
 
-    let defaultOptions = {
-      disableCollapsedCursor: true,
-      toolGroup: 'overlay'
-    }
-
-    config.import(BasePackage, defaultOptions)
-    config.import(ParagraphPackage, defaultOptions)
+    // Overlay configuration
+    config.addToolPanel('main-overlay', [
+      // Displays prompts such as EditLinkTool, which are exclusive
+      // so that's why we put them first
+      {
+        name: 'prompt',
+        type: 'tool-group',
+        commandGroups: ['prompt']
+      },
+      {
+        // used to resolve icons and labels
+        name: 'text-types',
+        type: 'tool-dropdown',
+        showDisabled: false,
+        contextual: true,
+        style: 'minimal',
+        commandGroups: ['text-types']
+      },
+      {
+        name: 'annotations',
+        type: 'tool-group',
+        contextual: true,
+        showDisabled: false,
+        style: 'minimal',
+        commandGroups: ['annotations']
+      }
+    ])
+    config.import(BasePackage)
+    config.import(ParagraphPackage)
 
     // HTML importers/exporters
     config.addImporter('html', RichTextAreaHTMLImporter)

@@ -1,11 +1,13 @@
 import ResourcesContext from './ResourcesContext'
-import { EntityEditorPackage, PagerPackage } from 'archivist'
+import ResourceSelector from './ResourceSelector'
+import { EntityEditorPackage, PagerPackage } from 'archivist-js'
 
 export default {
   name: 'archivist-resources',
   configure: function(config) {
     config.import(PagerPackage)
     config.import(EntityEditorPackage)
+    config.addComponent('resource-selector', ResourceSelector)
     config.addContext('resources', ResourcesContext, false)
     config.addIcon('resources', {'fontawesome': 'fa-bullseye'})
     config.addIcon('editEntity', {'fontawesome': 'fa-edit'})
@@ -31,6 +33,10 @@ export default {
     config.addLabel('searchPlaceholder', {
       en: 'Type to search...',
       ru: 'Поиск...'
+    })
+    config.addLabel('selectEntityTypeFilter', {
+      en: 'Select type',
+      ru: 'Выберите тип'
     })
   }
 }
